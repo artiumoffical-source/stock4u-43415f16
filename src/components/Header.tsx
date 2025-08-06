@@ -97,32 +97,9 @@ export default function Header() {
         alt="Stock4U Logo"
       />
 
-      {/* Right side - Navigation - Fixed order to match Figma */}
+      {/* Right side - Navigation */}
       <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
-        {/* Search */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19.6147 18.2617L15.1993 14.047C16.4584 12.6648 17.1061 10.8699 17.0059 9.04073C16.9057 7.21155 16.0654 5.49097 14.6621 4.24167C13.2588 2.99237 11.4022 2.31195 9.48358 2.34385C7.56497 2.37574 5.73429 3.11746 4.37743 4.41265C3.02056 5.70784 2.24352 7.45531 2.21011 9.2867C2.17669 11.1181 2.88951 12.8903 4.1983 14.2298C5.50709 15.5693 7.30961 16.3715 9.22589 16.4671C11.1422 16.5628 13.0225 15.9445 14.4705 14.7426L18.886 18.9573C18.9837 19.0443 19.113 19.0916 19.2466 19.0894C19.3802 19.0871 19.5076 19.0355 19.6021 18.9453C19.6966 18.8551 19.7507 18.7334 19.753 18.6059C19.7554 18.4784 19.7058 18.355 19.6147 18.2617ZM3.26598 9.42203C3.26598 8.22144 3.63895 7.0478 4.33772 6.04955C5.0365 5.05129 6.0297 4.27324 7.19172 3.81379C8.35375 3.35435 9.6324 3.23413 10.866 3.46836C12.0996 3.70258 13.2327 4.28072 14.1221 5.12967C15.0115 5.97862 15.6172 7.06025 15.8625 8.23777C16.1079 9.4153 15.982 10.6358 15.5006 11.745C15.0193 12.8542 14.2042 13.8023 13.1584 14.4693C12.1126 15.1363 10.8831 15.4923 9.62535 15.4923C7.93937 15.4904 6.32302 14.8502 5.13085 13.7122C3.93868 12.5743 3.26802 11.0314 3.26598 9.42203Z"
-              fill="#4C7EFB"
-            />
-          </svg>
-          <span
-            style={{
-              color: "#4C7EFB",
-              opacity: 0.3,
-              fontSize: "18px",
-              letterSpacing: "-2.34px",
-            }}
-          >
-            ________________
-          </span>
+        <Link to="/" style={{ textDecoration: "none" }}>
           <span
             style={{
               color: "#4C7EFB",
@@ -132,11 +109,11 @@ export default function Header() {
               fontWeight: "400",
             }}
           >
-            חיפוש
+            בית
           </span>
-        </div>
+        </Link>
 
-        <Link to="/careers" style={{ textDecoration: "none" }}>
+        <Link to="/about" style={{ textDecoration: "none" }}>
           <span
             style={{
               color: "#4C7EFB",
@@ -146,7 +123,7 @@ export default function Header() {
               fontWeight: "400",
             }}
           >
-            קריירה
+            אודות
           </span>
         </Link>
 
@@ -167,7 +144,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <Link to="/about" style={{ textDecoration: "none" }}>
+        <Link to="/careers" style={{ textDecoration: "none" }}>
           <span
             style={{
               color: "#4C7EFB",
@@ -177,21 +154,7 @@ export default function Header() {
               fontWeight: "400",
             }}
           >
-            אודות
-          </span>
-        </Link>
-
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
-          >
-            בית
+            קריירה
           </span>
         </Link>
       </div>

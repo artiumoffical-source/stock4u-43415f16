@@ -108,18 +108,18 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeStock = (symbol: string) => {
-    setGiftData(prev => ({
+    setGiftData((prev) => ({
       ...prev,
-      selectedStocks: prev.selectedStocks.filter(stock => stock.symbol !== symbol)
+      selectedStocks: prev.selectedStocks.filter((s) => s.symbol !== symbol),
     }));
   };
 
   const updateStockAmount = (symbol: string, amount: number) => {
-    setGiftData(prev => ({
+    setGiftData((prev) => ({
       ...prev,
-      selectedStocks: prev.selectedStocks.map(stock =>
-        stock.symbol === symbol ? { ...stock, amount } : stock
-      )
+      selectedStocks: prev.selectedStocks.map((stock) =>
+        stock.symbol === symbol ? { ...stock, amount } : stock,
+      ),
     }));
   };
 
