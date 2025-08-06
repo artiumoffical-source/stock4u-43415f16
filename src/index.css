@@ -2,126 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Stock4U Design System - Financial Platform Theme */
-
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-
-    --primary: 214 84% 56%;
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
-
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 214 84% 56%;
-
-    --muted: 214 32% 91%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 214 32% 91%;
-    --accent-foreground: 214 84% 56%;
-
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 214 84% 56%;
-
-    --radius: 0.75rem;
-
-    /* Stock4U Brand Colors */
-    --stock4u-blue: 214 84% 56%;
-    --stock4u-light-blue: 214 32% 91%;
-    --stock4u-dark-blue: 214 84% 46%;
-    --stock4u-green: 142 76% 36%;
-    --stock4u-red: 0 84% 60%;
-    --stock4u-gold: 45 93% 47%;
-
-    /* Financial Colors */
-    --gain-color: 142 76% 36%;
-    --loss-color: 0 84% 60%;
-    --neutral-color: 215 20% 65%;
-
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--stock4u-blue)), hsl(var(--stock4u-dark-blue)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--stock4u-light-blue)), hsl(var(--background)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--stock4u-light-blue) / 0.1));
-
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--stock4u-blue) / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(var(--stock4u-blue) / 0.15);
-    --shadow-float: 0 8px 25px -8px hsl(var(--stock4u-blue) / 0.25);
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem
   }
-
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
-
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-
-    --primary: 214 84% 66%;
+    --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
-
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
-
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-
     --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 214 84% 66%;
-
-    /* Dark mode overrides */
-    --stock4u-blue: 214 84% 66%;
-    --stock4u-light-blue: 0 0% 14.9%;
-    --gradient-primary: linear-gradient(135deg, hsl(var(--stock4u-blue)), hsl(214 84% 76%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--background)), hsl(0 0% 14.9%));
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%
   }
 }
 
@@ -129,30 +62,16 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-family: 'Assistant', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-
-  /* Hebrew RTL Support */
+  
   .hebrew-font {
-    direction: rtl;
-    text-align: right;
     font-family: 'Assistant', 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-
-  /* Stock Chart Animations */
-  .animate-chart-rise {
-    animation: chartRise 2s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+  
+  .english-font {
+    font-family: 'Arial', 'Helvetica', sans-serif;
   }
 }
 
@@ -161,57 +80,12 @@
     animation: scroll 30s linear infinite;
   }
 
-  .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .stock-card-hover {
-    transition: var(--transition-smooth);
-    transform: translateY(0);
-  }
-
-  .stock-card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-float);
-  }
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes chartRise {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 20px hsl(var(--stock4u-blue) / 0.4);
-  }
-  100% {
-    box-shadow: 0 0 30px hsl(var(--stock4u-blue) / 0.8);
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
   }
 }

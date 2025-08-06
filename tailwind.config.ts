@@ -64,17 +64,15 @@ export default {
 				},
 				// Stock4U Brand Colors
 				'stock4u': {
-					'blue': 'hsl(var(--stock4u-blue))',
-					'light-blue': 'hsl(var(--stock4u-light-blue))',
-					'dark-blue': 'hsl(var(--stock4u-dark-blue))',
-					'green': 'hsl(var(--stock4u-green))',
-					'red': 'hsl(var(--stock4u-red))',
-					'gold': 'hsl(var(--stock4u-gold))'
-				},
-				// Financial Colors
-				'gain': 'hsl(var(--gain-color))',
-				'loss': 'hsl(var(--loss-color))',
-				'neutral': 'hsl(var(--neutral-color))'
+					'white': '#FFF',
+					'dark-grey': '#486284',
+					'nostalgic-blue': '#689EDA',
+					'pop-yellow': '#FFC547',
+					'happy-blue': '#4C7EFB',
+					'grey': '#8CA2C0',
+					'black': '#1B1919',
+					'light-blue': '#DBE3F3'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
