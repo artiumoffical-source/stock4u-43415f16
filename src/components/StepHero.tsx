@@ -1,99 +1,224 @@
+import React from "react";
+
 interface StepHeroProps {
-  currentStep: number;
+  currentStep: 1 | 2 | 3;
 }
 
-export const StepHero = ({ currentStep }: StepHeroProps) => {
-  const steps = [
-    { number: 1, title: "פרטי ההזמנה", active: currentStep === 1 },
-    { number: 2, title: "עיצוב המתנה", active: currentStep === 2 },
-    { number: 3, title: "סיכום", active: currentStep === 3 },
-  ];
-
+export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
   return (
     <div
       style={{
         width: "100%",
-        height: "200px",
-        background: "linear-gradient(135deg, #4C7EFB 0%, #6366F1 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        height: "559px",
+        flexShrink: 0,
+        background: "#DBE3F3",
         position: "relative",
         overflow: "hidden",
+        marginLeft: "1px",
       }}
     >
-      {/* Background Pattern */}
+      {/* Content Container */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0.1,
-          background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"20\" r=\"1\" fill=\"white\"/></svg>') repeat",
-        }}
-      />
-
-      {/* Content */}
-      <div
-        style={{
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           gap: "40px",
-          zIndex: 1,
+          zIndex: 10,
         }}
       >
-        {steps.map((step, index) => (
-          <div key={step.number} style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+        {/* Step Progress Indicator */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "30px",
+          }}
+        >
+          {/* Step 1 */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
             <div
               style={{
+                width: currentStep >= 1 ? "50px" : "40px",
+                height: currentStep >= 1 ? "50px" : "40px",
+                borderRadius: "50%",
+                background: currentStep >= 1 ? "#4C7EFB" : "rgba(76, 126, 251, 0.3)",
+                color: currentStep >= 1 ? "#FFF" : "#4C7EFB",
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                gap: "12px",
+                justifyContent: "center",
+                fontSize: "20px",
+                fontWeight: "700",
+                fontFamily: "Poppins",
+                transition: "all 0.3s ease",
               }}
             >
-              <div
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  borderRadius: "50%",
-                  background: step.active ? "#FFF" : "rgba(255, 255, 255, 0.3)",
-                  color: step.active ? "#4C7EFB" : "#FFF",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  border: step.active ? "none" : "2px solid rgba(255, 255, 255, 0.5)",
-                  transition: "all 0.3s ease",
-                }}
-              >
-                {step.number}
-              </div>
-              <span
-                style={{
-                  color: step.active ? "#FFF" : "rgba(255, 255, 255, 0.7)",
-                  fontSize: "16px",
-                  fontWeight: step.active ? "600" : "400",
-                  fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                }}
-              >
-                {step.title}
-              </span>
+              1
             </div>
-            {index < steps.length - 1 && (
-              <div
-                style={{
-                  width: "60px",
-                  height: "2px",
-                  background: "rgba(255, 255, 255, 0.3)",
-                }}
-              />
-            )}
+            <span
+              style={{
+                color: currentStep >= 1 ? "#4C7EFB" : "rgba(76, 126, 251, 0.6)",
+                fontSize: "16px",
+                fontWeight: currentStep >= 1 ? "600" : "400",
+                fontFamily: "Poppins",
+                textAlign: "center",
+              }}
+            >
+              פרטי הזמנה
+            </span>
           </div>
-        ))}
+
+          {/* Connector Line */}
+          <div
+            style={{
+              width: "60px",
+              height: "2px",
+              background: currentStep >= 2 ? "#4C7EFB" : "rgba(76, 126, 251, 0.3)",
+              transition: "background 0.3s ease",
+            }}
+          />
+
+          {/* Step 2 */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <div
+              style={{
+                width: currentStep >= 2 ? "50px" : "40px",
+                height: currentStep >= 2 ? "50px" : "40px",
+                borderRadius: "50%",
+                background: currentStep >= 2 ? "#4C7EFB" : "rgba(76, 126, 251, 0.3)",
+                color: currentStep >= 2 ? "#FFF" : "#4C7EFB",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+                fontWeight: "700",
+                fontFamily: "Poppins",
+                transition: "all 0.3s ease",
+              }}
+            >
+              2
+            </div>
+            <span
+              style={{
+                color: currentStep >= 2 ? "#4C7EFB" : "rgba(76, 126, 251, 0.6)",
+                fontSize: "16px",
+                fontWeight: currentStep >= 2 ? "600" : "400",
+                fontFamily: "Poppins",
+                textAlign: "center",
+              }}
+            >
+              עיצוב מתנה
+            </span>
+          </div>
+
+          {/* Connector Line */}
+          <div
+            style={{
+              width: "60px",
+              height: "2px",
+              background: currentStep >= 3 ? "#4C7EFB" : "rgba(76, 126, 251, 0.3)",
+              transition: "background 0.3s ease",
+            }}
+          />
+
+          {/* Step 3 */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <div
+              style={{
+                width: currentStep >= 3 ? "50px" : "40px",
+                height: currentStep >= 3 ? "50px" : "40px",
+                borderRadius: "50%",
+                background: currentStep >= 3 ? "#4C7EFB" : "rgba(76, 126, 251, 0.3)",
+                color: currentStep >= 3 ? "#FFF" : "#4C7EFB",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+                fontWeight: "700",
+                fontFamily: "Poppins",
+                transition: "all 0.3s ease",
+              }}
+            >
+              3
+            </div>
+            <span
+              style={{
+                color: currentStep >= 3 ? "#4C7EFB" : "rgba(76, 126, 251, 0.6)",
+                fontSize: "16px",
+                fontWeight: currentStep >= 3 ? "600" : "400",
+                fontFamily: "Poppins",
+                textAlign: "center",
+              }}
+            >
+              סיכום והזמנה
+            </span>
+          </div>
+        </div>
+
+        {/* Main Title */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "16px",
+          }}
+        >
+          <h1
+            style={{
+              color: "#4C7EFB",
+              fontSize: "48px",
+              fontWeight: "700",
+              fontFamily: "Poppins",
+              textAlign: "center",
+              margin: 0,
+            }}
+          >
+            {currentStep === 1 && "פרטי ההזמנה"}
+            {currentStep === 2 && "עיצוב המתנה"}
+            {currentStep === 3 && "סיכום ותשלום"}
+          </h1>
+          <p
+            style={{
+              color: "#486284",
+              fontSize: "20px",
+              fontWeight: "400",
+              fontFamily: "Poppins",
+              textAlign: "center",
+              margin: 0,
+              maxWidth: "600px",
+            }}
+          >
+            {currentStep === 1 && "מלאו את הפרטים הנדרשים לשליחת המתנה"}
+            {currentStep === 2 && "בחרו את עיצוב המתנה והברכה האישית"}
+            {currentStep === 3 && "בדקו את הפרטים ובצעו תשלום"}
+          </p>
+        </div>
       </div>
     </div>
   );
