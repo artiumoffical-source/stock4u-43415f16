@@ -90,13 +90,20 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [giftData]);
 
   const updateGiftData = (updates: Partial<GiftData>) => {
-    setGiftData(prev => ({ ...prev, ...updates }));
+    setGiftData((prev) => ({ ...prev, ...updates }));
   };
 
-  const addStock = (stock: { symbol: string; name: string; amount: number }) => {
-    setGiftData(prev => ({
+  const addStock = (stock: {
+    symbol: string;
+    name: string;
+    amount: number;
+  }) => {
+    setGiftData((prev) => ({
       ...prev,
-      selectedStocks: [...prev.selectedStocks, stock]
+      selectedStocks: [
+        ...prev.selectedStocks.filter((s) => s.symbol !== stock.symbol),
+        stock,
+      ],
     }));
   };
 

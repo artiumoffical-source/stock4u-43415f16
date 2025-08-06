@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   :root {
@@ -64,14 +64,6 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-  
-  .hebrew-font {
-    font-family: 'Assistant', 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .english-font {
-    font-family: 'Arial', 'Helvetica', sans-serif;
   }
 }
 
