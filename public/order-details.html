@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock4U - פרטי ההזמנה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4F4F4;
+            color: #333;
+            direction: rtl;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: #102A43;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #C6A96F;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #C6A96F;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #102A43;
+            color: white;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: #C6A96F;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: #C6A96F;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .step-number {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-number.active {
+            background: #C6A96F;
+            color: #102A43;
+        }
+
+        .step-number.inactive {
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+        }
+
+        .step-text {
+            color: #C6A96F;
+            font-weight: 600;
+        }
+
+        .step-text.inactive {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .progress-line {
+            width: 4rem;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #102A43;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #C6A96F;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #102A43;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #C6A96F;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #C6A96F;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b8986a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(198,169,111,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #102A43;
+            border: 2px solid #102A43;
+        }
+
+        .btn-secondary:hover {
+            background: #102A43;
+            color: white;
+        }
+
+        .recipients-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .recipient-card {
+            background: #f8f9fa;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .recipient-card.active {
+            border-color: #C6A96F;
+            background: rgba(198,169,111,0.05);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: #102A43;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .progress-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .main-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Stock4U</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">בית</a></li>
+                    <li><a href="#about">אודות</a></li>
+                    <li><a href="#gifts">רשימת מתנות</a></li>
+                    <li><a href="#careers">קריירה</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>פרטי ההזמנה</h1>
+            <p>מלאו את הפרטים הנדרשים לשליחת המתנה הדיגיטלית</p>
+            
+            <!-- Progress Indicator -->
+            <div class="progress-container">
+                <div class="progress-step">
+                    <div class="step-number active">1</div>
+                    <span class="step-text">פרטי הזמנה</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <div class="step-number inactive">2</div>
+                    <span class="step-text inactive">עיצוב מתנה</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <div class="step-number inactive">3</div>
+                    <span class="step-text inactive">סיכום ותשלום</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Order Summary -->
+        <section class="form-section">
+            <h2 class="section-title">סיכום ההזמנה</h2>
+            <div class="form-group">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+                    <div>
+                        <h3 style="color: #102A43; font-size: 1.2rem; margin-bottom: 0.5rem;">מניות נבחרות</h3>
+                        <p style="color: #666;">Apple Inc. (AAPL)</p>
+                        <p style="color: #666;">Microsoft Corp. (MSFT)</p>
+                    </div>
+                    <div style="text-align: left;">
+                        <h3 style="color: #102A43; font-size: 1.2rem; margin-bottom: 0.5rem;">סכום כולל</h3>
+                        <p style="font-size: 2rem; font-weight: bold; color: #C6A96F;">₪500</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sender Information -->
+        <section class="form-section">
+            <h2 class="section-title">פרטי השולח</h2>
+            <div class="form-group">
+                <label class="form-label">שם השולח</label>
+                <input type="text" class="form-input" placeholder="הכניסו את שמכם">
+            </div>
+        </section>
+
+        <!-- Recipients -->
+        <section class="form-section">
+            <h2 class="section-title">פרטי המקבלים</h2>
+            <div class="recipients-list">
+                <div class="recipient-card active">
+                    <div class="form-group">
+                        <label class="form-label">שם המקבל</label>
+                        <input type="text" class="form-input" placeholder="שם מלא">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">טלפון</label>
+                            <input type="tel" class="form-input" placeholder="05X-XXX-XXXX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">אימייל</label>
+                            <input type="email" class="form-input" placeholder="example@email.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary" style="margin-top: 1rem;">+ הוסף מקבל נוסף</button>
+        </section>
+
+        <!-- Delivery Method -->
+        <section class="form-section">
+            <h2 class="section-title">אופן משלוח</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="radio" name="delivery" value="sms" checked>
+                    <span>SMS</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="radio" name="delivery" value="email">
+                    <span>אימייל</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Greeting Message -->
+        <section class="form-section">
+            <h2 class="section-title">הודעת ברכה</h2>
+            <div class="form-group">
+                <label class="form-label">הודעה אישית</label>
+                <textarea class="form-input" rows="4" placeholder="כתבו כאן את הברכה האישית שלכם..."></textarea>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="navigation-buttons">
+            <button class="btn btn-secondary">← חזור</button>
+            <button class="btn btn-primary">המשך לעיצוב המתנה →</button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">Stock4U</div>
+            <p>&copy; 2024 Stock4U. כל הזכויות שמורות.</p>
+        </div>
+    </footer>
+</body>
+</html>
