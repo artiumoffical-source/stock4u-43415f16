@@ -30,6 +30,8 @@ interface GiftData {
     phone: string;
     email: string;
   }>;
+  deliveryMethods?: string[];
+  uploadedImage?: string;
 }
 
 interface GiftContextType {
@@ -62,6 +64,7 @@ const defaultGiftData: GiftData = {
     minute: "",
   },
   recipients: [],
+  deliveryMethods: ["mobile"],
 };
 
 const GiftContext = createContext<GiftContextType | undefined>(undefined);
