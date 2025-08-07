@@ -503,8 +503,43 @@ export default function OrderDetails() {
                 gap: "30px",
                 width: "100%",
                 maxWidth: "1000px",
+                position: "relative",
               }}
             >
+              {/* Remove button - only show for additional recipients */}
+              {index > 0 && (
+                <button
+                  onClick={() => removeRecipient(recipient.id)}
+                  style={{
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-10px",
+                    width: "24px",
+                    height: "24px",
+                    borderRadius: "50%",
+                    background: "#FF4444",
+                    color: "#FFF",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 10,
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#FF6666";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#FF4444";
+                  }}
+                >
+                  ×
+                </button>
+              )}
+
               {/* Phone Number */}
               <div style={{ flex: "1", maxWidth: "300px" }}>
                 <label
