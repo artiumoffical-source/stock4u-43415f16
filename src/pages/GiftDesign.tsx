@@ -275,7 +275,7 @@ const GiftDesign = () => {
               fontWeight: "500",
             }}
           >
-            המשך לברכה האישית
+            המשך לתשלום
           </button>
         </div>
       </div>
