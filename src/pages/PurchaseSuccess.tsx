@@ -1,124 +1,325 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useGift } from "@/contexts/GiftContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 
-const PurchaseSuccess = () => {
-  const navigate = useNavigate();
+export default function PurchaseSuccess() {
+  const { giftData } = useGift();
 
+  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  return (
-    <div className="min-h-screen bg-background hebrew-font" dir="rtl">
-      <Header />
-      
-      {/* Main Success Section */}
-      <div className="relative min-h-[80vh] bg-gradient-to-br from-purple-100 via-blue-50 to-purple-200 overflow-hidden">
-        {/* Floating Elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Stars */}
-          <div className="absolute top-20 left-20 text-yellow-400 text-4xl animate-pulse">✨</div>
-          <div className="absolute top-32 right-32 text-yellow-400 text-3xl animate-pulse delay-200">⭐</div>
-          <div className="absolute bottom-40 left-40 text-yellow-400 text-5xl animate-pulse delay-700">✨</div>
-          <div className="absolute bottom-20 right-20 text-yellow-400 text-3xl animate-pulse delay-500">⭐</div>
-          
-          {/* Currency symbols */}
-          <div className="absolute top-40 left-1/4 text-green-500 text-6xl animate-bounce delay-300">€</div>
-          <div className="absolute top-60 right-1/4 text-green-500 text-5xl animate-bounce delay-1000">$</div>
-          <div className="absolute bottom-60 left-1/3 text-green-500 text-4xl animate-bounce delay-700">£</div>
-          <div className="absolute bottom-32 right-1/3 text-green-500 text-6xl animate-bounce delay-200">€</div>
-          <div className="absolute top-80 left-1/6 text-green-500 text-5xl animate-bounce delay-500">¥</div>
-          <div className="absolute bottom-80 right-1/6 text-green-500 text-4xl animate-bounce delay-900">$</div>
-        </div>
+  // Format delivery date and time
+  const formatDeliveryDateTime = () => {
+    if (giftData.sendingMethod === "immediately") {
+      return "מיד";
+    }
 
-        {/* Main Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[80vh] px-4">
-          {/* Shopping Cart Character */}
-          <div className="mb-8 relative">
-            {/* Cart Body */}
-            <div className="relative">
-              <div className="w-32 h-24 bg-orange-500 rounded-lg relative shadow-lg">
-                {/* Cart Face */}
-                <div className="absolute top-4 left-8">
-                  {/* Eyes */}
-                  <div className="flex space-x-2">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                      <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
-                    </div>
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                      <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
-                    </div>
-                  </div>
-                  {/* Mouth */}
-                  <div className="mt-2 w-8 h-4 bg-blue-600 rounded-full"></div>
-                </div>
-                
-                {/* Shopping bags in cart */}
-                <div className="absolute -top-2 left-2">
-                  <div className="w-6 h-8 bg-yellow-400 rounded-sm transform -rotate-12"></div>
-                </div>
-                <div className="absolute -top-3 right-2">
-                  <div className="w-6 h-8 bg-blue-400 rounded-sm transform rotate-12"></div>
-                </div>
-              </div>
-              
-              {/* Cart Handle */}
-              <div className="absolute -right-4 top-0 w-6 h-16 border-4 border-blue-600 rounded-r-lg"></div>
-              
-              {/* Cart Wheels */}
-              <div className="absolute -bottom-4 left-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="absolute -bottom-4 right-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
-              </div>
-            </div>
+    if (giftData.selectedDate && giftData.selectedTime) {
+      const { day, month, year } = giftData.selectedDate;
+      const { hour, minute } = giftData.selectedTime;
+
+      if (day && month && year && hour && minute) {
+        return `${day} ${month} ${year}, ${hour}:${minute}`;
+      }
+    }
+
+    return giftData.recipientDetails.deliveryDate || "תאריך לא צוין";
+  };
+
+  // Get sender name or fallback
+  const senderName = giftData.senderName || "השולח";
+
+  // Get recipient name or fallback
+  const recipientName = giftData.recipientDetails.name || "הנמען";
+
+  // Get recipient email or fallback
+  const recipientEmail = giftData.recipientDetails.email || "לא צוין";
+
+  // Get selected stocks for display
+  const stocksList = giftData.selectedStocks.length > 0
+    ? giftData.selectedStocks.map(stock => stock.symbol).join(", ")
+    : "מניות נבחרות";
+
+  return (
+    <div style={{ direction: "rtl", minHeight: "100vh", background: "#FFF" }}>
+      <Header />
+
+      {/* Hero Section - Original Figma Design */}
+      <div style={{ position: "relative", width: "100%", height: "559px", overflow: "hidden" }}>
+        <img
+          src="https://api.builder.io/api/v1/image/assets/TEMP/5cafa848e255474fc771e474fc37970f0e1c731b?width=3840"
+          alt="הרכישה בוצעה בהצלחה!"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center"
+          }}
+        />
+      </div>
+
+      {/* Gift Details Section */}
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "60px 20px",
+        background: "#F5F7FC"
+      }}>
+        <div style={{
+          width: "100%",
+          maxWidth: "1275px",
+          background: "#FFF",
+          borderRadius: "30px",
+          padding: "40px",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)"
+        }}>
+          {/* Main Gift Info */}
+          <div style={{
+            background: "linear-gradient(135deg, #F5F7FC 0%, #E8F1FF 100%)",
+            borderRadius: "20px",
+            padding: "30px",
+            marginBottom: "30px",
+            textAlign: "center"
+          }}>
+            <p style={{
+              fontSize: "28px",
+              fontWeight: "700",
+              color: "#486284",
+              margin: "0",
+              lineHeight: "1.4",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              המתנה מ- <span style={{ color: "#E96036" }}>{senderName}</span> תישלח אל{" "}
+              <span style={{ color: "#E96036" }}>{recipientName}</span> ב-{" "}
+              <span style={{ color: "#E96036" }}>{formatDeliveryDateTime()}</span>
+            </p>
           </div>
 
-          {/* Success Message */}
-          <div className="text-center bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl max-w-2xl">
-            <h1 className="text-4xl font-bold text-orange-600 mb-4">
-              הרכישה בוצעה
-            </h1>
-            <h2 className="text-4xl font-bold text-orange-600 mb-6">
-              בהצלחה!
-            </h2>
-            
-            <p className="text-xl text-blue-600 mb-8">
-              המוצר נישלח אל המייל כבי יד
+          {/* Receipt Confirmation */}
+          <div style={{
+            background: "rgba(76, 126, 251, 0.1)",
+            borderRadius: "16px",
+            padding: "24px",
+            textAlign: "center",
+            border: "2px solid rgba(76, 126, 251, 0.2)"
+          }}>
+            <h3 style={{
+              fontSize: "20px",
+              fontWeight: "700",
+              color: "#4C7EFB",
+              margin: "0 0 8px",
+              fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              קבלה נשלחה
+            </h3>
+            <p style={{
+              fontSize: "18px",
+              color: "#486284",
+              margin: "0",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              קבלה נשלחה אל: {recipientEmail}
             </p>
-
-            {/* Order Details */}
-            <div className="bg-gray-50 rounded-xl p-6 mb-6">
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">קבלה נישלחה</h3>
-              <div className="text-center">
-                <input 
-                  type="text" 
-                  placeholder="קבלה נישלחה - לא צוין"
-                  className="w-full max-w-sm bg-white border border-gray-300 rounded-lg px-4 py-2 text-center text-gray-500"
-                  disabled
-                />
-              </div>
-            </div>
-
-            {/* Action Button */}
-            <Button 
-              onClick={() => navigate('/')}
-              className="bg-stock4u-blue hover:bg-stock4u-dark-blue text-white px-12 py-3 text-xl rounded-xl font-semibold shadow-lg transform hover:scale-105 transition-all duration-200"
-            >
-              חזור לעמוד הבית
-            </Button>
           </div>
         </div>
       </div>
 
+      {/* Statistics Section */}
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "60px 20px",
+        background: "#FFF"
+      }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "24px",
+          width: "100%",
+          maxWidth: "1200px"
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "32px",
+            borderRadius: "24px",
+            background: "rgba(239, 242, 246, 0.40)"
+          }}>
+            <div style={{
+              fontSize: "60px",
+              fontWeight: "700",
+              color: "#486284",
+              margin: "0 0 16px",
+              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              24+
+            </div>
+            <div style={{
+              fontSize: "20px",
+              color: "#8CA2C0",
+              textAlign: "center",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              מדינות שבהם אנו עובדים
+            </div>
+          </div>
+
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "32px",
+            borderRadius: "24px",
+            background: "rgba(239, 242, 246, 0.40)"
+          }}>
+            <div style={{
+              fontSize: "60px",
+              fontWeight: "700",
+              color: "#486284",
+              margin: "0 0 16px",
+              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              17M
+            </div>
+            <div style={{
+              fontSize: "20px",
+              color: "#8CA2C0",
+              textAlign: "center",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              אנשים שהאמינו בנו
+            </div>
+          </div>
+
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "32px",
+            borderRadius: "24px",
+            background: "rgba(239, 242, 246, 0.40)"
+          }}>
+            <div style={{
+              fontSize: "60px",
+              fontWeight: "700",
+              color: "#486284",
+              margin: "0 0 16px",
+              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              +95%
+            </div>
+            <div style={{
+              fontSize: "20px",
+              color: "#8CA2C0",
+              textAlign: "center",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              לקוחות מרוצים
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Company Logos Ticker */}
+      <div style={{
+        padding: "40px 0",
+        background: "#F9FAFC",
+        overflow: "hidden"
+      }}>
+        <h3 style={{
+          fontSize: "20px",
+          color: "#486284",
+          textAlign: "center",
+          margin: "0 0 40px",
+          fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
+        }}>
+          חברות פופולאריות להשקעה
+        </h3>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "44px",
+          opacity: "0.6",
+          animation: "scroll 30s linear infinite",
+          whiteSpace: "nowrap"
+        }}>
+          {["GOOG", "AMZN", "NASDAQ", "AAPL", "AAN", "NVDA", "MSFT", "META", "SONY", "CRM"].map((symbol) => (
+            <div key={symbol} style={{
+              fontSize: "52px",
+              fontWeight: "700",
+              color: "#486284",
+              fontFamily: "'Hanken Grotesk', -apple-system, Roboto, Helvetica, sans-serif"
+            }}>
+              {symbol}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: "24px",
+        padding: "60px 20px",
+        background: "#FFF"
+      }}>
+        <Link
+          to="/"
+          style={{
+            display: "inline-flex",
+            padding: "16px 32px",
+            borderRadius: "50px",
+            background: "#4C7EFB",
+            color: "#FFF",
+            fontSize: "18px",
+            fontWeight: "700",
+            textDecoration: "none",
+            boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
+            fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
+          }}
+        >
+          חזור לעמוד הבית
+        </Link>
+
+        <Link
+          to="/gift-list"
+          style={{
+            display: "inline-flex",
+            padding: "16px 32px",
+            borderRadius: "50px",
+            background: "#DBE3F3",
+            color: "#4C7EFB",
+            fontSize: "18px",
+            fontWeight: "700",
+            textDecoration: "none",
+            fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
+          }}
+        >
+          שלח מתנה נוספת
+        </Link>
+      </div>
+
       <Footer />
+
+      <style>
+        {`
+          @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+          }
+
+          @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+          }
+        `}
+      </style>
     </div>
   );
-};
-
-export default PurchaseSuccess;
+}
