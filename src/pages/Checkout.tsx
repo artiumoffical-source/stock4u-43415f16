@@ -4,170 +4,69 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
-import { CreditCard, Shield, Lock, Check } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { giftData } = useGift();
   
   const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
     cardNumber: "",
-    expiryDate: "",
+    cardholderName: "",
+    expiryMonth: "",
+    expiryYear: "",
     cvv: "",
-    billingAddress: "",
-    city: "",
-    zipCode: "",
   });
 
-  const totalAmount = giftData.selectedStocks.reduce((sum, stock) => sum + stock.amount, 0);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Process payment
     navigate("/payment-success");
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        minHeight: "100vh",
-        background: "#FFF",
-        direction: "rtl",
-      }}
-    >
+    <div className="w-full min-h-screen bg-white" dir="rtl">
       <Header />
-
       <StepHero currentStep={3} />
 
       {/* Main Content */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          maxWidth: "600px",
-          margin: "0 auto",
-          padding: "60px 40px",
-          background: "#fff",
-        }}
-      >
+      <div className="flex flex-col justify-center items-center max-w-[600px] mx-auto px-10 py-15">
         {/* Title */}
-        <h2
-          style={{
-            color: "#1B1919",
-            fontSize: "24px",
-            fontWeight: "600",
-            fontFamily: "Poppins",
-            margin: "0 0 40px 0",
-            textAlign: "center",
-          }}
-        >
+        <h2 className="text-stock4u-black text-2xl font-semibold font-['Poppins'] mb-10 text-center">
           תשלום בכרטיס אשראי
         </h2>
 
         {/* Payment Form */}
-        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <form onSubmit={handleSubmit} className="w-full space-y-5">
           {/* Card Number */}
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                display: "block",
-                color: "#1B1919",
-                fontSize: "14px",
-                fontFamily: "Poppins",
-                marginBottom: "8px",
-                fontWeight: "500",
-              }}
-            >
+          <div>
+            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
               מספר כרטיס
             </label>
-            <div style={{ position: "relative" }}>
+            <div className="relative">
               <input
                 type="text"
                 name="cardNumber"
                 value={formData.cardNumber}
                 onChange={handleInputChange}
                 placeholder="הכניסו מספר כרטיס"
-                style={{
-                  width: "100%",
-                  height: "50px",
-                  border: "2px solid #E0E7FF",
-                  borderRadius: "8px",
-                  padding: "0 60px 0 16px",
-                  fontSize: "16px",
-                  fontFamily: "Poppins",
-                  direction: "ltr",
-                  textAlign: "left",
-                }}
+                className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg pl-[60px] pr-4 text-base font-['Poppins'] text-left"
+                style={{ direction: "ltr" }}
                 required
               />
               {/* Credit Card Icons */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: "16px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "flex",
-                  gap: "8px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "24px",
-                    height: "16px",
-                    background: "#EB5013",
-                    borderRadius: "2px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "8px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex gap-2">
+                <div className="w-6 h-4 bg-[#EB5013] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
                   MC
                 </div>
-                <div
-                  style={{
-                    width: "24px",
-                    height: "16px",
-                    background: "#1A1F71",
-                    borderRadius: "2px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "8px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
+                <div className="w-6 h-4 bg-[#1A1F71] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
                   VISA
                 </div>
-                <div
-                  style={{
-                    width: "24px",
-                    height: "16px",
-                    background: "#0079BE",
-                    borderRadius: "2px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "8px",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
+                <div className="w-6 h-4 bg-[#0079BE] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
                   D
                 </div>
               </div>
@@ -175,217 +74,101 @@ const Checkout = () => {
           </div>
 
           {/* Card Holder Name */}
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                display: "block",
-                color: "#1B1919",
-                fontSize: "14px",
-                fontFamily: "Poppins",
-                marginBottom: "8px",
-                fontWeight: "500",
-              }}
-            >
+          <div>
+            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
               שם בעל הכרטיס
             </label>
             <input
               type="text"
-              name="firstName"
-              value={formData.firstName}
+              name="cardholderName"
+              value={formData.cardholderName}
               onChange={handleInputChange}
               placeholder="הכניסו שם בעל הכרטיס"
-              style={{
-                width: "100%",
-                height: "50px",
-                border: "2px solid #E0E7FF",
-                borderRadius: "8px",
-                padding: "0 16px",
-                fontSize: "16px",
-                fontFamily: "Poppins",
-              }}
+              className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins']"
               required
             />
           </div>
 
           {/* Expiry and CVV */}
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                display: "block",
-                color: "#1B1919",
-                fontSize: "14px",
-                fontFamily: "Poppins",
-                marginBottom: "8px",
-                fontWeight: "500",
-              }}
-            >
+          <div>
+            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
               תוקף זיהוי מהיר הכרטיס
             </label>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 120px 120px",
-                gap: "12px",
-              }}
-            >
-              <div style={{ position: "relative" }}>
+            <div className="grid grid-cols-[1fr_120px_120px] gap-3">
+              {/* Month Dropdown */}
+              <div className="relative">
                 <select
-                  style={{
-                    width: "100%",
-                    height: "50px",
-                    border: "2px solid #E0E7FF",
-                    borderRadius: "8px",
-                    padding: "0 16px",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "white",
-                    appearance: "none",
-                    cursor: "pointer",
-                  }}
+                  name="expiryMonth"
+                  value={formData.expiryMonth}
+                  onChange={handleInputChange}
+                  className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] bg-white appearance-none cursor-pointer"
+                  required
                 >
-                  <option>בחירה</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                  <option>04</option>
-                  <option>05</option>
-                  <option>06</option>
-                  <option>07</option>
-                  <option>08</option>
-                  <option>09</option>
-                  <option>10</option>
-                  <option>11</option>
-                  <option>12</option>
+                  <option value="">בחירה</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
                 </select>
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "16px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    pointerEvents: "none",
-                  }}
-                >
-                  ▼
-                </div>
+                <ChevronDown className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
+
+              {/* CVV */}
               <input
                 type="text"
-                name="expiryDate"
-                value={formData.expiryDate}
+                name="cvv"
+                value={formData.cvv}
                 onChange={handleInputChange}
                 placeholder="XXX"
-                style={{
-                  width: "100%",
-                  height: "50px",
-                  border: "2px solid #E0E7FF",
-                  borderRadius: "8px",
-                  padding: "0 16px",
-                  fontSize: "16px",
-                  fontFamily: "Poppins",
-                  textAlign: "center",
-                }}
+                maxLength={3}
+                className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] text-center"
                 required
               />
-              <div style={{ position: "relative" }}>
+
+              {/* Year Dropdown */}
+              <div className="relative">
                 <select
-                  style={{
-                    width: "100%",
-                    height: "50px",
-                    border: "2px solid #E0E7FF",
-                    borderRadius: "8px",
-                    padding: "0 16px",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "white",
-                    appearance: "none",
-                    cursor: "pointer",
-                  }}
+                  name="expiryYear"
+                  value={formData.expiryYear}
+                  onChange={handleInputChange}
+                  className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] bg-white appearance-none cursor-pointer"
+                  required
                 >
-                  <option>שנה</option>
-                  <option>2024</option>
-                  <option>2025</option>
-                  <option>2026</option>
-                  <option>2027</option>
-                  <option>2028</option>
-                  <option>2029</option>
-                  <option>2030</option>
+                  <option value="">שנה</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                  <option value="2030">2030</option>
                 </select>
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "16px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    pointerEvents: "none",
-                  }}
-                >
-                  ▼
-                </div>
+                <ChevronDown className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
             </div>
           </div>
 
           {/* Payment Options */}
-          <div style={{ marginBottom: "40px" }}>
-            <p
-              style={{
-                color: "#1B1919",
-                fontSize: "14px",
-                fontFamily: "Poppins",
-                marginBottom: "16px",
-                fontWeight: "500",
-              }}
-            >
+          <div className="mb-10">
+            <p className="text-stock4u-black text-sm font-['Poppins'] mb-4 font-medium">
               אופציות נוספות לתשלום:
             </p>
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  background: "#F8FAFC",
-                  border: "1px solid #E0E7FF",
-                  borderRadius: "8px",
-                  padding: "12px 20px",
-                  fontSize: "14px",
-                  fontFamily: "Poppins",
-                  color: "#486284",
-                  cursor: "pointer",
-                }}
-              >
+            <div className="flex gap-3 justify-center">
+              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
                 💳 Bit - ביט
               </div>
-              <div
-                style={{
-                  background: "#F8FAFC",
-                  border: "1px solid #E0E7FF",
-                  borderRadius: "8px",
-                  padding: "12px 20px",
-                  fontSize: "14px",
-                  fontFamily: "Poppins",
-                  color: "#486284",
-                  cursor: "pointer",
-                }}
-              >
+              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
                 🍎 Apple Pay - אפל פיי
               </div>
-              <div
-                style={{
-                  background: "#F8FAFC",
-                  border: "1px solid #E0E7FF",
-                  borderRadius: "8px",
-                  padding: "12px 20px",
-                  fontSize: "14px",
-                  fontFamily: "Poppins",
-                  color: "#486284",
-                  cursor: "pointer",
-                }}
-              >
+              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
                 🎯 Google Pay - גוגל פיי
               </div>
             </div>
@@ -394,18 +177,7 @@ const Checkout = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            style={{
-              width: "100%",
-              height: "50px",
-              background: "#4C7EFB",
-              color: "#FFF",
-              border: "none",
-              borderRadius: "25px",
-              fontSize: "16px",
-              fontFamily: "Poppins",
-              cursor: "pointer",
-              fontWeight: "600",
-            }}
+            className="w-full h-[50px] bg-stock4u-happy-blue text-white border-none rounded-[25px] text-base font-['Poppins'] cursor-pointer font-semibold hover:bg-opacity-90 transition-all"
           >
             מעבר לתשלום
           </button>
