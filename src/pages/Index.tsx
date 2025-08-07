@@ -45,8 +45,8 @@ export default function Index() {
       </section>
 
       {/* Video Section */}
-      <section className="max-w-[1342px] mx-auto px-4 pt-8">
-        <div className="bg-black rounded-[25px] border-[19px] border-stock4u-light-blue relative overflow-hidden w-full h-[684px]">
+      <section className="max-w-[800px] mx-auto px-4 pt-8">
+        <div className="bg-black rounded-[25px] border-[19px] border-stock4u-light-blue relative overflow-hidden w-full h-[450px]">
           <div className="w-full h-full flex items-center justify-center">
             <button
               onClick={() =>
