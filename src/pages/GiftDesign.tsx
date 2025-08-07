@@ -2,350 +2,281 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
-import { Palette, Type, Upload, Sparkles, Save, ArrowLeft } from "lucide-react";
+import { Eye } from "lucide-react";
 
 const GiftDesign = () => {
   const navigate = useNavigate();
   const { giftData, updateGiftData } = useGift();
   
-  const [selectedTemplate, setSelectedTemplate] = useState(giftData.selectedCard || "template1");
-  const [selectedColor, setSelectedColor] = useState("#C6A96F");
-  const [selectedFont, setSelectedFont] = useState("poppins");
-  const [customMessage, setCustomMessage] = useState(giftData.greetingMessage || "");
-  const [selectedAnimation, setSelectedAnimation] = useState("fade");
+  const [selectedCard, setSelectedCard] = useState(giftData.selectedCard || "card1");
 
-  const templates = [
+  const cardTemplates = [
     {
-      id: "template1",
-      name: "קלאסי",
-      preview: "bg-gradient-to-br from-[hsl(var(--stock4u-blue))] to-[hsl(var(--stock4u-blue-light))]"
+      id: "card1",
+      name: "שייר פור יו - צבע",
+      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
+      bgColor: "linear-gradient(135deg, #ff6b6b, #ffa8a8)"
     },
     {
-      id: "template2", 
-      name: "זהב מלכותי",
-      preview: "bg-gradient-to-br from-[hsl(var(--stock4u-gold))] to-[hsl(var(--stock4u-gold-light))]"
+      id: "card2", 
+      name: "שייר פור יו - כחול",
+      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
+      bgColor: "linear-gradient(135deg, #4ecdc4, #96ceb4)"
     },
     {
-      id: "template3",
-      name: "מינימליסטי",
-      preview: "bg-gradient-to-br from-gray-100 to-gray-200"
-    },
-    {
-      id: "template4",
-      name: "אלגנטי",
-      preview: "bg-gradient-to-br from-purple-600 to-pink-500"
+      id: "card3",
+      name: "שייר פור יו - אדום",
+      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
+      bgColor: "linear-gradient(135deg, #e74c3c, #ec7063)"
     }
   ];
 
-  const colors = [
-    "#C6A96F", "#102A43", "#FF6B6B", "#4ECDC4", 
-    "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD"
-  ];
-
-  const fonts = [
-    { id: "poppins", name: "Poppins", style: "font-sans" },
-    { id: "serif", name: "Serif", style: "font-serif" },
-    { id: "mono", name: "Monospace", style: "font-mono" },
-    { id: "cursive", name: "כתב יד", style: "font-serif italic" }
-  ];
-
-  const animations = [
-    { id: "fade", name: "דהייה" },
-    { id: "slide", name: "החלקה" },
-    { id: "zoom", name: "זום" },
-    { id: "bounce", name: "קפיצה" }
-  ];
-
-  const handleSave = () => {
+  const handleContinue = () => {
     updateGiftData({
-      selectedCard: selectedTemplate,
-      greetingMessage: customMessage
+      selectedCard: selectedCard
     });
     navigate("/checkout");
   };
 
   return (
-    <div className="min-h-screen bg-background hebrew-font" dir="rtl">
+    <div
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "#FFF",
+        direction: "rtl",
+      }}
+    >
       <Header />
-      
-      {/* Hero Section - Stock4U Professional Design */}
-      <div className="relative bg-[#102A43] text-white py-20 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-[#C6A96F] rounded-full -translate-x-32 -translate-y-32"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C6A96F] rounded-full translate-x-32 translate-y-32"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Main Title */}
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
-              עיצוב המתנה
-            </h1>
-            
-            {/* Subtitle */}
-            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
-              בחרו את עיצוב המתנה והברכה האישית שלכם
-            </p>
-            
-            {/* Progress Indicator */}
-            <div className="flex justify-center items-center space-x-8 mt-12">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-[#C6A96F] rounded-full flex items-center justify-center text-[#102A43] font-bold">
-                  ✓
-                </div>
-                <span className="mr-3 text-[#C6A96F] font-semibold">פרטי הזמנה</span>
-              </div>
-              <div className="w-16 h-1 bg-[#C6A96F]"></div>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-[#C6A96F] rounded-full flex items-center justify-center text-[#102A43] font-bold">
-                  2
-                </div>
-                <span className="mr-3 text-[#C6A96F] font-semibold">עיצוב מתנה</span>
-              </div>
-              <div className="w-16 h-1 bg-white/30"></div>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white/60 font-bold">
-                  3
-                </div>
-                <span className="mr-3 text-white/60">סיכום ותשלום</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <StepHero currentStep={2} />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Design Controls */}
-          <div className="space-y-6">
-            
-            {/* Template Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  בחירת תבנית
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {templates.map((template) => (
-                    <div
-                      key={template.id}
-                      onClick={() => setSelectedTemplate(template.id)}
-                      className={`relative h-24 rounded-lg cursor-pointer border-2 transition-all ${
-                        selectedTemplate === template.id 
-                          ? "border-[hsl(var(--stock4u-gold))] ring-2 ring-[hsl(var(--stock4u-gold))]/20" 
-                          : "border-gray-200 hover:border-[hsl(var(--stock4u-blue))]"
-                      }`}
-                    >
-                      <div className={`w-full h-full rounded-lg ${template.preview}`}></div>
-                      <div className="absolute bottom-1 right-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-medium">
-                        {template.name}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "60px",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "80px 40px",
+          background: "#fff",
+        }}
+      >
+        {/* Title */}
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "40px",
+          }}
+        >
+          <h2
+            style={{
+              color: "#1B1919",
+              fontSize: "32px",
+              fontWeight: "600",
+              fontFamily: "Poppins",
+              margin: "0 0 16px 0",
+            }}
+          >
+            בחרו את כרטיס הברכה המושלם
+          </h2>
+          <p
+            style={{
+              color: "#486284",
+              fontSize: "18px",
+              fontFamily: "Poppins",
+              margin: "0",
+            }}
+          >
+            בחרו עיצוב שמבטא בדיוק לשלחתכם את דין הממה החיובית
+          </p>
+        </div>
 
-            {/* Color Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  בחירת צבע
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-3">
-                  {colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${
-                        selectedColor === color 
-                          ? "border-[hsl(var(--stock4u-blue))] ring-2 ring-[hsl(var(--stock4u-blue))]/20" 
-                          : "border-gray-300"
-                      }`}
-                      style={{ backgroundColor: color }}
+        {/* Card Templates */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "40px",
+            width: "100%",
+            flexWrap: "wrap",
+          }}
+        >
+          {cardTemplates.map((card) => (
+            <div
+              key={card.id}
+              onClick={() => setSelectedCard(card.id)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "20px",
+                cursor: "pointer",
+                position: "relative",
+              }}
+            >
+              {/* Card Preview */}
+              <div
+                style={{
+                  width: "280px",
+                  height: "200px",
+                  borderRadius: "16px",
+                  background: card.bgColor,
+                  position: "relative",
+                  overflow: "hidden",
+                  border: selectedCard === card.id ? "3px solid #4C7EFB" : "2px solid #E0E7FF",
+                  transition: "all 0.3s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {/* Card Content - Mock design with coins and decorations */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "20px",
+                    left: "20px",
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "rgba(255, 255, 255, 0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "50%",
+                      background: "#FFD700",
+                    }}
+                  />
+                </div>
+                
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "30px",
+                    right: "30px",
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    background: "rgba(255, 255, 255, 0.3)",
+                  }}
+                />
+                
+                {/* Center logo area */}
+                <div
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "12px",
+                    background: "rgba(255, 255, 255, 0.15)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <div
+                    style={{
+                      color: "#FFF",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    STOCK4U
+                  </div>
+                </div>
+
+                {/* Bottom coins */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "20px",
+                    right: "20px",
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        background: "#FFD700",
+                        border: "2px solid rgba(255, 255, 255, 0.5)",
+                      }}
                     />
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Font Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Type className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  בחירת גופן
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3">
-                  {fonts.map((font) => (
-                    <button
-                      key={font.id}
-                      onClick={() => setSelectedFont(font.id)}
-                      className={`p-3 text-center border rounded-lg transition-all ${
-                        selectedFont === font.id 
-                          ? "border-[hsl(var(--stock4u-gold))] bg-[hsl(var(--stock4u-gold))]/10" 
-                          : "border-gray-200 hover:border-[hsl(var(--stock4u-blue))]"
-                      } ${font.style}`}
-                    >
-                      {font.name}
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Animation Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  אפקטי אנימציה
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3">
-                  {animations.map((animation) => (
-                    <button
-                      key={animation.id}
-                      onClick={() => setSelectedAnimation(animation.id)}
-                      className={`p-3 text-center border rounded-lg transition-all ${
-                        selectedAnimation === animation.id 
-                          ? "border-[hsl(var(--stock4u-gold))] bg-[hsl(var(--stock4u-gold))]/10" 
-                          : "border-gray-200 hover:border-[hsl(var(--stock4u-blue))]"
-                      }`}
-                    >
-                      {animation.name}
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Custom Message */}
-            <Card>
-              <CardHeader>
-                <CardTitle>הודעה אישית</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  placeholder="כתוב כאן את ההודעה האישית שלך..."
-                  value={customMessage}
-                  onChange={(e) => setCustomMessage(e.target.value)}
-                  className="min-h-24 resize-none"
+              {/* Card Name and Preview Button */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <Eye
+                  size={20}
+                  color="#486284"
+                  style={{ cursor: "pointer" }}
                 />
-              </CardContent>
-            </Card>
-
-            {/* Upload Custom Image */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Upload className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  העלאת תמונה מותאמת אישית
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                  <p className="text-gray-600">גרור ושחרר תמונה כאן או לחץ לבחירה</p>
-                  <input type="file" className="hidden" accept="image/*" />
-                  <Button variant="outline" className="mt-2">
-                    בחר תמונה
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Preview Panel */}
-          <div className="lg:sticky lg:top-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>תצוגה מקדימה</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="aspect-[3/4] w-full max-w-md mx-auto">
-                  <div 
-                    className={`w-full h-full rounded-xl shadow-2xl p-6 flex flex-col justify-between text-white relative overflow-hidden ${
-                      templates.find(t => t.id === selectedTemplate)?.preview
-                    }`}
-                    style={{ borderColor: selectedColor }}
-                  >
-                    {/* Decorative elements */}
-                    <div className="absolute top-4 left-4 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm"></div>
-                    <div className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm"></div>
-                    
-                    {/* Content */}
-                    <div className="relative z-10">
-                      <h3 className={`text-xl font-bold mb-2 ${fonts.find(f => f.id === selectedFont)?.style}`}>
-                        מתנת מניות Stock4U
-                      </h3>
-                    </div>
-                    
-                    <div className="relative z-10 text-center">
-                      {customMessage && (
-                        <p className={`text-sm mb-4 ${fonts.find(f => f.id === selectedFont)?.style}`}>
-                          {customMessage}
-                        </p>
-                      )}
-                      <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-                        <p className="text-xs opacity-90">סכום המתנה</p>
-                        <p className="text-lg font-bold">
-                          ₪{giftData.selectedStocks.reduce((sum, stock) => sum + stock.amount, 0)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                <span
+                  style={{
+                    color: "#1B1919",
+                    fontSize: "16px",
+                    fontFamily: "Poppins",
+                    fontWeight: "500",
+                  }}
+                >
+                  {card.name}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-between mt-8">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/order-details")}
-            className="flex items-center gap-2"
+        {/* Continue Button */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "40px",
+          }}
+        >
+          <button
+            onClick={handleContinue}
+            style={{
+              width: "300px",
+              height: "50px",
+              background: "#486284",
+              color: "#FFF",
+              border: "none",
+              borderRadius: "25px",
+              fontSize: "18px",
+              fontFamily: "Poppins",
+              cursor: "pointer",
+              fontWeight: "500",
+            }}
           >
-            <ArrowLeft className="w-4 h-4" />
-            חזור
-          </Button>
-          
-          <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              onClick={handleSave}
-              className="flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
-              שמור טיוטה
-            </Button>
-            
-            <Button 
-              onClick={handleSave}
-              className="bg-[hsl(var(--stock4u-gold))] hover:bg-[hsl(var(--stock4u-gold-dark))] text-white px-8"
-            >
-              המשך לתשלום
-            </Button>
-          </div>
+            המשך לברכה האישית
+          </button>
         </div>
       </div>
 
