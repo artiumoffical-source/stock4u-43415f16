@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import CompanyTicker from "@/components/CompanyTicker";
 import { useGift } from "../contexts/GiftContext";
 
 export default function StockSelection() {
@@ -745,86 +746,7 @@ export default function StockSelection() {
       </div>
 
       {/* Company Ticker Section */}
-      <div className="py-8 bg-gray-50">
-        <div className="text-center mb-6">
-          <span
-            className="text-[20px] text-[#486284]"
-            style={{
-              fontFamily:
-                "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-            }}
-          >
-            חברות פופולאריות להשקעה
-          </span>
-        </div>
-        <div className="overflow-hidden">
-          <div className="flex items-center justify-center gap-12 opacity-30 flex-wrap">
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              AAPL
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              NVDA
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              MSFT
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              GOOGL
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              AMZN
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              SPY
-            </span>
-            <span
-              className="text-[40px] font-bold text-[#486284]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              QQQ
-            </span>
-          </div>
-        </div>
-      </div>
+      <CompanyTicker />
 
       <Footer />
     </div>
