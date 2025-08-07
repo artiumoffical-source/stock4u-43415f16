@@ -955,7 +955,7 @@ export default function OrderDetails() {
                 greetingMessage: greetingText,
                 uploadedImage,
               });
-              navigate("/payment");
+              navigate("/gift-design");
             }}
             style={{
               display: "flex",
@@ -973,7 +973,7 @@ export default function OrderDetails() {
               cursor: "pointer",
             }}
           >
-            לתשלום
+            המשך לעיצוב המתנה
           </button>
         </div>
       </div>
