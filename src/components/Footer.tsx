@@ -111,6 +111,8 @@ export default function Footer() {
         marginTop: "80px",
         overflow: "visible",
         zIndex: 1,
+        border: "none",
+        outline: "none",
       }}
     >
       {/* Logo Section - positioned on left as per Figma design */}
