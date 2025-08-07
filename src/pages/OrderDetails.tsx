@@ -149,7 +149,30 @@ export default function OrderDetails() {
       <Header />
 
       {/* Hero Section */}
-      <StepHero currentStep={1} />
+      <div className="relative w-full h-80 bg-gradient-to-r from-[hsl(var(--stock4u-blue))] to-[hsl(var(--stock4u-blue-light))] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-10"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[hsl(var(--stock4u-gold))]">
+            פרטי ההזמנה
+          </h1>
+          <p className="text-xl md:text-2xl max-w-2xl leading-relaxed">
+            השלם את פרטי המתנה והעברה כדי להמשיך בתהליך
+          </p>
+          <div className="mt-6 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[hsl(var(--stock4u-gold))] flex items-center justify-center text-[hsl(var(--stock4u-blue))] font-bold">
+              1
+            </div>
+            <div className="w-16 h-1 bg-[hsl(var(--stock4u-gold))] opacity-50"></div>
+            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
+              2
+            </div>
+            <div className="w-16 h-1 bg-white/20"></div>
+            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
+              3
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Form Content */}
       <div
