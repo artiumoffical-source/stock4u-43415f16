@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CompanyTicker from "@/components/CompanyTicker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -197,6 +198,9 @@ const Careers = () => {
           </div>
         </section>
       </div>
+      
+      {/* Company Logos Ticker */}
+      <CompanyTicker />
       
       <Footer />
     </div>

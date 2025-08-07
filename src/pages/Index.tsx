@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import CompanyTicker from "@/components/CompanyTicker";
 
 export default function Index() {
   return (
@@ -132,14 +133,7 @@ export default function Index() {
       </section>
 
       {/* Company Logos Ticker */}
-      <section className="py-6 overflow-hidden">
-        <p className="text-center text-stock4u-dark-grey mb-6">
-          חברות פופולאריות להשקעה
-        </p>
-        <div className="flex items-center gap-12 opacity-30 animate-pulse">
-          {/* Placeholder for company logos */}
-        </div>
-      </section>
+      <CompanyTicker />
 
       <Footer />
     </div>

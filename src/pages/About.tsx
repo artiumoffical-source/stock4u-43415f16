@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CompanyTicker from "@/components/CompanyTicker";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Shield, Users, Award } from "lucide-react";
 
@@ -139,6 +140,9 @@ const About = () => {
           </div>
         </section>
       </div>
+      
+      {/* Company Logos Ticker */}
+      <CompanyTicker />
       
       <Footer />
     </div>
