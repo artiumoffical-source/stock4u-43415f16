@@ -119,7 +119,7 @@ export default function Footer() {
       <div
         style={{
           position: "absolute",
-          left: "78px",
+          left: "40px",
           top: "-60px",
           width: "207px",
           height: "338px",
