@@ -108,6 +108,7 @@ export default function Footer() {
         background: "#DBE3F3",
         position: "relative",
         direction: "rtl",
+        marginTop: "80px",
       }}
     >
       {/* Logo Section - positioned on left as per Figma design */}
