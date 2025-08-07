@@ -16,6 +16,7 @@ const Checkout = () => {
     expiryMonth: "",
     expiryYear: "",
     cvv: "",
+    installments: "1"
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -34,94 +35,106 @@ const Checkout = () => {
       <StepHero currentStep={3} />
 
       {/* Main Content */}
-      <div className="flex flex-col justify-center items-center max-w-[600px] mx-auto px-10 py-15">
+      <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Title */}
-        <h2 className="text-stock4u-black text-2xl font-semibold font-['Poppins'] mb-10 text-center">
+        <h2 className="text-stock4u-black text-2xl font-semibold mb-12 text-center">
           תשלום בכרטיס אשראי
         </h2>
 
         {/* Payment Form */}
-        <form onSubmit={handleSubmit} className="w-full space-y-5">
-          {/* Card Number */}
-          <div>
-            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
-              מספר כרטיס
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                name="cardNumber"
-                value={formData.cardNumber}
-                onChange={handleInputChange}
-                placeholder="הכניסו מספר כרטיס"
-                className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg pl-[60px] pr-4 text-base font-['Poppins'] text-left"
-                style={{ direction: "ltr" }}
-                required
-              />
-              {/* Credit Card Icons */}
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex gap-2">
-                <div className="w-6 h-4 bg-[#EB5013] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                  MC
-                </div>
-                <div className="w-6 h-4 bg-[#1A1F71] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                  VISA
-                </div>
-                <div className="w-6 h-4 bg-[#0079BE] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                  D
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Top Row - Card Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card Number */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                מספר כרטיס
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="cardNumber"
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
+                  placeholder="הכניסו מספר כרטיס"
+                  className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg pr-4 pl-20 text-base bg-white"
+                  style={{ direction: "ltr" }}
+                  required
+                />
+                {/* Credit Card Icons */}
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex gap-1">
+                  <div className="w-8 h-5 bg-[#EB5013] rounded-sm flex items-center justify-center text-[10px] text-white font-bold">
+                    MC
+                  </div>
+                  <div className="w-8 h-5 bg-[#1A1F71] rounded-sm flex items-center justify-center text-[10px] text-white font-bold">
+                    VISA
+                  </div>
+                  <div className="w-8 h-5 bg-[#0079BE] rounded-sm flex items-center justify-center text-[10px] text-white font-bold">
+                    D
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Card Holder Name */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                שם בעל הכרטיס
+              </label>
+              <input
+                type="text"
+                name="cardholderName"
+                value={formData.cardholderName}
+                onChange={handleInputChange}
+                placeholder="הכניסו שם כאן"
+                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white"
+                required
+              />
+            </div>
+
+            {/* Card Validity */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                תוקף זהות מהיר כרטיס
+              </label>
+              <input
+                type="text"
+                placeholder="הכניסו מספר תוקף זהות"
+                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white"
+              />
+            </div>
           </div>
 
-          {/* Card Holder Name */}
-          <div>
-            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
-              שם בעל הכרטיס
-            </label>
-            <input
-              type="text"
-              name="cardholderName"
-              value={formData.cardholderName}
-              onChange={handleInputChange}
-              placeholder="הכניסו שם בעל הכרטיס"
-              className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins']"
-              required
-            />
-          </div>
-
-          {/* Expiry and CVV */}
-          <div>
-            <label className="block text-stock4u-black text-sm font-['Poppins'] mb-2 font-medium">
-              תוקף זיהוי מהיר הכרטיס
-            </label>
-            <div className="grid grid-cols-[1fr_120px_120px] gap-3">
-              {/* Month Dropdown */}
+          {/* Bottom Row - Payment Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Number of Installments */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                מספר תשלומים
+              </label>
               <div className="relative">
                 <select
-                  name="expiryMonth"
-                  value={formData.expiryMonth}
+                  name="installments"
+                  value={formData.installments}
                   onChange={handleInputChange}
-                  className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] bg-white appearance-none cursor-pointer"
+                  className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white appearance-none cursor-pointer"
                   required
                 >
-                  <option value="">בחירה</option>
-                  <option value="01">01</option>
-                  <option value="02">02</option>
-                  <option value="03">03</option>
-                  <option value="04">04</option>
-                  <option value="05">05</option>
-                  <option value="06">06</option>
-                  <option value="07">07</option>
-                  <option value="08">08</option>
-                  <option value="09">09</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="6">6</option>
                   <option value="12">12</option>
                 </select>
                 <ChevronDown className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
+            </div>
 
-              {/* CVV */}
+            {/* CVV */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                CVV (3 ספרות גגב הכרטיס)
+              </label>
               <input
                 type="text"
                 name="cvv"
@@ -129,58 +142,105 @@ const Checkout = () => {
                 onChange={handleInputChange}
                 placeholder="XXX"
                 maxLength={3}
-                className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] text-center"
+                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white text-center"
                 required
               />
+            </div>
 
-              {/* Year Dropdown */}
-              <div className="relative">
-                <select
-                  name="expiryYear"
-                  value={formData.expiryYear}
-                  onChange={handleInputChange}
-                  className="w-full h-[50px] border-2 border-stock4u-light-blue rounded-lg px-4 text-base font-['Poppins'] bg-white appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="">שנה</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
-                  <option value="2028">2028</option>
-                  <option value="2029">2029</option>
-                  <option value="2030">2030</option>
-                </select>
-                <ChevronDown className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+            {/* Expiry Date */}
+            <div>
+              <label className="block text-stock4u-black text-sm font-medium mb-3">
+                תאריך תוקף כרטיס
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Month */}
+                <div className="relative">
+                  <select
+                    name="expiryMonth"
+                    value={formData.expiryMonth}
+                    onChange={handleInputChange}
+                    className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white appearance-none cursor-pointer"
+                    required
+                  >
+                    <option value="">חודש</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                  <ChevronDown className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                </div>
+                {/* Year */}
+                <div className="relative">
+                  <select
+                    name="expiryYear"
+                    value={formData.expiryYear}
+                    onChange={handleInputChange}
+                    className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white appearance-none cursor-pointer"
+                    required
+                  >
+                    <option value="">YYYY</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                  </select>
+                  <ChevronDown className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Payment Options */}
-          <div className="mb-10">
-            <p className="text-stock4u-black text-sm font-['Poppins'] mb-4 font-medium">
+          <div className="mt-16">
+            <p className="text-stock4u-black text-lg font-medium mb-8 text-center">
               אופציות נוספות לתשלום:
             </p>
-            <div className="flex gap-3 justify-center">
-              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
-                💳 Bit - ביט
-              </div>
-              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
-                🍎 Apple Pay - אפל פיי
-              </div>
-              <div className="bg-gray-50 border border-stock4u-light-blue rounded-lg px-5 py-3 text-sm font-['Poppins'] text-stock4u-dark-grey cursor-pointer hover:bg-gray-100 transition-colors">
-                🎯 Google Pay - גוגל פיי
-              </div>
+            <div className="flex gap-6 justify-center">
+              <button
+                type="button"
+                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-8 py-4 text-base font-medium text-stock4u-black cursor-pointer hover:bg-gray-50 transition-colors flex items-center gap-2"
+              >
+                <span className="text-blue-600 font-bold">bit</span>
+                <span>שלמו עם -</span>
+              </button>
+              <button
+                type="button"
+                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-8 py-4 text-base font-medium text-stock4u-black cursor-pointer hover:bg-gray-50 transition-colors flex items-center gap-2"
+              >
+                <span className="text-black font-bold">🍎 Pay</span>
+                <span>שלמו עם -</span>
+              </button>
+              <button
+                type="button"
+                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-8 py-4 text-base font-medium text-stock4u-black cursor-pointer hover:bg-gray-50 transition-colors flex items-center gap-2"
+              >
+                <span className="text-blue-600 font-bold">Pay G</span>
+                <span>שלמו עם -</span>
+              </button>
             </div>
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full h-[50px] bg-stock4u-happy-blue text-white border-none rounded-[25px] text-base font-['Poppins'] cursor-pointer font-semibold hover:bg-opacity-90 transition-all"
-          >
-            מעבר לתשלום
-          </button>
+          <div className="flex justify-center mt-16">
+            <button
+              type="submit"
+              className="w-80 h-14 bg-stock4u-happy-blue text-white border-none rounded-full text-lg font-semibold cursor-pointer hover:bg-opacity-90 transition-all"
+            >
+              מעבר לתשלום
+            </button>
+          </div>
         </form>
       </div>
 
