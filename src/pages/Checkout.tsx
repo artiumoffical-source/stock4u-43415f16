@@ -1,251 +1,619 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
-import { ChevronDown } from "lucide-react";
 
-const Checkout = () => {
+export default function Checkout() {
   const navigate = useNavigate();
   const { giftData } = useGift();
-  
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [formData, setFormData] = useState({
+    idNumber: "",
+    cardHolderName: "",
     cardNumber: "",
-    cardholderName: "",
+    cvv: "",
+    installments: "1",
     expiryMonth: "",
     expiryYear: "",
-    cvv: "",
-    installments: "1"
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/payment-success");
+    console.log("Processing payment...", formData);
+
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      const paymentSuccess = true;
+
+      if (paymentSuccess) {
+        navigate("/purchase-success");
+      } else {
+        navigate("/purchase-error");
+      }
+    }, 1000);
+  };
+
+  const handleAlternativePayment = (method: string) => {
+    console.log(`Processing payment with ${method}...`);
+
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      const paymentSuccess = true;
+
+      if (paymentSuccess) {
+        navigate("/purchase-success");
+      } else {
+        navigate("/purchase-error");
+      }
+    }, 1000);
   };
 
   return (
-    <div className="w-full min-h-screen bg-white" dir="rtl">
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#FFF",
+        direction: "rtl",
+        fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+      }}
+    >
       <Header />
       <StepHero currentStep={3} />
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Title */}
-        <h1 className="text-stock4u-black text-3xl font-bold mb-16 text-center">
-          תשלום בכרטיס אשראי
-        </h1>
+      <div
+        style={{
+          maxWidth: "1400px",
+          margin: "80px auto",
+          padding: "0 40px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "40px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "70px",
+            width: "100%",
+          }}
+        >
+          <h2
+            style={{
+              color: "#486284",
+              fontSize: "30px",
+              fontWeight: "700",
+              textAlign: "center",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+              margin: 0,
+            }}
+          >
+            תשלום בכרטיס אשראי:
+          </h2>
 
-        {/* Payment Form */}
-        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
-          {/* Form Grid - 3x2 layout */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* Top Row */}
-            {/* Card Validity - Left */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                תעודת זהות מהיר כבטחון
-              </label>
-              <input
-                type="text"
-                placeholder="הכניסו תעודת זהות מהיר"
-                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white"
-              />
-            </div>
-
-            {/* Card Holder Name - Middle */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                שם בעל הכרטיס
-              </label>
-              <input
-                type="text"
-                name="cardholderName"
-                value={formData.cardholderName}
-                onChange={handleInputChange}
-                placeholder="הכניסו שם כאן"
-                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white"
-                required
-              />
-            </div>
-
-            {/* Card Number - Right */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                מספר כרטיס
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="cardNumber"
-                  value={formData.cardNumber}
-                  onChange={handleInputChange}
-                  placeholder="0000 0000 0000 0000"
-                  className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg pr-4 pl-20 text-base bg-white"
-                  style={{ direction: "ltr" }}
-                  required
-                />
-                {/* Credit Card Icons */}
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex gap-1">
-                  <div className="w-6 h-4 bg-[#EB5013] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                    MC
-                  </div>
-                  <div className="w-6 h-4 bg-[#1A1F71] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                    V
-                  </div>
-                  <div className="w-6 h-4 bg-[#0079BE] rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
-                    D
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Row */}
-            {/* Number of Installments - Left */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                מספר תשלומים
-              </label>
-              <div className="relative">
-                <select
-                  name="installments"
-                  value={formData.installments}
-                  onChange={handleInputChange}
-                  className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="6">6</option>
-                  <option value="12">12</option>
-                </select>
-                <ChevronDown className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-            </div>
-
-            {/* CVV - Middle */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                CVV 3 ספרות בגב הכרטיס
-              </label>
-              <input
-                type="text"
-                name="cvv"
-                value={formData.cvv}
-                onChange={handleInputChange}
-                placeholder="XXX"
-                maxLength={3}
-                className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-4 text-base bg-white text-center"
-                required
-              />
-            </div>
-
-            {/* Expiry Date - Right */}
-            <div>
-              <label className="block text-stock4u-black text-base font-medium mb-4">
-                חודש/שנה
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {/* Month */}
-                <div className="relative">
-                  <select
-                    name="expiryMonth"
-                    value={formData.expiryMonth}
-                    onChange={handleInputChange}
-                    className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-3 text-base bg-white appearance-none cursor-pointer"
-                    required
-                  >
-                    <option value="">חודש</option>
-                    <option value="01">01</option>
-                    <option value="02">02</option>
-                    <option value="03">03</option>
-                    <option value="04">04</option>
-                    <option value="05">05</option>
-                    <option value="06">06</option>
-                    <option value="07">07</option>
-                    <option value="08">08</option>
-                    <option value="09">09</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                  </select>
-                  <ChevronDown className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                </div>
-                {/* Year */}
-                <div className="relative">
-                  <select
-                    name="expiryYear"
-                    value={formData.expiryYear}
-                    onChange={handleInputChange}
-                    className="w-full h-14 border-2 border-stock4u-light-blue rounded-lg px-3 text-base bg-white appearance-none cursor-pointer"
-                    required
-                  >
-                    <option value="">שנה</option>
-                    <option value="2024">24</option>
-                    <option value="2025">25</option>
-                    <option value="2026">26</option>
-                    <option value="2027">27</option>
-                    <option value="2028">28</option>
-                    <option value="2029">29</option>
-                    <option value="2030">30</option>
-                  </select>
-                  <ChevronDown className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Payment Options */}
-          <div className="mb-16">
-            <h3 className="text-stock4u-black text-xl font-medium mb-8 text-center">
-              אופציות נוספות לתשלום:
-            </h3>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <button
-                type="button"
-                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-6 py-3 text-lg font-medium text-stock4u-black hover:bg-gray-50 transition-colors flex items-center gap-3"
-              >
-                <span>שלמו עם -</span>
-                <span className="text-blue-600 font-bold text-xl">bit</span>
-              </button>
-              <button
-                type="button"
-                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-6 py-3 text-lg font-medium text-stock4u-black hover:bg-gray-50 transition-colors flex items-center gap-3"
-              >
-                <span>שלמו עם -</span>
-                <span className="text-black font-bold text-xl">🍎 Pay</span>
-              </button>
-              <button
-                type="button"
-                className="bg-white border-2 border-stock4u-light-blue rounded-lg px-6 py-3 text-lg font-medium text-stock4u-black hover:bg-gray-50 transition-colors flex items-center gap-3"
-              >
-                <span>שלמו עם -</span>
-                <span className="text-blue-600 font-bold text-xl">G Pay</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="w-96 h-16 bg-stock4u-happy-blue text-white rounded-full text-xl font-bold hover:bg-opacity-90 transition-all"
+          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "63px",
+                width: "100%",
+              }}
             >
-              מעבר לתשלום
+              {/* First Row */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  gap: "40px",
+                  width: "100%",
+                  direction: "rtl",
+                }}
+              >
+                {/* Card Number */}
+                <div
+                  style={{
+                    display: "flex",
+                    width: "360px",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      width: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "17px",
+                      }}
+                    >
+                      {/* Credit card icons */}
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <div style={{ width: "30px", height: "20px", backgroundColor: "#1A1F71", borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white", fontWeight: "bold" }}>V</div>
+                        <div style={{ width: "30px", height: "20px", backgroundColor: "#EB5013", borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "8px", color: "white", fontWeight: "bold" }}>MC</div>
+                        <div style={{ width: "30px", height: "20px", backgroundColor: "#0079BE", borderRadius: "3px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white", fontWeight: "bold" }}>D</div>
+                      </div>
+                    </div>
+                    <label
+                      style={{
+                        color: "#1B1919",
+                        textAlign: "right",
+                        fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                        fontSize: "20px",
+                        fontWeight: "400",
+                        marginBottom: "0",
+                      }}
+                    >
+                      מספר כרטיס
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.cardNumber}
+                    onChange={(e) => handleInputChange("cardNumber", e.target.value)}
+                    placeholder="הכניסו מספר כרטיס"
+                    style={{
+                      width: "100%",
+                      height: "64px",
+                      padding: "21px 28px",
+                      borderRadius: "10px",
+                      border: "1px solid #4C7EFB",
+                      background: "rgba(245, 247, 252, 1)",
+                      color: "#3C4382",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+
+                <div style={{ width: "1px", height: "113px", background: "#1B1919", opacity: 0.2 }} />
+
+                {/* Card Holder Name */}
+                <div
+                  style={{
+                    display: "flex",
+                    width: "360px",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "#1B1919",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      marginBottom: "0",
+                    }}
+                  >
+                    שם בעל הכרטיס
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.cardHolderName}
+                    onChange={(e) => handleInputChange("cardHolderName", e.target.value)}
+                    placeholder="הכניסו שם כאן"
+                    style={{
+                      width: "100%",
+                      height: "64px",
+                      padding: "21px 28px",
+                      borderRadius: "10px",
+                      border: "1px solid #4C7EFB",
+                      background: "rgba(245, 247, 252, 1)",
+                      color: "#3C4382",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+
+                <div style={{ width: "1px", height: "113px", background: "#1B1919", opacity: 0.2 }} />
+
+                {/* ID Number */}
+                <div
+                  style={{
+                    display: "flex",
+                    width: "360px",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "#1B1919",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      marginBottom: "0",
+                    }}
+                  >
+                    תעודת זהות מחזיק כרטיס
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.idNumber}
+                    onChange={(e) => handleInputChange("idNumber", e.target.value)}
+                    placeholder="הכניסו מספר תעודת זהות"
+                    style={{
+                      width: "100%",
+                      height: "64px",
+                      padding: "21px 28px",
+                      borderRadius: "10px",
+                      border: "1px solid #4C7EFB",
+                      background: "rgba(245, 247, 252, 1)",
+                      color: "#3C4382",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Second Row */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  gap: "40px",
+                  width: "100%",
+                  direction: "rtl",
+                }}
+              >
+                {/* Installments */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "#1B1919",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      marginBottom: "0",
+                    }}
+                  >
+                    מספר תשלומים
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <select
+                      value={formData.installments}
+                      onChange={(e) => handleInputChange("installments", e.target.value)}
+                      style={{
+                        width: "170px",
+                        height: "64px",
+                        padding: "21px 28px",
+                        borderRadius: "10px",
+                        border: "1px solid #4C7EFB",
+                        background: "rgba(245, 247, 252, 1)",
+                        color: "#3C4382",
+                        textAlign: "center",
+                        fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                        fontSize: "20px",
+                        fontWeight: "400",
+                        outline: "none",
+                        boxSizing: "border-box",
+                        appearance: "none",
+                      }}
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="6">6</option>
+                      <option value="12">12</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ width: "1px", height: "113px", background: "#1B1919", opacity: 0.2 }} />
+
+                {/* CVV */}
+                <div
+                  style={{
+                    display: "flex",
+                    width: "360px",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "#1B1919",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      marginBottom: "0",
+                    }}
+                  >
+                    CVV (3 ספרות בגב הכרטיס)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.cvv}
+                    onChange={(e) => handleInputChange("cvv", e.target.value)}
+                    placeholder="XXX"
+                    maxLength={3}
+                    style={{
+                      width: "100%",
+                      height: "64px",
+                      padding: "21px 28px",
+                      borderRadius: "10px",
+                      border: "1px solid #4C7EFB",
+                      background: "rgba(245, 247, 252, 1)",
+                      color: "#3C4382",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+
+                <div style={{ width: "1px", height: "113px", background: "#1B1919", opacity: 0.2 }} />
+
+                {/* Expiry Date */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "22px",
+                  }}
+                >
+                  <label
+                    style={{
+                      color: "#1B1919",
+                      textAlign: "right",
+                      fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                      fontSize: "20px",
+                      fontWeight: "400",
+                      marginBottom: "0",
+                    }}
+                  >
+                    תאריך תוקף הכרטיס
+                  </label>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-start",
+                      gap: "30px",
+                      direction: "rtl",
+                    }}
+                  >
+                    <div style={{ position: "relative" }}>
+                      <select
+                        value={formData.expiryYear}
+                        onChange={(e) => handleInputChange("expiryYear", e.target.value)}
+                        style={{
+                          width: "171px",
+                          height: "64px",
+                          padding: "21px 28px",
+                          borderRadius: "10px",
+                          border: "1px solid #4C7EFB",
+                          background: "rgba(245, 247, 252, 1)",
+                          color: "#3C4382",
+                          textAlign: "center",
+                          fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                          fontSize: "20px",
+                          fontWeight: "400",
+                          outline: "none",
+                          boxSizing: "border-box",
+                          appearance: "none",
+                        }}
+                      >
+                        <option value="">שנה</option>
+                        {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map((year) => (
+                          <option key={year} value={year.toString()}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div style={{ position: "relative" }}>
+                      <select
+                        value={formData.expiryMonth}
+                        onChange={(e) => handleInputChange("expiryMonth", e.target.value)}
+                        style={{
+                          width: "170px",
+                          height: "64px",
+                          padding: "21px 28px",
+                          borderRadius: "10px",
+                          border: "1px solid #4C7EFB",
+                          background: "rgba(245, 247, 252, 1)",
+                          color: "#3C4382",
+                          textAlign: "center",
+                          fontFamily: "Assistant, -apple-system, Roboto, Helvetica, sans-serif",
+                          fontSize: "20px",
+                          fontWeight: "400",
+                          outline: "none",
+                          boxSizing: "border-box",
+                          appearance: "none",
+                        }}
+                      >
+                        <option value="">חודש</option>
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                          <option key={month} value={month.toString().padStart(2, "0")}>
+                            {month.toString().padStart(2, "0")}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "1256px",
+            height: "1px",
+            background: "#4C7EFB",
+            opacity: 0.2,
+            margin: "40px 0",
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "56px",
+            width: "100%",
+            maxWidth: "615px",
+          }}
+        >
+          <h3
+            style={{
+              color: "#486284",
+              fontSize: "30px",
+              fontWeight: "700",
+              textAlign: "center",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+              margin: 0,
+            }}
+          >
+            אופציות נוספות לתשלום:
+          </h3>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "20px",
+              width: "100%",
+              direction: "rtl",
+            }}
+          >
+            <button
+              onClick={() => handleAlternativePayment("Google Pay")}
+              style={{
+                width: "191.83px",
+                height: "57.924px",
+                padding: "14px 17px",
+                borderRadius: "9.654px",
+                border: "2.413px solid #DBE3F3",
+                background: "#FFF",
+                cursor: "pointer",
+                fontSize: "20px",
+                color: "#1B1919",
+              }}
+            >
+              Google Pay
+            </button>
+
+            <button
+              onClick={() => handleAlternativePayment("Apple Pay")}
+              style={{
+                width: "191.83px",
+                height: "57.924px",
+                padding: "14px 17px",
+                borderRadius: "9.654px",
+                border: "2.413px solid #DBE3F3",
+                background: "#FFF",
+                cursor: "pointer",
+                fontSize: "20px",
+                color: "#1B1919",
+              }}
+            >
+              🍎 Pay
+            </button>
+
+            <button
+              onClick={() => handleAlternativePayment("Bit")}
+              style={{
+                width: "191.83px",
+                height: "57.924px",
+                padding: "14px 17px",
+                borderRadius: "9.654px",
+                border: "2.413px solid #DBE3F3",
+                background: "#FFF",
+                cursor: "pointer",
+                fontSize: "20px",
+                color: "#3F5CE3",
+              }}
+            >
+              bit
             </button>
           </div>
-        </form>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "56px" }}>
+          <button
+            onClick={handleSubmit}
+            style={{
+              width: "615px",
+              height: "79px",
+              borderRadius: "24px",
+              background: "#4C7EFB",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+              fontSize: "30px",
+              fontWeight: "700",
+              color: "#FFF",
+            }}
+          >
+            מעבר לתשלום
+          </button>
+        </div>
       </div>
 
       <Footer />
     </div>
   );
-};
-
-export default Checkout;
+}
