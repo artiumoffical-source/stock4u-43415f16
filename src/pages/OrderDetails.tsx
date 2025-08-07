@@ -148,27 +148,48 @@ export default function OrderDetails() {
     >
       <Header />
 
-      {/* Hero Section */}
-      <div className="relative w-full h-80 bg-gradient-to-r from-[hsl(var(--stock4u-blue))] to-[hsl(var(--stock4u-blue-light))] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-10"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[hsl(var(--stock4u-gold))]">
-            פרטי ההזמנה
-          </h1>
-          <p className="text-xl md:text-2xl max-w-2xl leading-relaxed">
-            השלם את פרטי המתנה והעברה כדי להמשיך בתהליך
-          </p>
-          <div className="mt-6 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[hsl(var(--stock4u-gold))] flex items-center justify-center text-[hsl(var(--stock4u-blue))] font-bold">
-              1
-            </div>
-            <div className="w-16 h-1 bg-[hsl(var(--stock4u-gold))] opacity-50"></div>
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-              2
-            </div>
-            <div className="w-16 h-1 bg-white/20"></div>
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-              3
+      {/* Hero Section - Stock4U Professional Design */}
+      <div className="relative bg-[#102A43] text-white py-20 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-64 h-64 bg-[#C6A96F] rounded-full -translate-x-32 -translate-y-32"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C6A96F] rounded-full translate-x-32 translate-y-32"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Main Title */}
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+              פרטי ההזמנה
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
+              מלאו את הפרטים הנדרשים לשליחת המתנה הדיגיטלית
+            </p>
+            
+            {/* Progress Indicator */}
+            <div className="flex justify-center items-center space-x-8 mt-12">
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-[#C6A96F] rounded-full flex items-center justify-center text-[#102A43] font-bold">
+                  1
+                </div>
+                <span className="mr-3 text-[#C6A96F] font-semibold">פרטי הזמנה</span>
+              </div>
+              <div className="w-16 h-1 bg-white/30"></div>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white/60 font-bold">
+                  2
+                </div>
+                <span className="mr-3 text-white/60">עיצוב מתנה</span>
+              </div>
+              <div className="w-16 h-1 bg-white/30"></div>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white/60 font-bold">
+                  3
+                </div>
+                <span className="mr-3 text-white/60">סיכום ותשלום</span>
+              </div>
             </div>
           </div>
         </div>
