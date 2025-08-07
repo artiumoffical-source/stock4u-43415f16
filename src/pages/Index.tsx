@@ -10,7 +10,7 @@ export default function Index() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative bg-stock4u-light-blue overflow-hidden h-[566px]">
+      <section className="relative bg-stock4u-light-blue overflow-hidden h-[400px]">
         {/* Background Stock Chart */}
         <div className="absolute inset-0 opacity-20">
           <svg
