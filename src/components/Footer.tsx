@@ -109,6 +109,8 @@ export default function Footer() {
         position: "relative",
         direction: "rtl",
         marginTop: "80px",
+        overflow: "visible",
+        zIndex: 1,
       }}
     >
       {/* Logo Section - positioned on left as per Figma design */}
@@ -116,9 +118,10 @@ export default function Footer() {
         style={{
           position: "absolute",
           left: "78px",
-          top: "-92px",
+          top: "-60px",
           width: "207px",
           height: "338px",
+          zIndex: 10,
         }}
       >
         {/* Stock4U Logo - Centered below dancing mascot */}
