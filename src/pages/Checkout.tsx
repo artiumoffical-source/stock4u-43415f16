@@ -2,17 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
-import { CreditCard, Shield, Lock, Check, ArrowLeft } from "lucide-react";
+import { CreditCard, Shield, Lock, Check } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { giftData } = useGift();
+  
   const [formData, setFormData] = useState({
     email: "",
     firstName: "",
@@ -39,231 +36,632 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background hebrew-font" dir="rtl">
+    <div
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        background: "#FFF",
+        direction: "rtl",
+      }}
+    >
       <Header />
-      
-      {/* Hero Section */}
-      <div className="relative w-full h-64 bg-gradient-to-r from-[hsl(var(--stock4u-blue))] to-[hsl(var(--stock4u-blue-light))] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-10"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[hsl(var(--stock4u-gold))]">
+
+      <StepHero currentStep={3} />
+
+      {/* Main Content */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "60px",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "80px 40px",
+          background: "#fff",
+        }}
+      >
+        {/* Title */}
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "40px",
+          }}
+        >
+          <h2
+            style={{
+              color: "#1B1919",
+              fontSize: "32px",
+              fontWeight: "600",
+              fontFamily: "Poppins",
+              margin: "0 0 16px 0",
+            }}
+          >
             השלמת רכישה
-          </h1>
-          <p className="text-xl md:text-2xl max-w-2xl leading-relaxed">
+          </h2>
+          <p
+            style={{
+              color: "#486284",
+              fontSize: "18px",
+              fontFamily: "Poppins",
+              margin: "0",
+            }}
+          >
             השלם את פרטי התשלום שלך בצורה מאובטחת
           </p>
-          <div className="mt-6 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-              1
-            </div>
-            <div className="w-16 h-1 bg-white/20"></div>
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-              2
-            </div>
-            <div className="w-16 h-1 bg-white/20"></div>
-            <div className="w-8 h-8 rounded-full bg-[hsl(var(--stock4u-gold))] flex items-center justify-center text-[hsl(var(--stock4u-blue))] font-bold">
-              3
-            </div>
-          </div>
         </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
+        {/* Form and Summary Grid */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 400px",
+            gap: "60px",
+            width: "100%",
+            alignItems: "start",
+          }}
+        >
           {/* Payment Form */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-[hsl(var(--stock4u-gold))]" />
-                  פרטי תשלום
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">שם פרטי</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName">שם משפחה</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
+          <div
+            style={{
+              background: "#FFF",
+              borderRadius: "16px",
+              border: "1px solid #E0E7FF",
+              padding: "40px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "30px",
+              }}
+            >
+              <CreditCard size={24} color="#486284" />
+              <h3
+                style={{
+                  color: "#1B1919",
+                  fontSize: "20px",
+                  fontWeight: "600",
+                  fontFamily: "Poppins",
+                  margin: "0",
+                }}
+              >
+                פרטי תשלום
+              </h3>
+            </div>
 
-                  <div>
-                    <Label htmlFor="email">כתובת אימייל</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  <Separator />
-
-                  <div>
-                    <Label htmlFor="cardNumber">מספר כרטיס אשראי</Label>
-                    <Input
-                      id="cardNumber"
-                      name="cardNumber"
-                      placeholder="1234 5678 9012 3456"
-                      value={formData.cardNumber}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="expiryDate">תוקף</Label>
-                      <Input
-                        id="expiryDate"
-                        name="expiryDate"
-                        placeholder="MM/YY"
-                        value={formData.expiryDate}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="cvv">CVV</Label>
-                      <Input
-                        id="cvv"
-                        name="cvv"
-                        placeholder="123"
-                        value={formData.cvv}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div>
-                    <Label htmlFor="billingAddress">כתובת לחיוב</Label>
-                    <Input
-                      id="billingAddress"
-                      name="billingAddress"
-                      value={formData.billingAddress}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="city">עיר</Label>
-                      <Input
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="zipCode">מיקוד</Label>
-                      <Input
-                        id="zipCode"
-                        name="zipCode"
-                        value={formData.zipCode}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-
-            {/* Security Badges */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-green-600" />
-                    SSL מאובטח
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-green-600" />
-                    הצפנה 256-bit
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-600" />
-                    PCI תואם
-                  </div>
+            <form onSubmit={handleSubmit}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  marginBottom: "20px",
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    שם פרטי
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    שם משפחה
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    color: "#1B1919",
+                    fontSize: "14px",
+                    fontFamily: "Poppins",
+                    marginBottom: "8px",
+                  }}
+                >
+                  כתובת אימייל
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  style={{
+                    width: "100%",
+                    height: "48px",
+                    border: "1px solid #E0E7FF",
+                    borderRadius: "8px",
+                    padding: "0 16px",
+                    fontSize: "16px",
+                    fontFamily: "Poppins",
+                  }}
+                  required
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    color: "#1B1919",
+                    fontSize: "14px",
+                    fontFamily: "Poppins",
+                    marginBottom: "8px",
+                  }}
+                >
+                  מספר כרטיס אשראי
+                </label>
+                <input
+                  type="text"
+                  name="cardNumber"
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
+                  placeholder="1234 5678 9012 3456"
+                  style={{
+                    width: "100%",
+                    height: "48px",
+                    border: "1px solid #E0E7FF",
+                    borderRadius: "8px",
+                    padding: "0 16px",
+                    fontSize: "16px",
+                    fontFamily: "Poppins",
+                  }}
+                  required
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  marginBottom: "20px",
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    תוקף
+                  </label>
+                  <input
+                    type="text"
+                    name="expiryDate"
+                    value={formData.expiryDate}
+                    onChange={handleInputChange}
+                    placeholder="MM/YY"
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    CVV
+                  </label>
+                  <input
+                    type="text"
+                    name="cvv"
+                    value={formData.cvv}
+                    onChange={handleInputChange}
+                    placeholder="123"
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    color: "#1B1919",
+                    fontSize: "14px",
+                    fontFamily: "Poppins",
+                    marginBottom: "8px",
+                  }}
+                >
+                  כתובת לחיוב
+                </label>
+                <input
+                  type="text"
+                  name="billingAddress"
+                  value={formData.billingAddress}
+                  onChange={handleInputChange}
+                  style={{
+                    width: "100%",
+                    height: "48px",
+                    border: "1px solid #E0E7FF",
+                    borderRadius: "8px",
+                    padding: "0 16px",
+                    fontSize: "16px",
+                    fontFamily: "Poppins",
+                  }}
+                  required
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  marginBottom: "30px",
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    עיר
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      color: "#1B1919",
+                      fontSize: "14px",
+                      fontFamily: "Poppins",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    מיקוד
+                  </label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleInputChange}
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      border: "1px solid #E0E7FF",
+                      borderRadius: "8px",
+                      padding: "0 16px",
+                      fontSize: "16px",
+                      fontFamily: "Poppins",
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Security Badges */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "30px",
+                  padding: "20px",
+                  background: "#F8FAFC",
+                  borderRadius: "8px",
+                  border: "1px solid #E0E7FF",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <Shield size={16} color="#16a34a" />
+                  <span
+                    style={{
+                      color: "#486284",
+                      fontSize: "12px",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    SSL מאובטח
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <Lock size={16} color="#16a34a" />
+                  <span
+                    style={{
+                      color: "#486284",
+                      fontSize: "12px",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    הצפנה 256-bit
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <Check size={16} color="#16a34a" />
+                  <span
+                    style={{
+                      color: "#486284",
+                      fontSize: "12px",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    PCI תואם
+                  </span>
+                </div>
+              </div>
+            </form>
           </div>
 
           {/* Order Summary */}
-          <div className="lg:sticky lg:top-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>סיכום הזמנה</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {giftData.selectedStocks.map((stock) => (
-                  <div key={stock.symbol} className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">{stock.name}</p>
-                      <p className="text-sm text-muted-foreground">{stock.symbol}</p>
-                    </div>
-                    <p className="font-medium">₪{stock.amount}</p>
+          <div
+            style={{
+              background: "#FFF",
+              borderRadius: "16px",
+              border: "1px solid #E0E7FF",
+              padding: "40px",
+              position: "sticky",
+              top: "20px",
+            }}
+          >
+            <h3
+              style={{
+                color: "#1B1919",
+                fontSize: "20px",
+                fontWeight: "600",
+                fontFamily: "Poppins",
+                margin: "0 0 30px 0",
+              }}
+            >
+              סיכום הזמנה
+            </h3>
+
+            <div style={{ marginBottom: "30px" }}>
+              {giftData.selectedStocks.map((stock) => (
+                <div
+                  key={stock.symbol}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        fontFamily: "Poppins",
+                        margin: "0 0 4px 0",
+                      }}
+                    >
+                      {stock.name}
+                    </p>
+                    <p
+                      style={{
+                        color: "#486284",
+                        fontSize: "14px",
+                        fontFamily: "Poppins",
+                        margin: "0",
+                      }}
+                    >
+                      {stock.symbol}
+                    </p>
                   </div>
-                ))}
-                
-                <Separator />
-                
-                <div className="flex justify-between items-center text-lg font-bold">
-                  <span>סה"כ לתשלום:</span>
-                  <span className="text-[hsl(var(--stock4u-gold))]">₪{totalAmount}</span>
-                </div>
-
-                <div className="space-y-3 mt-6">
-                  <Button 
-                    onClick={handleSubmit}
-                    className="w-full bg-[hsl(var(--stock4u-gold))] hover:bg-[hsl(var(--stock4u-gold-dark))] text-white py-3"
-                    size="lg"
+                  <p
+                    style={{
+                      color: "#1B1919",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      fontFamily: "Poppins",
+                      margin: "0",
+                    }}
                   >
-                    השלם תשלום - ₪{totalAmount}
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    onClick={() => navigate("/gift-design")}
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    חזור לעיצוב המתנה
-                  </Button>
+                    ₪{stock.amount}
+                  </p>
                 </div>
+              ))}
+            </div>
 
-                <div className="text-xs text-center text-muted-foreground mt-4">
-                  בלחיצה על "השלם תשלום" אתה מסכים לתנאי השימוש ומדיניות הפרטיות שלנו
-                </div>
-              </CardContent>
-            </Card>
+            <div
+              style={{
+                height: "1px",
+                background: "#E0E7FF",
+                margin: "30px 0",
+              }}
+            />
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "30px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#1B1919",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  fontFamily: "Poppins",
+                }}
+              >
+                סה"כ לתשלום:
+              </span>
+              <span
+                style={{
+                  color: "#486284",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  fontFamily: "Poppins",
+                }}
+              >
+                ₪{totalAmount}
+              </span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <button
+                onClick={handleSubmit}
+                style={{
+                  width: "100%",
+                  height: "50px",
+                  background: "#486284",
+                  color: "#FFF",
+                  border: "none",
+                  borderRadius: "25px",
+                  fontSize: "16px",
+                  fontFamily: "Poppins",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                השלם תשלום - ₪{totalAmount}
+              </button>
+
+              <button
+                onClick={() => navigate("/gift-design")}
+                style={{
+                  width: "100%",
+                  height: "50px",
+                  background: "transparent",
+                  color: "#486284",
+                  border: "1px solid #E0E7FF",
+                  borderRadius: "25px",
+                  fontSize: "16px",
+                  fontFamily: "Poppins",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                }}
+              >
+                חזור לעיצוב המתנה
+              </button>
+            </div>
+
+            <p
+              style={{
+                color: "#486284",
+                fontSize: "12px",
+                fontFamily: "Poppins",
+                textAlign: "center",
+                margin: "20px 0 0 0",
+                lineHeight: "1.4",
+              }}
+            >
+              בלחיצה על "השלם תשלום" אתה מסכים לתנאי השימוש ומדיניות הפרטיות שלנו
+            </p>
           </div>
         </div>
       </div>
