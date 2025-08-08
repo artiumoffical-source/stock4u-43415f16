@@ -2,72 +2,55 @@ import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import CompanyTicker from "@/components/CompanyTicker";
 
 export default function Index() {
   return (
     <div className="min-h-screen bg-white hebrew-font" dir="rtl">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative bg-stock4u-light-blue overflow-hidden h-[400px]">
-        {/* Background Stock Chart */}
-        <div className="absolute inset-0 opacity-20">
-          <svg
-            className="w-full h-full object-cover"
-            viewBox="0 0 1921 614"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <path
-              d="M0.433594 595.989L219.59 456.719L260.449 513.919L364.455 441.797L409.029 498.998L650.471 307.501L706.189 484.076L895.628 374.649L1070.21 309.719L1315.37 175.423L1460.23 406.711L2020.32 17.3564"
-              stroke="#689EDA"
-              strokeWidth="42"
-              fill="none"
-            />
-          </svg>
-        </div>
-
-        {/* Character Images Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1c4a1455277d46fd898e404fd012d0c2?format=webp&width=1920&quality=90"
-            alt="Stock4U Characters with Main Title"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-
-        {/* Hero Content - Empty to let background image handle all visual elements */}
-        <div className="relative z-20 text-center py-20">
-          {/* Content is handled by background image */}
-        </div>
+      {/* Hero Section - Exact Figma Match: 566px height */}
+      <section className="relative h-[566px] bg-stock4u-light-blue overflow-hidden">
+        <img
+          src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
+          alt="Stock4U Characters with Main Title"
+          className="w-full h-full object-cover object-center"
+        />
       </section>
 
-      {/* Video Section */}
-      <section className="max-w-[800px] mx-auto px-4 pt-8">
-        <div className="bg-black rounded-[25px] border-[19px] border-stock4u-light-blue relative overflow-hidden w-full h-[450px]">
-          <div className="w-full h-full flex items-center justify-center">
-            <button
-              onClick={() =>
-                window.open(
-                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                  "_blank",
-                )
-              }
-              className="w-[178px] h-[178px] bg-stock4u-happy-blue rounded-full flex items-center justify-center shadow-[10px_10px_0_rgba(0,0,0,0.1)] hover:scale-105 transition-transform"
-            >
-              <svg
-                className="w-12 h-12 text-white ml-2"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </button>
+      {/* Video and Blue Background Section - positioned to overlap hero as in Figma */}
+      <div className="relative -mt-[200px] z-30">
+        {/* Blue Extension Background - 395px height, positioned to overlap hero */}
+        <div className="w-full h-[395px] bg-stock4u-light-blue relative mt-[200px]">
+
+          {/* Video Section - positioned to overlap both hero and blue background */}
+          <div className="absolute -top-[30px] left-1/2 transform -translate-x-1/2">
+            <div className="w-[1342px] h-[684px] bg-black rounded-[25px] border-[19px] border-stock4u-light-blue relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+              <div className="w-full h-full flex items-center justify-center">
+                <button
+                  onClick={() =>
+                    window.open(
+                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                      "_blank",
+                    )
+                  }
+                  className="w-[178px] h-[178px] bg-stock4u-happy-blue rounded-full flex items-center justify-center shadow-[10px_10px_0_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border-[15px] border-white"
+                >
+                  <svg
+                    className="w-16 h-16 text-white ml-3"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+
+        {/* Space below blue background to accommodate the video overflow */}
+        <div className="h-[351px] bg-white"></div>
+      </div>
 
       {/* Gift Packages Carousel */}
       <section className="w-full py-6 mb-6">
@@ -133,7 +116,46 @@ export default function Index() {
       </section>
 
       {/* Company Logos Ticker */}
-      <CompanyTicker />
+      <section className="py-6 overflow-hidden">
+        <p className="text-center text-stock4u-dark-grey mb-6">
+          חברות פופולאריות להשקעה
+        </p>
+        <div className="relative overflow-hidden">
+          <div className="flex items-center gap-12 opacity-30 animate-marquee">
+            <div className="flex items-center gap-12 shrink-0">
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">GOOG</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AMZN</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">NASDAQ</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AAPL</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AAN</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">NVDA</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">MSFT</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">META</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">SONY</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">CRM</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">ORCL</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">JNJ</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">TSLA</span>
+            </div>
+            {/* Duplicate for seamless scroll */}
+            <div className="flex items-center gap-12 shrink-0">
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">GOOG</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AMZN</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">NASDAQ</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AAPL</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">AAN</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">NVDA</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">MSFT</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">META</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">SONY</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">CRM</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">ORCL</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">JNJ</span>
+              <span className="text-4xl font-bold text-stock4u-dark-grey english-font">TSLA</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
