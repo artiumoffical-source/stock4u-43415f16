@@ -22,7 +22,7 @@ export const sendGiftEmails = async (emailData: EmailData) => {
   try {
     console.log('Making request to Supabase Edge Function...');
     
-    const response = await fetch('https://ggquxuidarjnayqkhthv.supabase.co/functions/v1/resend-email', {
+    const response = await fetch('https://ggquxuidarjnayqkhthv.supabase.co/functions/v1/send-smtp-email', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncXV4dWlkYXJqbmF5cWtodGh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NTY1NjksImV4cCI6MjA3MDMzMjU2OX0.2CxN1Sj1l8dftUVigcMJXp9jNFfPPfQpE3MVSkAnp4A',
