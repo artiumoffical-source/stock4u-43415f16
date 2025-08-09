@@ -17,7 +17,11 @@ export interface EmailData {
 }
 
 export const sendGiftEmails = async (emailData: EmailData) => {
+  console.log('Sending email with data:', emailData);
+  
   try {
+    console.log('Making request to Supabase Edge Function...');
+    
     const response = await fetch('https://ggquxuidarjnayqkhthv.supabase.co/functions/v1/resend-email', {
       method: 'POST',
       headers: {
@@ -27,11 +31,17 @@ export const sendGiftEmails = async (emailData: EmailData) => {
       body: JSON.stringify(emailData),
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
     if (!response.ok) {
-      throw new Error('Failed to send email');
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();
+    console.log('Email sent successfully:', result);
     return result;
   } catch (error) {
     console.error('Error sending email:', error);
@@ -40,6 +50,9 @@ export const sendGiftEmails = async (emailData: EmailData) => {
 };
 
 export const sendGiftNotificationEmails = async (giftData: any) => {
+  console.log('Starting to send gift notification emails...');
+  console.log('Gift data:', giftData);
+
   const stocksList = giftData.selectedStocks.map((stock: any) => ({
     symbol: stock.symbol,
     name: stock.name,
@@ -50,37 +63,46 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
     sum + (stock.amount * stock.price), 0
   );
 
+  console.log('Stocks list:', stocksList);
+  console.log('Total value:', totalValue);
+
   // Email to recipient
   const recipientEmailData: EmailData = {
     from: 'support@stock4u.co.il',
-    to: giftData.recipientEmail,
+    to: giftData.recipientDetails?.email || giftData.recipientEmail,
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName}!`,
     senderName: giftData.senderName,
-    recipientName: giftData.recipientName,
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName,
     giftDetails: {
       stocks: stocksList,
       totalValue,
-      message: giftData.message,
-      deliveryDate: giftData.deliveryDate
+      message: giftData.greetingMessage || giftData.message,
+      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate
     }
   };
 
-  // Email to sender (confirmation)
+  console.log('Recipient email data:', recipientEmailData);
+
+  // Email to sender (confirmation) - using recipient email as fallback since we don't have sender email
   const senderEmailData: EmailData = {
     from: 'support@stock4u.co.il',
-    to: giftData.senderEmail || giftData.recipientEmail, // fallback if no sender email
-    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientName}`,
+    to: giftData.senderEmail || giftData.recipientDetails?.email || giftData.recipientEmail,
+    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName}`,
     senderName: giftData.senderName,
-    recipientName: giftData.recipientName,
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName,
     giftDetails: {
       stocks: stocksList,
       totalValue,
-      message: giftData.message,
-      deliveryDate: giftData.deliveryDate
+      message: giftData.greetingMessage || giftData.message,
+      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate
     }
   };
 
+  console.log('Sender email data:', senderEmailData);
+
   try {
+    console.log('Sending emails...');
+    
     await Promise.all([
       sendGiftEmails(recipientEmailData),
       sendGiftEmails(senderEmailData)
