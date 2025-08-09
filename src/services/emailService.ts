@@ -70,9 +70,9 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
   const recipientEmailData: EmailData = {
     from: 'support@stock4u.co.il',
     to: giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
-    subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'המארח'}!`,
-    senderName: giftData.senderName || 'המארח',
-    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'הנמען',
+    subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'השולח'}!`,
+    senderName: giftData.senderName || 'השולח',
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
     giftDetails: {
       stocks: stocksList,
       totalValue,
@@ -87,9 +87,9 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
   const senderEmailData: EmailData = {
     from: 'support@stock4u.co.il',
     to: giftData.senderEmail || giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
-    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'הנמען'}`,
-    senderName: giftData.senderName || 'המארח',
-    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'הנמען',
+    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
+    senderName: giftData.senderName || 'השולח',
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
     giftDetails: {
       stocks: stocksList,
       totalValue,

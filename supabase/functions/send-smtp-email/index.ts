@@ -205,47 +205,33 @@ const handler = async (req: Request): Promise<Response> => {
     
     const htmlContent = generateGiftEmailHTML(emailData, isForRecipient);
     
-    // Send email via SMTP
-    const smtpResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    // Configure nodemailer with your SMTP settings
+    const nodemailer = (await import('npm:nodemailer@6.9.7')).default;
+    
+    const transporter = nodemailer.createTransporter({
+      host: 'mail.stock4u.co.il',
+      port: 465,
+      secure: true, // Use SSL
+      auth: {
+        user: 'support@stock4u.co.il',
+        pass: password,
       },
-      body: JSON.stringify({
-        sender: emailData.from,
-        to: [emailData.to],
-        subject: emailData.subject,
-        html_body: htmlContent,
-        custom_headers: [
-          {
-            header: 'Reply-To',
-            value: 'support@stock4u.co.il'
-          }
-        ]
-      })
     });
 
-    if (!smtpResponse.ok) {
-      // Fallback: Use direct SMTP connection
-      console.log('Fallback: Using direct SMTP with credentials:', {
-        host: 'mail.stock4u.co.il',
-        port: 465,
-        secure: true,
-        username: 'support@stock4u.co.il',
-        from: emailData.from,
-        to: emailData.to,
-        subject: emailData.subject
-      });
-      
-      // For now, we'll log the email data and consider it sent
-      console.log('Email sent via SMTP fallback');
-    } else {
-      console.log('Email sent via SMTP2GO successfully');
-    }
+    // Send the email
+    const info = await transporter.sendMail({
+      from: '"Stock4U" <support@stock4u.co.il>',
+      to: emailData.to,
+      subject: emailData.subject,
+      html: htmlContent,
+      replyTo: 'support@stock4u.co.il'
+    });
+
+    console.log('Email sent successfully via SMTP:', info.messageId);
     
     const result = {
       success: true,
-      messageId: `${Date.now()}@stock4u.co.il`,
+      messageId: info.messageId,
       from: emailData.from,
       to: emailData.to,
       subject: emailData.subject
