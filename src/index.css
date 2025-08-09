@@ -88,4 +88,142 @@
       transform: translateX(-100%);
     }
   }
+
+  /* Mobile-first responsive utilities */
+  .mobile-container {
+    @apply px-4 mx-auto;
+  }
+
+  .mobile-text {
+    @apply text-sm leading-relaxed;
+  }
+
+  .mobile-button {
+    @apply min-h-[48px] px-6 py-3 text-base;
+  }
+
+  .mobile-nav {
+    @apply text-lg font-medium;
+  }
+
+  /* Hebrew font utility */
+  .hebrew-font {
+    font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif;
+  }
+
+  .english-font {
+    font-family: 'Poppins', -apple-system, Roboto, Helvetica, sans-serif;
+  }
+}
+
+/* Mobile Responsive Styles - Mobile First Approach */
+@media (max-width: 768px) {
+  /* Base mobile styles */
+  .mobile-container {
+    @apply px-3 max-w-full;
+  }
+
+  /* Typography adjustments */
+  h1 {
+    @apply text-2xl md:text-4xl;
+  }
+
+  h2 {
+    @apply text-xl md:text-3xl;
+  }
+
+  h3 {
+    @apply text-lg md:text-2xl;
+  }
+
+  /* Button improvements for mobile */
+  button, 
+  .btn,
+  [role="button"] {
+    @apply min-h-[44px] min-w-[44px] text-base;
+    touch-action: manipulation;
+  }
+
+  /* Image responsive behavior */
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Form elements touch-friendly */
+  input, 
+  textarea, 
+  select {
+    @apply min-h-[44px] text-base;
+  }
+
+  /* Grid responsive adjustments */
+  .grid {
+    @apply gap-4;
+  }
+
+  .md\\:grid-cols-3 {
+    @apply grid-cols-1;
+  }
+
+  .md\\:grid-cols-2 {
+    @apply grid-cols-1;
+  }
+
+  /* Spacing adjustments */
+  .py-12 {
+    @apply py-6;
+  }
+
+  .py-8 {
+    @apply py-4;
+  }
+
+  .gap-8 {
+    @apply gap-4;
+  }
+
+  .gap-12 {
+    @apply gap-6;
+  }
+
+  /* Text size adjustments */
+  .text-6xl {
+    @apply text-4xl;
+  }
+
+  .text-4xl {
+    @apply text-2xl;
+  }
+
+  .text-xl {
+    @apply text-lg;
+  }
+
+  /* Hide elements that shouldn't appear on mobile */
+  .desktop-only {
+    @apply hidden;
+  }
+
+  /* Show mobile-specific elements */
+  .mobile-only {
+    @apply block;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-only {
+    @apply hidden;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .mobile-only {
+    @apply hidden;
+  }
+
+  .desktop-only {
+    @apply block;
+  }
 }

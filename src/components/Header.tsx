@@ -1,35 +1,36 @@
 import { Link } from "react-router-dom";
+import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   return (
     <header
+      className="w-full bg-white border-b border-gray-200 relative"
       style={{
-        width: "100%",
         height: "75px",
-        padding: "0 35px",
+        padding: "0 max(16px, min(35px, 5vw))",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        borderBottom: "1px solid #DDD",
-        background: "#FFF",
-        position: "relative",
       }}
     >
       {/* Left side - Cart and Login */}
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
         {/* Shopping Cart */}
         <Link to="/order-summary" style={{ textDecoration: "none" }}>
           <div
+            className="mobile-button"
             style={{
               width: "48px",
               height: "47px",
               borderRadius: "56px",
               background: "#4C7EFB",
-              boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
+              boxShadow: "6px 6px 0 0 rgba(0, 0, 0, 0.10)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
+              minWidth: "44px",
+              minHeight: "44px",
             }}
           >
             <svg
@@ -53,17 +54,20 @@ export default function Header() {
         {/* Login Button */}
         <Link to="/login" style={{ textDecoration: "none" }}>
           <div
+            className="mobile-button"
             style={{
               display: "flex",
-              width: "119px",
+              width: "auto",
+              minWidth: "100px",
               height: "47px",
-              padding: "14px",
+              padding: "12px 16px",
               justifyContent: "center",
               alignItems: "center",
               gap: "10px",
               borderRadius: "50px",
               background: "#DBE3F3",
               cursor: "pointer",
+              minHeight: "44px",
             }}
           >
             <span
@@ -87,18 +91,25 @@ export default function Header() {
       {/* Center - Logo */}
       <img
         src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
+        className="max-w-none"
         style={{
-          height: "66px",
+          height: "min(66px, 12vw)",
           width: "auto",
           position: "absolute",
           left: "50%",
           transform: "translateX(-50%)",
+          maxHeight: "60px",
         }}
         alt="Stock4U Logo"
       />
 
-      {/* Right side - Navigation */}
-      <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
+      {/* Mobile Menu */}
+      <div className="md:hidden">
+        <MobileMenu />
+      </div>
+
+      {/* Right side - Navigation - Desktop Only */}
+      <div className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <span
             style={{

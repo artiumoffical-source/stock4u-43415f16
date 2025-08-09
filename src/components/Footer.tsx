@@ -102,43 +102,39 @@ export default function Footer() {
         `}
       </style>
     <footer
+      className="w-full bg-[#DBE3F3] relative overflow-visible z-[1] border-none outline-none"
       style={{
-        width: "100%",
-        height: "308px",
-        background: "#DBE3F3",
-        position: "relative",
+        height: "auto",
+        minHeight: "250px",
         direction: "rtl",
-        marginTop: "80px",
-        overflow: "visible",
-        zIndex: 1,
-        border: "none",
-        outline: "none",
+        marginTop: "40px",
+        paddingBottom: "40px",
       }}
     >
-      {/* Logo Section - positioned on left as per Figma design */}
+      {/* Logo Section - Responsive positioning */}
       <div
+        className="absolute z-10"
         style={{
-          position: "absolute",
-          left: "10px",
-          top: "-60px",
-          width: "207px",
-          height: "338px",
-          zIndex: 10,
+          left: "max(10px, 2vw)",
+          top: "-40px",
+          width: "min(207px, 35vw)",
+          height: "auto",
+          minHeight: "200px",
         }}
       >
-        {/* Stock4U Logo - Centered below dancing mascot */}
+        {/* Stock4U Logo - Responsive centered below dancing mascot */}
         <div
           style={{
             position: "absolute",
             left: "50%",
-            top: "280px",
+            top: "min(280px, 70vw)",
             transform: "translateX(-50%)",
             width: "auto",
-            height: "56px",
+            height: "auto",
             color: "#4C7EFB",
             fontFamily:
               "Holtwood One SC, -apple-system, Roboto, Helvetica, sans-serif",
-            fontSize: "33px",
+            fontSize: "clamp(20px, 5vw, 33px)",
             fontWeight: "900",
             lineHeight: "normal",
             textTransform: "uppercase",
@@ -151,15 +147,16 @@ export default function Footer() {
           Stock4U
         </div>
 
-        {/* Logo Complex 3D Element with Kalinka Dance Animation */}
+        {/* Logo Complex 3D Element with Kalinka Dance Animation - Responsive */}
         <div
           className="kalinka-dancer"
           style={{
             position: "absolute",
-            left: "24px",
+            left: "min(24px, 3vw)",
             top: "0px",
-            width: "160px",
-            height: "253px",
+            width: "min(160px, 25vw)",
+            height: "auto",
+            aspectRatio: "160/253",
           }}
         >
 
@@ -213,32 +210,41 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Content Sections - Centered and responsive layout */}
+      {/* Content Sections - Mobile responsive layout */}
       <div
+        className="mobile-container"
         style={{
-          position: "absolute",
-          left: "50%",
-          top: "76px",
-          transform: "translateX(-50%)",
-          width: "auto",
+          position: "relative",
+          left: "auto",
+          top: "auto",
+          transform: "none",
+          width: "100%",
           maxWidth: "1200px",
-          height: "152px",
+          height: "auto",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "40px",
+          gap: "20px",
+          marginTop: "200px",
+          padding: "0 20px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "60px", justifyContent: "center" }}>
-          {/* אנחנו ברשתות */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "30px", justifyContent: "center", width: "100%" }}>
+          
+          {/* Mobile responsive wrapper */}
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "20px", justifyContent: "center", flexWrap: "wrap", width: "100%" }}>
+          {/* אנחנו ברשתות - Mobile responsive */}
           <div
             style={{
               display: "flex",
-              width: "250px",
+              width: "min(250px, 100%)",
+              maxWidth: "300px",
               flexDirection: "column",
               alignItems: "center",
-              gap: "20px",
+              gap: "15px",
               textAlign: "center",
+              margin: "0 10px",
             }}
           >
             <div
@@ -740,6 +746,7 @@ export default function Footer() {
           <svg width="2" height="153" viewBox="0 0 2 153" fill="none">
             <path d="M0.511719 0.985107V152.844" stroke="#4C7EFB" />
           </svg>
+          </div>
         </div>
       </div>
     </footer>
