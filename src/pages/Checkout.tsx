@@ -4,10 +4,13 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
+import { sendGiftNotificationEmails } from "@/services/emailService";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { giftData } = useGift();
+  const { toast } = useToast();
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -27,12 +30,12 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Processing payment...", formData);
 
     // Simulate payment processing
-    setTimeout(() => {
+    setTimeout(async () => {
       // Scroll to top before navigation
       window.scrollTo(0, 0);
 
@@ -41,6 +44,21 @@ export default function Checkout() {
       const paymentSuccess = true; // This would come from payment gateway response
 
       if (paymentSuccess) {
+        try {
+          // Send gift notification emails
+          await sendGiftNotificationEmails(giftData);
+          toast({
+            title: "המתנה נשלחה בהצלחה!",
+            description: "מיילים נשלחו לשולח ולמקבל המתנה",
+          });
+        } catch (error) {
+          console.error("Failed to send emails:", error);
+          toast({
+            title: "המתנה נשלחה בהצלחה",
+            description: "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
+            variant: "destructive",
+          });
+        }
         navigate("/purchase-success");
       } else {
         navigate("/purchase-error");
@@ -48,11 +66,11 @@ export default function Checkout() {
     }, 1000);
   };
 
-  const handleAlternativePayment = (method: string) => {
+  const handleAlternativePayment = async (method: string) => {
     console.log(`Processing payment with ${method}...`);
 
     // Simulate alternative payment processing
-    setTimeout(() => {
+    setTimeout(async () => {
       // Scroll to top before navigation
       window.scrollTo(0, 0);
 
@@ -61,6 +79,21 @@ export default function Checkout() {
       const paymentSuccess = true; // This would come from payment gateway response
 
       if (paymentSuccess) {
+        try {
+          // Send gift notification emails
+          await sendGiftNotificationEmails(giftData);
+          toast({
+            title: "המתנה נשלחה בהצלחה!",
+            description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
+          });
+        } catch (error) {
+          console.error("Failed to send emails:", error);
+          toast({
+            title: "המתנה נשלחה בהצלחה",
+            description: "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
+            variant: "destructive",
+          });
+        }
         navigate("/purchase-success");
       } else {
         navigate("/purchase-error");
