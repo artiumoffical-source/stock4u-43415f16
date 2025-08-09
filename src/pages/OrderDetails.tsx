@@ -74,7 +74,9 @@ export default function OrderDetails() {
         recipientDetails: {
           name: updatedRecipients[0].name,
           email: updatedRecipients[0].email,
-          deliveryDate: `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}`,
+          deliveryDate: selectedDate.day && selectedDate.month && selectedDate.year 
+            ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}` 
+            : null,
         },
       });
     }
@@ -981,7 +983,9 @@ export default function OrderDetails() {
                 recipientDetails: {
                   name: recipients[0].name,
                   email: recipients[0].email,
-                  deliveryDate: `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}`,
+                  deliveryDate: selectedDate.day && selectedDate.month && selectedDate.year 
+                    ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}` 
+                    : null,
                 },
                 deliveryMethods: selectedDeliveryMethods,
                 sendingMethod,

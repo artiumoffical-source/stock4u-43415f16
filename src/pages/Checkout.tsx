@@ -56,7 +56,9 @@ export default function Checkout() {
             recipient_email: giftData.recipientDetails?.email || '',
             recipient_phone: '',
             delivery_method: 'email',
-            delivery_date: giftData.recipientDetails?.deliveryDate || null,
+            delivery_date: (giftData.recipientDetails?.deliveryDate && giftData.recipientDetails.deliveryDate !== '//' && giftData.recipientDetails.deliveryDate.trim() !== '') 
+              ? giftData.recipientDetails.deliveryDate 
+              : null,
             selected_stocks: giftData.selectedStocks,
             total_amount: giftData.selectedStocks.reduce((total, stock) => total + (stock.amount * 100), 0), // Assuming 100 ILS per stock
             currency: 'ILS',
@@ -126,7 +128,9 @@ export default function Checkout() {
             recipient_email: giftData.recipientDetails?.email || '',
             recipient_phone: '',
             delivery_method: 'email',
-            delivery_date: giftData.recipientDetails?.deliveryDate || null,
+            delivery_date: (giftData.recipientDetails?.deliveryDate && giftData.recipientDetails.deliveryDate !== '//' && giftData.recipientDetails.deliveryDate.trim() !== '') 
+              ? giftData.recipientDetails.deliveryDate 
+              : null,
             selected_stocks: giftData.selectedStocks,
             total_amount: giftData.selectedStocks.reduce((total, stock) => total + (stock.amount * 100), 0), // Assuming 100 ILS per stock
             currency: 'ILS',
