@@ -208,7 +208,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Configure nodemailer with your SMTP settings
     const nodemailer = (await import('npm:nodemailer@6.9.7')).default;
     
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: 'mail.stock4u.co.il',
       port: 465,
       secure: true, // Use SSL
