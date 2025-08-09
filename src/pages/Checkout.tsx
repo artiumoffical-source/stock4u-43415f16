@@ -6,6 +6,7 @@ import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
 import { sendGiftNotificationEmails } from "@/services/emailService";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -45,6 +46,41 @@ export default function Checkout() {
 
       if (paymentSuccess) {
         try {
+          // Save order to database
+          const orderData = {
+            buyer_name: formData.cardHolderName || '',
+            buyer_email: giftData.recipientDetails?.email || '',
+            buyer_phone: '',
+            buyer_id: formData.idNumber,
+            recipient_name: giftData.recipientDetails?.name || '',
+            recipient_email: giftData.recipientDetails?.email || '',
+            recipient_phone: '',
+            delivery_method: 'email',
+            delivery_date: giftData.recipientDetails?.deliveryDate || null,
+            selected_stocks: giftData.selectedStocks,
+            total_amount: giftData.selectedStocks.reduce((total, stock) => total + (stock.amount * 100), 0), // Assuming 100 ILS per stock
+            currency: 'ILS',
+            selected_card: giftData.selectedCard || '',
+            personal_message: giftData.greetingMessage || '',
+            sender_name: giftData.senderName || '',
+            status: 'new',
+            payment_status: 'paid'
+          };
+
+          const { error: orderError } = await supabase
+            .from('orders')
+            .insert([orderData]);
+
+          if (orderError) {
+            console.error('Error saving order:', orderError);
+            toast({
+              title: "שגיאה בשמירת ההזמנה",
+              description: "אנא צרו קשר עם השירות",
+              variant: "destructive",
+            });
+            return;
+          }
+
           // Send gift notification emails
           await sendGiftNotificationEmails(giftData);
           toast({
@@ -80,6 +116,41 @@ export default function Checkout() {
 
       if (paymentSuccess) {
         try {
+          // Save order to database
+          const orderData = {
+            buyer_name: formData.cardHolderName || '',
+            buyer_email: giftData.recipientDetails?.email || '',
+            buyer_phone: '',
+            buyer_id: formData.idNumber,
+            recipient_name: giftData.recipientDetails?.name || '',
+            recipient_email: giftData.recipientDetails?.email || '',
+            recipient_phone: '',
+            delivery_method: 'email',
+            delivery_date: giftData.recipientDetails?.deliveryDate || null,
+            selected_stocks: giftData.selectedStocks,
+            total_amount: giftData.selectedStocks.reduce((total, stock) => total + (stock.amount * 100), 0), // Assuming 100 ILS per stock
+            currency: 'ILS',
+            selected_card: giftData.selectedCard || '',
+            personal_message: giftData.greetingMessage || '',
+            sender_name: giftData.senderName || '',
+            status: 'new',
+            payment_status: 'paid'
+          };
+
+          const { error: orderError } = await supabase
+            .from('orders')
+            .insert([orderData]);
+
+          if (orderError) {
+            console.error('Error saving order:', orderError);
+            toast({
+              title: "שגיאה בשמירת ההזמנה",
+              description: "אנא צרו קשר עם השירות",
+              variant: "destructive",
+            });
+            return;
+          }
+
           // Send gift notification emails
           await sendGiftNotificationEmails(giftData);
           toast({
