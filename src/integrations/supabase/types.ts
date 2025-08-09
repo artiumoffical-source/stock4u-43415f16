@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          created_at: string
+          failed_attempts: number | null
+          id: string
+          last_login: string | null
+          locked_until: string | null
+          password_hash: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          failed_attempts?: number | null
+          id?: string
+          last_login?: string | null
+          locked_until?: string | null
+          password_hash: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          failed_attempts?: number | null
+          id?: string
+          last_login?: string | null
+          locked_until?: string | null
+          password_hash?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          buyer_email: string
+          buyer_id: string | null
+          buyer_name: string
+          buyer_phone: string | null
+          created_at: string
+          currency: string | null
+          delivery_date: string | null
+          delivery_method: string | null
+          id: string
+          order_number: string
+          payment_status: string | null
+          personal_message: string | null
+          recipient_email: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
+          selected_card: string | null
+          selected_stocks: Json
+          sender_name: string | null
+          status: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          buyer_email: string
+          buyer_id?: string | null
+          buyer_name: string
+          buyer_phone?: string | null
+          created_at?: string
+          currency?: string | null
+          delivery_date?: string | null
+          delivery_method?: string | null
+          id?: string
+          order_number?: string
+          payment_status?: string | null
+          personal_message?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          selected_card?: string | null
+          selected_stocks: Json
+          sender_name?: string | null
+          status?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          buyer_email?: string
+          buyer_id?: string | null
+          buyer_name?: string
+          buyer_phone?: string | null
+          created_at?: string
+          currency?: string | null
+          delivery_date?: string | null
+          delivery_method?: string | null
+          id?: string
+          order_number?: string
+          payment_status?: string | null
+          personal_message?: string | null
+          recipient_email?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          selected_card?: string | null
+          selected_stocks?: Json
+          sender_name?: string | null
+          status?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
