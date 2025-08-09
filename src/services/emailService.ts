@@ -53,15 +53,15 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
   console.log('Starting to send gift notification emails...');
   console.log('Gift data:', giftData);
 
-  const stocksList = giftData.selectedStocks.map((stock: any) => ({
+  const stocksList = giftData.selectedStocks?.map((stock: any) => ({
     symbol: stock.symbol,
     name: stock.name,
     amount: stock.amount
-  }));
+  })) || [];
 
-  const totalValue = giftData.selectedStocks.reduce((sum: number, stock: any) => 
-    sum + (stock.amount * stock.price), 0
-  );
+  const totalValue = giftData.selectedStocks?.reduce((sum: number, stock: any) => 
+    sum + (stock.amount * (stock.price || 0)), 0
+  ) || 0;
 
   console.log('Stocks list:', stocksList);
   console.log('Total value:', totalValue);
@@ -69,15 +69,15 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
   // Email to recipient
   const recipientEmailData: EmailData = {
     from: 'support@stock4u.co.il',
-    to: giftData.recipientDetails?.email || giftData.recipientEmail,
-    subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName}!`,
-    senderName: giftData.senderName,
-    recipientName: giftData.recipientDetails?.name || giftData.recipientName,
+    to: giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
+    subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'המארח'}!`,
+    senderName: giftData.senderName || 'המארח',
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'הנמען',
     giftDetails: {
       stocks: stocksList,
       totalValue,
-      message: giftData.greetingMessage || giftData.message,
-      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate
+      message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת בשבילך!',
+      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
     }
   };
 
@@ -86,15 +86,15 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
   // Email to sender (confirmation) - using recipient email as fallback since we don't have sender email
   const senderEmailData: EmailData = {
     from: 'support@stock4u.co.il',
-    to: giftData.senderEmail || giftData.recipientDetails?.email || giftData.recipientEmail,
-    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName}`,
-    senderName: giftData.senderName,
-    recipientName: giftData.recipientDetails?.name || giftData.recipientName,
+    to: giftData.senderEmail || giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
+    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'הנמען'}`,
+    senderName: giftData.senderName || 'המארח',
+    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'הנמען',
     giftDetails: {
       stocks: stocksList,
       totalValue,
-      message: giftData.greetingMessage || giftData.message,
-      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate
+      message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת!',
+      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
     }
   };
 
