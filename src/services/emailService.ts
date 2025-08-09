@@ -1,4 +1,5 @@
 export interface EmailData {
+  from: string;
   to: string;
   subject: string;
   senderName: string;
@@ -51,6 +52,7 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
 
   // Email to recipient
   const recipientEmailData: EmailData = {
+    from: 'support@stock4u.co.il',
     to: giftData.recipientEmail,
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName}!`,
     senderName: giftData.senderName,
@@ -65,6 +67,7 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
 
   // Email to sender (confirmation)
   const senderEmailData: EmailData = {
+    from: 'support@stock4u.co.il',
     to: giftData.senderEmail || giftData.recipientEmail, // fallback if no sender email
     subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientName}`,
     senderName: giftData.senderName,
