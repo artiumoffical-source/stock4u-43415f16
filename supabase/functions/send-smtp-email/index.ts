@@ -1,4 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -193,45 +196,30 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const emailData: EmailData = await req.json();
-    console.log('Sending email via SMTP:', emailData);
+    console.log('Sending email via Resend:', emailData);
     
-    const password = Deno.env.get('STOCK4U_EMAIL_PASSWORD');
-    if (!password) {
-      throw new Error('STOCK4U_EMAIL_PASSWORD not configured');
-    }
-
     // Determine if this is for recipient or sender based on subject
     const isForRecipient = emailData.subject.includes('קיבלת מתנת');
     
     const htmlContent = generateGiftEmailHTML(emailData, isForRecipient);
     
-    // Configure nodemailer with your SMTP settings
-    const nodemailer = (await import('npm:nodemailer@6.9.7')).default;
-    
-    const transporter = nodemailer.createTransport({
-      host: 'mail.stock4u.co.il',
-      port: 465,
-      secure: true, // Use SSL
-      auth: {
-        user: 'support@stock4u.co.il',
-        pass: password,
-      },
-    });
-
-    // Send the email
-    const info = await transporter.sendMail({
-      from: '"Stock4U" <support@stock4u.co.il>',
-      to: emailData.to,
+    // Send the email using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Stock4U <onboarding@resend.dev>',
+      to: [emailData.to],
       subject: emailData.subject,
       html: htmlContent,
-      replyTo: 'support@stock4u.co.il'
     });
 
-    console.log('Email sent successfully via SMTP:', info.messageId);
+    if (error) {
+      throw new Error(`Resend error: ${error.message}`);
+    }
+
+    console.log('Email sent successfully via Resend:', data?.id);
     
     const result = {
       success: true,
-      messageId: info.messageId,
+      messageId: data?.id,
       from: emailData.from,
       to: emailData.to,
       subject: emailData.subject
