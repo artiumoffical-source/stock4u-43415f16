@@ -1,7 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const apiKey = Deno.env.get("RESEND_API_KEY");
+console.log('API Key exists:', !!apiKey);
+console.log('API Key length:', apiKey?.length);
+console.log('API Key starts with re_:', apiKey?.startsWith('re_'));
+const resend = new Resend(apiKey);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
