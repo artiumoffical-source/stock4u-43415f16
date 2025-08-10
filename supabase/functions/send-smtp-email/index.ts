@@ -47,199 +47,133 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
         body {
           margin: 0;
           padding: 0;
-          font-family: Arial, sans-serif;
-          background-color: #ffffff;
+          font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+          background-color: #f8faff;
           direction: rtl;
-          width: 100%;
+          line-height: 1.5;
         }
         table { border-collapse: collapse; }
+        .container { max-width: 480px; margin: 0 auto; background: white; }
         
-        /* Responsive adjustments for email clients */
-        @media only screen and (max-width: 600px) {
-          .email-container { width: 100% !important; height: auto !important; }
-          .header { width: 100% !important; position: relative !important; }
-          .yellow-section { width: 100% !important; position: relative !important; height: auto !important; }
-          .content-card { width: 90% !important; left: 5% !important; position: relative !important; top: auto !important; margin: 20px auto !important; }
-          .statistics { width: 100% !important; position: relative !important; left: 0 !important; top: auto !important; flex-direction: column !important; }
-          .footer { width: 100% !important; position: relative !important; left: 0 !important; top: auto !important; }
-          .decorative-element { display: none !important; }
-          .heading-large { font-size: 40px !important; }
-          .heading-small { font-size: 24px !important; }
+        @media only screen and (max-width: 480px) {
+          .container { width: 100% !important; }
+          .content { padding: 15px !important; }
+          .heading-large { font-size: 28px !important; }
+          .heading-small { font-size: 18px !important; }
         }
       </style>
     </head>
     <body>
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background: white;">
-        <!-- Header Section -->
+      <table class="container" cellpadding="0" cellspacing="0" border="0">
+        
+        <!-- Header with Logo -->
         <tr>
-          <td style="background: white; border: 1px solid #DDD; padding: 20px; text-align: center;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="text-align: left; width: 33%;">
-                  <table cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                      <td style="padding-left: 10px;">
-                        <div style="width: 40px; height: 40px; background: #4C7EFB; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-                          <svg width="20" height="20" viewBox="0 0 25 25" fill="none">
-                            <path d="M19.9003 10.3121H5.30426C5.00888 10.3124 4.71739 10.3795 4.45158 10.5083C4.18577 10.6372 3.95252 10.8244 3.76926 11.0561C3.58676 11.2871 3.45924 11.5566 3.39635 11.8442C3.33345 12.1318 3.33684 12.43 3.40626 12.7161L4.97126 19.1241C5.19785 19.9497 5.68982 20.6778 6.37126 21.1961C7.05326 21.7151 7.88826 21.9961 8.74726 21.9961H16.4553C17.3143 21.9961 18.1493 21.7151 18.8313 21.1961C19.5127 20.6778 20.0047 19.9497 20.2313 19.1241L21.7963 12.7171C21.9016 12.2851 21.8554 11.8301 21.6653 11.4282C21.4753 11.0262 21.1529 10.7018 20.7523 10.5091C20.4857 10.3811 20.194 10.3138 19.8983 10.3121M8.68926 14.2061V18.1011M12.6023 14.2061V18.1011M16.5153 14.2061V18.1011M19.4503 10.3121C19.4499 9.41614 19.2725 8.52909 18.9283 7.70191C18.584 6.87473 18.0797 6.12374 17.4443 5.4921C16.1577 4.21259 14.4167 3.4949 12.6023 3.4961C10.7878 3.4949 9.04678 4.21259 7.76026 5.4921C7.12502 6.12383 6.62088 6.87485 6.2768 7.70203C5.93271 8.5292 5.75547 9.41621 5.75526 10.3121" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </div>
-                      </td>
-                      <td style="padding-left: 10px;">
-                        <div style="background: #DBE3F3; border-radius: 25px; padding: 8px 16px; color: #4C7EFB; font-weight: bold; font-size: 14px;">יציאה</div>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-                <td style="text-align: center; width: 33%;">
-                  <img src="https://api.builder.io/api/v1/image/assets/TEMP/b4b3197717142c54d34f612cc618c552d7d121d6?width=562" alt="Stock4U Logo" style="width: 150px; height: auto;">
-                </td>
-                <td style="text-align: right; width: 33%; color: #4C7EFB; font-size: 14px;">
-                  <div style="display: inline-block; margin-left: 15px;">בית</div>
-                  <div style="display: inline-block; margin-left: 15px;">אודות</div>
-                  <div style="display: inline-block; margin-left: 15px;">קריירה</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Yellow Background Section -->
-        <tr>
-          <td style="background: #FFC547; padding: 40px 20px; text-align: center; position: relative;">
-            <!-- Background decorative elements simplified for email -->
-            <div style="position: absolute; top: 10px; right: 10px; opacity: 0.3;">💰</div>
-            <div style="position: absolute; bottom: 10px; left: 10px; opacity: 0.3;">⭐</div>
-            <div style="position: absolute; top: 50%; right: 20%; opacity: 0.3;">💎</div>
-            
-            <!-- Mascot placeholder - simplified for email -->
-            <div style="margin: 20px 0;">
-              <img src="https://api.builder.io/api/v1/image/assets/TEMP/bc95305a408a0a10cdd090884c0f2965277b826e?width=340" alt="Stock4U Mascot" style="width: 120px; height: auto; filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.1));">
+          <td style="background: #FFC547; padding: 20px; text-align: center;">
+            <div style="background: white; padding: 15px; border-radius: 15px; display: inline-block; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <div style="width: 35px; height: 35px; background: #4C7EFB; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;">
+                  🎁
+                </div>
+                <span style="color: #4C7EFB; font-size: 20px; font-weight: bold;">STOCK4U</span>
+              </div>
             </div>
           </td>
         </tr>
 
-        <!-- Main Content Card -->
+        <!-- Hero Section -->
         <tr>
-          <td style="padding: 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #FFF; border-radius: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); padding: 40px 20px;">
-              <tr>
-                <td style="text-align: center;">
-                  <!-- Heading Section -->
-                  <div style="margin-bottom: 20px;">
-                    <div style="font-weight: bold; color: #E96036; text-align: center; font-size: 28px; margin-bottom: 10px;">איזה כיף!</div>
-                    <div style="font-weight: bold; color: #E96036; text-align: center; font-size: 48px; margin-bottom: 20px;">קיבלת מתנה!</div>
-                  </div>
-
-                  <!-- Sender Info -->
-                  <div style="color: #4C7EFB; text-align: center; font-size: 20px; margin-bottom: 30px;">
-                    ממי המתנה? ${senderName} כמובן!
-                  </div>
-
-                  <!-- Company Logo -->
-                  ${hasLogo && companyLogo ? `
-                  <div style="margin: 30px 0;">
-                    <img src="${companyLogo}" alt="${senderName} Logo" style="max-width: 300px; max-height: 80px; border-radius: 10px;">
-                  </div>
-                  ` : ''}
-
-                  <!-- Stocks Table -->
-                  <div style="margin: 30px 0;">
-                    <div style="font-size: 16px; font-weight: 600; color: #486284; margin-bottom: 15px;">המניות שקיבלת במתנה:</div>
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #E0E7FF; border-radius: 8px; overflow: hidden;">
-                      <thead>
-                        <tr style="background: #F5F7FC;">
-                          <th style="padding: 12px; text-align: center; color: #486284; font-weight: 600; font-size: 14px; border-bottom: 1px solid #E0E7FF;">כמות</th>
-                          <th style="padding: 12px; text-align: center; color: #486284; font-weight: 600; font-size: 14px; border-bottom: 1px solid #E0E7FF;">שם החברה</th>
-                          <th style="padding: 12px; text-align: center; color: #486284; font-weight: 600; font-size: 14px; border-bottom: 1px solid #E0E7FF;">סמל</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${giftDetails.stocks.map(stock => `
-                        <tr>
-                          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #E0E7FF; color: #4C7EFB; font-weight: 600;">${stock.amount}</td>
-                          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #E0E7FF; color: #486284;">${stock.name}</td>
-                          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #E0E7FF; color: #486284; font-weight: 500;">${stock.symbol}</td>
-                        </tr>
-                        `).join('')}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <!-- Greeting Message -->
-                  ${giftDetails.message ? `
-                  <div style="margin: 30px 0; padding: 20px; background: #F8FAFF; border-radius: 10px; border-right: 4px solid #4C7EFB;">
-                    <div style="color: #486284; font-size: 16px; line-height: 1.6;">"${giftDetails.message}"</div>
-                  </div>
-                  ` : ''}
-
-                  <!-- Action Button -->
-                  <div style="margin: 30px 0;">
-                    <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-                      <tr>
-                        <td style="background: #4C7EFB; border-radius: 25px; box-shadow: 5px 5px 0 rgba(0,0,0,0.1);">
-                          <a href="#" style="display: block; padding: 15px 30px; color: white; font-weight: bold; font-size: 16px; text-decoration: none;">לצפייה במתנה</a>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </table>
+          <td style="background: #FFC547; padding: 0 20px 30px 20px; text-align: center;">
+            <div style="font-size: 20px; color: #E96036; font-weight: bold; margin-bottom: 5px;">איזה כיף!</div>
+            <div style="font-size: 32px; color: #E96036; font-weight: bold; margin-bottom: 15px;" class="heading-large">קיבלת מתנה!</div>
+            <div style="font-size: 16px; color: #4C7EFB; margin-bottom: 20px;">
+              ממי המתנה? <strong>${senderName}</strong> כמובן!
+            </div>
+            
+            <!-- Gift illustration -->
+            <div style="background: white; width: 80px; height: 80px; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+              <span style="font-size: 40px;">🎁</span>
+            </div>
           </td>
         </tr>
 
-        <!-- Statistics Section -->
+        <!-- Main Content -->
         <tr>
-          <td style="padding: 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="width: 33%; padding: 20px; text-align: center; background: rgba(239,242,246,0.4); border-radius: 15px; margin-left: 10px;">
-                  <div style="color: #486284; font-size: 36px; font-weight: bold; margin-bottom: 10px;">24+</div>
-                  <div style="color: #8CA2C0; font-size: 14px;">מדינות שבהם אנו עובדים</div>
-                </td>
-                <td style="width: 33%; padding: 20px; text-align: center; background: rgba(239,242,246,0.4); border-radius: 15px; margin: 0 5px;">
-                  <div style="color: #486284; font-size: 36px; font-weight: bold; margin-bottom: 10px;">17M</div>
-                  <div style="color: #8CA2C0; font-size: 14px;">אנשים שהאמינו בנו</div>
-                </td>
-                <td style="width: 33%; padding: 20px; text-align: center; background: rgba(239,242,246,0.4); border-radius: 15px; margin-right: 10px;">
-                  <div style="color: #486284; font-size: 36px; font-weight: bold; margin-bottom: 10px;">+95%</div>
-                  <div style="color: #8CA2C0; font-size: 14px;">לקוחות מרוצים</div>
-                </td>
-              </tr>
-            </table>
+          <td class="content" style="background: white; padding: 25px;">
+            
+            <!-- Company Logo -->
+            ${hasLogo && companyLogo ? `
+            <div style="text-align: center; margin-bottom: 25px;">
+              <img src="${companyLogo}" alt="${senderName} Logo" style="max-width: 200px; max-height: 60px; border-radius: 8px;">
+            </div>
+            ` : ''}
+
+            <!-- Stocks Section -->
+            <div style="margin-bottom: 25px;">
+              <div style="font-size: 16px; font-weight: 600; color: #486284; margin-bottom: 12px; text-align: center;">המניות שקיבלת במתנה:</div>
+              
+              ${giftDetails.stocks.map(stock => `
+              <div style="background: #F8FAFF; border: 1px solid #E0E7FF; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="text-align: center; flex: 1;">
+                  <div style="color: #4C7EFB; font-weight: bold; font-size: 18px;">${stock.amount}</div>
+                  <div style="color: #8CA2C0; font-size: 12px;">כמות</div>
+                </div>
+                <div style="text-align: center; flex: 2;">
+                  <div style="color: #486284; font-weight: 600; font-size: 14px;">${stock.name}</div>
+                  <div style="color: #8CA2C0; font-size: 12px;">שם החברה</div>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                  <div style="color: #486284; font-weight: bold; font-size: 16px;">${stock.symbol}</div>
+                  <div style="color: #8CA2C0; font-size: 12px;">סמל</div>
+                </div>
+              </div>
+              `).join('')}
+              
+              <div style="background: #4C7EFB; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-top: 15px;">
+                <div style="font-size: 14px; opacity: 0.9;">סה"כ שווי המתנה</div>
+                <div style="font-size: 20px; font-weight: bold;">₪${giftDetails.totalValue?.toLocaleString() || 'לא מוגדר'}</div>
+              </div>
+            </div>
+
+            <!-- Message -->
+            ${giftDetails.message ? `
+            <div style="background: #F8FAFF; border-right: 4px solid #4C7EFB; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+              <div style="color: #8CA2C0; font-size: 12px; margin-bottom: 5px;">הודעה מיוחדת בשבילך:</div>
+              <div style="color: #486284; font-size: 14px; line-height: 1.6; font-style: italic;">"${giftDetails.message}"</div>
+            </div>
+            ` : ''}
+
+            <!-- Action Button -->
+            <div style="text-align: center; margin: 25px 0;">
+              <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                <tr>
+                  <td style="background: #4C7EFB; border-radius: 25px; padding: 12px 25px;">
+                    <a href="#" style="color: white; font-weight: bold; font-size: 14px; text-decoration: none; display: block;">
+                      לצפייה במתנה 👀
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Delivery Info -->
+            ${giftDetails.deliveryDate ? `
+            <div style="background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; padding: 12px; text-align: center; margin-top: 20px;">
+              <div style="color: #F57C00; font-size: 12px;">📅 תאריך משלוח: ${giftDetails.deliveryDate}</div>
+            </div>
+            ` : ''}
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="background: #DBE3F3; padding: 30px 20px; text-align: center;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="text-align: center;">
-                  <!-- Logo and Brand -->
-                  <div style="margin-bottom: 20px;">
-                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/c6f4ef138fe2fcff4c861a628f2808355b08ca4e?width=247" alt="Stock4U Mascot" style="width: 40px; height: auto; vertical-align: middle; margin-left: 10px;">
-                    <span style="color: #4C7EFB; font-size: 18px; font-weight: bold; vertical-align: middle;">STOCK4U</span>
-                  </div>
-                  
-                  <!-- Contact and Links -->
-                  <div style="color: #4C7EFB; font-size: 14px; line-height: 1.6;">
-                    <div style="margin-bottom: 10px;">
-                      <strong>צרו קשר:</strong> support@stock4u.co.il | 03-12345678
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                      <span style="margin: 0 10px;">אודות</span>
-                      <span style="margin: 0 10px;">מדיניות פרטיות</span>
-                      <span style="margin: 0 10px;">תנאי שימוש</span>
-                    </div>
-                    <div style="color: #8CA2C0; font-size: 12px;">
-                      © 2024 Stock4U. כל הזכויות שמורות.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
+          <td style="background: #F8FAFF; padding: 20px; text-align: center; border-top: 1px solid #E0E7FF;">
+            <div style="margin-bottom: 15px;">
+              <span style="color: #4C7EFB; font-size: 14px; font-weight: bold;">STOCK4U</span>
+            </div>
+            <div style="color: #8CA2C0; font-size: 11px; line-height: 1.4;">
+              © 2024 Stock4U. כל הזכויות שמורות.<br>
+              support@stock4u.co.il | מוקד שירות: 03-12345678
+            </div>
           </td>
         </tr>
       </table>
