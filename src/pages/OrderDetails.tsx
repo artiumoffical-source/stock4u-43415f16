@@ -24,6 +24,7 @@ export default function OrderDetails() {
     string[]
   >(["mobile"]);
   const [senderName, setSenderName] = useState(giftData?.senderName || "");
+  const [senderEmail, setSenderEmail] = useState(giftData?.senderEmail || "");
   const [recipients, setRecipients] = useState<Recipient[]>([
     {
       id: "1",
@@ -370,7 +371,27 @@ export default function OrderDetails() {
               type="text"
               value={senderName}
               onChange={(e) => setSenderName(e.target.value)}
-              placeholder="שדה נבחר עם טקסט"
+              placeholder="השם שלכם"
+              style={{
+                width: "100%",
+                height: "50px",
+                padding: "15px 20px",
+                color: "#1B1919",
+                textAlign: "center",
+                fontSize: "16px",
+                fontFamily: "Poppins",
+                background: "rgba(245, 247, 252, 1)",
+                border: "1px solid #4C7EFB",
+                borderRadius: "10px",
+                outline: "none",
+                marginBottom: "10px",
+              }}
+            />
+            <input
+              type="email"
+              value={senderEmail}
+              onChange={(e) => setSenderEmail(e.target.value)}
+              placeholder="המייל שלכם"
               style={{
                 width: "100%",
                 height: "50px",
@@ -988,6 +1009,7 @@ export default function OrderDetails() {
             onClick={() => {
               updateGiftData({
                 senderName,
+                senderEmail,
                 recipientDetails: {
                   name: recipients[0].name,
                   email: recipients[0].email,

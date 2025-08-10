@@ -14,6 +14,7 @@ interface GiftData {
     deliveryDate: string;
   };
   senderName: string;
+  senderEmail: string;
   sendingMethod?: string;
   selectedDate?: {
     day: string;
@@ -55,6 +56,7 @@ const defaultGiftData: GiftData = {
     deliveryDate: "",
   },
   senderName: "",
+  senderEmail: "",
   sendingMethod: "immediately",
   selectedDate: {
     day: "",

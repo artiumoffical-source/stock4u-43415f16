@@ -87,10 +87,10 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
 
   console.log('Recipient email data:', recipientEmailData);
 
-  // Email to sender (confirmation) - using recipient email as fallback since we don't have sender email
+  // Email to sender (confirmation)
   const senderEmailData: EmailData = {
     from: 'support@stock4u.co.il',
-    to: giftData.senderEmail || giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
+    to: giftData.senderEmail || 'test@example.com',
     subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
     senderName: giftData.senderName || 'השולח',
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
