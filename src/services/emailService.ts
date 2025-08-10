@@ -70,7 +70,7 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
 
   // Email to recipient
   const recipientEmailData: EmailData = {
-    from: 'support@send.stock4u.co.il',
+    from: 'Stock4U <onboarding@resend.dev>',
     to: giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'השולח'}!`,
     senderName: giftData.senderName || 'השולח',
@@ -89,7 +89,7 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
 
   // Email to sender (confirmation)
   const senderEmailData: EmailData = {
-    from: 'support@send.stock4u.co.il',
+    from: 'Stock4U <onboarding@resend.dev>',
     to: giftData.senderEmail || 'test@example.com',
     subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
     senderName: giftData.senderName || 'השולח',
