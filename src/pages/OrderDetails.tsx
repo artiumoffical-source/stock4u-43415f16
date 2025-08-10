@@ -109,7 +109,15 @@ export default function OrderDetails() {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setUploadedImage(e.target?.result as string);
+        const imageData = e.target?.result as string;
+        setUploadedImage(imageData);
+        
+        // Update the gift context with logo data
+        updateGiftData({
+          uploadedImage: imageData,
+          companyLogo: imageData,
+          hasLogo: true
+        });
       };
       reader.readAsDataURL(file);
     }

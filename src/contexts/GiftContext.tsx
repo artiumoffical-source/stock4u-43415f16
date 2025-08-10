@@ -32,6 +32,8 @@ interface GiftData {
   }>;
   deliveryMethods?: string[];
   uploadedImage?: string;
+  companyLogo?: string;
+  hasLogo?: boolean;
 }
 
 interface GiftContextType {

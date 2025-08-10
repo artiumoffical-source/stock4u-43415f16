@@ -14,6 +14,8 @@ export interface EmailData {
     message?: string;
     deliveryDate?: string;
   };
+  companyLogo?: string;
+  hasLogo?: boolean;
 }
 
 export const sendGiftEmails = async (emailData: EmailData) => {
@@ -78,7 +80,9 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
       totalValue,
       message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת בשבילך!',
       deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
-    }
+    },
+    companyLogo: giftData.companyLogo || giftData.uploadedImage,
+    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false
   };
 
   console.log('Recipient email data:', recipientEmailData);
@@ -95,7 +99,9 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
       totalValue,
       message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת!',
       deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
-    }
+    },
+    companyLogo: giftData.companyLogo || giftData.uploadedImage,
+    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false
   };
 
   console.log('Sender email data:', senderEmailData);
