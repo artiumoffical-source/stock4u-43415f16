@@ -1,7 +1,7 @@
 import React from "react";
 
 interface StepHeroProps {
-  currentStep: 1 | 2 | 3;
+  currentStep: 1 | 2 | 3 | 4;
 }
 
 export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {

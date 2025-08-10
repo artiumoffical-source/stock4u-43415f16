@@ -198,7 +198,7 @@ export default function StockSelection() {
   const goToCart = () => {
     // Scroll to top before navigation
     window.scrollTo(0, 0);
-    navigate("/order-details");
+    navigate("/cart");
   };
 
   const getTotalSelectedStocks = () => {
