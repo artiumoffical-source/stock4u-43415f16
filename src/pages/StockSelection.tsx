@@ -215,7 +215,10 @@ export default function StockSelection() {
     const handleAmountChange = (value: string) => {
       const numValue = parseInt(value) || 0;
       setAmount(numValue);
-      updateStockAmount(stock.symbol, numValue);
+    };
+
+    const handleAmountBlur = () => {
+      updateStockAmount(stock.symbol, amount);
     };
 
     return (
@@ -291,6 +294,7 @@ export default function StockSelection() {
               placeholder="0"
               value={amount || ""}
               onChange={(e) => handleAmountChange(e.target.value)}
+              onBlur={handleAmountBlur}
               className="w-20 h-8 border border-[#DBE3F3] rounded-md text-center text-[14px] text-[#486284] focus:outline-none focus:ring-2 focus:ring-[#4C7EFB] focus:border-transparent"
               style={{
                 fontFamily:
