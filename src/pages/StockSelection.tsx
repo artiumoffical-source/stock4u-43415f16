@@ -7,7 +7,7 @@ import { useGift } from "../contexts/GiftContext";
 export default function StockSelection() {
   const [selectedTab, setSelectedTab] = useState("individual");
   const [searchTerm, setSearchTerm] = useState("");
-  const { giftData, addStock, removeStock, updateStockAmount, resetGiftData } =
+  const { giftData, addStock, removeStock, resetGiftData } =
     useGift();
   const navigate = useNavigate();
 
@@ -19,14 +19,11 @@ export default function StockSelection() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Convert selectedStocks to cartItems format for display
-  const cartItems = giftData.selectedStocks.reduce(
-    (acc, stock) => {
-      acc[stock.symbol] = Math.ceil(stock.amount / 100); // Convert amount to share count (approximate)
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+  // Get selected stocks amounts for display
+  const getStockAmount = (symbol: string) => {
+    const stock = giftData.selectedStocks.find(s => s.symbol === symbol);
+    return stock ? stock.amount : 0;
+  };
 
   // Top 5 US stocks (מניות בודדות)
   const individualStocks = [
@@ -176,48 +173,26 @@ export default function StockSelection() {
     },
   ];
 
-  const addToCart = (symbol: string, stockData?: any) => {
+  const updateStockAmount = (symbol: string, amount: number) => {
     const stockInfo =
-      stockData ||
       individualStocks.find((s) => s.symbol === symbol) ||
       etfs.find((s) => s.symbol === symbol);
 
-    if (stockInfo) {
+    if (stockInfo && amount > 0) {
       addStock({
         symbol: stockInfo.symbol,
         name: stockInfo.company,
-        amount: 300, // Default amount
+        amount: amount,
       });
+    } else if (amount === 0) {
+      removeStock(symbol);
     }
   };
 
-  const updateQuantity = (symbol: string, increment: boolean) => {
-    const currentStock = giftData.selectedStocks.find(
-      (s) => s.symbol === symbol,
-    );
-    if (increment) {
-      if (currentStock) {
-        updateStockAmount(symbol, currentStock.amount + 100);
-      } else {
-        // Add new stock if doesn't exist
-        const stockInfo =
-          individualStocks.find((s) => s.symbol === symbol) ||
-          etfs.find((s) => s.symbol === symbol);
-        if (stockInfo) {
-          addStock({
-            symbol: stockInfo.symbol,
-            name: stockInfo.company,
-            amount: 100,
-          });
-        }
-      }
-    } else if (currentStock) {
-      if (currentStock.amount <= 100) {
-        removeStock(symbol);
-      } else {
-        updateStockAmount(symbol, currentStock.amount - 100);
-      }
-    }
+  const continueToGiftDesign = () => {
+    // Scroll to top before navigation
+    window.scrollTo(0, 0);
+    navigate("/gift-design");
   };
 
   const goToCart = () => {
@@ -226,120 +201,133 @@ export default function StockSelection() {
     navigate("/order-details");
   };
 
-  const getTotalCartItems = () => {
-    return Object.values(cartItems).reduce((sum, count) => sum + count, 0);
+  const getTotalSelectedStocks = () => {
+    return giftData.selectedStocks.length;
   };
 
-  const StockCard = ({ stock }: { stock: any }) => (
-    <div
-      className="w-[380px] h-[260px] bg-white rounded-[20px] relative p-5 hover:shadow-xl transition-all duration-300"
-      style={{ boxShadow: "0 4px 81.4px 0 rgba(72, 98, 132, 0.15)" }}
-    >
-      {/* Expand Icon */}
-      <div className="absolute top-4 left-4">
-        <div className="w-[22px] h-[22px] bg-[#4C7EFB] rounded-lg flex items-center justify-center text-white hover:bg-blue-600 transition-colors cursor-pointer">
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 28 28">
-            <path
-              fillRule="evenodd"
-              d="M14.3969 3.27417C14.3969 3.05039 14.308 2.83578 14.1498 2.67755C13.9916 2.51931 13.777 2.43042 13.5532 2.43042H7.98443C6.09443 2.43042 5.14943 2.43042 4.4238 2.7983C3.78879 3.12186 3.2725 3.63815 2.94893 4.27317C2.58105 4.99542 2.58105 5.94042 2.58105 7.8338V13.4025C2.58105 13.6263 2.66995 13.8409 2.82818 13.9992C2.98642 14.1574 3.20103 14.2463 3.4248 14.2463C3.64858 14.2463 3.86319 14.1574 4.02143 13.9992C4.17966 13.8409 4.26855 13.6263 4.26855 13.4025V7.8338C4.26855 6.86011 4.26855 6.23236 4.30905 5.75817C4.34618 5.29917 4.4103 5.13042 4.45249 5.04604C4.61449 4.72879 4.87268 4.47061 5.18993 4.30861C5.2743 4.26642 5.44305 4.2023 5.90205 4.16517C6.37962 4.12636 7.00905 4.12467 7.97768 4.12467H13.5464C13.7702 4.12467 13.9848 4.03577 14.1431 3.87754C14.3013 3.71931 14.3902 3.5047 14.3902 3.28092L14.3969 3.27417Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-      </div>
+  const getTotalGiftAmount = () => {
+    return giftData.selectedStocks.reduce((sum, stock) => sum + stock.amount, 0);
+  };
 
-      {/* Company info with logo */}
-      <div className="pt-4">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="text-[#486284] opacity-80">{stock.logo}</div>
-          <h3
-            className="text-[28px] font-bold text-[#486284] leading-[32px]"
+  const StockCard = ({ stock }: { stock: any }) => {
+    const [amount, setAmount] = useState(getStockAmount(stock.symbol));
+    
+    const handleAmountChange = (value: string) => {
+      const numValue = parseInt(value) || 0;
+      setAmount(numValue);
+      updateStockAmount(stock.symbol, numValue);
+    };
+
+    return (
+      <div
+        className="w-[380px] h-[300px] bg-white rounded-[20px] relative p-5 hover:shadow-xl transition-all duration-300"
+        style={{ boxShadow: "0 4px 81.4px 0 rgba(72, 98, 132, 0.15)" }}
+      >
+        {/* Expand Icon */}
+        <div className="absolute top-4 left-4">
+          <div className="w-[22px] h-[22px] bg-[#4C7EFB] rounded-lg flex items-center justify-center text-white hover:bg-blue-600 transition-colors cursor-pointer">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 28 28">
+              <path
+                fillRule="evenodd"
+                d="M14.3969 3.27417C14.3969 3.05039 14.308 2.83578 14.1498 2.67755C13.9916 2.51931 13.777 2.43042 13.5532 2.43042H7.98443C6.09443 2.43042 5.14943 2.43042 4.4238 2.7983C3.78879 3.12186 3.2725 3.63815 2.94893 4.27317C2.58105 4.99542 2.58105 5.94042 2.58105 7.8338V13.4025C2.58105 13.6263 2.66995 13.8409 2.82818 13.9992C2.98642 14.1574 3.20103 14.2463 3.4248 14.2463C3.64858 14.2463 3.86319 14.1574 4.02143 13.9992C4.17966 13.8409 4.26855 13.6263 4.26855 13.4025V7.8338C4.26855 6.86011 4.26855 6.23236 4.30905 5.75817C4.34618 5.29917 4.4103 5.13042 4.45249 5.04604C4.61449 4.72879 4.87268 4.47061 5.18993 4.30861C5.2743 4.26642 5.44305 4.2023 5.90205 4.16517C6.37962 4.12636 7.00905 4.12467 7.97768 4.12467H13.5464C13.7702 4.12467 13.9848 4.03577 14.1431 3.87754C14.3013 3.71931 14.3902 3.5047 14.3902 3.28092L14.3969 3.27417Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Company info with logo */}
+        <div className="pt-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="text-[#486284] opacity-80">{stock.logo}</div>
+            <h3
+              className="text-[28px] font-bold text-[#486284] leading-[32px]"
+              style={{
+                fontFamily:
+                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
+            >
+              {stock.symbol}
+            </h3>
+          </div>
+          <p
+            className="text-[12px] text-[#486284] opacity-50 mb-4 leading-[18px]"
             style={{
               fontFamily:
                 "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
             }}
           >
-            {stock.symbol}
-          </h3>
+            {stock.company}
+          </p>
         </div>
-        <p
-          className="text-[12px] text-[#486284] opacity-50 mb-6 leading-[18px]"
-          style={{
-            fontFamily:
-              "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-          }}
-        >
-          {stock.company}
-        </p>
-      </div>
 
-      {/* Description */}
-      <div className="px-2">
-        <p
-          className="text-[14px] text-[#486284] leading-[134%] text-right mb-6 h-[100px] overflow-hidden"
-          style={{
-            fontFamily:
-              "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-          }}
-        >
-          {stock.description}
-        </p>
-      </div>
+        {/* Description */}
+        <div className="px-2">
+          <p
+            className="text-[14px] text-[#486284] leading-[134%] text-right mb-4 h-[80px] overflow-hidden"
+            style={{
+              fontFamily:
+                "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
+            }}
+          >
+            {stock.description}
+          </p>
+        </div>
 
-      {/* Bottom section with add to cart button */}
-      <div className="absolute bottom-4 left-4">
-        <button
-          onClick={() => {
-            addToCart(stock.symbol, stock);
-            // Small delay to ensure state update, then navigate
-            setTimeout(() => goToCart(), 100);
-          }}
-          className="w-[120px] h-[40px] bg-[#4C7EFB] hover:bg-blue-600 text-white rounded-[40px] font-bold text-[15px] transition-all duration-200"
-          style={{
-            fontFamily:
-              "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-            boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
-          }}
-        >
-          הוסף לעגלה
-        </button>
-      </div>
+        {/* Gift Amount Input */}
+        <div className="absolute bottom-16 right-4 left-4">
+          <div className="flex items-center gap-2 justify-center">
+            <span
+              className="text-[14px] text-[#486284] font-medium"
+              style={{
+                fontFamily:
+                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
+            >
+              ₪
+            </span>
+            <input
+              type="number"
+              placeholder="0"
+              value={amount || ""}
+              onChange={(e) => handleAmountChange(e.target.value)}
+              className="w-20 h-8 border border-[#DBE3F3] rounded-md text-center text-[14px] text-[#486284] focus:outline-none focus:ring-2 focus:ring-[#4C7EFB] focus:border-transparent"
+              style={{
+                fontFamily:
+                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
+            />
+            <span
+              className="text-[14px] text-[#486284] font-medium"
+              style={{
+                fontFamily:
+                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
+            >
+              סכום המתנה
+            </span>
+          </div>
+        </div>
 
-      {/* Quantity controls on the right side */}
-      <div className="absolute bottom-4 right-4 flex items-center gap-2">
-        <button
-          onClick={() => updateQuantity(stock.symbol, false)}
-          className="w-[36px] h-[34px] bg-[#DDD] hover:bg-gray-300 rounded-[15px] flex items-center justify-center text-[28px] font-bold text-[#486284] transition-colors"
-          style={{
-            fontFamily:
-              "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-          }}
-          disabled={!cartItems[stock.symbol] || cartItems[stock.symbol] === 0}
-        >
-          -
-        </button>
-        <span
-          className="text-[28px] font-bold text-[#486284] w-[20px] text-center"
-          style={{
-            fontFamily:
-              "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-          }}
-        >
-          {cartItems[stock.symbol] || 0}
-        </span>
-        <button
-          onClick={() => updateQuantity(stock.symbol, true)}
-          className="w-[36px] h-[34px] bg-[#DDD] hover:bg-gray-300 rounded-[15px] flex items-center justify-center text-[28px] font-bold text-[#486284] transition-colors"
-          style={{
-            fontFamily:
-              "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-          }}
-        >
-          +
-        </button>
+        {/* Selected indicator */}
+        {amount > 0 && (
+          <div className="absolute bottom-4 left-4">
+            <div className="w-[100px] h-[30px] bg-green-100 border border-green-300 rounded-[15px] flex items-center justify-center">
+              <span
+                className="text-[12px] font-bold text-green-700"
+                style={{
+                  fontFamily:
+                    "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+                }}
+              >
+                נבחר ₪{amount}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   // Get current data based on selected tab
   const currentData = selectedTab === "individual" ? individualStocks : etfs;
@@ -375,7 +363,7 @@ export default function StockSelection() {
                   />
                 </svg>
               </div>
-              {getTotalCartItems() > 0 && (
+              {getTotalSelectedStocks() > 0 && (
                 <div className="absolute -top-1 -left-1 w-5 h-5 bg-[#FFC547] border-2 border-white rounded-full flex items-center justify-center">
                   <span
                     className="text-xs font-bold text-[#1521B2]"
@@ -384,7 +372,7 @@ export default function StockSelection() {
                         "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
                     }}
                   >
-                    {getTotalCartItems()}
+                    {getTotalSelectedStocks()}
                   </span>
                 </div>
               )}
@@ -674,6 +662,43 @@ export default function StockSelection() {
               <StockCard key={`${selectedTab}-${index}`} stock={stock} />
             ))}
           </div>
+
+          {/* Continue to Gift Design Button */}
+          {getTotalSelectedStocks() > 0 && (
+            <div className="text-center mb-12">
+              <div className="mb-4">
+                <p
+                  className="text-[18px] font-bold text-[#486284] mb-2"
+                  style={{
+                    fontFamily:
+                      "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
+                  סך הכל: ₪{getTotalGiftAmount().toLocaleString()}
+                </p>
+                <p
+                  className="text-[14px] text-[#486284] opacity-70"
+                  style={{
+                    fontFamily:
+                      "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
+                  {getTotalSelectedStocks()} מניות נבחרו
+                </p>
+              </div>
+              <button
+                onClick={continueToGiftDesign}
+                className="w-[250px] h-[50px] bg-[#4C7EFB] hover:bg-blue-600 text-white rounded-[40px] font-bold text-[16px] transition-all duration-200"
+                style={{
+                  fontFamily:
+                    "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+                  boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
+                }}
+              >
+                המשך לעיצוב המתנה
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
