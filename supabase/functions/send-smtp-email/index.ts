@@ -261,6 +261,12 @@ const handler = async (req: Request): Promise<Response> => {
     
     const htmlBody = generateGiftEmailHTML(emailData, isForRecipient);
 
+    console.log('Sending email with data:', {
+      from: emailData.from,
+      to: emailData.to,
+      subject: emailData.subject
+    });
+
     const { data, error } = await resend.emails.send({
       from: emailData.from,
       to: [emailData.to],
@@ -269,8 +275,10 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (error) {
-      console.error('Resend error:', error);
-      throw new Error(`Resend error: ${error.message}`);
+      console.error('Resend error details:', JSON.stringify(error, null, 2));
+      console.error('Resend error message:', error.message);
+      console.error('Resend error type:', typeof error);
+      throw new Error(`Resend error: ${JSON.stringify(error)}`);
     }
 
     console.log('Email sent successfully:', data);
