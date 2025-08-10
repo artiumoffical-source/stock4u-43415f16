@@ -41,640 +41,71 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Stock4U - ${isForRecipient ? 'מתנת מניות' : 'אישור שליחת מתנה'}</title>
-      <!--[if mso]>
-      <noscript>
-        <xml>
-          <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-        </xml>
-      </noscript>
-      <![endif]-->
+      <title>מתנת מניות מ-${senderName}</title>
       <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Heebo', Arial, sans-serif; direction: rtl; background: #ffffff; }
+        table { border-collapse: collapse; }
+        .container { width: 800px; max-width: 100%; margin: 0 auto; background: #ffffff; }
+        .header { background: #4C7EFB; padding: 20px; text-align: center; color: white; }
+        .logo { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+        .tagline { font-size: 14px; opacity: 0.9; }
+        .main-content { position: relative; background: #FFC547; width: 100%; height: 327px; }
+        .decorative-bg { position: absolute; top: -109px; left: -49px; width: 888px; height: 561px; 
+          background: url('https://api.builder.io/api/v1/image/assets/TEMP/8748bb1fb3ec0f322beee2fda95614b39ec269b6?width=4258') no-repeat; background-size: cover; z-index: 1; }
+        .gift-card { position: absolute; width: 494px; height: 250px; left: 153px; top: 262px; 
+          background: #ffffff; border-radius: 14.4px; box-shadow: 0 1.7px 16.3px 0 rgba(0,0,0,0.25); 
+          padding: 9px 8px; z-index: 10; }
+        .gift-card-inner { display: table; width: 100%; height: 100%; }
+        .gift-content { display: table-cell; vertical-align: middle; text-align: center; }
+        .gift-title { color: #E96036; font-size: 14.2px; font-weight: 800; margin-bottom: 5.6px; }
+        .gift-subtitle { color: #E96036; font-size: 26.7px; font-weight: 800; margin-bottom: 20px; }
+        .gift-from { color: #4C7EFB; font-size: 10px; margin-bottom: 20px; }
+        .company-logo { width: 230.5px; height: 43.9px; margin: 0 auto 20px auto; border-radius: 6.4px; display: block; }
+        .view-btn { width: 113px; height: 29px; background: #4C7EFB; border-radius: 23.4px; 
+          box-shadow: 4.2px 4.2px 0 0 rgba(0,0,0,0.10); margin: 0 auto; }
+        .btn-text { color: #ffffff; font-size: 7.5px; font-weight: 700; line-height: 29px; text-align: center; }
+        .footer { background: #333; color: white; padding: 20px; text-align: center; }
+        @media (max-width: 600px) {
+          .container { width: 100% !important; }
+          .main-content { height: auto !important; min-height: 300px !important; }
+          .gift-card { position: relative !important; width: 90% !important; left: auto !important; 
+            top: 50px !important; margin: 0 auto !important; }
+          .gift-subtitle { font-size: 22px !important; }
+          .company-logo { width: 80% !important; max-width: 200px !important; height: auto !important; }
         }
-        
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-          line-height: 1.6;
-          color: #333;
-          background-color: #ffffff;
-          direction: rtl;
-          margin: 0;
-          padding: 0;
-          width: 100%;
-          min-width: 100%;
-          -webkit-text-size-adjust: 100%;
-          -ms-text-size-adjust: 100%;
-        }
-        
-        table {
-          border-collapse: collapse;
-          mso-table-lspace: 0pt;
-          mso-table-rspace: 0pt;
-        }
-        
-        .email-wrapper {
-          width: 100%;
-          background-color: #ffffff;
-          margin: 0;
-          padding: 0;
-        }
-        
-        .email-container {
-          max-width: 600px;
-          margin: 0 auto;
-          background-color: #ffffff;
-          position: relative;
-        }
-        
-        /* Header Section */
-        .header-section {
-          background-color: #ffffff;
-          border: 1px solid #DDD;
-          padding: 10px 20px;
-          text-align: center;
-        }
-        
-        .header-content {
-          display: table;
-          width: 100%;
-        }
-        
-        .header-left, .header-right {
-          display: table-cell;
-          vertical-align: middle;
-          width: 25%;
-        }
-        
-        .header-center {
-          display: table-cell;
-          vertical-align: middle;
-          text-align: center;
-          width: 50%;
-        }
-        
-        .cart-icon {
-          display: inline-block;
-          width: 40px;
-          height: 40px;
-          background-color: #4C7EFB;
-          border-radius: 50%;
-          text-align: center;
-          line-height: 40px;
-          box-shadow: 5px 5px 0 0 rgba(0,0,0,0.10);
-        }
-        
-        .exit-button {
-          display: inline-block;
-          background-color: #DBE3F3;
-          color: #4C7EFB;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-weight: bold;
-          font-size: 14px;
-          text-decoration: none;
-          margin-right: 10px;
-        }
-        
-        .header-nav {
-          color: #4C7EFB;
-          font-size: 14px;
-          text-align: left;
-        }
-        
-        .logo-img {
-          max-width: 180px;
-          height: auto;
-        }
-        
-        /* Main Yellow Section */
-        .hero-section {
-          background-color: #FFC547;
-          padding: 30px 20px;
-          text-align: center;
-          position: relative;
-          background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/7a0ce1897b9a92990f9d99cb40666973ee6b2c50?width=4258');
-          background-size: cover;
-          background-position: center;
-        }
-        
-        .decorative-element {
-          position: absolute;
-          opacity: 0.7;
-        }
-        
-        .currency-1 {
-          width: 40px;
-          height: 60px;
-          right: 20px;
-          top: 20px;
-          background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/dc30876d4e45ff347666118bde718b5cf5c9ffb0?width=175');
-          background-size: contain;
-          background-repeat: no-repeat;
-          transform: rotate(20deg);
-        }
-        
-        .currency-2 {
-          width: 40px;
-          height: 60px;
-          left: 20px;
-          bottom: 20px;
-          background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/a70d9027dcb8137595aae5c3f6f8bb37597cbfdd?width=175');
-          background-size: contain;
-          background-repeat: no-repeat;
-        }
-        
-        .star-red {
-          width: 30px;
-          height: 35px;
-          right: 50px;
-          top: 50px;
-          background: #E96036;
-          clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        
-        .star-yellow {
-          width: 35px;
-          height: 40px;
-          left: 50px;
-          top: 30px;
-          background: #FFC547;
-          clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        
-        .mascot-container {
-          position: relative;
-          display: inline-block;
-          margin: 20px 0;
-        }
-        
-        .mascot-bg {
-          background: white;
-          border-radius: 20px;
-          padding: 15px;
-          filter: drop-shadow(5px 5px 0 rgba(0,0,0,0.1));
-          display: inline-block;
-        }
-        
-        .mascot-image {
-          width: 120px;
-          height: auto;
-          max-height: 150px;
-        }
-        
-        /* Main Content Card */
-        .content-card {
-          background: #ffffff;
-          margin: 20px;
-          padding: 30px 20px;
-          border-radius: 25px;
-          box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-          text-align: center;
-          position: relative;
-          top: -30px;
-        }
-        
-        .content-heading {
-          font-weight: bold;
-          color: #E96036;
-          text-align: center;
-          margin-bottom: 20px;
-        }
-        
-        .content-title {
-          font-size: 24px;
-          margin-bottom: 8px;
-        }
-        
-        .content-subtitle {
-          font-size: 36px;
-          margin-bottom: 20px;
-        }
-        
-        .sender-info {
-          color: #4C7EFB;
-          font-size: 18px;
-          margin-bottom: 25px;
-        }
-        
-        .company-logo {
-          max-width: 300px;
-          height: auto;
-          max-height: 80px;
-          border-radius: 10px;
-          margin: 20px auto;
-          display: block;
-        }
-        
-        .cta-button {
-          display: inline-block;
-          background-color: #4C7EFB;
-          color: white !important;
-          padding: 12px 25px;
-          border-radius: 25px;
-          text-decoration: none;
-          font-weight: bold;
-          font-size: 16px;
-          margin: 20px 0;
-          box-shadow: 8px 8px 0 0 rgba(0,0,0,0.10);
-          transition: transform 0.2s;
-        }
-        
-        .cta-button:hover {
-          transform: translateY(-2px);
-        }
-        
-        .gift-details {
-          background: #f8f9ff;
-          padding: 20px;
-          border-radius: 15px;
-          margin: 20px 0;
-          text-align: right;
-        }
-        
-        .stock-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px 0;
-          border-bottom: 1px solid #eee;
-        }
-        
-        .stock-item:last-child {
-          border-bottom: none;
-        }
-        
-        .stock-symbol {
-          font-weight: bold;
-          color: #4C7EFB;
-          font-size: 16px;
-        }
-        
-        .stock-name {
-          color: #666;
-          font-size: 14px;
-          margin-top: 3px;
-        }
-        
-        .stock-amount {
-          font-weight: bold;
-          color: #E96036;
-          font-size: 16px;
-        }
-        
-        .total-value {
-          background: #E96036;
-          color: white;
-          padding: 15px;
-          border-radius: 12px;
-          text-align: center;
-          font-size: 18px;
-          font-weight: bold;
-          margin: 20px 0;
-        }
-        
-        .message-section {
-          background: #FFC547;
-          padding: 20px;
-          border-radius: 15px;
-          margin: 20px 0;
-          font-style: italic;
-          text-align: center;
-          font-size: 16px;
-        }
-        
-        /* Statistics Section */
-        .stats-section {
-          padding: 20px;
-          background: rgba(239,242,246,0.4);
-        }
-        
-        .stats-container {
-          display: flex;
-          gap: 15px;
-          max-width: 500px;
-          margin: 0 auto;
-        }
-        
-        .stat-item {
-          flex: 1;
-          background: rgba(255,255,255,0.8);
-          padding: 20px 10px;
-          border-radius: 15px;
-          text-align: center;
-        }
-        
-        .stat-number {
-          font-size: 32px;
-          font-weight: bold;
-          color: #486284;
-          margin-bottom: 8px;
-          font-family: 'DM Sans', sans-serif;
-        }
-        
-        .stat-label {
-          font-size: 12px;
-          color: #8CA2C0;
-          line-height: 1.4;
-        }
-        
-        /* Footer Section */
-        .footer-section {
-          background-color: #DBE3F3;
-          padding: 25px 20px;
-          text-align: center;
-        }
-        
-        .footer-content {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 30px;
-          flex-wrap: wrap;
-        }
-        
-        .footer-logo-section {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-        
-        .footer-mascot {
-          width: 40px;
-          height: 50px;
-        }
-        
-        .footer-brand {
-          color: #4C7EFB;
-          font-size: 16px;
-          font-weight: bold;
-        }
-        
-        .footer-info {
-          color: #4C7EFB;
-          font-size: 12px;
-          text-align: center;
-        }
-        
-        .footer-links {
-          color: #4C7EFB;
-          font-size: 11px;
-          margin-top: 8px;
-        }
-        
-        /* Mobile Responsive */
-        @media only screen and (max-width: 600px) {
-          .email-container {
-            width: 100% !important;
-            max-width: none !important;
-          }
-          
-          .header-content {
-            display: block !important;
-          }
-          
-          .header-left, .header-center, .header-right {
-            display: block !important;
-            width: 100% !important;
-            text-align: center !important;
-            padding: 5px 0 !important;
-          }
-          
-          .header-nav {
-            display: none !important;
-          }
-          
-          .logo-img {
-            max-width: 150px !important;
-          }
-          
-          .hero-section {
-            padding: 20px 10px !important;
-          }
-          
-          .decorative-element {
-            display: none !important;
-          }
-          
-          .mascot-image {
-            width: 100px !important;
-            max-height: 120px !important;
-          }
-          
-          .content-card {
-            margin: 10px !important;
-            padding: 20px 15px !important;
-          }
-          
-          .content-subtitle {
-            font-size: 28px !important;
-          }
-          
-          .content-title {
-            font-size: 20px !important;
-          }
-          
-          .sender-info {
-            font-size: 16px !important;
-          }
-          
-          .company-logo {
-            max-width: 90% !important;
-          }
-          
-          .stats-container {
-            flex-direction: column !important;
-            gap: 10px !important;
-          }
-          
-          .stat-number {
-            font-size: 24px !important;
-          }
-          
-          .stat-label {
-            font-size: 11px !important;
-          }
-          
-          .footer-content {
-            flex-direction: column !important;
-            gap: 15px !important;
-          }
-          
-          .cta-button {
-            width: 80% !important;
-            margin: 15px auto !important;
-            display: block !important;
-            text-align: center !important;
-          }
-          
-          .gift-details {
-            text-align: center !important;
-          }
-        }
-        
-        /* Gmail App specific fixes */
-        @media screen and (max-width: 480px) {
-          .hero-section {
-            background-size: cover !important;
-          }
-          
-          .content-card {
-            border-radius: 15px !important;
-          }
-        }
-        
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-          .content-card {
-            background: #ffffff !important;
-            color: #333333 !important;
-          }
-        }
-        
-        /* Outlook specific fixes */
-        <!--[if mso]>
-        .hero-section {
-          background-color: #FFC547 !important;
-        }
-        <![endif]-->
       </style>
     </head>
     <body>
-      <div class="email-wrapper">
-        <div class="email-container">
-          <!-- Header Section -->
-          <div class="header-section">
-            <div class="header-content">
-              <div class="header-left">
-                <div class="cart-icon">
-                  <svg width="20" height="20" viewBox="0 0 25 25" fill="none">
-                    <path d="M19.9003 10.3121H5.30426" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M8.68926 14.2061V18.1011M12.6023 14.2061V18.1011M16.5153 14.2061V18.1011" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </div>
-                <a href="#" class="exit-button">יציאה</a>
-              </div>
-              
-              <div class="header-center">
-                <img src="https://api.builder.io/api/v1/image/assets/TEMP/b4b3197717142c54d34f612cc618c552d7d121d6?width=562" alt="Stock4U Logo" class="logo-img">
-              </div>
-              
-              <div class="header-right">
-                <div class="header-nav">בית | אודות | קריירה</div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Main Yellow Background Section -->
-          <div class="hero-section">
-            <!-- Decorative Elements -->
-            <div class="decorative-element currency-1"></div>
-            <div class="decorative-element currency-2"></div>
-            <div class="decorative-element star-red"></div>
-            <div class="decorative-element star-yellow"></div>
-            
-            <!-- Stock4U Mascot -->
-            <div class="mascot-container">
-              <div class="mascot-bg">
-                <img src="https://api.builder.io/api/v1/image/assets/TEMP/bc95305a408a0a10cdd090884c0f2965277b826e?width=340" alt="Stock4U Mascot" class="mascot-image">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Main Content Card -->
-          <div class="content-card">
-            <!-- Heading Section -->
-            <div class="content-heading content-title">איזה כיף!</div>
-            <div class="content-heading content-subtitle">${isForRecipient ? 'קיבלת מתנה!' : 'המתנה נשלחה!'}</div>
-            
-            <!-- Sender Info -->
-            <div class="sender-info">
-              ${isForRecipient ? `ממי המתנה? ${senderName} כמובן!` : `המתנה נשלחה ל-${recipientName} בהצלחה!`}
-            </div>
-            
-            <!-- Company Logo -->
-            ${hasLogo && companyLogo ? `
-              <img src="${companyLogo}" alt="${senderName} Logo" class="company-logo">
-            ` : ''}
-            
-            <!-- Action Button -->
-            ${isForRecipient ? `
-              <a href="https://stock4u.co.il/gift-redeem" class="cta-button">לצפייה במתנה</a>
-            ` : ''}
-            
-            <!-- Gift Details -->
-            <div class="gift-details">
-              <h3 style="color: #4C7EFB; margin-bottom: 15px; font-size: 18px; text-align: center;">פרטי המתנה:</h3>
-              ${giftDetails.stocks.map(stock => `
-                <div class="stock-item">
-                  <div>
-                    <div class="stock-symbol">${stock.symbol}</div>
-                    <div class="stock-name">${stock.name}</div>
+      <table role="presentation" width="800" cellspacing="0" cellpadding="0" border="0" class="container">
+        <tr><td class="header">
+          <div class="logo">Stock4U</div>
+          <div class="tagline">המתנה המושלמת לכל אירוע</div>
+        </td></tr>
+        <tr><td>
+          <div class="main-content">
+            <div class="decorative-bg"></div>
+            <div class="gift-card">
+              <div class="gift-card-inner">
+                <div class="gift-content">
+                  <div class="gift-title">איזה כיף!</div>
+                  <div class="gift-subtitle">קיבלת מתנה!</div>
+                  <div class="gift-from">ממי המתנה? ${senderName} כמובן!</div>
+                  ${hasLogo && companyLogo ? `<img src="${companyLogo}" alt="לוגו החברה" class="company-logo">` : ''}
+                  <div class="view-btn">
+                    <div class="btn-text">לצפייה במתנה</div>
                   </div>
-                  <div class="stock-amount">${stock.amount} מניות</div>
                 </div>
-              `).join('')}
-            </div>
-            
-            <!-- Total Value -->
-            <div class="total-value">
-              סה"כ ערך המתנה: ₪${giftDetails.totalValue.toLocaleString()}
-            </div>
-            
-            <!-- Message -->
-            ${giftDetails.message ? `
-              <div class="message-section">
-                "${giftDetails.message}"
-              </div>
-            ` : ''}
-            
-            <!-- Delivery Date -->
-            <p style="text-align: center; color: #666; margin-top: 20px; font-size: 14px;">
-              תאריך מסירה: ${giftDetails.deliveryDate}
-            </p>
-          </div>
-          
-          <!-- Statistics Section -->
-          <div class="stats-section">
-            <div class="stats-container">
-              <div class="stat-item">
-                <div class="stat-number">24+</div>
-                <div class="stat-label">מדינות שבהם אנו עובדים</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">17M</div>
-                <div class="stat-label">אנשים שהאמינו בנו</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">+95%</div>
-                <div class="stat-label">לקוחות מרוצים</div>
               </div>
             </div>
           </div>
-          
-          <!-- Footer -->
-          <div class="footer-section">
-            <div class="footer-content">
-              <!-- Stock4U Logo and Mascot -->
-              <div class="footer-logo-section">
-                <img src="https://api.builder.io/api/v1/image/assets/TEMP/c6f4ef138fe2fcff4c861a628f2808355b08ca4e?width=247" alt="Stock4U Mascot" class="footer-mascot">
-                <div class="footer-brand">STOCK4U</div>
-              </div>
-              
-              <!-- Contact & Links -->
-              <div class="footer-info">
-                <div>support@stock4u.co.il | 03-12345678</div>
-                <div class="footer-links">אודות | מדיניות פרטיות | תנאי שימוש</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </td></tr>
+        <tr><td class="footer">
+          <h3>Stock4U</h3>
+          <p>המתנה המושלמת לכל אירוע</p>
+          <p style="font-size: 12px; opacity: 0.7; margin-top: 15px;">© 2024 Stock4U. כל הזכויות שמורות.</p>
+        </td></tr>
+      </table>
     </body>
     </html>
   `;
