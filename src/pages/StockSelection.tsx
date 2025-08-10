@@ -192,13 +192,13 @@ export default function StockSelection() {
   const continueToGiftDesign = () => {
     // Scroll to top before navigation
     window.scrollTo(0, 0);
-    navigate("/cart");
+    navigate("/order-details");
   };
 
   const goToCart = () => {
     // Scroll to top before navigation
     window.scrollTo(0, 0);
-    navigate("/cart");
+    navigate("/order-details");
   };
 
   const getTotalSelectedStocks = () => {
@@ -699,7 +699,7 @@ export default function StockSelection() {
                   boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
                 }}
               >
-                המשך לסל הקניות
+                המשך לפרטים וברכה
               </button>
             </div>
           )}
