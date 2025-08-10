@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGift } from "@/contexts/GiftContext";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import jsPDF from "jspdf";
 
 export default function PurchaseSuccess() {
   const { giftData } = useGift();
@@ -43,6 +46,111 @@ export default function PurchaseSuccess() {
   const stocksList = giftData.selectedStocks.length > 0
     ? giftData.selectedStocks.map(stock => stock.symbol).join(", ")
     : "מניות נבחרות";
+
+  // Generate PDF receipt
+  const generateReceiptPDF = () => {
+    const doc = new jsPDF();
+    
+    // Set font for Hebrew support (using built-in font)
+    doc.setFont("helvetica");
+    
+    // Title
+    doc.setFontSize(20);
+    doc.setTextColor(76, 126, 251);
+    doc.text("Stock4U - Receipt", 105, 30, { align: "center" });
+    
+    // Line separator
+    doc.setDrawColor(76, 126, 251);
+    doc.setLineWidth(1);
+    doc.line(20, 40, 190, 40);
+    
+    // Receipt details
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    
+    let yPosition = 60;
+    
+    // Sender details
+    doc.setFontSize(14);
+    doc.setTextColor(72, 98, 132);
+    doc.text("Sender Details:", 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Name: ${senderName}`, 25, yPosition);
+    yPosition += 10;
+    
+    // Recipient details
+    yPosition += 10;
+    doc.setFontSize(14);
+    doc.setTextColor(72, 98, 132);
+    doc.text("Recipient Details:", 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Name: ${recipientName}`, 25, yPosition);
+    yPosition += 10;
+    doc.text(`Email: ${recipientEmail}`, 25, yPosition);
+    yPosition += 10;
+    
+    // Delivery details
+    yPosition += 10;
+    doc.setFontSize(14);
+    doc.setTextColor(72, 98, 132);
+    doc.text("Delivery Information:", 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Delivery Date: ${formatDeliveryDateTime()}`, 25, yPosition);
+    yPosition += 10;
+    
+    // Selected stocks
+    yPosition += 10;
+    doc.setFontSize(14);
+    doc.setTextColor(72, 98, 132);
+    doc.text("Selected Stocks:", 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    
+    giftData.selectedStocks.forEach((stock, index) => {
+      doc.text(`${index + 1}. ${stock.symbol} - Quantity: ${stock.amount}`, 25, yPosition);
+      yPosition += 10;
+    });
+    
+    // Greeting message (if exists)
+    if (giftData.greetingMessage && giftData.greetingMessage.trim()) {
+      yPosition += 10;
+      doc.setFontSize(14);
+      doc.setTextColor(72, 98, 132);
+      doc.text("Personal Message:", 20, yPosition);
+      yPosition += 15;
+      
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      // Split long messages into multiple lines
+      const messageLines = doc.splitTextToSize(giftData.greetingMessage, 170);
+      messageLines.forEach((line: string) => {
+        doc.text(line, 25, yPosition);
+        yPosition += 10;
+      });
+    }
+    
+    // Footer
+    yPosition += 20;
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, yPosition);
+    doc.text("Stock4U - Making investing accessible for everyone", 105, yPosition + 10, { align: "center" });
+    
+    // Save the PDF
+    const fileName = `Stock4U_Receipt_${new Date().getTime()}.pdf`;
+    doc.save(fileName);
+  };
 
   return (
     <div style={{ direction: "rtl", minHeight: "100vh", background: "#FFF" }}>
@@ -99,7 +207,7 @@ export default function PurchaseSuccess() {
             </p>
           </div>
 
-          {/* Receipt Confirmation */}
+          {/* Receipt Download */}
           <div style={{
             background: "rgba(76, 126, 251, 0.1)",
             borderRadius: "16px",
@@ -111,19 +219,23 @@ export default function PurchaseSuccess() {
               fontSize: "20px",
               fontWeight: "700",
               color: "#4C7EFB",
-              margin: "0 0 8px",
+              margin: "0 0 16px",
               fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
             }}>
-              קבלה נשלחה
+              הורד קבלה
             </h3>
-            <p style={{
-              fontSize: "18px",
-              color: "#486284",
-              margin: "0",
-              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
-              קבלה נשלחה אל: {recipientEmail}
-            </p>
+            <Button
+              onClick={generateReceiptPDF}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+              style={{
+                fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif",
+                fontSize: "16px",
+                padding: "12px 24px"
+              }}
+            >
+              <Download className="h-4 w-4" />
+              הורד קבלה PDF
+            </Button>
           </div>
         </div>
       </div>
