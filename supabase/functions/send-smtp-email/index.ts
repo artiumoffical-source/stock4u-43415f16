@@ -34,7 +34,6 @@ interface EmailData {
 
 const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): string => {
   const { senderName, recipientName, giftDetails, companyLogo, hasLogo } = emailData;
-  const stocksList = giftDetails.stocks.map(stock => `${stock.symbol} (${stock.amount} מניות)`).join(', ');
   
   return `
     <!DOCTYPE html>
@@ -60,11 +59,6 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
         
         <!-- Main container matching Figma exactly -->
         <div style="position: relative; width: 800px; height: 800px; background: #FFF;">
-          
-          <!-- Header with Stock4U -->
-          <div style="position: absolute; width: 800px; height: 42px; background: #4C7EFB; left: 0px; top: 0px; text-align: center; padding-top: 8px;">
-            <div style="color: #FFF; font-size: 24px; font-weight: bold;">Stock4U</div>
-          </div>
           
           <!-- Updated Yellow background section with new Figma design -->
           <div style="position: absolute; width: 800px; height: 327px; background: #FFC547; left: 0px; top: 42px;">
@@ -276,25 +270,19 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
 
               <!-- Subtitle -->
               <div 
-                style="width: 141.5px; color: #4C7EFB; text-align: center; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-size: 10px; font-weight: 400; line-height: normal;"
+                style="width: 141.5px; color: #4C7EFB; text-align: center; font-family: 'Poppins', -apple-system, Roboto, Helvetica, sans-serif; font-size: 10px; font-weight: 400; line-height: normal;"
               >
                 ממי המתנה? ${senderName} כמובן!
               </div>
 
+              ${hasLogo ? `
               <!-- United Logo with exact dimensions from Figma -->
-              ${hasLogo && companyLogo ? `
               <img 
                 src="${companyLogo}" 
-                alt="Company Logo"
+                alt="${senderName} Logo"
                 style="width: 230.5px; height: 43.9px; border-radius: 6.4px;"
               />
-              ` : `
-              <img 
-                src="https://api.builder.io/api/v1/image/assets/TEMP/378ddfe0d1afad1c8baf4e915e3a1587e200b3b8?width=1105" 
-                alt="United Logo"
-                style="width: 230.5px; height: 43.9px; border-radius: 6.4px;"
-              />
-              `}
+              ` : ''}
 
               <!-- Button with exact styling from Figma -->
               <div style="width: 113px; height: 29px;">
@@ -314,37 +302,35 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
         </div>
       </div>
     </body>
-    </html>
-  `;
+    </html>`;
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log('Received email request');
-  
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    console.log('Received email request');
     const emailData: EmailData = await req.json();
     console.log('Email data:', emailData);
 
-    const html = generateGiftEmailHTML(emailData, true);
+    const recipientHTML = generateGiftEmailHTML(emailData, true);
     
-    console.log('Sending email with data:', {
-      from: emailData.from,
-      to: emailData.to,
-      subject: emailData.subject
-    });
-
-    const result = await resend.emails.send({
+    const emailRequest = {
       from: emailData.from,
       to: emailData.to,
       subject: emailData.subject,
-      html: html,
+      html: recipientHTML
+    };
+    
+    console.log('Sending email with data:', {
+      from: emailRequest.from,
+      to: emailRequest.to,
+      subject: emailRequest.subject
     });
-
+    
+    const result = await resend.emails.send(emailRequest);
     console.log('Email sent successfully:', result);
 
     return new Response(JSON.stringify(result), {
@@ -354,20 +340,14 @@ const handler = async (req: Request): Promise<Response> => {
         ...corsHeaders,
       },
     });
+    
   } catch (error: any) {
     console.error('Error in send-smtp-email function:', error);
-    console.error('Resend error details:', error.response?.body || error.message);
-    
     return new Response(
-      JSON.stringify({ 
-        error: `Resend error: ${JSON.stringify(error.response?.body || error.message)}` 
-      }),
+      JSON.stringify({ error: error.message }),
       {
         status: 500,
-        headers: { 
-          'Content-Type': 'application/json', 
-          ...corsHeaders 
-        },
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
       }
     );
   }
