@@ -54,7 +54,7 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
           line-height: 1.4;
         }
         
-        /* Main container */
+        /* Main container using table for email compatibility */
         .email-container { 
           width: 800px; 
           height: 800px; 
@@ -69,9 +69,8 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
           width: 800px;
           height: 42px;
           background: #4C7EFB;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          text-align: center;
+          padding-top: 8px;
           position: absolute;
           top: 0;
           left: 0;
@@ -85,285 +84,200 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
           text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
-        /* Yellow section with gradient */
+        /* Yellow section - exact 327px height as specified */
         .yellow-bg {
           position: absolute;
           width: 800px;
-          height: 758px;
-          background: linear-gradient(135deg, #FFC547 0%, #FFB347 50%, #FFA047 100%);
+          height: 327px;
+          background: #FFE23D;
           top: 42px;
           left: 0;
           z-index: 1;
         }
         
-        /* Background pattern overlay */
-        .bg-pattern {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 20px,
-            rgba(255,255,255,0.1) 20px,
-            rgba(255,255,255,0.1) 40px
-          );
-          z-index: 2;
-        }
-        
-        /* Decorative elements positioning */
-        .deco {
-          position: absolute;
-          z-index: 5;
-          filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
-        }
-        
-        /* White gift card - main focus */
+        /* White gift card - exact positioning and size as specified */
         .gift-card {
           position: absolute;
           width: 494px;
-          height: 280px;
+          height: 250px;
           left: 153px;
-          top: 240px;
-          background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-          border-radius: 20px;
-          box-shadow: 
-            0 10px 30px rgba(0, 0, 0, 0.15),
-            0 0 0 1px rgba(255,255,255,0.8) inset;
+          top: 262px;
+          background: #FFFFFF;
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
           z-index: 10;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 25px 20px;
+          padding: 20px;
           text-align: center;
         }
         
         .main-title {
-          color: #E96036;
-          font-size: 36px;
-          font-weight: 900;
-          margin-bottom: 8px;
-          line-height: 1.1;
-          text-shadow: 0 1px 2px rgba(233,96,54,0.2);
+          color: #333;
+          font-size: 28px;
+          font-weight: bold;
+          margin-bottom: 5px;
+          line-height: 1.2;
         }
         
         .sub-title {
-          color: #E96036;
-          font-size: 20px;
-          font-weight: 700;
-          margin-bottom: 15px;
-          opacity: 0.9;
+          color: #666;
+          font-size: 16px;
+          font-weight: normal;
+          margin-bottom: 10px;
         }
         
         .from-text {
           color: #4C7EFB;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
-          margin-bottom: 20px;
-          background: rgba(76, 126, 251, 0.1);
-          padding: 8px 16px;
-          border-radius: 15px;
+          margin-bottom: 15px;
         }
         
         .logo-section {
-          margin: 15px 0 20px 0;
+          margin: 10px 0 15px 0;
           max-width: 100%;
         }
         
         .company-logo {
-          max-width: 220px;
-          max-height: 65px;
-          border-radius: 12px;
+          max-width: 180px;
+          max-height: 50px;
+          border-radius: 8px;
           object-fit: contain;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          border: 2px solid rgba(255,255,255,0.8);
         }
         
         .view-btn {
-          background: linear-gradient(135deg, #4C7EFB 0%, #3B5EE6 100%);
+          background: #4C7EFB;
           color: white;
-          padding: 14px 32px;
-          border-radius: 30px;
+          padding: 8px 20px;
+          border-radius: 20px;
           text-decoration: none;
-          font-size: 18px;
-          font-weight: 700;
-          margin-top: 10px;
+          font-size: 14px;
+          font-weight: 600;
           display: inline-block;
-          box-shadow: 
-            0 6px 20px rgba(76, 126, 251, 0.4),
-            0 2px 4px rgba(0,0,0,0.1);
-          transition: all 0.3s ease;
-          border: 2px solid rgba(255,255,255,0.3);
+          margin-top: 5px;
         }
         
         .stocks-info {
           color: #666;
-          font-size: 14px;
-          margin-top: 15px;
-          max-width: 420px;
-          background: rgba(0,0,0,0.05);
-          padding: 10px 15px;
-          border-radius: 10px;
-          font-weight: 500;
+          font-size: 12px;
+          margin-top: 10px;
+          max-width: 400px;
+          margin-left: auto;
+          margin-right: auto;
         }
         
         .message-text {
           color: #555;
-          font-size: 13px;
-          margin-top: 8px;
+          font-size: 11px;
+          margin-top: 5px;
           font-style: italic;
-          opacity: 0.8;
         }
         
-        /* Footer */
-        .footer {
+        /* Builder.io API images positioned exactly */
+        .deco-img {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 800px;
-          height: 80px;
-          background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          font-weight: 500;
-          z-index: 15;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+          z-index: 5;
         }
         
         /* Responsive design */
         @media (max-width: 600px) {
-          .email-container, .header, .yellow-bg, .footer { 
+          .email-container { 
             width: 100% !important; 
             min-width: 320px !important;
+            height: auto !important;
           }
-          .email-container { height: auto !important; min-height: 600px !important; }
+          .header { width: 100% !important; }
+          .yellow-bg { 
+            width: 100% !important; 
+            height: 250px !important; 
+          }
           .gift-card { 
             width: 90% !important; 
             left: 5% !important; 
-            top: 120px !important;
+            top: 180px !important;
             height: auto !important;
-            padding: 35px 25px !important;
-            margin-bottom: 20px !important;
+            padding: 25px !important;
           }
-          .main-title { font-size: 32px !important; }
-          .sub-title { font-size: 18px !important; }
-          .from-text { font-size: 15px !important; }
-          .view-btn { 
-            font-size: 16px !important; 
-            padding: 12px 28px !important; 
-          }
-          .company-logo {
-            max-width: 180px !important;
-            max-height: 50px !important;
-          }
-          .footer { 
-            position: relative !important;
-            margin-top: 400px !important;
-            font-size: 14px !important;
-          }
-          .deco { display: none !important; }
+          .main-title { font-size: 24px !important; }
+          .sub-title { font-size: 14px !important; }
+          .deco-img { display: none !important; }
         }
       </style>
     </head>
     <body>
-      <div class="email-container">
-        
-        <!-- Header -->
-        <div class="header">
-          <div class="header-text">Stock4U</div>
-        </div>
-        
-        <!-- Yellow background -->
-        <div class="yellow-bg">
-          <div class="bg-pattern"></div>
-          
-          <!-- Decorative gift icons -->
-          <svg class="deco" style="left: 120px; top: 60px; width: 45px; height: 45px;" viewBox="0 0 24 24" fill="#E96036">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          
-          <svg class="deco" style="left: 630px; top: 90px; width: 40px; height: 40px;" viewBox="0 0 24 24" fill="#FFD700">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          
-          <svg class="deco" style="left: 70px; top: 200px; width: 35px; height: 35px;" viewBox="0 0 24 24" fill="#FF6B35">
-            <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
-            <path d="M9 9h6v6H9z"/>
-            <circle cx="12" cy="12" r="2" fill="white"/>
-          </svg>
-          
-          <svg class="deco" style="left: 680px; top: 170px; width: 38px; height: 38px;" viewBox="0 0 24 24" fill="#FFD700">
-            <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
-            <path d="M9 9h6v6H9z"/>
-            <circle cx="12" cy="12" r="2" fill="white"/>
-          </svg>
-          
-          <svg class="deco" style="left: 220px; top: 35px; width: 50px; height: 50px;" viewBox="0 0 24 24" fill="#FF6B35">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            <circle cx="12" cy="12" r="3" fill="#FFD700"/>
-          </svg>
-          
-          <svg class="deco" style="left: 540px; top: 220px; width: 42px; height: 42px;" viewBox="0 0 24 24" fill="#4C7EFB">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M8 12h8M12 8v8" stroke="white" stroke-width="2"/>
-          </svg>
-          
-          <svg class="deco" style="left: 450px; top: 50px; width: 38px; height: 38px;" viewBox="0 0 24 24" fill="#E96036">
-            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-            <circle cx="12" cy="12" r="4" fill="#FFD700"/>
-          </svg>
-          
-          <!-- Robot icon -->
-          <svg class="deco" style="left: 300px; top: 45px; width: 55px; height: 55px; transform: rotate(-8deg);" viewBox="0 0 24 24" fill="#4C7EFB">
-            <rect x="5" y="5" width="14" height="14" rx="3" ry="3"/>
-            <circle cx="9" cy="9" r="1.5" fill="white"/>
-            <circle cx="15" cy="9" r="1.5" fill="white"/>
-            <path d="M8 14h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M12 2v3M4 8L2 6M20 8l2-2M5 19l-2 2M19 19l2 2" stroke="#4C7EFB" stroke-width="2"/>
-          </svg>
-          
-          <svg class="deco" style="left: 600px; top: 30px; width: 35px; height: 35px;" viewBox="0 0 24 24" fill="#FFD700">
-            <circle cx="12" cy="12" r="8"/>
-            <circle cx="12" cy="12" r="4" fill="#FF6B35"/>
-            <circle cx="12" cy="12" r="2" fill="white"/>
-          </svg>
-        </div>
-        
-        <!-- Main gift card -->
-        <div class="gift-card">
-          <div class="main-title">איזה כיף! קיבלת מתנה!</div>
-          <div class="sub-title">מתנת מניות מיוחדת</div>
-          <div class="from-text">מאת: ${senderName}</div>
-          
-          ${hasLogo && companyLogo ? `
-          <div class="logo-section">
-            <img src="${companyLogo}" alt="לוגו החברה" class="company-logo">
-          </div>
-          ` : ''}
-          
-          <a href="#" class="view-btn">לצפייה במתנה</a>
-          
-          <div class="stocks-info">
-            <strong>המניות שלך:</strong><br>${stocksList}
-          </div>
-          
-          ${giftDetails.message ? `
-          <div class="message-text">"${giftDetails.message}"</div>
-          ` : ''}
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-          Stock4U - פלטפורמת מתנות המניות המובילה בישראל
-        </div>
-        
-      </div>
+      <table width="800" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; background: #FFF; position: relative;">
+        <tr>
+          <td>
+            <div class="email-container">
+              
+              <!-- Header -->
+              <div class="header">
+                <div class="header-text">Stock4U</div>
+              </div>
+              
+              <!-- Yellow background - exact 327px height -->
+              <div class="yellow-bg">
+                
+                <!-- Decorative images from Builder.io API with exact positioning -->
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F0fc5077f49854ad9b4e41ef7c82ad3fc" 
+                     class="deco-img" style="left: 70px; top: 45px; width: 70px; height: 70px;" alt="">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F5b1b4b6c14154fadb4fce3ff70d8c1ca" 
+                     class="deco-img" style="left: 680px; top: 70px; width: 65px; height: 65px;" alt="">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F88b8e3e2de334de2a09e91da67e8f8b9" 
+                     class="deco-img" style="left: 200px; top: 35px; width: 60px; height: 60px;" alt="">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2Fb0fc4659f36c44919ea1f4e2b7b92e7a" 
+                     class="deco-img" style="left: 580px; top: 180px; width: 55px; height: 55px;" alt="">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F70ba789d4d044b05b8e6a7ed5b8bc1fe" 
+                     class="deco-img" style="left: 120px; top: 160px; width: 50px; height: 50px;" alt="">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F5f96b8d78b5c4c789e32e2b5a4c8d9f2" 
+                     class="deco-img" style="left: 450px; top: 55px; width: 45px; height: 45px;" alt="">
+                
+                <!-- Main mascot/robot character with exact positioning -->
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F2f85d64c7b4a4a81a5f7e3b8c9d0e1f2" 
+                     class="deco-img" style="left: 300px; top: 20px; width: 120px; height: 120px;" alt="Robot mascot">
+                
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2F3a94e75d8c5b5b92b6e8f4a9d1e2f3b4" 
+                     class="deco-img" style="left: 620px; top: 25px; width: 40px; height: 40px;" alt="">
+                
+              </div>
+              
+              <!-- Main gift card with exact positioning -->
+              <div class="gift-card">
+                <div class="main-title">איזה כיף! קיבלת מתנה!</div>
+                <div class="sub-title">מתנת מניות מיוחדת</div>
+                <div class="from-text">מאת: ${senderName}</div>
+                
+                ${hasLogo && companyLogo ? `
+                <div class="logo-section">
+                  <img src="${companyLogo}" alt="לוגו החברה" class="company-logo">
+                </div>
+                ` : `
+                <!-- United logo as default -->
+                <div class="logo-section">
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F85dcaa8ab7cd4e54bb1e22de3e5ccef1%2Funited-logo-placeholder" 
+                       alt="United Logo" class="company-logo">
+                </div>
+                `}
+                
+                <a href="#" class="view-btn">לצפייה במתנה</a>
+                
+                <div class="stocks-info">
+                  <strong>המניות שלך:</strong><br>${stocksList}
+                </div>
+                
+                ${giftDetails.message ? `
+                <div class="message-text">"${giftDetails.message}"</div>
+                ` : ''}
+              </div>
+              
+            </div>
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
   `;
