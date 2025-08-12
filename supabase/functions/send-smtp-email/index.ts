@@ -77,7 +77,7 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean): s
             <!-- Sender Information -->
             <div style="margin-bottom: 30px;">
               <p style="margin: 0 0 15px 0; color: #4C7EFB; font-size: 18px; font-weight: 600;">
-                ממי המתנה? <strong>${senderName}</strong> כמובן!
+                ממי המתנה? <strong>${senderName}</strong>${hasLogo ? '' : ' כמובן!'}
               </p>
               
               ${hasLogo && companyLogo ? `
