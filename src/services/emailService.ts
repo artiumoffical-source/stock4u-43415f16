@@ -16,6 +16,7 @@ export interface EmailData {
   };
   companyLogo?: string;
   hasLogo?: boolean;
+  orderId: string;
 }
 
 export const sendGiftEmails = async (emailData: EmailData) => {
@@ -51,7 +52,7 @@ export const sendGiftEmails = async (emailData: EmailData) => {
   }
 };
 
-export const sendGiftNotificationEmails = async (giftData: any) => {
+export const sendGiftNotificationEmails = async (giftData: any, orderId: string) => {
   console.log('Starting to send gift notification emails...');
   console.log('Gift data:', giftData);
 
@@ -82,7 +83,8 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
       deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
     },
     companyLogo: giftData.companyLogo || giftData.uploadedImage,
-    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false
+    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
+    orderId: orderId
   };
 
   console.log('Recipient email data:', recipientEmailData);
@@ -101,7 +103,8 @@ export const sendGiftNotificationEmails = async (giftData: any) => {
       deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
     },
     companyLogo: giftData.companyLogo || giftData.uploadedImage,
-    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false
+    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
+    orderId: orderId
   };
 
   console.log('Sender email data:', senderEmailData);

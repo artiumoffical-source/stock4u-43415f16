@@ -69,9 +69,11 @@ export default function Checkout() {
             payment_status: 'paid'
           };
 
-          const { error: orderError } = await supabase
+          const { data: orderResult, error: orderError } = await supabase
             .from('orders')
-            .insert([orderData]);
+            .insert([orderData])
+            .select('id')
+            .single();
 
           if (orderError) {
             console.error('Error saving order:', orderError);
@@ -84,7 +86,7 @@ export default function Checkout() {
           }
 
           // Send gift notification emails
-          await sendGiftNotificationEmails(giftData);
+          await sendGiftNotificationEmails(giftData, orderResult.id);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: "מיילים נשלחו לשולח ולמקבל המתנה",
@@ -141,9 +143,11 @@ export default function Checkout() {
             payment_status: 'paid'
           };
 
-          const { error: orderError } = await supabase
+          const { data: orderResult, error: orderError } = await supabase
             .from('orders')
-            .insert([orderData]);
+            .insert([orderData])
+            .select('id')
+            .single();
 
           if (orderError) {
             console.error('Error saving order:', orderError);
@@ -156,7 +160,7 @@ export default function Checkout() {
           }
 
           // Send gift notification emails
-          await sendGiftNotificationEmails(giftData);
+          await sendGiftNotificationEmails(giftData, orderResult.id);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
