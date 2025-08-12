@@ -230,66 +230,76 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
             </div>
 
 
-            <!-- White gift card exactly matching user's design -->
-            <div style="position: absolute; width: 494px; height: 250px; padding: 9px 8px; border-radius: 14.4px; background: #FFF; box-shadow: 0 1.7px 16.3px 0 rgba(0, 0, 0, 0.25); left: 153px; top: 262px; display: flex; justify-content: center; align-items: center;">
-              <div style="width: 452px; display: flex; flex-direction: column; align-items: center; gap: 24px;">
-                
-                 <!-- Main headings exactly matching Figma -->
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 5.6px;">
-                  <div style="width: 195px; color: #E96036; text-align: center; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 14.2px; font-weight: 800;">
-                    איזה כיף!
-                  </div>
-                  <div style="width: 195px; color: #E96036; text-align: center; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 26.7px; font-weight: 800;">
-                    קיבלת מתנה!
-                  </div>
+            <!-- Centered White Gift Card - matching user's design exactly -->
+            <div style="position: absolute; width: 560px; height: 300px; padding: 30px; border-radius: 20px; background: #FFF; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); left: 50%; top: 50%; transform: translate(-50%, -50%); margin-top: 40px;">
+              
+              <!-- Main title -->
+              <div style="text-align: center; margin-bottom: 20px;">
+                <div style="color: #E96036; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px;">
+                  איזה כיף!
                 </div>
-
-                <!-- Subtitle -->
-                <div style="width: 141.5px; color: #4C7EFB; text-align: center; font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif; font-size: 10px; font-weight: 400;">
-                  ממי המתנה? ${senderName}${hasLogo ? '' : ' כמובן!'}
-                </div>
-
-                <!-- Company Logo if provided -->
-                ${hasLogo && companyLogo ? `
-                <img 
-                  src="${companyLogo}" 
-                  alt="${senderName} Logo"
-                  style="width: 230.5px; height: 43.9px; border-radius: 6.4px; object-fit: contain;"
-                />
-                ` : ''}
-
-                <!-- Button with exact styling from Figma -->
-                <div style="width: 113px; height: 29px;">
-                  <a href="${giftToken ? `https://ggquxuidarjnayqkhthv.supabase.co/gift-registration?token=${giftToken}` : '#'}" style="display: flex; justify-content: center; align-items: center; width: 113px; height: 29px; padding: 4.2px; gap: 4.2px; border-radius: 23.4px; background: #4C7EFB; box-shadow: 4.2px 4.2px 0 0 rgba(0, 0, 0, 0.10); text-decoration: none;">
-                    <div style="width: 48px; height: 6px; color: #FFF; text-align: center; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 7.5px; font-weight: 700;">
-                      לצפייה במתנה
-                    </div>
-                  </a>
-                </div>
-
-                <!-- Legal notice -->
-                <div style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
-                  <p style="margin: 0; color: #666; font-size: 11px; line-height: 1.4;">
-                    על פי החוק, נדרשת הרשמה לפתיחת חשבון מניות.<br>
-                    לחצו על הכפתור להשלמת התהליך.
-                  </p>
+                <div style="color: #E96036; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 32px; font-weight: 800;">
+                  קיבלת מתנה!
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Footer -->
-          <div style="background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 12px;">
-            <p style="margin: 0 0 10px 0;">
-              <strong>Stock4U</strong> - פלטפורמת המניות המובילה בישראל
-            </p>
-            <p style="margin: 0; line-height: 1.4;">
-              מייל זה נשלח אוטומטית. אנא אל תשיבו למייל זה.<br>
-              לשאלות ותמיכה: support@stock4u.co.il
-            </p>
-          </div>
-        </div>
-      </div>
+              <!-- Sender info -->
+              <div style="text-align: center; margin-bottom: 25px;">
+                <div style="color: #666; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 16px; margin-bottom: 10px;">
+                  מ${senderName}
+                </div>
+                
+                <!-- Company logo if exists -->
+                ${hasLogo && companyLogo ? `
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                  <img src="${companyLogo}" alt="לוגו החברה" style="max-width: 120px; max-height: 60px; object-fit: contain;" />
+                </div>
+                ` : ''}
+              </div>
+
+              <!-- Stocks list -->
+              <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                <div style="color: #333; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 15px; text-align: center;">
+                  המניות שקיבלת:
+                </div>
+                ${giftDetails.stocks.map(stock => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <div style="color: #333; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 14px; font-weight: 500;">
+                      ${stock.name} (${stock.symbol})
+                    </div>
+                    <div style="color: #E96036; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 14px; font-weight: 600;">
+                      ${stock.amount} מניה${stock.amount > 1 ? 'ות' : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <!-- Message if exists -->
+              ${giftDetails.message ? `
+              <div style="background: #fff3e0; border-radius: 12px; padding: 15px; margin-bottom: 25px; border-right: 4px solid #E96036;">
+                <div style="color: #333; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; text-align: center;">
+                  "${giftDetails.message}"
+                </div>
+              </div>
+              ` : ''}
+
+              <!-- Action button for recipient -->
+              ${isForRecipient && giftToken ? `
+              <div style="text-align: center;">
+                <a href="https://stock4u-app.lovableproject.com/gift-registration?token=${giftToken}" 
+                   style="display: inline-block; background: #E96036; color: white; padding: 16px 32px; border-radius: 12px; text-decoration: none; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(233, 96, 54, 0.3);">
+                  לקבלת המתנה לחץ כאן
+                </a>
+              </div>
+              ` : ''}
+
+              <!-- Confirmation text for sender -->
+              ${!isForRecipient ? `
+              <div style="text-align: center; color: #666; font-family: 'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif; font-size: 14px;">
+                המתנה נשלחה בהצלחה ל${recipientName}!
+              </div>
+              ` : ''}
+            </div>
       
     </body>
     </html>`;
