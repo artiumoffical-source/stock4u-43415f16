@@ -1,3 +1,5 @@
+import { supabase } from '@/integrations/supabase/client';
+
 export interface EmailData {
   from: string;
   to: string;
@@ -23,17 +25,14 @@ export const sendGiftEmails = async (emailData: EmailData) => {
   console.log('Sending email with data:', emailData);
   
   try {
-    console.log('Making request to Supabase Edge Function...');
-    
-    // Import Supabase client dynamically to avoid circular dependencies
-    const { supabase } = await import('@/integrations/supabase/client');
+    console.log('Calling Supabase Edge Function securely...');
     
     const { data, error } = await supabase.functions.invoke('send-smtp-email', {
       body: emailData
     });
 
     if (error) {
-      console.error('Supabase function error:', error);
+      console.error('Error response:', error);
       throw new Error(`Failed to send email: ${error.message}`);
     }
 
