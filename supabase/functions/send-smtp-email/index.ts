@@ -11,6 +11,10 @@ const resend = new Resend(apiKey);
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Content-Security-Policy': "default-src 'self'",
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin'
 };
 
 interface EmailData {
@@ -238,7 +242,24 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log('Received email request');
     const emailData: EmailData = await req.json();
-    console.log('Email data:', emailData);
+    
+    // Validate and sanitize email data
+    if (!emailData.to || !emailData.from || !emailData.subject) {
+      throw new Error('Missing required email fields');
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailData.to) || !emailRegex.test(emailData.from)) {
+      throw new Error('Invalid email format');
+    }
+    
+    // Sanitize text fields
+    emailData.subject = emailData.subject.slice(0, 200);
+    emailData.senderName = emailData.senderName?.slice(0, 100) || '';
+    emailData.recipientName = emailData.recipientName?.slice(0, 100) || '';
+    
+    console.log('Email data validated:', { to: emailData.to, from: emailData.from, subject: emailData.subject });
 
     // Create gift registration token
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;

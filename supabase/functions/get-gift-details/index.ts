@@ -4,6 +4,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.54.0";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Content-Security-Policy': "default-src 'self'",
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin'
 };
 
 interface RequestBody {
@@ -23,7 +27,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { token }: RequestBody = await req.json();
 
-    if (!token) {
+    // Validate and sanitize token
+    if (!token || typeof token !== 'string') {
       return new Response(JSON.stringify({
         success: false,
         message: "Token is required"
@@ -33,7 +38,21 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    console.log('Looking for gift registration with token:', token);
+    // Sanitize token (UUID format validation)
+    const sanitizedToken = token.trim();
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    
+    if (!uuidRegex.test(sanitizedToken)) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "Invalid token format"
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
+    console.log('Looking for gift registration with token:', sanitizedToken);
 
     // Find the gift registration
     const { data: giftRegistration, error: regError } = await supabase
@@ -52,7 +71,7 @@ const handler = async (req: Request): Promise<Response> => {
           delivery_date
         )
       `)
-      .eq('token', token)
+      .eq('token', sanitizedToken)
       .single();
 
     if (regError) {

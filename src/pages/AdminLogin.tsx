@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Lock, User } from 'lucide-react';
+import { adminCredentialsValidation, sanitizeInput } from '@/lib/validation';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
@@ -28,12 +29,26 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    const result = await login(username, password);
-    
-    if (result.success) {
-      navigate('/admin-dashboard');
-    } else {
-      setError(result.error || 'שגיאה בהתחברות');
+    try {
+      // Validate and sanitize inputs
+      const validatedData = adminCredentialsValidation.parse({
+        username: sanitizeInput(username),
+        password
+      });
+
+      const result = await login(validatedData.username, validatedData.password);
+      
+      if (result.success) {
+        navigate('/admin-dashboard');
+      } else {
+        setError(result.error || 'שגיאה בהתחברות');
+      }
+    } catch (error: any) {
+      if (error.errors) {
+        setError(error.errors[0]?.message || 'נתונים לא תקינים');
+      } else {
+        setError('שגיאה בהתחברות');
+      }
     }
     
     setLoading(false);

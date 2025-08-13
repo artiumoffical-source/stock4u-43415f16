@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard } from "lucide-react";
+import { giftRegistrationValidation } from "@/lib/validation";
 
 interface GiftData {
   id: string;
@@ -101,10 +102,13 @@ export default function GiftRegistration() {
     setSubmitting(true);
 
     try {
+      // Validate and sanitize all form inputs
+      const validatedData = giftRegistrationValidation.parse(formData);
+
       const { data, error } = await supabase.functions.invoke('register-gift-recipient', {
         body: {
           token,
-          registrationData: formData
+          registrationData: validatedData
         }
       });
 
@@ -121,11 +125,22 @@ export default function GiftRegistration() {
       }
     } catch (error: any) {
       console.error("Error registering:", error);
-      toast({
-        title: "שגיאה",
-        description: error.message || "שגיאה בהרשמה, אנא נסה שוב",
-        variant: "destructive",
-      });
+      
+      if (error.errors) {
+        // Zod validation errors
+        const firstError = error.errors[0];
+        toast({
+          title: "שגיאה בנתונים",
+          description: firstError?.message || "אנא בדוק שהנתונים תקינים",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "שגיאה",
+          description: error.message || "שגיאה בהרשמה, אנא נסה שוב",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSubmitting(false);
     }

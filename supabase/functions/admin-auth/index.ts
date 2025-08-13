@@ -5,12 +5,43 @@ import { compare } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Content-Security-Policy': "default-src 'self'",
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin'
 };
 
 interface LoginRequest {
   username: string;
   password: string;
 }
+
+// Rate limiting - simple in-memory store (use Redis in production)
+const loginAttempts = new Map<string, { count: number; resetTime: number }>();
+
+const isRateLimited = (ip: string): boolean => {
+  const now = Date.now();
+  const key = ip;
+  
+  if (!loginAttempts.has(key)) {
+    loginAttempts.set(key, { count: 1, resetTime: now + 15 * 60 * 1000 }); // 15 minutes
+    return false;
+  }
+  
+  const attempt = loginAttempts.get(key)!;
+  
+  if (now > attempt.resetTime) {
+    loginAttempts.set(key, { count: 1, resetTime: now + 15 * 60 * 1000 });
+    return false;
+  }
+  
+  if (attempt.count >= 10) { // Max 10 attempts per 15 minutes
+    return true;
+  }
+  
+  attempt.count++;
+  return false;
+};
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -19,11 +50,33 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Rate limiting by IP
+    const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    
+    if (isRateLimited(clientIP)) {
+      console.log('Rate limited login attempt from:', clientIP);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Too many login attempts. Try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { username, password }: LoginRequest = await req.json();
+
+    // Input validation and sanitization
+    if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid input format' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Sanitize username
+    const sanitizedUsername = username.trim().slice(0, 50);
 
     if (!username || !password) {
       return new Response(
@@ -36,11 +89,14 @@ const handler = async (req: Request): Promise<Response> => {
     const { data: adminUser, error: userError } = await supabase
       .from('admin_users')
       .select('*')
-      .eq('username', username)
+      .eq('username', sanitizedUsername)
       .single();
 
+    // Log login attempt for audit
+    console.log('Admin login attempt:', { username: sanitizedUsername, ip: clientIP, timestamp: new Date().toISOString() });
+
     if (userError || !adminUser) {
-      console.log('Admin user not found:', username);
+      console.log('Admin user not found:', sanitizedUsername, 'IP:', clientIP);
       return new Response(
         JSON.stringify({ success: false, error: 'Invalid credentials' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
