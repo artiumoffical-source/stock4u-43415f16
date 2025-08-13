@@ -25,27 +25,20 @@ export const sendGiftEmails = async (emailData: EmailData) => {
   try {
     console.log('Making request to Supabase Edge Function...');
     
-    const response = await fetch('https://ggquxuidarjnayqkhthv.supabase.co/functions/v1/send-smtp-email', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncXV4dWlkYXJqbmF5cWtodGh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NTY1NjksImV4cCI6MjA3MDMzMjU2OX0.2CxN1Sj1l8dftUVigcMJXp9jNFfPPfQpE3MVSkAnp4A',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailData),
+    // Import Supabase client dynamically to avoid circular dependencies
+    const { supabase } = await import('@/integrations/supabase/client');
+    
+    const { data, error } = await supabase.functions.invoke('send-smtp-email', {
+      body: emailData
     });
 
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error response:', errorText);
-      throw new Error(`Failed to send email: ${response.status} - ${errorText}`);
+    if (error) {
+      console.error('Supabase function error:', error);
+      throw new Error(`Failed to send email: ${error.message}`);
     }
 
-    const result = await response.json();
-    console.log('Email sent successfully:', result);
-    return result;
+    console.log('Email sent successfully:', data);
+    return data;
   } catch (error) {
     console.error('Error sending email:', error);
     throw error;
