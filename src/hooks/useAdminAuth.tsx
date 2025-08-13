@@ -1,11 +1,11 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import bcrypt from 'bcryptjs';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  logout: () => void;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -14,81 +14,53 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    // Check if admin is already authenticated
-    const adminSession = localStorage.getItem('admin_session');
-    if (adminSession) {
-      try {
-        const session = JSON.parse(adminSession);
-        if (session.expires > Date.now()) {
-          setIsAuthenticated(true);
-        } else {
-          localStorage.removeItem('admin_session');
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Check if user is an admin
+        const isAdmin = session?.user?.user_metadata?.role === 'admin';
+        setIsAuthenticated(isAdmin);
+        
+        if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
         }
-      } catch {
-        localStorage.removeItem('admin_session');
       }
-    }
-    setLoading(false);
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      const isAdmin = session?.user?.user_metadata?.role === 'admin';
+      setIsAuthenticated(isAdmin);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (username: string, password: string) => {
     try {
-      // Check for account lockout
-      const { data: user } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('username', username)
-        .single();
+      // Use the secure admin auth edge function
+      const { data, error } = await supabase.functions.invoke('admin-auth', {
+        body: { username, password }
+      });
 
-      if (!user) {
-        return { success: false, error: 'שם משתמש או סיסמה שגויים' };
+      if (error) {
+        console.error('Admin auth function error:', error);
+        return { success: false, error: 'שגיאה במערכת. נסה שוב מאוחר יותר' };
       }
 
-      // Check if account is locked
-      if (user.locked_until && new Date(user.locked_until) > new Date()) {
-        return { success: false, error: 'החשבון נעול זמנית. נסה שוב מאוחר יותר' };
+      if (!data.success) {
+        return { success: false, error: data.error || 'שם משתמש או סיסמה שגויים' };
       }
-
-      // For now, use simple password comparison (in production, use bcrypt)
-      const isValidPassword = password === '1234qwer';
-      
-      if (!isValidPassword) {
-        // Increment failed attempts
-        const failedAttempts = (user.failed_attempts || 0) + 1;
-        const lockUntil = failedAttempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000) : null;
-
-        await supabase
-          .from('admin_users')
-          .update({ 
-            failed_attempts: failedAttempts,
-            locked_until: lockUntil?.toISOString() || null
-          })
-          .eq('id', user.id);
-
-        return { success: false, error: 'שם משתמש או סיסמה שגויים' };
-      }
-
-      // Successful login - reset failed attempts and update last login
-        await supabase
-          .from('admin_users')
-          .update({ 
-            failed_attempts: 0,
-            locked_until: null,
-            last_login: new Date().toISOString()
-          })
-          .eq('id', user.id);
-
-      // Create session
-      const session = {
-        userId: user.id,
-        username: user.username,
-        expires: Date.now() + (8 * 60 * 60 * 1000) // 8 hours
-      };
-
-      localStorage.setItem('admin_session', JSON.stringify(session));
-      setIsAuthenticated(true);
 
       return { success: true };
     } catch (error) {
@@ -97,9 +69,11 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('admin_session');
+  const logout = async () => {
+    await supabase.auth.signOut();
     setIsAuthenticated(false);
+    setUser(null);
+    setSession(null);
   };
 
   return (

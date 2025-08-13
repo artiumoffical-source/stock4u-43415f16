@@ -142,7 +142,7 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">ניהול הזמנות</h1>
-          <Button onClick={logout} variant="outline" className="flex items-center gap-2">
+          <Button onClick={() => logout()} variant="outline" className="flex items-center gap-2">
             <LogOut className="h-4 w-4" />
             התנתק
           </Button>

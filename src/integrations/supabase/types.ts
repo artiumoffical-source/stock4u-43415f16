@@ -44,6 +44,59 @@ export type Database = {
         }
         Relationships: []
       }
+      gift_registrations: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          id_number: string | null
+          order_id: string
+          recipient_email: string
+          recipient_name: string
+          recipient_phone: string | null
+          registered_at: string | null
+          registration_status: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          id_number?: string | null
+          order_id: string
+          recipient_email: string
+          recipient_name: string
+          recipient_phone?: string | null
+          registered_at?: string | null
+          registration_status?: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          id_number?: string | null
+          order_id?: string
+          recipient_email?: string
+          recipient_name?: string
+          recipient_phone?: string | null
+          registered_at?: string | null
+          registration_status?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_gift_registrations_order_id"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           buyer_email: string
@@ -121,7 +174,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_authenticated_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
