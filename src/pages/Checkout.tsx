@@ -48,8 +48,8 @@ export default function Checkout() {
         try {
           // Save order to database
           const orderData = {
-            buyer_name: formData.cardHolderName || '',
-            buyer_email: giftData.recipientDetails?.email || '',
+            buyer_name: formData.cardHolderName || giftData.senderName || '',
+            buyer_email: giftData.senderEmail || '',
             buyer_phone: '',
             buyer_id: formData.idNumber,
             recipient_name: giftData.recipientDetails?.name || '',
@@ -77,9 +77,11 @@ export default function Checkout() {
 
           if (orderError) {
             console.error('Error saving order:', orderError);
+            console.error('Order data:', orderData);
+            console.error('Gift data:', giftData);
             toast({
               title: "שגיאה בשמירת ההזמנה",
-              description: "אנא צרו קשר עם השירות",
+              description: `שגיאה: ${orderError.message}`,
               variant: "destructive",
             });
             return;
@@ -122,8 +124,8 @@ export default function Checkout() {
         try {
           // Save order to database
           const orderData = {
-            buyer_name: formData.cardHolderName || '',
-            buyer_email: giftData.recipientDetails?.email || '',
+            buyer_name: formData.cardHolderName || giftData.senderName || '',
+            buyer_email: giftData.senderEmail || '',
             buyer_phone: '',
             buyer_id: formData.idNumber,
             recipient_name: giftData.recipientDetails?.name || '',
@@ -151,9 +153,11 @@ export default function Checkout() {
 
           if (orderError) {
             console.error('Error saving order:', orderError);
+            console.error('Order data:', orderData);
+            console.error('Gift data:', giftData);
             toast({
               title: "שגיאה בשמירת ההזמנה",
-              description: "אנא צרו קשר עם השירות",
+              description: `שגיאה: ${orderError.message}`,
               variant: "destructive",
             });
             return;
