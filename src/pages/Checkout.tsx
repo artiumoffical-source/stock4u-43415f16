@@ -46,7 +46,7 @@ export default function Checkout() {
 
       if (paymentSuccess) {
         try {
-          // Save order to database
+          // Save order to database via secure Edge Function
           console.log('Preparing order data with gift data:', giftData);
           const orderData = {
             buyer_name: formData.cardHolderName || giftData.senderName || '',
@@ -70,29 +70,28 @@ export default function Checkout() {
             payment_status: 'paid'
           };
 
-          const { data: orderResult, error: orderError } = await supabase
-            .from('orders')
-            .insert([orderData])
-            .select('id')
-            .single();
+          // Call secure Edge Function to create order
+          const { data: orderResult, error: orderError } = await supabase.functions.invoke('create-order', {
+            body: orderData
+          });
 
-          if (orderError) {
-            console.error('Error saving order:', orderError);
+          if (orderError || !orderResult.success) {
+            console.error('Error saving order:', orderError || orderResult.error);
             console.error('Order data:', orderData);
             console.error('Gift data:', giftData);
             toast({
               title: "שגיאה בשמירת ההזמנה",
-              description: `שגיאה: ${orderError.message}`,
+              description: `שגיאה: ${orderError?.message || orderResult.error}`,
               variant: "destructive",
             });
             return;
           }
 
-          console.log('Order saved successfully, ID:', orderResult.id);
+          console.log('Order saved successfully, ID:', orderResult.orderId);
           
           // Send gift notification emails
           console.log('Attempting to send gift notification emails...');
-          await sendGiftNotificationEmails(giftData, orderResult.id);
+          await sendGiftNotificationEmails(giftData, orderResult.orderId);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: "מיילים נשלחו לשולח ולמקבל המתנה",
@@ -126,7 +125,7 @@ export default function Checkout() {
 
       if (paymentSuccess) {
         try {
-          // Save order to database
+          // Save order to database via secure Edge Function
           const orderData = {
             buyer_name: formData.cardHolderName || giftData.senderName || '',
             buyer_email: giftData.senderEmail || '',
@@ -149,26 +148,25 @@ export default function Checkout() {
             payment_status: 'paid'
           };
 
-          const { data: orderResult, error: orderError } = await supabase
-            .from('orders')
-            .insert([orderData])
-            .select('id')
-            .single();
+          // Call secure Edge Function to create order
+          const { data: orderResult, error: orderError } = await supabase.functions.invoke('create-order', {
+            body: orderData
+          });
 
-          if (orderError) {
-            console.error('Error saving order:', orderError);
+          if (orderError || !orderResult.success) {
+            console.error('Error saving order:', orderError || orderResult.error);
             console.error('Order data:', orderData);
             console.error('Gift data:', giftData);
             toast({
               title: "שגיאה בשמירת ההזמנה",
-              description: `שגיאה: ${orderError.message}`,
+              description: `שגיאה: ${orderError?.message || orderResult.error}`,
               variant: "destructive",
             });
             return;
           }
 
           // Send gift notification emails
-          await sendGiftNotificationEmails(giftData, orderResult.id);
+          await sendGiftNotificationEmails(giftData, orderResult.orderId);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
