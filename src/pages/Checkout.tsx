@@ -47,6 +47,7 @@ export default function Checkout() {
       if (paymentSuccess) {
         try {
           // Save order to database
+          console.log('Preparing order data with gift data:', giftData);
           const orderData = {
             buyer_name: formData.cardHolderName || giftData.senderName || '',
             buyer_email: giftData.senderEmail || '',
@@ -87,7 +88,10 @@ export default function Checkout() {
             return;
           }
 
+          console.log('Order saved successfully, ID:', orderResult.id);
+          
           // Send gift notification emails
+          console.log('Attempting to send gift notification emails...');
           await sendGiftNotificationEmails(giftData, orderResult.id);
           toast({
             title: "המתנה נשלחה בהצלחה!",
