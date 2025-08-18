@@ -17,6 +17,8 @@ interface RegistrationData {
 interface RequestBody {
   token: string;
   registrationData: RegistrationData;
+  documentFileName?: string;
+  documentType?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -30,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { token, registrationData }: RequestBody = await req.json();
+    const { token, registrationData, documentFileName, documentType }: RequestBody = await req.json();
 
     if (!token || !registrationData) {
       return new Response(JSON.stringify({
@@ -73,18 +75,29 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    // Prepare update data
+    const updateData: any = {
+      recipient_name: registrationData.fullName,
+      recipient_email: registrationData.email,
+      recipient_phone: registrationData.phone,
+      id_number: registrationData.idNumber,
+      address: registrationData.address,
+      registration_status: 'completed',
+      registered_at: new Date().toISOString()
+    };
+
+    // Add document information if provided
+    if (documentFileName && documentType) {
+      const documentUrl = `${token}/${Date.now()}.${documentFileName.split('.').pop()}`;
+      updateData.id_document_url = documentUrl;
+      updateData.id_document_type = documentType;
+      updateData.kyc_status = 'submitted';
+    }
+
     // Update the gift registration with the new data
     const { error: updateError } = await supabase
       .from('gift_registrations')
-      .update({
-        recipient_name: registrationData.fullName,
-        recipient_email: registrationData.email,
-        recipient_phone: registrationData.phone,
-        id_number: registrationData.idNumber,
-        address: registrationData.address,
-        registration_status: 'completed',
-        registered_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', giftRegistration.id);
 
     if (updateError) {

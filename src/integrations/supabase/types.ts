@@ -88,7 +88,12 @@ export type Database = {
           address: string | null
           created_at: string
           id: string
+          id_document_type: string | null
+          id_document_url: string | null
           id_number: string | null
+          kyc_reviewed_at: string | null
+          kyc_reviewed_by: string | null
+          kyc_status: string | null
           order_id: string
           recipient_email: string
           recipient_name: string
@@ -102,7 +107,12 @@ export type Database = {
           address?: string | null
           created_at?: string
           id?: string
+          id_document_type?: string | null
+          id_document_url?: string | null
           id_number?: string | null
+          kyc_reviewed_at?: string | null
+          kyc_reviewed_by?: string | null
+          kyc_status?: string | null
           order_id: string
           recipient_email: string
           recipient_name: string
@@ -116,7 +126,12 @@ export type Database = {
           address?: string | null
           created_at?: string
           id?: string
+          id_document_type?: string | null
+          id_document_url?: string | null
           id_number?: string | null
+          kyc_reviewed_at?: string | null
+          kyc_reviewed_by?: string | null
+          kyc_status?: string | null
           order_id?: string
           recipient_email?: string
           recipient_name?: string

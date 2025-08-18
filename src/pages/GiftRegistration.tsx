@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileUpload } from "@/components/ui/file-upload";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard } from "lucide-react";
@@ -33,6 +34,8 @@ export default function GiftRegistration() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [giftData, setGiftData] = useState<GiftData | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     idNumber: "",
@@ -97,8 +100,68 @@ export default function GiftRegistration() {
     }
   };
 
+  const handleFileSelect = async (file: File) => {
+    if (!token) return;
+    
+    setIsUploading(true);
+    try {
+      // Generate unique filename
+      const fileExtension = file.name.split('.').pop();
+      const fileName = `${token}/${Date.now()}.${fileExtension}`;
+      
+      // Upload file to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('kyc-documents')
+        .upload(fileName, file);
+      
+      if (uploadError) throw uploadError;
+      
+      setUploadedFile(file);
+      toast({
+        title: "הקובץ הועלה בהצלחה",
+        description: "המסמך נשמר במערכת",
+      });
+    } catch (error: any) {
+      console.error('Error uploading file:', error);
+      toast({
+        variant: "destructive",
+        title: "שגיאה בהעלאת הקובץ",
+        description: error.message || "אנא נסה שוב",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileRemove = async () => {
+    if (uploadedFile && token) {
+      try {
+        // Try to remove the file from storage
+        const fileExtension = uploadedFile.name.split('.').pop();
+        const fileName = `${token}/${Date.now()}.${fileExtension}`;
+        
+        await supabase.storage
+          .from('kyc-documents')
+          .remove([fileName]);
+      } catch (error) {
+        console.error('Error removing file:', error);
+      }
+    }
+    setUploadedFile(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!uploadedFile) {
+      toast({
+        variant: "destructive",
+        title: "חסר מסמך מזהה",
+        description: "אנא העלה מסמך מזהה לפני המשך הרישום",
+      });
+      return;
+    }
+    
     setSubmitting(true);
 
     try {
@@ -108,7 +171,9 @@ export default function GiftRegistration() {
       const { data, error } = await supabase.functions.invoke('register-gift-recipient', {
         body: {
           token,
-          registrationData: validatedData
+          registrationData: validatedData,
+          documentFileName: uploadedFile.name,
+          documentType: uploadedFile.type
         }
       });
 
@@ -117,7 +182,7 @@ export default function GiftRegistration() {
       if (data.success) {
         toast({
           title: "הרשמה הושלמה!",
-          description: "פרטיך נרשמו בהצלחה. המתנה תהיה זמינה בקרוב בחשבונך.",
+          description: "פרטיך ומסמך הזהות נרשמו בהצלחה. המתנה תהיה זמינה בקרוב בחשבונך.",
         });
         navigate("/");
       } else {
@@ -315,6 +380,23 @@ export default function GiftRegistration() {
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="id-document" className="text-right">
+                    מסמך מזהה *
+                  </Label>
+                  <p className="text-sm text-muted-foreground text-right">
+                    אנא העלה תמונה או סריקה של תעודת זהות, דרכון או רישיון נהיגה
+                  </p>
+                  <FileUpload
+                    onFileSelect={handleFileSelect}
+                    onFileRemove={handleFileRemove}
+                    uploadedFile={uploadedFile}
+                    isUploading={isUploading}
+                    acceptedTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
+                    maxSizeMB={5}
+                  />
+                </div>
+
                 <div className="bg-muted/50 p-4 rounded-lg">
                   <p className="text-sm text-muted-foreground text-center">
                     המידע שלך מאובטח ומוגן. נשתמש בו רק לצורך פתיחת חשבון המניות שלך בהתאם לחוק.
@@ -325,7 +407,7 @@ export default function GiftRegistration() {
                   type="submit" 
                   className="w-full" 
                   size="lg"
-                  disabled={submitting}
+                  disabled={submitting || isUploading || !uploadedFile}
                 >
                   {submitting ? (
                     <>
