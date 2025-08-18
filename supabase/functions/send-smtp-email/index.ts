@@ -61,9 +61,9 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
       <tr>
         <td style="text-align: center;">
-          <a href="https://stock4u.vercel.app/gift-registration?token=${giftToken}" 
+          <a href="${Deno.env.get('SUPABASE_URL')?.replace('https://', 'https://').split('.supabase.co')[0]}.lovableproject.com/login" 
              style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600;">
-            🎁 לקבלת המתנה - לחץ כאן
+            🎁 להרשמה ולקבלת המתנה - לחץ כאן
           </a>
         </td>
       </tr>

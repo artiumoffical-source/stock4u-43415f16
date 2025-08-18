@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -8,12 +8,13 @@ import Footer from "@/components/Footer";
 
 const SMSVerification = () => {
   const [otp, setOtp] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length === 6) {
       // Navigate to stock selection
-      window.location.href = "/stock-selection";
+      navigate("/stock-selection");
     }
   };
 
