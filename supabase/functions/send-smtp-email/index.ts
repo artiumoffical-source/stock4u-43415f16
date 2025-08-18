@@ -248,11 +248,28 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Missing required email fields');
     }
     
-    // Basic email validation
+    // Validate email addresses - support both simple emails and "Name <email>" format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailData.to) || !emailRegex.test(emailData.from)) {
-      throw new Error('Invalid email format');
+    
+    // Validate "to" email
+    if (!emailRegex.test(emailData.to)) {
+      console.error('Invalid "to" email format:', emailData.to);
+      throw new Error(`Invalid recipient email format: ${emailData.to}`);
     }
+    
+    // Extract and validate "from" email - handle both "email" and "Name <email>" formats
+    let fromEmail = emailData.from;
+    const fromEmailMatch = emailData.from.match(/<([^>]+)>/);
+    if (fromEmailMatch) {
+      fromEmail = fromEmailMatch[1];
+    }
+    
+    if (!emailRegex.test(fromEmail)) {
+      console.error('Invalid "from" email format:', emailData.from, 'extracted:', fromEmail);
+      throw new Error(`Invalid sender email format: ${emailData.from}`);
+    }
+    
+    console.log('Email validation passed. From:', emailData.from, 'To:', emailData.to);
     
     // Sanitize text fields
     emailData.subject = emailData.subject.slice(0, 200);
