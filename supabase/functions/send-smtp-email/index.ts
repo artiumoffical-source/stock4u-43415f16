@@ -335,6 +335,8 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
 };
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("STEP 1: entering handler");
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -355,7 +357,21 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Received email request');
     console.log('Using API key:', apiKey?.substring(0, 7) + '...');
     
-    const emailData: EmailData = await req.json();
+    let emailData: EmailData;
+    try {
+      emailData = await req.json();
+    } catch (jsonError: any) {
+      console.error('JSON PARSE ERROR:', jsonError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body', details: jsonError.message }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        }
+      );
+    }
+    
+    console.log("STEP 2: emailData parsed", emailData);
     console.log('Email request received for:', emailData.to);
     console.log('Subject:', emailData.subject);
     console.log('Is for recipient:', emailData.isForRecipient);
@@ -404,6 +420,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate unique token for gift registration
     const token = crypto.randomUUID();
     
+    console.log("STEP 3: inserting registration");
+    
     // Create gift registration record
     const { error: regError } = await supabase
       .from('gift_registrations')
@@ -420,10 +438,13 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Failed to create gift registration');
     }
 
+    console.log("STEP 4: registration inserted");
+
     // Determine if this email is for the recipient or sender
     const isForRecipient = emailData.isForRecipient ?? emailData.subject.includes('קיבלת מתנת');
     console.log('Email type determined - isForRecipient:', isForRecipient);
     
+    console.log("STEP 5: generating HTML");
     const recipientHTML = generateGiftEmailHTML(emailData, isForRecipient, token);
     
     const emailRequest = {
@@ -439,6 +460,7 @@ const handler = async (req: Request): Promise<Response> => {
       subject: emailRequest.subject
     });
     
+    console.log("STEP 6: calling Resend");
     const result = await resend.emails.send(emailRequest);
     console.log('Email sent successfully:', result);
 
@@ -451,6 +473,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
     
   } catch (error: any) {
+    console.log("FINAL ERROR", error);
     console.error('Error in send-smtp-email function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
