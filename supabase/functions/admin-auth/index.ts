@@ -163,6 +163,16 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Insert role into user_roles table for server-side validation
+    const { error: roleError } = await supabase
+      .from('user_roles')
+      .insert({ user_id: authData.user.id, role: 'admin' });
+
+    if (roleError) {
+      console.error('Role assignment error:', roleError);
+      // Continue anyway - the auth user was created
+    }
+
     // Generate session token
     const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',

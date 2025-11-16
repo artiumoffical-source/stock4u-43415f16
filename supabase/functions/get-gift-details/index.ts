@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.54.0";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,9 +11,31 @@ const corsHeaders = {
   'Referrer-Policy': 'strict-origin-when-cross-origin'
 };
 
-interface RequestBody {
-  token: string;
+// Rate limiting
+const requestCounts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 10;
+const RATE_WINDOW = 60000;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = requestCounts.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    requestCounts.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+    return false;
+  }
+  
+  if (record.count >= RATE_LIMIT) {
+    return true;
+  }
+  
+  record.count++;
+  return false;
 }
+
+const requestSchema = z.object({
+  token: z.string().uuid()
+});
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -20,39 +43,38 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Rate limiting
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    if (isRateLimited(ip)) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "יותר מדי ניסיונות. אנא נסה שוב מאוחר יותר"
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { token }: RequestBody = await req.json();
-
-    // Validate and sanitize token
-    if (!token || typeof token !== 'string') {
-      return new Response(JSON.stringify({
-        success: false,
-        message: "Token is required"
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
-
-    // Sanitize token (UUID format validation)
-    const sanitizedToken = token.trim();
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const rawData = await req.json();
     
-    if (!uuidRegex.test(sanitizedToken)) {
+    // Validate input
+    const validationResult = requestSchema.safeParse(rawData);
+    if (!validationResult.success) {
       return new Response(JSON.stringify({
         success: false,
-        message: "Invalid token format"
+        message: "פורמט הקישור לא תקין"
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    console.log('Looking for gift registration with token:', sanitizedToken);
+    const { token } = validationResult.data;
 
     // Find the gift registration
     const { data: giftRegistration, error: regError } = await supabase
@@ -71,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
           delivery_date
         )
       `)
-      .eq('token', sanitizedToken)
+      .eq('token', token)
       .single();
 
     if (regError) {
@@ -106,8 +128,6 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    console.log('Gift registration found:', giftRegistration);
-
     return new Response(JSON.stringify({
       success: true,
       gift: giftRegistration.orders
@@ -120,7 +140,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.error('Error in get-gift-details function:', error);
     return new Response(JSON.stringify({
       success: false,
-      message: error.message
+      message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
