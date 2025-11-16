@@ -22,6 +22,7 @@ import Careers from "./pages/Careers";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import GiftRegistration from "./pages/GiftRegistration";
+import RedeemGift from "./pages/RedeemGift";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/admin-portal-s4u" element={<AdminLogin />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/gift-registration" element={<GiftRegistration />} />
+              <Route path="/redeem" element={<RedeemGift />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
