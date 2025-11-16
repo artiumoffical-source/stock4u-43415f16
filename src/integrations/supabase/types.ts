@@ -52,7 +52,7 @@ export type Database = {
           entity_id: string | null
           entity_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string | null
           user_type: string | null
@@ -64,7 +64,7 @@ export type Database = {
           entity_id?: string | null
           entity_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
           user_type?: string | null
@@ -76,7 +76,7 @@ export type Database = {
           entity_id?: string | null
           entity_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
           user_type?: string | null
@@ -228,10 +228,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_authenticated_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_authenticated_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

@@ -90,19 +90,39 @@ export default function Checkout() {
           console.log('Order saved successfully, ID:', orderResult.orderId);
           
           // Send gift notification emails
-          console.log('Attempting to send gift notification emails...');
-          await sendGiftNotificationEmails(giftData, orderResult.orderId);
-          toast({
-            title: "המתנה נשלחה בהצלחה!",
-            description: "מיילים נשלחו לשולח ולמקבל המתנה",
-          });
+          try {
+            console.log('Attempting to send gift notification emails...');
+            console.log('Gift data for emails:', {
+              senderEmail: giftData.senderEmail,
+              recipientEmail: giftData.recipientDetails?.email,
+              senderName: giftData.senderName,
+              recipientName: giftData.recipientDetails?.name
+            });
+            
+            await sendGiftNotificationEmails(giftData, orderResult.orderId);
+            
+            console.log('Emails sent successfully');
+            toast({
+              title: "המתנה נשלחה בהצלחה!",
+              description: "מיילים נשלחו לשולח ולמקבל המתנה",
+            });
+          } catch (emailError) {
+            console.error("Failed to send emails:", emailError);
+            console.error("Error details:", emailError instanceof Error ? emailError.message : String(emailError));
+            toast({
+              title: "שגיאה בשליחת המיילים",
+              description: emailError instanceof Error ? emailError.message : "אנא צרו קשר עם השירות",
+              variant: "destructive",
+            });
+          }
         } catch (error) {
-          console.error("Failed to send emails:", error);
+          console.error('Error in checkout process:', error);
           toast({
-            title: "המתנה נשלחה בהצלחה",
-            description: "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
+            title: "שגיאה בתהליך הרכישה",
+            description: "אירעה שגיאה. אנא נסה שנית.",
             variant: "destructive",
           });
+          return;
         }
         navigate("/purchase-success");
       } else {
