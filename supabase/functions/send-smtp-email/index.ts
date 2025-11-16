@@ -62,7 +62,7 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px;">
       <tr>
         <td style="text-align: center;">
-          <a href="${Deno.env.get('SUPABASE_URL')?.replace('https://', 'https://').split('.supabase.co')[0]}.lovableproject.com/gift-registration?token=${giftToken}" 
+          <a href="https://stock4u.co.il/redeem?token=${giftToken}" 
              style="display: inline-block; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
             🎁 התחל תהליך זיהוי וקבלת המתנה
           </a>
