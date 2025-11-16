@@ -54,10 +54,6 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
   if (!recipientEmail) {
     throw new Error('Recipient email is required but missing');
   }
-  
-  if (!giftData.senderEmail) {
-    throw new Error('Sender email is required but missing');
-  }
 
   const stocksList = giftData.selectedStocks?.map((stock: any) => ({
     symbol: stock.symbol,
