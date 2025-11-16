@@ -1,25 +1,59 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.54.0";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface RegistrationData {
-  fullName: string;
-  idNumber: string;
-  address: string;
-  phone: string;
-  email: string;
+// Rate limiting
+const requestCounts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 5;
+const RATE_WINDOW = 60000;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = requestCounts.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    requestCounts.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+    return false;
+  }
+  
+  if (record.count >= RATE_LIMIT) {
+    return true;
+  }
+  
+  record.count++;
+  return false;
 }
 
-interface RequestBody {
-  token: string;
-  registrationData: RegistrationData;
-  documentFileName?: string;
-  documentType?: string;
-}
+// Validation schemas
+const israeliIdSchema = z.string().regex(/^\d{9}$/).refine((id) => {
+  const digits = id.split('').map(Number);
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    let num = digits[i] * ((i % 2) + 1);
+    sum += num > 9 ? num - 9 : num;
+  }
+  return sum % 10 === 0;
+}, { message: 'Invalid Israeli ID number' });
+
+const registrationSchema = z.object({
+  fullName: z.string().min(1).max(100),
+  idNumber: israeliIdSchema,
+  address: z.string().min(1).max(200),
+  phone: z.string().regex(/^0\d{1,2}-?\d{7}$/),
+  email: z.string().email().max(255)
+});
+
+const requestSchema = z.object({
+  token: z.string().uuid(),
+  registrationData: registrationSchema,
+  documentFileName: z.string().max(100).optional(),
+  documentType: z.string().max(50).optional()
+});
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -27,24 +61,39 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Rate limiting
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    if (isRateLimited(ip)) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "יותר מדי ניסיונות. אנא נסה שוב מאוחר יותר"
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { token, registrationData, documentFileName, documentType }: RequestBody = await req.json();
-
-    if (!token || !registrationData) {
+    const rawData = await req.json();
+    
+    // Validate input
+    const validationResult = requestSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      console.error('Validation error:', validationResult.error);
       return new Response(JSON.stringify({
         success: false,
-        message: "Token and registration data are required"
+        message: "נתונים לא תקינים. אנא בדוק את הפרטים ונסה שוב"
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    console.log('Processing registration for token:', token);
+    const { token, registrationData, documentFileName, documentType } = validationResult.data;
 
     // Find the gift registration
     const { data: giftRegistration, error: regError } = await supabase
@@ -111,11 +160,6 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    console.log('Gift registration completed successfully for token:', token);
-
-    // Here you could send confirmation emails to admin, sender, and recipient
-    // For now, we'll just return success
-
     return new Response(JSON.stringify({
       success: true,
       message: "הרישום הושלם בהצלחה"
@@ -128,7 +172,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.error('Error in register-gift-recipient function:', error);
     return new Response(JSON.stringify({
       success: false,
-      message: error.message
+      message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
