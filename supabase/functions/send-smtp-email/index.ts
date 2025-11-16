@@ -239,8 +239,21 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Validate API key exists
+  if (!apiKey) {
+    console.error('CRITICAL: RESEND_API_KEY is not configured!');
+    return new Response(
+      JSON.stringify({ error: 'Email service not configured - missing API key' }),
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json', ...corsHeaders } 
+      }
+    );
+  }
+
   try {
     console.log('Received email request');
+    console.log('Using API key:', apiKey?.substring(0, 7) + '...');
     const emailData: EmailData = await req.json();
     
     // Validate and sanitize email data

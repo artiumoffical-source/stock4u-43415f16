@@ -48,6 +48,16 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
   console.log('Starting to send gift notification emails...');
   console.log('Gift data:', giftData);
 
+  // Validate required email addresses
+  const recipientEmail = giftData.recipientDetails?.email || giftData.recipientEmail;
+  if (!recipientEmail) {
+    throw new Error('Recipient email is required but missing');
+  }
+  
+  if (!giftData.senderEmail) {
+    throw new Error('Sender email is required but missing');
+  }
+
   const stocksList = giftData.selectedStocks?.map((stock: any) => ({
     symbol: stock.symbol,
     name: stock.name,
@@ -60,11 +70,13 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
 
   console.log('Stocks list:', stocksList);
   console.log('Total value:', totalValue);
+  console.log('Recipient email:', recipientEmail);
+  console.log('Sender email:', giftData.senderEmail);
 
   // Email to recipient
   const recipientEmailData: EmailData = {
     from: 'Stock4U <onboarding@resend.dev>',
-    to: giftData.recipientDetails?.email || giftData.recipientEmail || 'test@example.com',
+    to: recipientEmail,
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'השולח'}!`,
     senderName: giftData.senderName || 'השולח',
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
@@ -84,7 +96,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
   // Email to sender (confirmation)
   const senderEmailData: EmailData = {
     from: 'Stock4U <onboarding@resend.dev>',
-    to: giftData.senderEmail || 'test@example.com',
+    to: giftData.senderEmail,
     subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
     senderName: giftData.senderName || 'השולח',
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
