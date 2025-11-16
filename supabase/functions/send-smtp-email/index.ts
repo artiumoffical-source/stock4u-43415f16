@@ -420,7 +420,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Failed to create gift registration');
     }
 
-    const recipientHTML = generateGiftEmailHTML(emailData, true, token);
+    // Determine if this email is for the recipient or sender
+    const isForRecipient = emailData.isForRecipient ?? emailData.subject.includes('קיבלת מתנת');
+    console.log('Email type determined - isForRecipient:', isForRecipient);
+    
+    const recipientHTML = generateGiftEmailHTML(emailData, isForRecipient, token);
     
     const emailRequest = {
       from: emailData.from,
