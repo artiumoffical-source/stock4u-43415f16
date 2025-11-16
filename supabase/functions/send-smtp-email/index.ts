@@ -24,6 +24,7 @@ interface EmailData {
   senderName: string;
   recipientName: string;
   orderId: string;
+  isForRecipient?: boolean;
   giftDetails: {
     stocks: Array<{
       symbol: string;
@@ -58,13 +59,30 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
   ` : '';
 
   const actionButton = isForRecipient && giftToken ? `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px;">
       <tr>
         <td style="text-align: center;">
-          <a href="${Deno.env.get('SUPABASE_URL')?.replace('https://', 'https://').split('.supabase.co')[0]}.lovableproject.com/login" 
-             style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600;">
-            🎁 להרשמה ולקבלת המתנה - לחץ כאן
+          <a href="${Deno.env.get('SUPABASE_URL')?.replace('https://', 'https://').split('.supabase.co')[0]}.lovableproject.com/gift-registration?token=${giftToken}" 
+             style="display: inline-block; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+            🎁 התחל תהליך זיהוי וקבלת המתנה
           </a>
+          <p style="color: #666; font-size: 13px; margin: 12px 0 0 0;">
+            לחיצה על הכפתור תעביר אותך לטופס הזיהוי המאובטח
+          </p>
+        </td>
+      </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
+      <tr>
+        <td style="text-align: center; padding: 16px; background: #f9fafb; border-radius: 8px;">
+          <p style="color: #666; font-size: 13px; margin: 0 0 8px 0;">
+            <strong>זקוק לעזרה?</strong>
+          </p>
+          <p style="color: #666; font-size: 13px; margin: 0;">
+            📧 support@stock4u.co.il | 📞 03-1234567<br>
+            שעות פעילות: ראשון-חמישי 9:00-18:00
+          </p>
         </td>
       </tr>
     </table>
@@ -188,6 +206,70 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                           </table>
                         ` : ''}
                         
+                        ${isForRecipient ? `
+                          <!-- Legal Process Information -->
+                          <table width="100%" cellpadding="20" cellspacing="0" 
+                                 style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 12px; margin: 24px 0;">
+                            <tr>
+                              <td>
+                                <h3 style="color: #1e40af; font-size: 20px; font-weight: bold; margin: 0 0 16px 0; text-align: center;">
+                                  📋 תהליך מימוש המתנה
+                                </h3>
+                                
+                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
+                                    🏦 חשבון נאמנות ייעודי
+                                  </h4>
+                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">
+                                    ערך המתנה שלך (₪${emailData.giftDetails.totalValue.toLocaleString()}) מוחזק בחשבון נאמנות ייעודי על שמך. 
+                                    הכספים מאובטחים ומוגנים על פי חוק, ואינם נגישים לשום צד שלישי עד להשלמת תהליך הזיהוי.
+                                  </p>
+                                </div>
+                                
+                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
+                                    ✅ תהליך זיהוי (KYC/AML) - חובה על פי חוק
+                                  </h4>
+                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0;">
+                                    על מנת לקבל את המתנה, עליך להשלים תהליך זיהוי מלא בהתאם לדרישות הרגולציה הישראלית למניעת הלבנת הון ומימון טרור.
+                                  </p>
+                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">
+                                    <strong>מה נדרש ממך:</strong><br>
+                                    • צילום תעודת זהות / דרכון בתוקף<br>
+                                    • אימות פרטים אישיים (שם, כתובת, טלפון)<br>
+                                    • אישור על מקור הכנסה (במקרים מסוימים)<br>
+                                    • חתימה דיגיטלית על הצהרות רגולטוריות
+                                  </p>
+                                </div>
+                                
+                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
+                                    🔄 שלבי התהליך
+                                  </h4>
+                                  <ol style="color: #666; font-size: 14px; line-height: 1.8; margin: 0; padding-right: 20px;">
+                                    <li><strong>הרשמה והזדהות ראשונית</strong> - מילוי פרטים אישיים והעלאת מסמכים</li>
+                                    <li><strong>אימות זהות</strong> - צוות Stock4U בודק את המסמכים (עד 48 שעות)</li>
+                                    <li><strong>פתיחת חשבון השקעות</strong> - נפתח עבורך חשבון מנוהל אישי</li>
+                                    <li><strong>העברת הכספים מהנאמנות</strong> - הכסף עובר לחשבון ההשקעות שלך</li>
+                                    <li><strong>רכישת המניות</strong> - המניות נרכשות בשמך בהתאם למתנה המקורית</li>
+                                    <li><strong>אישור סופי</strong> - תקבל אישור על השלמת התהליך והמניות יופיעו בחשבונך</li>
+                                  </ol>
+                                </div>
+                                
+                                <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border: 1px solid #fbbf24;">
+                                  <p style="color: #92400e; font-size: 13px; line-height: 1.6; margin: 0;">
+                                    <strong>⏱️ זמני טיפול:</strong> התהליך הממוצע נמשך 2-5 ימי עסקים מרגע הגשת כל המסמכים הנדרשים.
+                                    <br><br>
+                                    <strong>💰 אפשרות מימוש במזומן:</strong> במקרים מסוימים, ניתן גם לממש את המתנה במזומן במקום במניות, בכפוף לאישור רגולטורי.
+                                    <br><br>
+                                    <strong>🔒 אבטחה:</strong> עד להשלמת התהליך, הכספים נשמרים בנאמנות ואינם ניתנים להעברה או משיכה על ידי אף אחד מלבד המוטב החוקי (אתה).
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        ` : ''}
+                        
                         <!-- Order Details -->
                         <table width="100%" cellpadding="0" cellspacing="0" 
                                style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
@@ -208,6 +290,24 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                       </td>
                     </tr>
                   </table>
+                  
+                  ${!isForRecipient ? `
+                    <table width="100%" cellpadding="20" cellspacing="0" 
+                           style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; margin: 24px 0;">
+                      <tr>
+                        <td style="text-align: center;">
+                          <h3 style="color: #065f46; font-size: 18px; font-weight: bold; margin: 0 0 12px 0;">
+                            ✅ המתנה נשלחה בהצלחה!
+                          </h3>
+                          <p style="color: #047857; font-size: 14px; line-height: 1.6; margin: 0;">
+                            שלחנו ל-<strong>${emailData.recipientName}</strong> מייל עם הוראות לקבלת המתנה.<br>
+                            המקבל/ת יצטרכו להשלים תהליך זיהוי (KYC) לפני שיוכלו לממש את המתנה.<br><br>
+                            תקבל/י עדכון נוסף ברגע שהמתנה תמומש על ידי המקבל/ת.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  ` : ''}
                   
                 </td>
               </tr>
@@ -254,7 +354,11 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log('Received email request');
     console.log('Using API key:', apiKey?.substring(0, 7) + '...');
+    
     const emailData: EmailData = await req.json();
+    console.log('Email request received for:', emailData.to);
+    console.log('Subject:', emailData.subject);
+    console.log('Is for recipient:', emailData.isForRecipient);
     
     // Validate and sanitize email data
     if (!emailData.to || !emailData.from || !emailData.subject) {

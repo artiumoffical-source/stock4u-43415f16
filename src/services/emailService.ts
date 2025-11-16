@@ -6,6 +6,8 @@ export interface EmailData {
   subject: string;
   senderName: string;
   recipientName: string;
+  orderId: string;
+  isForRecipient?: boolean;
   giftDetails: {
     stocks: Array<{
       symbol: string;
@@ -18,7 +20,6 @@ export interface EmailData {
   };
   companyLogo?: string;
   hasLogo?: boolean;
-  orderId: string;
 }
 
 export const sendGiftEmails = async (emailData: EmailData) => {
@@ -80,6 +81,8 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'השולח'}!`,
     senderName: giftData.senderName || 'השולח',
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
+    orderId: orderId,
+    isForRecipient: true,
     giftDetails: {
       stocks: stocksList,
       totalValue,
@@ -88,7 +91,6 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     },
     companyLogo: giftData.companyLogo || giftData.uploadedImage,
     hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
-    orderId: orderId
   };
 
   console.log('Recipient email data:', recipientEmailData);
@@ -100,6 +102,8 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
     senderName: giftData.senderName || 'השולח',
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
+    orderId: orderId,
+    isForRecipient: false,
     giftDetails: {
       stocks: stocksList,
       totalValue,
@@ -108,7 +112,6 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     },
     companyLogo: giftData.companyLogo || giftData.uploadedImage,
     hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
-    orderId: orderId
   };
 
   console.log('Sender email data:', senderEmailData);
