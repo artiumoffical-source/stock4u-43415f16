@@ -49,12 +49,12 @@ export default function Checkout() {
           // Save order to database via secure Edge Function
           console.log('Preparing order data with gift data:', giftData);
           const orderData = {
-            buyer_name: formData.cardHolderName || giftData.senderName || '',
-            buyer_email: giftData.senderEmail || '',
+            buyer_name: formData.cardHolderName || giftData.senderName || 'Guest',
+            buyer_email: giftData.senderEmail || 'noemail@example.com',
             buyer_phone: '',
             buyer_id: formData.idNumber,
-            recipient_name: giftData.recipientDetails?.name || '',
-            recipient_email: giftData.recipientDetails?.email || '',
+            recipient_name: giftData.recipientDetails?.name || null,
+            recipient_email: giftData.recipientDetails?.email || null,
             recipient_phone: '',
             delivery_method: 'email',
             delivery_date: (giftData.recipientDetails?.deliveryDate && giftData.recipientDetails.deliveryDate !== '//' && giftData.recipientDetails.deliveryDate.trim() !== '') 
@@ -147,12 +147,12 @@ export default function Checkout() {
         try {
           // Save order to database via secure Edge Function
           const orderData = {
-            buyer_name: formData.cardHolderName || giftData.senderName || '',
-            buyer_email: giftData.senderEmail || '',
+            buyer_name: formData.cardHolderName || giftData.senderName || 'Guest',
+            buyer_email: giftData.senderEmail || 'noemail@example.com',
             buyer_phone: '',
             buyer_id: formData.idNumber,
-            recipient_name: giftData.recipientDetails?.name || '',
-            recipient_email: giftData.recipientDetails?.email || '',
+            recipient_name: giftData.recipientDetails?.name || null,
+            recipient_email: giftData.recipientDetails?.email || null,
             recipient_phone: '',
             delivery_method: 'email',
             delivery_date: (giftData.recipientDetails?.deliveryDate && giftData.recipientDetails.deliveryDate !== '//' && giftData.recipientDetails.deliveryDate.trim() !== '') 
