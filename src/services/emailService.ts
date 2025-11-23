@@ -8,6 +8,7 @@ export interface EmailData {
   recipientName: string;
   orderId: string;
   isForRecipient?: boolean;
+  selectedCard?: string;
   giftDetails: {
     stocks: Array<{
       symbol: string;
@@ -81,6 +82,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
     orderId: orderId,
     isForRecipient: true,
+    selectedCard: giftData.selectedCard || 'lightblue',
     giftDetails: {
       stocks: stocksList,
       totalValue,
@@ -110,6 +112,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
         recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
         orderId: orderId,
         isForRecipient: false,
+        selectedCard: giftData.selectedCard || 'lightblue',
         giftDetails: {
           stocks: stocksList,
           totalValue,
