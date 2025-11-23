@@ -35,30 +35,24 @@ export default function RedeemGift() {
       }
 
       try {
-        // Validate token in gift_registrations table
-        const { data, error } = await supabase
-          .from("gift_registrations")
-          .select("*")
-          .eq("token", token)
-          .eq("registration_status", "pending")
-          .maybeSingle();
+        setTokenStatus("loading");
+        
+        // Use edge function to validate token and get gift details
+        const { data, error } = await supabase.functions.invoke('get-gift-details', {
+          body: { token }
+        });
 
-        if (error) {
-          console.error("Error validating token:", error);
-          setTokenStatus("error");
+        if (error || !data?.success) {
+          console.error('Error validating token:', error || data?.message);
+          setTokenStatus('invalid');
           return;
         }
 
-        if (!data) {
-          setTokenStatus("invalid");
-          return;
-        }
-
-        setGiftDetails(data);
-        setTokenStatus("valid");
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        setTokenStatus("error");
+        setGiftDetails(data.giftDetails);
+        setTokenStatus('valid');
+      } catch (error) {
+        console.error('Error validating token:', error);
+        setTokenStatus('error');
       }
     };
 

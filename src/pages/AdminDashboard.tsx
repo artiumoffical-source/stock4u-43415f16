@@ -52,6 +52,7 @@ export default function AdminDashboard() {
         .select('*')
         .order('created_at', { ascending: false });
 
+      // Apply server-side filtering for status
       if (statusFilter !== 'all') {
         query = query.eq('status', statusFilter);
       }
@@ -66,6 +67,7 @@ export default function AdminDashboard() {
 
       let filteredData = data || [];
 
+      // Only client-side filtering for search term (cannot do text search efficiently in Supabase without extensions)
       if (searchTerm) {
         filteredData = filteredData.filter(order => 
           order.buyer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

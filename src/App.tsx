@@ -5,9 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GiftProvider } from "./contexts/GiftContext";
 import { AdminAuthProvider } from "./hooks/useAdminAuth";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
-import Login from "./pages/Login";
-import SMSVerification from "./pages/SMSVerification";
 import StockSelection from "./pages/StockSelection";
 import Cart from "./pages/Cart";
 import GiftDesign from "./pages/GiftDesign";
@@ -28,17 +27,16 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AdminAuthProvider>
-        <GiftProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AdminAuthProvider>
+          <GiftProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/sms-verification" element={<SMSVerification />} />
               <Route path="/stock-selection" element={<StockSelection />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/gift-design" element={<GiftDesign />} />
@@ -62,6 +60,7 @@ const App = () => (
       </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
