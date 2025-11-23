@@ -5,6 +5,9 @@ import Footer from "@/components/Footer";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "@/contexts/GiftContext";
 import { Eye } from "lucide-react";
+import cardLightblue from "@/assets/card-lightblue.png";
+import cardYellow from "@/assets/card-yellow.png";
+import cardRed from "@/assets/card-red.png";
 
 const GiftDesign = () => {
   const navigate = useNavigate();
@@ -14,19 +17,19 @@ const GiftDesign = () => {
 
   const cardTemplates = [
     {
-      id: "red",
-      name: "שייר פור יו - אדום",
-      bgColor: "#E85D4A"
+      id: "lightblue",
+      name: "שייר פור יו - תכלת",
+      image: cardLightblue
     },
     {
       id: "yellow", 
       name: "שייר פור יו - צהוב",
-      bgColor: "#F5B942"
+      image: cardYellow
     },
     {
-      id: "lightblue",
-      name: "שייר פור יו - תכלת",
-      bgColor: "#C4D3E8"
+      id: "red",
+      name: "שייר פור יו - אדום",
+      image: cardRed
     }
   ];
 
@@ -61,10 +64,10 @@ const GiftDesign = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          gap: "40px",
+          gap: "48px",
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "60px 40px",
+          padding: "60px 40px 80px",
           background: "#fff",
         }}
       >
@@ -77,8 +80,8 @@ const GiftDesign = () => {
           <h2
             style={{
               color: "#486284",
-              fontSize: "28px",
-              fontWeight: "600",
+              fontSize: "32px",
+              fontWeight: "700",
               fontFamily: "Assistant, sans-serif",
               margin: "0",
             }}
@@ -93,7 +96,7 @@ const GiftDesign = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            gap: "32px",
+            gap: "40px",
             width: "100%",
             flexWrap: "wrap",
             maxWidth: "1100px",
@@ -107,87 +110,35 @@ const GiftDesign = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "16px",
+                gap: "20px",
                 cursor: "pointer",
                 position: "relative",
-                padding: "16px",
-                borderRadius: "20px",
-                border: selectedCard === card.id ? "4px solid #5B8DEE" : "4px solid transparent",
+                padding: "20px",
+                borderRadius: "24px",
+                border: selectedCard === card.id ? "5px solid #5B8DEE" : "5px solid transparent",
                 transition: "all 0.2s ease",
                 background: selectedCard === card.id ? "#F0F4FF" : "transparent",
               }}
             >
-              {/* Card Preview Container */}
+              {/* Card Preview Image */}
               <div
                 style={{
-                  width: "320px",
-                  height: "380px",
-                  borderRadius: "16px",
-                  background: card.bgColor,
-                  position: "relative",
+                  width: "340px",
+                  height: "260px",
+                  borderRadius: "20px",
                   overflow: "hidden",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
                 }}
               >
-                {/* Top decorative pattern */}
-                <div
+                <img
+                  src={card.image}
+                  alt={card.name}
                   style={{
                     width: "100%",
-                    height: "200px",
-                    background: `url('/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    opacity: 0.4,
+                    height: "100%",
+                    objectFit: "cover",
                   }}
                 />
-                
-                {/* Bottom message area */}
-                <div
-                  style={{
-                    width: "100%",
-                    height: "180px",
-                    background: card.bgColor === "#E85D4A" 
-                      ? "rgba(232, 93, 74, 0.4)" 
-                      : card.bgColor === "#F5B942"
-                      ? "rgba(245, 185, 66, 0.4)"
-                      : "rgba(196, 211, 232, 0.4)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                  }}
-                >
-                  {/* Three coin decorations */}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "12px",
-                      alignItems: "center",
-                    }}
-                  >
-                    {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "50%",
-                          background: "#F5B942",
-                          border: "3px solid rgba(255, 255, 255, 0.6)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "20px",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                        }}
-                      >
-                        ₪
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
 
               {/* Card Name and Eye Icon */}
@@ -195,14 +146,14 @@ const GiftDesign = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
+                  gap: "12px",
                   justifyContent: "center",
                 }}
               >
                 <span
                   style={{
                     color: "#486284",
-                    fontSize: "18px",
+                    fontSize: "20px",
                     fontFamily: "Assistant, sans-serif",
                     fontWeight: "600",
                   }}
@@ -210,8 +161,9 @@ const GiftDesign = () => {
                   {card.name}
                 </span>
                 <Eye
-                  size={24}
+                  size={28}
                   color="#486284"
+                  strokeWidth={2}
                   style={{ cursor: "pointer" }}
                 />
               </div>
@@ -231,18 +183,19 @@ const GiftDesign = () => {
             onClick={handleContinue}
             disabled={!selectedCard}
             style={{
-              width: "320px",
-              height: "56px",
+              width: "340px",
+              height: "60px",
               background: selectedCard ? "#486284" : "#D1D5DB",
               color: "#FFF",
               border: "none",
-              borderRadius: "28px",
-              fontSize: "18px",
+              borderRadius: "30px",
+              fontSize: "20px",
               fontFamily: "Assistant, sans-serif",
               cursor: selectedCard ? "pointer" : "not-allowed",
-              fontWeight: "600",
+              fontWeight: "700",
               opacity: selectedCard ? 1 : 0.6,
               transition: "all 0.2s ease",
+              boxShadow: selectedCard ? "0 4px 12px rgba(72, 98, 132, 0.3)" : "none",
             }}
           >
             המשך לתשלום
