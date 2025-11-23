@@ -10,30 +10,31 @@ const GiftDesign = () => {
   const navigate = useNavigate();
   const { giftData, updateGiftData } = useGift();
   
-  const [selectedCard, setSelectedCard] = useState(giftData.selectedCard || "card1");
+  const [selectedCard, setSelectedCard] = useState(giftData.selectedCard || "");
 
   const cardTemplates = [
     {
-      id: "card1",
-      name: "שייר פור יו - צבע",
-      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
-      bgColor: "linear-gradient(135deg, #ff6b6b, #ffa8a8)"
-    },
-    {
-      id: "card2", 
-      name: "שייר פור יו - כחול",
-      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
-      bgColor: "linear-gradient(135deg, #4ecdc4, #96ceb4)"
-    },
-    {
-      id: "card3",
+      id: "red",
       name: "שייר פור יו - אדום",
-      preview: "/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png",
-      bgColor: "linear-gradient(135deg, #e74c3c, #ec7063)"
+      bgColor: "#E85D4A"
+    },
+    {
+      id: "yellow", 
+      name: "שייר פור יו - צהוב",
+      bgColor: "#F5B942"
+    },
+    {
+      id: "lightblue",
+      name: "שייר פור יו - תכלת",
+      bgColor: "#C4D3E8"
     }
   ];
 
   const handleContinue = () => {
+    if (!selectedCard) {
+      console.log('[CARD_DESIGN_VALIDATION] No card selected');
+      return;
+    }
     updateGiftData({
       selectedCard: selectedCard
     });
@@ -60,10 +61,10 @@ const GiftDesign = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          gap: "60px",
+          gap: "40px",
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "80px 40px",
+          padding: "60px 40px",
           background: "#fff",
         }}
       >
@@ -71,30 +72,19 @@ const GiftDesign = () => {
         <div
           style={{
             textAlign: "center",
-            marginBottom: "40px",
           }}
         >
           <h2
             style={{
-              color: "#1B1919",
-              fontSize: "32px",
-              fontWeight: "600",
-              fontFamily: "Poppins",
-              margin: "0 0 16px 0",
-            }}
-          >
-            בחרו את כרטיס הברכה המושלם
-          </h2>
-          <p
-            style={{
               color: "#486284",
-              fontSize: "18px",
-              fontFamily: "Poppins",
+              fontSize: "28px",
+              fontWeight: "600",
+              fontFamily: "Assistant, sans-serif",
               margin: "0",
             }}
           >
-            בחרו עיצוב שמבטא בדיוק לשלחתכם את דין הממה החיובית
-          </p>
+            בחרו עיצוב:
+          </h2>
         </div>
 
         {/* Card Templates */}
@@ -102,10 +92,11 @@ const GiftDesign = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
-            gap: "40px",
+            alignItems: "flex-start",
+            gap: "32px",
             width: "100%",
             flexWrap: "wrap",
+            maxWidth: "1100px",
           }}
         >
           {cardTemplates.map((card) => (
@@ -116,137 +107,113 @@ const GiftDesign = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "20px",
+                gap: "16px",
                 cursor: "pointer",
                 position: "relative",
+                padding: "16px",
+                borderRadius: "20px",
+                border: selectedCard === card.id ? "4px solid #5B8DEE" : "4px solid transparent",
+                transition: "all 0.2s ease",
+                background: selectedCard === card.id ? "#F0F4FF" : "transparent",
               }}
             >
-              {/* Card Preview */}
+              {/* Card Preview Container */}
               <div
                 style={{
-                  width: "280px",
-                  height: "200px",
+                  width: "320px",
+                  height: "380px",
                   borderRadius: "16px",
                   background: card.bgColor,
                   position: "relative",
                   overflow: "hidden",
-                  border: selectedCard === card.id ? "3px solid #4C7EFB" : "2px solid #E0E7FF",
-                  transition: "all 0.3s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               >
-                {/* Card Content - Mock design with coins and decorations */}
+                {/* Top decorative pattern */}
                 <div
                   style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "rgba(255, 255, 255, 0.2)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
-                      background: "#FFD700",
-                    }}
-                  />
-                </div>
-                
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "30px",
-                    right: "30px",
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "50%",
-                    background: "rgba(255, 255, 255, 0.3)",
+                    width: "100%",
+                    height: "200px",
+                    background: `url('/lovable-uploads/81dd987e-08a3-468b-b6c0-d9b5f424e75d.png')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    opacity: 0.4,
                   }}
                 />
                 
-                {/* Center logo area */}
+                {/* Bottom message area */}
                 <div
                   style={{
-                    width: "80px",
-                    height: "80px",
-                    borderRadius: "12px",
-                    background: "rgba(255, 255, 255, 0.15)",
+                    width: "100%",
+                    height: "180px",
+                    background: card.bgColor === "#E85D4A" 
+                      ? "rgba(232, 93, 74, 0.4)" 
+                      : card.bgColor === "#F5B942"
+                      ? "rgba(245, 185, 66, 0.4)"
+                      : "rgba(196, 211, 232, 0.4)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backdropFilter: "blur(10px)",
+                    position: "relative",
                   }}
                 >
+                  {/* Three coin decorations */}
                   <div
                     style={{
-                      color: "#FFF",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      textAlign: "center",
+                      display: "flex",
+                      gap: "12px",
+                      alignItems: "center",
                     }}
                   >
-                    STOCK4U
+                    {[1, 2, 3].map((i) => (
+                      <div
+                        key={i}
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "50%",
+                          background: "#F5B942",
+                          border: "3px solid rgba(255, 255, 255, 0.6)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                          color: "#fff",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                        }}
+                      >
+                        ₪
+                      </div>
+                    ))}
                   </div>
-                </div>
-
-                {/* Bottom coins */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "20px",
-                    display: "flex",
-                    gap: "8px",
-                  }}
-                >
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      style={{
-                        width: "24px",
-                        height: "24px",
-                        borderRadius: "50%",
-                        background: "#FFD700",
-                        border: "2px solid rgba(255, 255, 255, 0.5)",
-                      }}
-                    />
-                  ))}
                 </div>
               </div>
 
-              {/* Card Name and Preview Button */}
+              {/* Card Name and Eye Icon */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
+                  gap: "10px",
+                  justifyContent: "center",
                 }}
               >
-                <Eye
-                  size={20}
-                  color="#486284"
-                  style={{ cursor: "pointer" }}
-                />
                 <span
                   style={{
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    fontWeight: "500",
+                    color: "#486284",
+                    fontSize: "18px",
+                    fontFamily: "Assistant, sans-serif",
+                    fontWeight: "600",
                   }}
                 >
                   {card.name}
                 </span>
+                <Eye
+                  size={24}
+                  color="#486284"
+                  style={{ cursor: "pointer" }}
+                />
               </div>
             </div>
           ))}
@@ -257,22 +224,25 @@ const GiftDesign = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "40px",
+            marginTop: "20px",
           }}
         >
           <button
             onClick={handleContinue}
+            disabled={!selectedCard}
             style={{
-              width: "300px",
-              height: "50px",
-              background: "#486284",
+              width: "320px",
+              height: "56px",
+              background: selectedCard ? "#486284" : "#D1D5DB",
               color: "#FFF",
               border: "none",
-              borderRadius: "25px",
+              borderRadius: "28px",
               fontSize: "18px",
-              fontFamily: "Poppins",
-              cursor: "pointer",
-              fontWeight: "500",
+              fontFamily: "Assistant, sans-serif",
+              cursor: selectedCard ? "pointer" : "not-allowed",
+              fontWeight: "600",
+              opacity: selectedCard ? 1 : 0.6,
+              transition: "all 0.2s ease",
             }}
           >
             המשך לתשלום

@@ -25,6 +25,7 @@ interface EmailData {
   recipientName: string;
   orderId: string;
   isForRecipient?: boolean;
+  selectedCard?: string;
   giftDetails: {
     stocks: Array<{
       symbol: string;
@@ -40,6 +41,21 @@ interface EmailData {
 }
 
 const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, giftToken?: string): string => {
+  // Get card design colors
+  const selectedCard = emailData.selectedCard || 'lightblue';
+  let cardBgColor = '#C4D3E8';
+  let cardName = 'תכלת';
+  
+  if (selectedCard === 'red') {
+    cardBgColor = '#E85D4A';
+    cardName = 'אדום';
+  } else if (selectedCard === 'yellow') {
+    cardBgColor = '#F5B942';
+    cardName = 'צהוב';
+  }
+  
+  console.log(`[CARD_DESIGN] Using card design: ${selectedCard} (${cardName}) with color ${cardBgColor}`);
+  
   // FIX ISSUE #1: Display gift amounts in ₪, not share counts
   const stocksHtml = emailData.giftDetails.stocks.map(stock => `
     <tr>
@@ -132,10 +148,10 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
           </td>
         </tr>
         
-        <!-- Yellow Header Section -->
+        <!-- Colored Header Section with Selected Card Design -->
         <tr>
           <td>
-            <table width="100%" cellpadding="0" cellspacing="0" style="background: #FFC547; padding: 40px 20px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background: ${cardBgColor}; padding: 40px 20px;">
               <tr>
                 <td style="text-align: center; position: relative;">
                   
@@ -149,6 +165,10 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                   
                   <p style="color: white; font-size: 18px; margin: 0;">
                     ${isForRecipient ? `מ-${emailData.senderName}` : `ל-${emailData.recipientName}`}
+                  </p>
+                  
+                  <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 12px 0 0 0;">
+                    עיצוב כרטיס: ${cardName}
                   </p>
                   
                 </td>
