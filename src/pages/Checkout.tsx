@@ -46,7 +46,7 @@ export default function Checkout() {
         ? giftData.recipientDetails.deliveryDate 
         : null,
       selected_stocks: giftData.selectedStocks,
-      total_amount: giftData.selectedStocks.reduce((total, stock) => total + (stock.amount * 100), 0),
+      total_amount: giftData.selectedStocks.reduce((total, stock) => total + stock.amount, 0),
       currency: 'ILS',
       selected_card: giftData.selectedCard || '',
       personal_message: giftData.greetingMessage || '',
