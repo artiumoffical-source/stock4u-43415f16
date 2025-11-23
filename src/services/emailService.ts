@@ -62,8 +62,9 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
     amount: stock.amount
   })) || [];
 
+  // FIX: stock.amount is the gift amount in ₪, not number of shares
   const totalValue = giftData.selectedStocks?.reduce((sum: number, stock: any) => 
-    sum + (stock.amount * (stock.price || 0)), 0
+    sum + stock.amount, 0
   ) || 0;
 
   console.log('Stocks list:', stocksList);

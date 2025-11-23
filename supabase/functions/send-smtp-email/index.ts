@@ -40,11 +40,12 @@ interface EmailData {
 }
 
 const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, giftToken?: string): string => {
+  // FIX ISSUE #1: Display gift amounts in ₪, not share counts
   const stocksHtml = emailData.giftDetails.stocks.map(stock => `
     <tr>
       <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #333;">${stock.symbol}</td>
       <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; color: #666;">${stock.name}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #333; text-align: left;">${stock.amount} מניות</td>
+      <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #333; text-align: left;">₪${stock.amount.toLocaleString()}</td>
     </tr>
   `).join('');
 
@@ -58,11 +59,17 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     </table>
   ` : '';
 
+  // FIX ISSUE #3: Use dynamic app URL instead of hardcoded domain
+  const appUrl = Deno.env.get('SUPABASE_URL')?.includes('localhost') 
+    ? 'http://localhost:5173' 
+    : (Deno.env.get('APP_URL') || 'https://stock4u.co.il');
+
   const actionButton = isForRecipient && giftToken ? `
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px;">
       <tr>
         <td style="text-align: center;">
-          <a href="https://stock4u.co.il/redeem?token=${giftToken}" 
+          <a href="${appUrl}/redeem?token=${giftToken}" 
+             class="cta-button"
              style="display: inline-block; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
             🎁 התחל תהליך זיהוי וקבלת המתנה
           </a>
@@ -88,6 +95,7 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     </table>
   ` : '';
 
+  // FIX ISSUE #2: Add responsive CSS and viewport meta tag
   return `
     <!DOCTYPE html>
     <html dir="rtl" lang="he">
@@ -96,16 +104,20 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>מתנת מניות מ-Stock4U</title>
       <style>
+        body { margin: 0; padding: 0; }
         @media only screen and (max-width: 600px) {
           .main-table { width: 100% !important; }
           .gift-card { width: 95% !important; padding: 20px !important; }
           .hide-mobile { display: none !important; }
+          h1 { font-size: 24px !important; }
+          h2 { font-size: 20px !important; }
+          .cta-button { padding: 14px 24px !important; font-size: 15px !important; }
         }
       </style>
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
       
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; max-width: 100%;">
         
         <!-- Header -->
         <tr>
@@ -147,10 +159,10 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
 
         <!-- Main Content -->
         <tr>
-          <td style="padding: 40px 20px;">
+          <td style="padding: 20px;">
             
-            <!-- Centered container -->
-            <table class="main-table" width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+            <!-- Centered container with max-width -->
+            <table class="main-table" width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; max-width: 600px;">
               <tr>
                 <td>
                   
@@ -172,9 +184,9 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                           <tr>
                             <td style="padding: 20px;">
                               
-                              <h3 style="color: #333; font-size: 18px; margin: 0 0 16px 0;">המניות שלך:</h3>
+                              <h3 style="color: #333; font-size: 18px; margin: 0 0 16px 0;">המתנה שלך:</h3>
                               
-                              <table width="100%" cellpadding="0" cellspacing="0">
+                              <table width="100%" cellpadding="0" cellspacing="0" style="word-wrap: break-word;">
                                 ${stocksHtml}
                               </table>
                               
@@ -182,7 +194,7 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                               <table width="100%" cellpadding="0" cellspacing="0" 
                                      style="border-top: 2px solid #e5e7eb; margin-top: 16px; padding-top: 16px;">
                                 <tr>
-                                  <td style="font-size: 18px; font-weight: bold; color: #333;">סה"כ ערך:</td>
+                                  <td style="font-size: 18px; font-weight: bold; color: #333;">סה"כ ערך המתנה:</td>
                                   <td style="font-size: 18px; font-weight: bold; color: #059669; text-align: left;">
                                     ₪${emailData.giftDetails.totalValue.toLocaleString()}
                                   </td>
@@ -237,30 +249,13 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
                                     <strong>מה נדרש ממך:</strong><br>
                                     • צילום תעודת זהות / דרכון בתוקף<br>
                                     • אימות פרטים אישיים (שם, כתובת, טלפון)<br>
-                                    • אישור על מקור הכנסה (במקרים מסוימים)<br>
                                     • חתימה דיגיטלית על הצהרות רגולטוריות
                                   </p>
-                                </div>
-                                
-                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
-                                    🔄 שלבי התהליך
-                                  </h4>
-                                  <ol style="color: #666; font-size: 14px; line-height: 1.8; margin: 0; padding-right: 20px;">
-                                    <li><strong>הרשמה והזדהות ראשונית</strong> - מילוי פרטים אישיים והעלאת מסמכים</li>
-                                    <li><strong>אימות זהות</strong> - צוות Stock4U בודק את המסמכים (עד 48 שעות)</li>
-                                    <li><strong>פתיחת חשבון השקעות</strong> - נפתח עבורך חשבון מנוהל אישי</li>
-                                    <li><strong>העברת הכספים מהנאמנות</strong> - הכסף עובר לחשבון ההשקעות שלך</li>
-                                    <li><strong>רכישת המניות</strong> - המניות נרכשות בשמך בהתאם למתנה המקורית</li>
-                                    <li><strong>אישור סופי</strong> - תקבל אישור על השלמת התהליך והמניות יופיעו בחשבונך</li>
-                                  </ol>
                                 </div>
                                 
                                 <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border: 1px solid #fbbf24;">
                                   <p style="color: #92400e; font-size: 13px; line-height: 1.6; margin: 0;">
                                     <strong>⏱️ זמני טיפול:</strong> התהליך הממוצע נמשך 2-5 ימי עסקים מרגע הגשת כל המסמכים הנדרשים.
-                                    <br><br>
-                                    <strong>💰 אפשרות מימוש במזומן:</strong> במקרים מסוימים, ניתן גם לממש את המתנה במזומן במקום במניות, בכפוף לאישור רגולטורי.
                                     <br><br>
                                     <strong>🔒 אבטחה:</strong> עד להשלמת התהליך, הכספים נשמרים בנאמנות ואינם ניתנים להעברה או משיכה על ידי אף אחד מלבד המוטב החוקי (אתה).
                                   </p>
@@ -426,7 +421,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: regError } = await supabase
       .from('gift_registrations')
       .insert({
-        order_id: emailData.orderId, // This should be passed from the calling function
+        order_id: emailData.orderId,
         token: token,
         recipient_name: emailData.recipientName,
         recipient_email: emailData.to,
