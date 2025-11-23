@@ -46,12 +46,13 @@ export const sendGiftEmails = async (emailData: EmailData) => {
 };
 
 export const sendGiftNotificationEmails = async (giftData: any, orderId: string) => {
-  console.log('Starting to send gift notification emails...');
+  console.log('[EMAIL_START] Starting to send gift notification emails...');
   console.log('Gift data:', giftData);
 
   // Validate required email addresses
   const recipientEmail = giftData.recipientDetails?.email || giftData.recipientEmail;
   if (!recipientEmail) {
+    console.error('[EMAIL_VALIDATION_ERROR] Recipient email is required but missing');
     throw new Error('Recipient email is required but missing');
   }
 
@@ -70,7 +71,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
   console.log('Recipient email:', recipientEmail);
   console.log('Sender email:', giftData.senderEmail);
 
-  // Email to recipient
+  // Email to recipient (REQUIRED)
   const recipientEmailData: EmailData = {
     from: 'Stock4U <onboarding@resend.dev>',
     to: recipientEmail,
@@ -91,39 +92,47 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
 
   console.log('Recipient email data:', recipientEmailData);
 
-  // Email to sender (confirmation)
-  const senderEmailData: EmailData = {
-    from: 'Stock4U <onboarding@resend.dev>',
-    to: giftData.senderEmail,
-    subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
-    senderName: giftData.senderName || 'השולח',
-    recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
-    orderId: orderId,
-    isForRecipient: false,
-    giftDetails: {
-      stocks: stocksList,
-      totalValue,
-      message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת!',
-      deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
-    },
-    companyLogo: giftData.companyLogo || giftData.uploadedImage,
-    hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
-  };
-
-  console.log('Sender email data:', senderEmailData);
-
   try {
-    console.log('Sending emails...');
+    console.log('[EMAIL_START] Sending recipient email...');
+    await sendGiftEmails(recipientEmailData);
+    console.log('[EMAIL_OK] Recipient email sent successfully');
+
+    // Email to sender (OPTIONAL - only if sender email exists)
+    if (giftData.senderEmail && giftData.senderEmail.trim() !== '') {
+      console.log('[EMAIL_START] Sending sender confirmation email...');
+      
+      const senderEmailData: EmailData = {
+        from: 'Stock4U <onboarding@resend.dev>',
+        to: giftData.senderEmail.trim(),
+        subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
+        senderName: giftData.senderName || 'השולח',
+        recipientName: giftData.recipientDetails?.name || giftData.recipientName || 'המקבל',
+        orderId: orderId,
+        isForRecipient: false,
+        giftDetails: {
+          stocks: stocksList,
+          totalValue,
+          message: giftData.greetingMessage || giftData.message || 'מתנה מיוחדת!',
+          deliveryDate: giftData.recipientDetails?.deliveryDate || giftData.deliveryDate || 'מיידי'
+        },
+        companyLogo: giftData.companyLogo || giftData.uploadedImage,
+        hasLogo: giftData.hasLogo || (giftData.companyLogo || giftData.uploadedImage) ? true : false,
+      };
+
+      try {
+        await sendGiftEmails(senderEmailData);
+        console.log('[EMAIL_OK] Sender confirmation email sent successfully');
+      } catch (senderError) {
+        // Log but don't fail - sender email is optional
+        console.warn('[EMAIL_FAIL] Failed to send sender email (non-critical):', senderError);
+      }
+    } else {
+      console.log('[EMAIL_SKIP] Sender email not provided, skipping sender confirmation');
+    }
     
-    await Promise.all([
-      sendGiftEmails(recipientEmailData),
-      sendGiftEmails(senderEmailData)
-    ]);
-    
-    console.log('All emails sent successfully');
     return true;
   } catch (error) {
-    console.error('Error sending gift emails:', error);
+    console.error('[EMAIL_FAIL] Error sending gift emails:', error);
     throw error;
   }
 };
