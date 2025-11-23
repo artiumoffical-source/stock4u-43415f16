@@ -104,37 +104,36 @@ export default function Footer() {
     <footer
       style={{
         width: "100%",
-        height: "308px",
+        minHeight: "308px",
         background: "#DBE3F3",
         position: "relative",
         direction: "rtl",
+        padding: "60px 20px 40px",
       }}
     >
-      {/* Logo Section - positioned exactly as in Figma */}
+      {/* Logo Section - Responsive */}
       <div
         style={{
           position: "absolute",
-          left: "78px",
-          top: "-92px",
-          width: "207px",
-          height: "338px",
+          left: "5%",
+          top: "-60px",
+          width: "clamp(120px, 15vw, 207px)",
+          height: "auto",
         }}
       >
-        {/* Stock4U Logo - Positioned exactly as in Figma */}
+        {/* Stock4U Logo */}
         <div
           style={{
-            position: "absolute",
-            left: "0px",
-            top: "282px",
-            width: "207px",
-            height: "56px",
+            position: "relative",
+            width: "100%",
             color: "#4C7EFB",
             fontFamily:
               "Holtwood One SC, -apple-system, Roboto, Helvetica, sans-serif",
-            fontSize: "33px",
+            fontSize: "clamp(20px, 2.5vw, 33px)",
             fontWeight: "400",
             lineHeight: "normal",
             textTransform: "uppercase",
+            marginTop: "200px",
           }}
         >
           Stock4U
@@ -145,30 +144,26 @@ export default function Footer() {
           className="kalinka-dancer"
           style={{
             position: "absolute",
-            left: "24px",
+            left: "15%",
             top: "0px",
-            width: "160px",
-            height: "253px",
+            width: "clamp(100px, 12vw, 160px)",
+            height: "auto",
           }}
         >
           {/* Main logo structure with drop shadows */}
           <div
             style={{
-              position: "absolute",
-              left: "0px",
-              top: "0px",
-              width: "160px",
-              height: "253px",
+              position: "relative",
+              width: "100%",
+              height: "auto",
               filter: "drop-shadow(3.658px 3.658px 0 rgba(0, 0, 0, 0.10))",
             }}
           >
             <div
               style={{
-                position: "absolute",
-                left: "0px",
-                top: "0px",
-                width: "160px",
-                height: "253px",
+                position: "relative",
+                width: "100%",
+                height: "auto",
                 filter: "drop-shadow(7.945px 6.179px 0 rgba(0, 0, 0, 0.15))",
               }}
             >
@@ -176,10 +171,10 @@ export default function Footer() {
                 src="https://api.builder.io/api/v1/image/assets/TEMP/f969c07e858b8f0f5fa3c353bca4357f94d553ca?width=315"
                 style={{
                   position: "absolute",
-                  left: "2px",
-                  top: "129px",
-                  width: "158px",
-                  height: "123px",
+                  left: "1%",
+                  top: "51%",
+                  width: "99%",
+                  height: "auto",
                 }}
                 alt="Group 108277"
               />
@@ -187,11 +182,10 @@ export default function Footer() {
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/85f6ee2d3f5933c63581e107b8a0cad1791e8911?width=247"
               style={{
-                position: "absolute",
-                left: "9px",
-                top: "0px",
-                width: "124px",
-                height: "173px",
+                position: "relative",
+                width: "78%",
+                height: "auto",
+                marginLeft: "5%",
               }}
               alt="Group 108355"
             />
@@ -199,25 +193,26 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Content Sections - positioned exactly as in Figma */}
+      {/* Content Sections - Responsive */}
       <div
         style={{
-          position: "absolute",
-          left: "550px",
-          top: "76px",
-          width: "1228px",
-          height: "152px",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "3px",
+          position: "relative",
+          width: "100%",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: "clamp(20px, 4vw, 60px)",
+          padding: "0 20px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "60px", justifyContent: "center" }}>
           {/* אנחנו ברשתות */}
           <div
             style={{
               display: "flex",
-              width: "250px",
+              width: "clamp(200px, 25vw, 250px)",
               flexDirection: "column",
               alignItems: "center",
               gap: "20px",
@@ -231,7 +226,7 @@ export default function Footer() {
                 textAlign: "center",
                 fontFamily:
                   "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "24px",
+                fontSize: "clamp(18px, 2vw, 24px)",
                 fontWeight: "700",
                 lineHeight: "normal",
               }}
@@ -263,7 +258,7 @@ export default function Footer() {
                     textAlign: "center",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -303,7 +298,7 @@ export default function Footer() {
                     textAlign: "center",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -344,7 +339,7 @@ export default function Footer() {
                     textAlign: "center",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -372,7 +367,7 @@ export default function Footer() {
           </div>
 
           {/* Separator */}
-          <svg width="2" height="153" viewBox="0 0 2 153" fill="none">
+          <svg width="2" height="clamp(100px, 15vh, 153px)" viewBox="0 0 2 153" fill="none" className="hidden md:block">
             <path d="M1.48828 0.985107V152.844" stroke="#4C7EFB" />
           </svg>
 
@@ -380,7 +375,7 @@ export default function Footer() {
           <div
             style={{
               display: "flex",
-              width: "250px",
+              width: "clamp(200px, 25vw, 250px)",
               flexDirection: "column",
               alignItems: "center",
               gap: "20px",
@@ -394,7 +389,7 @@ export default function Footer() {
                 textAlign: "center",
                 fontFamily:
                   "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "24px",
+                fontSize: "clamp(18px, 2vw, 24px)",
                 fontWeight: "700",
                 lineHeight: "normal",
               }}
@@ -425,7 +420,7 @@ export default function Footer() {
                     textAlign: "right",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -470,7 +465,7 @@ export default function Footer() {
                     textAlign: "right",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -509,7 +504,7 @@ export default function Footer() {
                     textAlign: "right",
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                    fontSize: "18px",
+                    fontSize: "clamp(14px, 1.5vw, 18px)",
                     fontWeight: "400",
                     lineHeight: "normal",
                   }}
@@ -540,7 +535,7 @@ export default function Footer() {
           </div>
 
           {/* Separator */}
-          <svg width="2" height="153" viewBox="0 0 2 153" fill="none">
+          <svg width="2" height="clamp(100px, 15vh, 153px)" viewBox="0 0 2 153" fill="none" className="hidden md:block">
             <path d="M1.48828 0.985107V152.844" stroke="#4C7EFB" />
           </svg>
 
@@ -548,7 +543,7 @@ export default function Footer() {
           <div
             style={{
               display: "flex",
-              width: "280px",
+              width: "clamp(200px, 25vw, 280px)",
               flexDirection: "column",
               alignItems: "flex-end",
               gap: "20px",
@@ -561,7 +556,7 @@ export default function Footer() {
                 textAlign: "right",
                 fontFamily:
                   "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "24px",
+                fontSize: "clamp(18px, 2vw, 24px)",
                 fontWeight: "700",
                 lineHeight: "normal",
               }}
@@ -586,7 +581,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -602,7 +597,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -618,7 +613,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -630,7 +625,7 @@ export default function Footer() {
           </div>
 
           {/* Separator */}
-          <svg width="2" height="153" viewBox="0 0 2 153" fill="none">
+          <svg width="2" height="clamp(100px, 15vh, 153px)" viewBox="0 0 2 153" fill="none" className="hidden md:block">
             <path d="M1 0.985107V152.844" stroke="#4C7EFB" />
           </svg>
 
@@ -638,7 +633,7 @@ export default function Footer() {
           <div
             style={{
               display: "flex",
-              width: "280px",
+              width: "clamp(200px, 25vw, 280px)",
               flexDirection: "column",
               alignItems: "flex-end",
               gap: "20px",
@@ -651,7 +646,7 @@ export default function Footer() {
                 textAlign: "right",
                 fontFamily:
                   "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "24px",
+                fontSize: "clamp(18px, 2vw, 24px)",
                 fontWeight: "700",
                 lineHeight: "normal",
               }}
@@ -676,7 +671,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -692,7 +687,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -708,7 +703,7 @@ export default function Footer() {
                   textAlign: "right",
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                  fontSize: "18px",
+                  fontSize: "clamp(14px, 1.5vw, 18px)",
                   fontWeight: "400",
                   lineHeight: "normal",
                   textDecoration: "none",
@@ -718,13 +713,8 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-
-          {/* Final Separator */}
-          <svg width="2" height="153" viewBox="0 0 2 153" fill="none">
-            <path d="M0.511719 0.985107V152.844" stroke="#4C7EFB" />
-          </svg>
-        </div>
       </div>
+
     </footer>
     </>
   );

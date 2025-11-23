@@ -667,9 +667,9 @@ export default function StockSelection() {
             ))}
           </div>
 
-          {/* Continue to Gift Design Button */}
-          {getTotalSelectedStocks() > 0 && (
-            <div className="text-center mb-12">
+          {/* Continue to Gift Design Button - Always visible */}
+          <div className="text-center mb-12">
+            {getTotalSelectedStocks() > 0 && (
               <div className="mb-4">
                 <p
                   className="text-[18px] font-bold text-[#486284] mb-2"
@@ -690,19 +690,24 @@ export default function StockSelection() {
                   {getTotalSelectedStocks()} מניות נבחרו
                 </p>
               </div>
-              <button
-                onClick={continueToGiftDesign}
-                className="w-[250px] h-[50px] bg-[#4C7EFB] hover:bg-blue-600 text-white rounded-[40px] font-bold text-[16px] transition-all duration-200"
-                style={{
-                  fontFamily:
-                    "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                  boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
-                }}
-              >
-                המשך לפרטים וברכה
-              </button>
-            </div>
-          )}
+            )}
+            <button
+              onClick={continueToGiftDesign}
+              disabled={getTotalSelectedStocks() === 0}
+              className={`w-[250px] h-[50px] rounded-[40px] font-bold text-[16px] transition-all duration-200 ${
+                getTotalSelectedStocks() > 0
+                  ? "bg-[#4C7EFB] hover:bg-blue-600 text-white cursor-pointer"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
+              }`}
+              style={{
+                fontFamily:
+                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+                boxShadow: getTotalSelectedStocks() > 0 ? "10px 10px 0 0 rgba(0, 0, 0, 0.10)" : "none",
+              }}
+            >
+              המשך לפרטים וברכה
+            </button>
+          </div>
         </div>
       </div>
 
