@@ -10,13 +10,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { giftData } = useGift();
+  const { giftData, resetGiftData } = useGift();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  
   const [formData, setFormData] = useState({
     idNumber: "",
     cardHolderName: "",
@@ -73,94 +75,123 @@ export default function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Processing payment...", formData);
+    
+    // [PAYMENT_DUPLICATE_GUARD] Prevent double submission
+    if (isSubmitting) {
+      console.log('[PAYMENT_DUPLICATE_GUARD] Submission already in progress, ignoring');
+      return;
+    }
 
-    // Simulate payment processing
-    setTimeout(async () => {
-      // Scroll to top before navigation
-      window.scrollTo(0, 0);
+    console.log("[PAYMENT_START] Processing payment...", { timestamp: new Date().toISOString() });
+    setIsSubmitting(true);
+
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // For now, always navigate to success page
-      // In the future, this will be determined by actual payment processing result
-      const paymentSuccess = true; // This would come from payment gateway response
+      const paymentSuccess = true;
 
       if (paymentSuccess) {
-        try {
-          const orderData = createOrderData('paid');
-          const orderResult = await saveOrder(orderData);
+        console.log("[PAYMENT_OK] Payment successful, creating order");
+        
+        const orderData = createOrderData('paid');
+        const orderResult = await saveOrder(orderData);
 
-          console.log('Order saved successfully, ID:', orderResult.orderId);
+        console.log('[PAYMENT_OK] Order saved successfully, ID:', orderResult.orderId);
+        
+        // Send gift notification emails (non-blocking)
+        try {
+          console.log('[EMAIL_START] Attempting to send gift notification emails...');
+          await sendGiftNotificationEmails(giftData, orderResult.orderId);
           
-          // Send gift notification emails
-          try {
-            console.log('Attempting to send gift notification emails...');
-            await sendGiftNotificationEmails(giftData, orderResult.orderId);
-            
-            console.log('Emails sent successfully');
-            toast({
-              title: "המתנה נשלחה בהצלחה!",
-              description: "מיילים נשלחו לשולח ולמקבל המתנה",
-            });
-          } catch (emailError) {
-            console.error("Failed to send emails:", emailError);
-            toast({
-              title: "שגיאה בשליחת המיילים",
-              description: emailError instanceof Error ? emailError.message : "אנא צרו קשר עם השירות",
-              variant: "destructive",
-            });
-          }
-        } catch (error: any) {
-          console.error('Error in checkout process:', error);
+          console.log('[EMAIL_OK] Emails sent successfully');
           toast({
-            title: "שגיאה בתהליך הרכישה",
-            description: error.message || "אירעה שגיאה. אנא נסה שנית.",
+            title: "המתנה נשלחה בהצלחה!",
+            description: "מיילים נשלחו לשולח ולמקבל המתנה",
+          });
+        } catch (emailError) {
+          console.error("[EMAIL_FAIL] Failed to send emails:", emailError);
+          toast({
+            title: "שגיאה בשליחת המיילים",
+            description: emailError instanceof Error ? emailError.message : "אנא צרו קשר עם השירות",
             variant: "destructive",
           });
-          return;
         }
+        
+        // Clear cart data before navigation
+        resetGiftData();
         navigate("/purchase-success");
       } else {
+        console.log("[PAYMENT_FAIL] Payment failed");
         navigate("/purchase-error");
       }
-    }, 1000);
+    } catch (error: any) {
+      console.error('[PAYMENT_FAIL] Error in checkout process:', error);
+      toast({
+        title: "שגיאה בתהליך הרכישה",
+        description: error.message || "אירעה שגיאה. אנא נסה שנית.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   };
 
   const handleAlternativePayment = async (method: string) => {
-    console.log(`Processing payment with ${method}...`);
+    // [PAYMENT_DUPLICATE_GUARD] Prevent double submission
+    if (isSubmitting) {
+      console.log('[PAYMENT_DUPLICATE_GUARD] Submission already in progress, ignoring');
+      return;
+    }
 
-    // Simulate alternative payment processing
-    setTimeout(async () => {
-      // Scroll to top before navigation
-      window.scrollTo(0, 0);
+    console.log(`[PAYMENT_START] Processing payment with ${method}...`, { timestamp: new Date().toISOString() });
+    setIsSubmitting(true);
 
-      // For now, always navigate to success page
-      // In the future, this will be determined by actual payment processing result
-      const paymentSuccess = true; // This would come from payment gateway response
+    try {
+      // Simulate alternative payment processing
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const paymentSuccess = true;
 
       if (paymentSuccess) {
-        try {
-          const orderData = createOrderData('paid');
-          const orderResult = await saveOrder(orderData);
+        console.log("[PAYMENT_OK] Payment successful, creating order");
+        
+        const orderData = createOrderData('paid');
+        const orderResult = await saveOrder(orderData);
 
-          // Send gift notification emails
+        // Send gift notification emails (non-blocking)
+        try {
+          console.log('[EMAIL_START] Sending emails...');
           await sendGiftNotificationEmails(giftData, orderResult.orderId);
+          console.log('[EMAIL_OK] Emails sent');
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
           });
         } catch (error: any) {
-          console.error("Failed to process payment:", error);
+          console.error("[EMAIL_FAIL] Failed to send emails:", error);
           toast({
             title: error.message.includes('order') ? "שגיאה בשמירת ההזמנה" : "המתנה נשלחה בהצלחה",
             description: error.message.includes('order') ? error.message : "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
             variant: error.message.includes('order') ? "destructive" : "default",
           });
         }
+        
+        resetGiftData();
         navigate("/purchase-success");
       } else {
+        console.log("[PAYMENT_FAIL] Payment failed");
         navigate("/purchase-error");
       }
-    }, 1000);
+    } catch (error: any) {
+      console.error('[PAYMENT_FAIL] Error processing payment:', error);
+      toast({
+        title: "שגיאה בתהליך התשלום",
+        description: error.message || "אירעה שגיאה. אנא נסה שנית.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   };
 
   return (
