@@ -400,7 +400,7 @@ export default function PurchaseSuccess() {
         </Link>
 
         <Link
-          to="/gift-list"
+          to="/stock-selection"
           style={{
             display: "inline-flex",
             padding: "16px 32px",
