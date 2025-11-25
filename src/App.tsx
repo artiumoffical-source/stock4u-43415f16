@@ -20,6 +20,14 @@ import About from "./pages/About";
 import Careers from "./pages/Careers";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import { AdminLayout } from "./components/admin/AdminLayout";
+import DashboardOverview from "./pages/admin/DashboardOverview";
+import OrdersPage from "./pages/admin/OrdersPage";
+import GiftsPage from "./pages/admin/GiftsPage";
+import CustomersPage from "./pages/admin/CustomersPage";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
+import AuditLogsPage from "./pages/admin/AuditLogsPage";
+import SettingsPage from "./pages/admin/SettingsPage";
 import GiftRegistration from "./pages/GiftRegistration";
 import RedeemGift from "./pages/RedeemGift";
 import NotFound from "./pages/NotFound";
@@ -50,6 +58,19 @@ const App = () => (
               <Route path="/careers" element={<Careers />} />
               <Route path="/admin-portal-s4u" element={<AdminLogin />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              
+              {/* New Admin Back Office Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<DashboardOverview />} />
+                <Route path="dashboard" element={<DashboardOverview />} />
+                <Route path="orders" element={<OrdersPage />} />
+                <Route path="gifts" element={<GiftsPage />} />
+                <Route path="customers" element={<CustomersPage />} />
+                <Route path="users" element={<AdminUsersPage />} />
+                <Route path="logs" element={<AuditLogsPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+              </Route>
+              
               <Route path="/gift-registration" element={<GiftRegistration />} />
               <Route path="/redeem" element={<RedeemGift />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
