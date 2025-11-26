@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import CompanyTicker from "@/components/CompanyTicker";
 import { useGift } from "../contexts/GiftContext";
 import StockFilters, { FilterState } from "@/components/StockFilters";
+import { StockCard } from "@/components/StockCard";
 
 export default function StockSelection() {
   const [selectedTab, setSelectedTab] = useState("individual");
@@ -221,128 +222,9 @@ export default function StockSelection() {
     return giftData.selectedStocks.reduce((sum, stock) => sum + stock.amount, 0);
   };
 
-  const StockCard = ({ stock }: { stock: any }) => {
-    const [amount, setAmount] = useState(getStockAmount(stock.symbol));
-    
-    const handleAmountChange = (value: string) => {
-      const numValue = parseInt(value) || 0;
-      setAmount(numValue);
-    };
-
-    const handleAmountBlur = () => {
-      updateStockAmount(stock.symbol, amount);
-    };
-
-    return (
-      <div
-        className="w-[380px] h-[300px] bg-white rounded-[20px] relative p-5 hover:shadow-xl transition-all duration-300"
-        style={{ boxShadow: "0 4px 81.4px 0 rgba(72, 98, 132, 0.15)" }}
-      >
-        {/* Expand Icon */}
-        <div className="absolute top-4 left-4">
-          <div className="w-[22px] h-[22px] bg-[#4C7EFB] rounded-lg flex items-center justify-center text-white hover:bg-blue-600 transition-colors cursor-pointer">
-            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 28 28">
-              <path
-                fillRule="evenodd"
-                d="M14.3969 3.27417C14.3969 3.05039 14.308 2.83578 14.1498 2.67755C13.9916 2.51931 13.777 2.43042 13.5532 2.43042H7.98443C6.09443 2.43042 5.14943 2.43042 4.4238 2.7983C3.78879 3.12186 3.2725 3.63815 2.94893 4.27317C2.58105 4.99542 2.58105 5.94042 2.58105 7.8338V13.4025C2.58105 13.6263 2.66995 13.8409 2.82818 13.9992C2.98642 14.1574 3.20103 14.2463 3.4248 14.2463C3.64858 14.2463 3.86319 14.1574 4.02143 13.9992C4.17966 13.8409 4.26855 13.6263 4.26855 13.4025V7.8338C4.26855 6.86011 4.26855 6.23236 4.30905 5.75817C4.34618 5.29917 4.4103 5.13042 4.45249 5.04604C4.61449 4.72879 4.87268 4.47061 5.18993 4.30861C5.2743 4.26642 5.44305 4.2023 5.90205 4.16517C6.37962 4.12636 7.00905 4.12467 7.97768 4.12467H13.5464C13.7702 4.12467 13.9848 4.03577 14.1431 3.87754C14.3013 3.71931 14.3902 3.5047 14.3902 3.28092L14.3969 3.27417Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-
-        {/* Company info with logo */}
-        <div className="pt-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="text-[#486284] opacity-80">{stock.logo}</div>
-            <h3
-              className="text-[28px] font-bold text-[#486284] leading-[32px]"
-              style={{
-                fontFamily:
-                  "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              {stock.symbol}
-            </h3>
-          </div>
-          <p
-            className="text-[12px] text-[#486284] opacity-50 mb-4 leading-[18px]"
-            style={{
-              fontFamily:
-                "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-            }}
-          >
-            {stock.company}
-          </p>
-        </div>
-
-        {/* Description */}
-        <div className="px-2">
-          <p
-            className="text-[14px] text-[#486284] leading-[134%] text-right mb-4 h-[80px] overflow-hidden"
-            style={{
-              fontFamily:
-                "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
-            }}
-          >
-            {stock.description}
-          </p>
-        </div>
-
-        {/* Gift Amount Input */}
-        <div className="absolute bottom-16 right-4 left-4">
-          <div className="flex items-center gap-2 justify-center">
-            <span
-              className="text-[14px] text-[#486284] font-medium"
-              style={{
-                fontFamily:
-                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              ₪
-            </span>
-            <input
-              type="number"
-              placeholder="0"
-              value={amount || ""}
-              onChange={(e) => handleAmountChange(e.target.value)}
-              onBlur={handleAmountBlur}
-              className="w-20 h-8 border border-[#DBE3F3] rounded-md text-center text-[14px] text-[#486284] focus:outline-none focus:ring-2 focus:ring-[#4C7EFB] focus:border-transparent"
-              style={{
-                fontFamily:
-                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            />
-            <span
-              className="text-[14px] text-[#486284] font-medium"
-              style={{
-                fontFamily:
-                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              סכום המתנה
-            </span>
-          </div>
-        </div>
-
-        {/* Selected indicator */}
-        {amount > 0 && (
-          <div className="absolute bottom-4 left-4">
-            <div className="w-[100px] h-[30px] bg-green-100 border border-green-300 rounded-[15px] flex items-center justify-center">
-              <span
-                className="text-[12px] font-bold text-green-700"
-                style={{
-                  fontFamily:
-                    "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                }}
-              >
-                נבחר ₪{amount}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  // Handle investment amount change
+  const handleInvestmentAmountChange = (symbol: string, amount: number) => {
+    updateStockAmount(symbol, amount);
   };
 
   // Handle filter changes
@@ -569,12 +451,17 @@ export default function StockSelection() {
           <div
             className={`grid gap-6 mb-12 ${
               selectedTab === "individual"
-                ? "grid-cols-3"
-                : "grid-cols-2 max-w-[900px] mx-auto"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto"
             }`}
           >
             {currentData.map((stock, index) => (
-              <StockCard key={`${selectedTab}-${index}`} stock={stock} />
+              <StockCard
+                key={`${selectedTab}-${index}`}
+                stock={stock}
+                investmentAmount={getStockAmount(stock.symbol)}
+                onInvestmentAmountChange={handleInvestmentAmountChange}
+              />
             ))}
           </div>
 
