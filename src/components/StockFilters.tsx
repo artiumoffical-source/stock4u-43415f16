@@ -43,7 +43,7 @@ export default function StockFilters({ onFiltersChange, initialFilters }: StockF
     ...defaultFilters,
     ...initialFilters,
   });
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(true);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [searchInput, setSearchInput] = useState(filters.search);
 
   // Debounced search
