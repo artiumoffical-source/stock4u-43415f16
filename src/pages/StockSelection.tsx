@@ -3,12 +3,24 @@ import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import CompanyTicker from "@/components/CompanyTicker";
 import { useGift } from "../contexts/GiftContext";
+import StockFilters, { FilterState } from "@/components/StockFilters";
 
 export default function StockSelection() {
   const [selectedTab, setSelectedTab] = useState("individual");
-  const [searchTerm, setSearchTerm] = useState("");
-  const { giftData, addStock, removeStock, resetGiftData } =
-    useGift();
+  const [filters, setFilters] = useState<FilterState>({
+    category: "single_stocks",
+    search: "",
+    priceMin: 2,
+    priceMax: 50,
+    marketCapMin: 500,
+    marketCapMax: 1,
+    marketCapMinUnit: "million",
+    marketCapMaxUnit: "billion",
+    growthMin: 1,
+    growthMax: 5,
+    country: "israel",
+  });
+  const { giftData, addStock, removeStock, resetGiftData } = useGift();
   const navigate = useNavigate();
 
   // Clean up any old localStorage data on first visit and scroll to top
@@ -333,8 +345,38 @@ export default function StockSelection() {
     );
   };
 
-  // Get current data based on selected tab
-  const currentData = selectedTab === "individual" ? individualStocks : etfs;
+  // Handle filter changes
+  const handleFiltersChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+    
+    // Update the selected tab based on category
+    if (newFilters.category === "single_stocks") {
+      setSelectedTab("individual");
+    } else {
+      setSelectedTab("etfs");
+    }
+    
+    // Here you would typically trigger data reload with the new filters
+    // For now, we're just updating the state which will filter the display
+  };
+
+  // Get current data based on selected tab and apply filters
+  const getCurrentData = () => {
+    const baseData = selectedTab === "individual" ? individualStocks : etfs;
+    
+    // Apply search filter
+    if (filters.search) {
+      return baseData.filter(
+        (stock) =>
+          stock.symbol.toLowerCase().includes(filters.search.toLowerCase()) ||
+          stock.company.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+    
+    return baseData;
+  };
+  
+  const currentData = getCurrentData();
 
   return (
     <div className="min-h-screen bg-white" dir="rtl">
@@ -491,139 +533,8 @@ export default function StockSelection() {
         />
       </div>
 
-      {/* Controls Section */}
-      <div className="bg-white py-12">
-        <div className="flex items-center justify-center gap-6">
-          {/* AI Icon */}
-          <div
-            className="w-[50px] h-[50px] bg-white rounded-[8px] p-2 flex items-center justify-center"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          >
-            <div className="w-[30px] h-[30px] bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="currentColor"
-                viewBox="0 0 40 39"
-              >
-                <path
-                  d="M15.1885 8.80151C16.0373 6.3812 19.4888 6.29977 20.498 8.57886L20.584 8.80249V8.80347L21.8955 12.5398C22.2154 13.4519 22.7323 14.2855 23.4102 14.9851C24.088 15.6847 24.9114 16.2341 25.8242 16.5964L25.835 16.6003L26.1875 16.7292L26.1982 16.7322L30.0332 18.0085C32.5212 18.8371 32.597 22.173 30.2676 23.156L30.0332 23.2429L26.1982 24.5203C25.2653 24.8306 24.4105 25.3326 23.6924 25.9929C22.9742 26.6532 22.4095 27.4568 22.0361 28.3494H22.0352L22.0312 28.3601L21.8994 28.7019L21.8955 28.7136L20.5859 32.4519C19.7632 34.7969 16.4977 34.9455 15.3789 32.8816L15.2773 32.6755L15.1826 32.4363L13.8789 28.7146C13.5593 27.8024 13.043 26.9682 12.3652 26.2683C11.6874 25.5684 10.8632 25.0185 9.9502 24.656L9.94043 24.6521L9.58887 24.5242L9.57812 24.5203L5.74316 23.2439C3.2521 22.4149 3.17697 19.0752 5.51074 18.0955L5.75781 18.0037L9.57812 16.7322C10.5107 16.4217 11.3652 15.9198 12.083 15.2595C12.8008 14.5993 13.3661 13.7964 13.7393 12.9041L13.7432 12.8933L13.875 12.5515L13.8789 12.5398L15.1885 8.80151Z"
-                  fill="#4C7EFB"
-                  stroke="white"
-                  strokeWidth="0.8"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Settings Icon */}
-          <div
-            className="w-[50px] h-[50px] bg-white rounded-[8px] p-2 flex items-center justify-center"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          >
-            <div className="w-[30px] h-[30px] bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Search Bar */}
-          <div
-            className="w-[220px] h-[50px] bg-white rounded-[8px] p-3 flex items-center gap-3"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          >
-            <svg
-              className="w-[18px] h-[17px] text-[#4C7EFB]"
-              fill="currentColor"
-              viewBox="0 0 23 22"
-            >
-              <path
-                d="M20.2876 18.4153L15.8721 14.2005C17.1312 12.8183 17.779 11.0235 17.6788 9.19429C17.5786 7.36512 16.7382 5.64453 15.335 4.39523C13.9317 3.14593 12.075 2.46551 10.1564 2.49741C8.23782 2.52931 6.40714 3.27102 5.05028 4.56621C3.69341 5.8614 2.91638 7.60887 2.88296 9.44027C2.84954 11.2717 3.56236 13.0439 4.87115 14.3834C6.17995 15.7229 7.98246 16.525 9.89874 16.6207C11.815 16.7163 13.6953 16.098 15.1434 14.8961L19.5588 19.1109C19.6566 19.1978 19.7859 19.2452 19.9194 19.2429C20.053 19.2407 20.1805 19.189 20.2749 19.0988C20.3694 19.0087 20.4235 18.887 20.4259 18.7595C20.4282 18.632 20.3787 18.5086 20.2876 18.4153ZM3.93883 9.5756C3.93883 8.375 4.3118 7.20137 5.01057 6.20311C5.70935 5.20485 6.70255 4.42681 7.86457 3.96736C9.0266 3.50791 10.3053 3.3877 11.5389 3.62192C12.7725 3.85615 13.9056 4.43429 14.795 5.28324C15.6843 6.13219 16.29 7.21381 16.5354 8.39134C16.7808 9.56886 16.6548 10.7894 16.1735 11.8986C15.6922 13.0078 14.8771 13.9559 13.8313 14.6229C12.7855 15.2899 11.556 15.6459 10.2982 15.6459C8.61222 15.644 6.99588 15.0038 5.8037 13.8658C4.61153 12.7278 3.94087 11.1849 3.93883 9.5756Z"
-                fill="#4C7EFB"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder="חיפוש"
-              className="flex-1 border-none outline-none text-[#4C7EFB] placeholder-[#4C7EFB] text-[16px] opacity-30"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                fontFamily:
-                  "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            />
-          </div>
-
-          {/* Category Dropdown */}
-          <div
-            className="w-[220px] h-[50px] bg-white rounded-[8px] border border-[#DBE3F3] px-5 py-3 flex items-center justify-between cursor-pointer"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          >
-            <svg
-              className="w-[16.27px] h-[8.135px] text-[#4C7EFB]"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 19 11"
-            >
-              <path d="M1.32715 0.820557L9.46191 8.95569L17.597 0.820557" />
-            </svg>
-            <span
-              className="text-[#4C7EFB] text-[16px] font-medium"
-              style={{
-                fontFamily:
-                  "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              טכנולוגיה
-            </span>
-          </div>
-
-          {/* Toggle Tabs */}
-          <div
-            className="w-[320px] h-[50px] bg-white rounded-[8px] border border-[#DBE3F3] p-[5px] flex"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          >
-            <button
-              className={`w-[150px] h-[40px] rounded-[6px] flex items-center justify-center text-[16px] font-medium transition-all ${
-                selectedTab === "individual"
-                  ? "bg-[#4C7EFB] text-white"
-                  : "text-[#4C7EFB]"
-              }`}
-              onClick={() => setSelectedTab("individual")}
-              style={{
-                fontFamily:
-                  "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              מניות בודדות
-            </button>
-            <button
-              className={`w-[150px] h-[40px] rounded-[6px] flex items-center justify-center text-[16px] font-medium transition-all ${
-                selectedTab === "etfs"
-                  ? "bg-[#4C7EFB] text-white"
-                  : "text-[#4C7EFB]"
-              }`}
-              onClick={() => setSelectedTab("etfs")}
-              style={{
-                fontFamily:
-                  "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-              }}
-            >
-              תעודות סל
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Filters Section */}
+      <StockFilters onFiltersChange={handleFiltersChange} initialFilters={filters} />
 
       {/* Main Content */}
       <div className="px-6 py-12">
