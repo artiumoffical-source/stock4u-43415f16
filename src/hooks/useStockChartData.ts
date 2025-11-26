@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChartDataPoint {
   date: string;
   price: number;
 }
 
-type TimeRange = "1M" | "3M" | "6M" | "1Y";
+export type TimeRange = "5D" | "חודש" | "1M" | "6M" | "1Y" | "5Y" | "MAX";
 
 // Cache for storing fetched data
 const dataCache = new Map<string, { data: ChartDataPoint[]; timestamp: number }>();
@@ -37,11 +38,12 @@ export function useStockChartData(symbol: string, timeRange: TimeRange) {
         const startDate = new Date();
         
         switch (timeRange) {
+          case "5D":
+            startDate.setDate(startDate.getDate() - 5);
+            break;
+          case "חודש":
           case "1M":
             startDate.setMonth(startDate.getMonth() - 1);
-            break;
-          case "3M":
-            startDate.setMonth(startDate.getMonth() - 3);
             break;
           case "6M":
             startDate.setMonth(startDate.getMonth() - 6);
@@ -49,32 +51,35 @@ export function useStockChartData(symbol: string, timeRange: TimeRange) {
           case "1Y":
             startDate.setFullYear(startDate.getFullYear() - 1);
             break;
+          case "5Y":
+            startDate.setFullYear(startDate.getFullYear() - 5);
+            break;
+          case "MAX":
+            startDate.setFullYear(startDate.getFullYear() - 20);
+            break;
         }
 
-        const formatDate = (date: Date) => date.toISOString().split('T')[0];
-
-        // Using Twelve Data API (free tier allows 8 requests per minute)
-        // Alternative: You can also use Alpha Vantage or Yahoo Finance API
         const period1 = Math.floor(startDate.getTime() / 1000);
         const period2 = Math.floor(endDate.getTime() / 1000);
         
-        // Using Yahoo Finance via query1.finance.yahoo.com (no API key needed)
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${period1}&period2=${period2}&interval=1d`;
+        // Call our edge function to avoid CORS issues
+        const { data: edgeFunctionData, error: edgeFunctionError } = await supabase.functions.invoke(
+          'fetch-stock-chart',
+          {
+            body: { symbol, period1, period2 }
+          }
+        );
 
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error("Failed to fetch stock data");
+        if (edgeFunctionError) {
+          throw new Error(edgeFunctionError.message || "שגיאה בטעינת נתונים");
         }
 
-        const result = await response.json();
-        
-        if (!result.chart?.result?.[0]?.timestamp) {
-          throw new Error("Invalid data format");
+        if (!edgeFunctionData?.chart?.result?.[0]?.timestamp) {
+          throw new Error("פורמט נתונים לא תקין");
         }
 
-        const timestamps = result.chart.result[0].timestamp;
-        const prices = result.chart.result[0].indicators.quote[0].close;
+        const timestamps = edgeFunctionData.chart.result[0].timestamp;
+        const prices = edgeFunctionData.chart.result[0].indicators.quote[0].close;
 
         const chartData: ChartDataPoint[] = timestamps
           .map((timestamp: number, index: number) => ({
@@ -95,7 +100,8 @@ export function useStockChartData(symbol: string, timeRange: TimeRange) {
         setData(chartData);
       } catch (err) {
         console.error("Error fetching stock chart data:", err);
-        setError(err instanceof Error ? err.message : "Unknown error");
+        const errorMessage = err instanceof Error ? err.message : "שגיאה לא ידועה";
+        setError(errorMessage);
         
         // Fallback to mock data for demonstration if API fails
         const mockData = generateMockData(timeRange);
@@ -115,7 +121,17 @@ export function useStockChartData(symbol: string, timeRange: TimeRange) {
 
 // Fallback mock data generator
 function generateMockData(timeRange: TimeRange): ChartDataPoint[] {
-  const points = timeRange === "1M" ? 30 : timeRange === "3M" ? 90 : timeRange === "6M" ? 180 : 365;
+  const pointsMap: Record<TimeRange, number> = {
+    "5D": 5,
+    "חודש": 30,
+    "1M": 30,
+    "6M": 180,
+    "1Y": 365,
+    "5Y": 365 * 5,
+    "MAX": 365 * 10,
+  };
+  
+  const points = pointsMap[timeRange] || 30;
   const data: ChartDataPoint[] = [];
   const basePrice = 100 + Math.random() * 100;
   

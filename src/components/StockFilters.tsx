@@ -110,7 +110,7 @@ export default function StockFilters({ onFiltersChange, initialFilters }: StockF
               onClick={() => updateFilter("category", "packages")}
               className="h-12 px-6 rounded-full text-base font-medium"
             >
-              חבילות מוכנות
+              תעודות סל
             </Button>
           </div>
 
