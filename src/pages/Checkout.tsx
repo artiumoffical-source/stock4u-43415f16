@@ -64,9 +64,6 @@ export default function Checkout() {
     });
 
     if (orderError || !orderResult.success) {
-      console.error('Error saving order:', orderError || orderResult.error);
-      console.error('Order data:', orderData);
-      console.error('Gift data:', giftData);
       throw new Error(orderError?.message || orderResult.error || 'Failed to create order');
     }
 
@@ -78,11 +75,8 @@ export default function Checkout() {
     
     // [PAYMENT_DUPLICATE_GUARD] Prevent double submission
     if (isSubmitting) {
-      console.log('[PAYMENT_DUPLICATE_GUARD] Submission already in progress, ignoring');
       return;
     }
-
-    console.log("[PAYMENT_START] Processing payment...", { timestamp: new Date().toISOString() });
     setIsSubmitting(true);
 
     try {
@@ -93,25 +87,17 @@ export default function Checkout() {
       const paymentSuccess = true;
 
       if (paymentSuccess) {
-        console.log("[PAYMENT_OK] Payment successful, creating order");
-        
         const orderData = createOrderData('paid');
         const orderResult = await saveOrder(orderData);
-
-        console.log('[PAYMENT_OK] Order saved successfully, ID:', orderResult.orderId);
         
         // Send gift notification emails (non-blocking)
         try {
-          console.log('[EMAIL_START] Attempting to send gift notification emails...');
           await sendGiftNotificationEmails(giftData, orderResult.orderId);
-          
-          console.log('[EMAIL_OK] Emails sent successfully');
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: "מיילים נשלחו לשולח ולמקבל המתנה",
           });
         } catch (emailError) {
-          console.error("[EMAIL_FAIL] Failed to send emails:", emailError);
           toast({
             title: "שגיאה בשליחת המיילים",
             description: emailError instanceof Error ? emailError.message : "אנא צרו קשר עם השירות",
@@ -123,11 +109,9 @@ export default function Checkout() {
         resetGiftData();
         navigate("/purchase-success");
       } else {
-        console.log("[PAYMENT_FAIL] Payment failed");
         navigate("/purchase-error");
       }
     } catch (error: any) {
-      console.error('[PAYMENT_FAIL] Error in checkout process:', error);
       toast({
         title: "שגיאה בתהליך הרכישה",
         description: error.message || "אירעה שגיאה. אנא נסה שנית.",
@@ -140,11 +124,8 @@ export default function Checkout() {
   const handleAlternativePayment = async (method: string) => {
     // [PAYMENT_DUPLICATE_GUARD] Prevent double submission
     if (isSubmitting) {
-      console.log('[PAYMENT_DUPLICATE_GUARD] Submission already in progress, ignoring');
       return;
     }
-
-    console.log(`[PAYMENT_START] Processing payment with ${method}...`, { timestamp: new Date().toISOString() });
     setIsSubmitting(true);
 
     try {
@@ -154,22 +135,17 @@ export default function Checkout() {
       const paymentSuccess = true;
 
       if (paymentSuccess) {
-        console.log("[PAYMENT_OK] Payment successful, creating order");
-        
         const orderData = createOrderData('paid');
         const orderResult = await saveOrder(orderData);
 
         // Send gift notification emails (non-blocking)
         try {
-          console.log('[EMAIL_START] Sending emails...');
           await sendGiftNotificationEmails(giftData, orderResult.orderId);
-          console.log('[EMAIL_OK] Emails sent');
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
           });
         } catch (error: any) {
-          console.error("[EMAIL_FAIL] Failed to send emails:", error);
           toast({
             title: error.message.includes('order') ? "שגיאה בשמירת ההזמנה" : "המתנה נשלחה בהצלחה",
             description: error.message.includes('order') ? error.message : "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
@@ -180,11 +156,9 @@ export default function Checkout() {
         resetGiftData();
         navigate("/purchase-success");
       } else {
-        console.log("[PAYMENT_FAIL] Payment failed");
         navigate("/purchase-error");
       }
     } catch (error: any) {
-      console.error('[PAYMENT_FAIL] Error processing payment:', error);
       toast({
         title: "שגיאה בתהליך התשלום",
         description: error.message || "אירעה שגיאה. אנא נסה שנית.",

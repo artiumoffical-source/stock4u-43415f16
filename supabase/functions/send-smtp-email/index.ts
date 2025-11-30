@@ -3,9 +3,6 @@ import { Resend } from "npm:resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.54.0";
 
 const apiKey = Deno.env.get("RESEND_API_KEY");
-console.log('API Key exists:', !!apiKey);
-console.log('API Key length:', apiKey?.length);
-console.log('API Key starts with re_:', apiKey?.startsWith('re_'));
 const resend = new Resend(apiKey);
 
 const corsHeaders = {
@@ -350,8 +347,6 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("STEP 1: entering handler");
-  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -369,9 +364,6 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log('Received email request');
-    console.log('Using API key:', apiKey?.substring(0, 7) + '...');
-    
     let emailData: EmailData;
     try {
       emailData = await req.json();
@@ -385,11 +377,6 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
-    
-    console.log("STEP 2: emailData parsed", emailData);
-    console.log('Email request received for:', emailData.to);
-    console.log('Subject:', emailData.subject);
-    console.log('Is for recipient:', emailData.isForRecipient);
     
     // Validate and sanitize email data
     if (!emailData.to || !emailData.from || !emailData.subject) {
@@ -413,18 +400,13 @@ const handler = async (req: Request): Promise<Response> => {
     }
     
     if (!emailRegex.test(fromEmail)) {
-      console.error('Invalid "from" email format:', emailData.from, 'extracted:', fromEmail);
-      throw new Error(`Invalid sender email format: ${emailData.from}`);
+      throw new Error('Invalid sender email format');
     }
-    
-    console.log('Email validation passed. From:', emailData.from, 'To:', emailData.to);
     
     // Sanitize text fields
     emailData.subject = emailData.subject.slice(0, 200);
     emailData.senderName = emailData.senderName?.slice(0, 100) || '';
     emailData.recipientName = emailData.recipientName?.slice(0, 100) || '';
-    
-    console.log('Email data validated:', { to: emailData.to, from: emailData.from, subject: emailData.subject });
 
     // Create gift registration token
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -434,8 +416,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Generate unique token for gift registration
     const token = crypto.randomUUID();
-    
-    console.log("STEP 3: inserting registration");
     
     // Create gift registration record
     const { error: regError } = await supabase
@@ -449,17 +429,11 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
     if (regError) {
-      console.error('Error creating gift registration:', regError);
       throw new Error('Failed to create gift registration');
     }
 
-    console.log("STEP 4: registration inserted");
-
     // Determine if this email is for the recipient or sender
     const isForRecipient = emailData.isForRecipient ?? emailData.subject.includes('קיבלת מתנת');
-    console.log('Email type determined - isForRecipient:', isForRecipient);
-    
-    console.log("STEP 5: generating HTML");
     const recipientHTML = generateGiftEmailHTML(emailData, isForRecipient, token);
     
     const emailRequest = {
@@ -469,15 +443,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: recipientHTML
     };
     
-    console.log('Sending email with data:', {
-      from: emailRequest.from,
-      to: emailRequest.to,
-      subject: emailRequest.subject
-    });
-    
-    console.log("STEP 6: calling Resend");
     const result = await resend.emails.send(emailRequest);
-    console.log('Email sent successfully:', result);
 
     return new Response(JSON.stringify(result), {
       status: 200,
@@ -488,8 +454,6 @@ const handler = async (req: Request): Promise<Response> => {
     });
     
   } catch (error: any) {
-    console.log("FINAL ERROR", error);
-    console.error('Error in send-smtp-email function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {

@@ -89,13 +89,11 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
         
         // Check if data is older than 7 days
         if (parsedData._timestamp && Date.now() - parsedData._timestamp > sevenDaysMs) {
-          console.log('Gift data expired, clearing localStorage');
           localStorage.removeItem('giftData');
         } else {
           setGiftData({ ...defaultGiftData, ...parsedData });
         }
       } catch (error) {
-        console.error("Error parsing saved gift data:", error);
         localStorage.removeItem('giftData');
       }
     }

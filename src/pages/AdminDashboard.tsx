@@ -80,7 +80,7 @@ export default function AdminDashboard() {
 
       setOrders(filteredData);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      // Error fetching orders
     }
     setLoading(false);
   };
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
       
       fetchOrders(); // Refresh the list
     } catch (error) {
-      console.error('Error updating order status:', error);
+      // Error updating order status
     }
   };
 
