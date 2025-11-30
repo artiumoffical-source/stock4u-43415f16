@@ -106,7 +106,6 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate input
     const validationResult = orderSchema.safeParse(rawData);
     if (!validationResult.success) {
-      console.error('Validation error:', validationResult.error);
       return new Response(
         JSON.stringify({ error: 'Invalid order data', details: validationResult.error.issues }),
         { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
@@ -132,7 +131,6 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (orderError) {
-      console.error('Error creating order:', orderError);
       return new Response(
         JSON.stringify({ error: orderError.message }),
         {
@@ -141,8 +139,6 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
-
-    console.log('Order created successfully:', order);
 
     return new Response(
       JSON.stringify({ success: true, orderId: order.id }),
@@ -153,7 +149,6 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
   } catch (error: any) {
-    console.error('Error in create-order function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {

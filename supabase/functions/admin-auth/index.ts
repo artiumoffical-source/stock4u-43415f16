@@ -54,7 +54,6 @@ const handler = async (req: Request): Promise<Response> => {
     const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
     
     if (isRateLimited(clientIP)) {
-      console.log('Rate limited login attempt from:', clientIP);
       return new Response(
         JSON.stringify({ success: false, error: 'Too many login attempts. Try again later.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -92,11 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
       .eq('username', sanitizedUsername)
       .single();
 
-    // Log login attempt for audit
-    console.log('Admin login attempt:', { username: sanitizedUsername, ip: clientIP, timestamp: new Date().toISOString() });
-
     if (userError || !adminUser) {
-      console.log('Admin user not found:', sanitizedUsername, 'IP:', clientIP);
       return new Response(
         JSON.stringify({ success: false, error: 'Invalid credentials' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -156,7 +151,6 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (authError) {
-      console.error('Auth error:', authError);
       return new Response(
         JSON.stringify({ success: false, error: 'Authentication failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -169,7 +163,6 @@ const handler = async (req: Request): Promise<Response> => {
       .insert({ user_id: authData.user.id, role: 'admin' });
 
     if (roleError) {
-      console.error('Role assignment error:', roleError);
       // Continue anyway - the auth user was created
     }
 
@@ -180,7 +173,6 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (sessionError) {
-      console.error('Session error:', sessionError);
       return new Response(
         JSON.stringify({ success: false, error: 'Session creation failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -200,7 +192,6 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
   } catch (error) {
-    console.error('Admin auth error:', error);
     return new Response(
       JSON.stringify({ success: false, error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

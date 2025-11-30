@@ -97,7 +97,6 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (regError) {
-      console.error('Error finding gift registration:', regError);
       return new Response(JSON.stringify({
         success: false,
         message: "מתנה לא נמצאה או שהקישור לא תקין"
@@ -137,7 +136,6 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
   } catch (error: any) {
-    console.error('Error in get-gift-details function:', error);
     return new Response(JSON.stringify({
       success: false,
       message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"
