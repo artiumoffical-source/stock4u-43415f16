@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // Rate limiting
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5;
+const RATE_LIMIT = 3;
 const RATE_WINDOW = 60000;
 
 function isRateLimited(ip: string): boolean {
@@ -29,30 +29,11 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-// Validation schemas
-const israeliIdSchema = z.string().regex(/^\d{9}$/).refine((id) => {
-  const digits = id.split('').map(Number);
-  let sum = 0;
-  for (let i = 0; i < 9; i++) {
-    let num = digits[i] * ((i % 2) + 1);
-    sum += num > 9 ? num - 9 : num;
-  }
-  return sum % 10 === 0;
-}, { message: 'Invalid Israeli ID number' });
-
-const registrationSchema = z.object({
-  fullName: z.string().min(1).max(100),
-  idNumber: israeliIdSchema,
-  address: z.string().min(1).max(200),
-  phone: z.string().regex(/^0\d{1,2}-?\d{7}$/),
-  email: z.string().email().max(255)
-});
-
 const requestSchema = z.object({
   token: z.string().uuid(),
-  registrationData: registrationSchema,
-  documentFileName: z.string().max(100).optional(),
-  documentType: z.string().max(50).optional()
+  fileName: z.string().max(100),
+  fileData: z.string(), // base64 encoded
+  fileType: z.string().regex(/^(image\/(jpeg|jpg|png)|application\/pdf)$/i)
 });
 
 const handler = async (req: Request): Promise<Response> => {
@@ -85,69 +66,93 @@ const handler = async (req: Request): Promise<Response> => {
     if (!validationResult.success) {
       return new Response(JSON.stringify({
         success: false,
-        message: "נתונים לא תקינים. אנא בדוק את הפרטים ונסה שוב"
+        message: "נתונים לא תקינים"
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    const { token, registrationData, documentFileName, documentType } = validationResult.data;
+    const { token, fileName, fileData, fileType } = validationResult.data;
 
-    // Find the gift registration
+    // Verify the gift registration exists and is not already completed
     const { data: giftRegistration, error: regError } = await supabase
       .from('gift_registrations')
-      .select('*')
+      .select('id, registration_status')
       .eq('token', token)
       .single();
 
     if (regError || !giftRegistration) {
       return new Response(JSON.stringify({
         success: false,
-        message: "מתנה לא נמצאה או שהקישור לא תקין"
+        message: "מתנה לא נמצאה"
       }), {
         status: 404,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    // Check if already registered
     if (giftRegistration.registration_status === 'completed') {
       return new Response(JSON.stringify({
         success: false,
-        message: "המתנה כבר נרשמה בעבר"
+        message: "המתנה כבר נרשמה"
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    // Prepare update data
-    const updateData: any = {
-      recipient_name: registrationData.fullName,
-      recipient_email: registrationData.email,
-      recipient_phone: registrationData.phone,
-      id_number: registrationData.idNumber,
-      address: registrationData.address,
-      registration_status: 'completed',
-      registered_at: new Date().toISOString()
-    };
-
-    // Add document information if provided
-    if (documentFileName && documentType) {
-      const documentUrl = `${token}/${Date.now()}.${documentFileName.split('.').pop()}`;
-      updateData.id_document_url = documentUrl;
-      updateData.id_document_type = documentType;
-      updateData.kyc_status = 'submitted';
+    // Decode base64 file data
+    const decoder = new TextDecoder();
+    const fileBuffer = Uint8Array.from(atob(fileData), c => c.charCodeAt(0));
+    
+    // Validate file size (max 5MB)
+    if (fileBuffer.length > 5 * 1024 * 1024) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "הקובץ גדול מדי. מקסימום 5MB"
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
     }
 
-    // Update the gift registration with the new data
+    // Generate unique file name with token prefix for isolation
+    const timestamp = Date.now();
+    const fileExtension = fileName.split('.').pop();
+    const storagePath = `${token}/${timestamp}.${fileExtension}`;
+
+    // Upload to storage using service role
+    const { error: uploadError } = await supabase.storage
+      .from('kyc-documents')
+      .upload(storagePath, fileBuffer, {
+        contentType: fileType,
+        upsert: false
+      });
+
+    if (uploadError) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "שגיאה בהעלאת הקובץ"
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
+    // Update gift registration with document info
     const { error: updateError } = await supabase
       .from('gift_registrations')
-      .update(updateData)
+      .update({
+        id_document_url: storagePath,
+        id_document_type: fileType
+      })
       .eq('id', giftRegistration.id);
 
     if (updateError) {
+      // Try to clean up the uploaded file
+      await supabase.storage.from('kyc-documents').remove([storagePath]);
+      
       return new Response(JSON.stringify({
         success: false,
         message: "שגיאה בעדכון הרישום"
@@ -159,7 +164,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     return new Response(JSON.stringify({
       success: true,
-      message: "הרישום הושלם בהצלחה"
+      message: "הקובץ הועלה בהצלחה",
+      documentPath: storagePath
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -168,7 +174,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     return new Response(JSON.stringify({
       success: false,
-      message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"
+      message: "שגיאת שרת"
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },

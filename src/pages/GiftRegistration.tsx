@@ -105,16 +105,30 @@ export default function GiftRegistration() {
     
     setIsUploading(true);
     try {
-      // Generate unique filename
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `${token}/${Date.now()}.${fileExtension}`;
-      
-      // Upload file to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('kyc-documents')
-        .upload(fileName, file);
-      
-      if (uploadError) throw uploadError;
+      // Convert file to base64
+      const reader = new FileReader();
+      const fileData = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => {
+          const base64 = reader.result?.toString().split(',')[1];
+          if (base64) resolve(base64);
+          else reject(new Error('Failed to read file'));
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      // Upload via edge function for secure server-side handling
+      const { data, error } = await supabase.functions.invoke('upload-kyc-document', {
+        body: {
+          token,
+          fileName: file.name,
+          fileData,
+          fileType: file.type
+        }
+      });
+
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.message || 'Upload failed');
       
       setUploadedFile(file);
       toast({
@@ -122,7 +136,6 @@ export default function GiftRegistration() {
         description: "המסמך נשמר במערכת",
       });
     } catch (error: any) {
-      console.error('Error uploading file:', error);
       toast({
         variant: "destructive",
         title: "שגיאה בהעלאת הקובץ",
