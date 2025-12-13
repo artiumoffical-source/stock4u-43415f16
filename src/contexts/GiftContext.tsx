@@ -35,7 +35,6 @@ interface GiftData {
   uploadedImage?: string;
   companyLogo?: string;
   hasLogo?: boolean;
-  _timestamp?: number;
 }
 
 interface GiftContextType {
@@ -79,32 +78,6 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [giftData, setGiftData] = useState<GiftData>(defaultGiftData);
 
-  // Load data from localStorage on mount with expiration check
-  useEffect(() => {
-    const savedData = localStorage.getItem("giftData");
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-        
-        // Check if data is older than 7 days
-        if (parsedData._timestamp && Date.now() - parsedData._timestamp > sevenDaysMs) {
-          localStorage.removeItem('giftData');
-        } else {
-          setGiftData({ ...defaultGiftData, ...parsedData });
-        }
-      } catch (error) {
-        localStorage.removeItem('giftData');
-      }
-    }
-  }, []);
-
-  // Save data to localStorage whenever it changes with timestamp
-  useEffect(() => {
-    const dataWithTimestamp = { ...giftData, _timestamp: Date.now() };
-    localStorage.setItem("giftData", JSON.stringify(dataWithTimestamp));
-  }, [giftData]);
-
   const updateGiftData = (updates: Partial<GiftData>) => {
     setGiftData((prev) => ({ ...prev, ...updates }));
   };
@@ -141,7 +114,6 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const resetGiftData = () => {
     setGiftData(defaultGiftData);
-    localStorage.removeItem("giftData");
   };
 
   return (
