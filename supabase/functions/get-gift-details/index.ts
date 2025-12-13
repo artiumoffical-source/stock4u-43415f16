@@ -75,6 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { token } = validationResult.data;
+    console.log(`[GET_GIFT] Looking up token: ${token}`);
 
     // Find the gift registration
     const { data: giftRegistration, error: regError } = await supabase
@@ -97,6 +98,7 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (regError) {
+      console.log(`[GET_GIFT] Database error for token ${token}:`, regError.message);
       return new Response(JSON.stringify({
         success: false,
         message: "מתנה לא נמצאה או שהקישור לא תקין"
@@ -116,8 +118,10 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // Check if already registered
-    if (giftRegistration.registration_status === 'completed') {
+    // Check if already registered (but allow viewing for submitted/under_review)
+    if (giftRegistration.registration_status === 'completed' || 
+        giftRegistration.registration_status === 'approved') {
+      console.log(`[GET_GIFT] Gift already completed: ${token}`);
       return new Response(JSON.stringify({
         success: false,
         message: "המתנה כבר נרשמה בעבר"
@@ -127,8 +131,19 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    console.log(`[GET_GIFT] Successfully found gift for token: ${token}, status: ${giftRegistration.registration_status}`);
+
+    // Return both giftDetails (for RedeemGift page) and gift (for GiftRegistration page)
     return new Response(JSON.stringify({
       success: true,
+      giftDetails: {
+        id: giftRegistration.id,
+        order_id: giftRegistration.order_id,
+        recipient_name: giftRegistration.recipient_name,
+        recipient_email: giftRegistration.recipient_email,
+        registration_status: giftRegistration.registration_status,
+        created_at: giftRegistration.created_at
+      },
       gift: giftRegistration.orders
     }), {
       status: 200,

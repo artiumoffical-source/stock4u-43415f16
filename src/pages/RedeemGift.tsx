@@ -29,29 +29,38 @@ export default function RedeemGift() {
 
   useEffect(() => {
     const validateToken = async () => {
+      console.log('[REDEEM_DEBUG] Token from URL:', token);
+      
       if (!token) {
+        console.log('[REDEEM_DEBUG] No token found in URL');
         setTokenStatus("invalid");
         return;
       }
 
       try {
         setTokenStatus("loading");
+        console.log('[REDEEM_DEBUG] Calling get-gift-details edge function');
         
         // Use edge function to validate token and get gift details
         const { data, error } = await supabase.functions.invoke('get-gift-details', {
           body: { token }
         });
 
+        console.log('[REDEEM_DEBUG] Response:', { data, error });
+
         if (error || !data?.success) {
-          console.error('Error validating token:', error || data?.message);
+          console.error('[REDEEM_DEBUG] Error validating token:', error || data?.message);
           setTokenStatus('invalid');
           return;
         }
 
+        console.log('[REDEEM_DEBUG] Gift details received:', data.giftDetails);
+        console.log('[REDEEM_DEBUG] Gift status:', data.giftDetails?.registration_status);
+        
         setGiftDetails(data.giftDetails);
         setTokenStatus('valid');
       } catch (error) {
-        console.error('Error validating token:', error);
+        console.error('[REDEEM_DEBUG] Exception:', error);
         setTokenStatus('error');
       }
     };
@@ -60,6 +69,7 @@ export default function RedeemGift() {
   }, [token]);
 
   const handleStartKYC = () => {
+    console.log('[REDEEM_DEBUG] Start KYC clicked, token:', token);
     if (token) {
       navigate(`/gift-registration?token=${token}`);
     }
