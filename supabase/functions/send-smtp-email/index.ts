@@ -50,10 +50,12 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
   
   console.log(`[CARD_DESIGN] Using card design: ${selectedCard} with color ${cardBgColor}`);
   
-  // FIX ISSUE #3: Use dynamic app URL instead of hardcoded domain
+  // Dynamic app URL for links and assets
   const appUrl = Deno.env.get('SUPABASE_URL')?.includes('localhost') 
     ? 'http://localhost:5173' 
     : (Deno.env.get('APP_URL') || 'https://stock4u.co.il');
+  
+  const stock4uLogoUrl = `${appUrl}/emails/stock4u-logo.png`;
 
   const logoSection = emailData.hasLogo && emailData.companyLogo ? `
     <div style="text-align: center; margin-bottom: 16px;">
@@ -61,14 +63,32 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     </div>
   ` : '';
 
-  const appUrl = Deno.env.get('SUPABASE_URL')?.includes('localhost') 
-    ? 'http://localhost:5173' 
-    : (Deno.env.get('APP_URL') || 'https://stock4u.co.il');
-  const stock4uLogoUrl = `${appUrl}/emails/stock4u-logo.png`;
+  // Build stocks display - compact card style for each stock
+  const stocksHtml = emailData.giftDetails.stocks.map(stock => `
+    <div style="background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 12px; text-align: center;">
+      <div style="font-size: 24px; font-weight: 700; color: #059669; margin-bottom: 4px;">₪${stock.amount.toLocaleString()}</div>
+      <div style="font-size: 18px; font-weight: 600; color: #1e293b;">${stock.symbol}</div>
+      <div style="font-size: 13px; color: #64748b; margin-top: 2px;">${stock.name}</div>
+    </div>
+  `).join('');
 
-  const logoSection = emailData.hasLogo && emailData.companyLogo ? `
-    <div style="text-align: center; margin-bottom: 16px;">
-      <img src="${emailData.companyLogo}" alt="לוגו החברה" style="max-width: 80px; height: auto; border-radius: 8px;">
+  // Action button for recipient to redeem gift
+  const actionButton = isForRecipient && giftToken ? `
+    <div style="text-align: center; margin-top: 24px;">
+      <a href="${appUrl}/redeem?token=${giftToken}" 
+         style="display: inline-block; background: linear-gradient(135deg, #4C7EFB 0%, #6366f1 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(76, 126, 251, 0.3); min-width: 200px;">
+        🎁 קבל את המתנה
+      </a>
+      <p style="color: #64748b; font-size: 12px; margin: 12px 0 0 0;">
+        לחיצה על הכפתור תעביר אותך לטופס הזיהוי המאובטח
+      </p>
+    </div>
+    
+    <div style="text-align: center; padding: 16px; background: #f8fafc; border-radius: 12px; margin-top: 20px;">
+      <p style="color: #64748b; font-size: 12px; margin: 0;">
+        <strong>זקוק לעזרה?</strong><br>
+        📧 support@stock4u.co.il
+      </p>
     </div>
   ` : '';
 
