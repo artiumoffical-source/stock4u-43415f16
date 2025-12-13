@@ -49,7 +49,7 @@ interface GiftContextType {
 
 const defaultGiftData: GiftData = {
   selectedStocks: [],
-  selectedCard: null,
+  selectedCard: "lightblue",
   greetingMessage: "",
   recipientDetails: {
     name: "",
@@ -69,7 +69,7 @@ const defaultGiftData: GiftData = {
     minute: "",
   },
   recipients: [],
-  deliveryMethods: ["mobile"],
+  deliveryMethods: ["email"],
 };
 
 const GiftContext = createContext<GiftContextType | undefined>(undefined);

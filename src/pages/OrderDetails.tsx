@@ -22,7 +22,8 @@ export default function OrderDetails() {
   
   const [selectedDeliveryMethods, setSelectedDeliveryMethods] = useState<
     string[]
-  >(["mobile"]);
+  >(["email"]);
+  const [dateTimeError, setDateTimeError] = useState("");
   const [senderName, setSenderName] = useState(giftData?.senderName || "");
   const [senderEmail, setSenderEmail] = useState(giftData?.senderEmail || "");
   const [recipients, setRecipients] = useState<Recipient[]>([
@@ -433,84 +434,349 @@ export default function OrderDetails() {
           <div
             style={{
               display: "flex",
-              gap: "30px",
+              flexDirection: "column",
+              gap: "20px",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
             <div
-              onClick={() => setSendingMethod("later")}
               style={{
                 display: "flex",
+                gap: "30px",
                 alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
+                justifyContent: "center",
               }}
             >
+              {/* Send Later Option */}
               <div
+                onClick={() => {
+                  setSendingMethod("later");
+                  setDateTimeError("");
+                }}
                 style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  border: "2px solid #4C7EFB",
-                  background: sendingMethod === "later" ? "#4C7EFB" : "transparent",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  gap: "10px",
+                  cursor: "pointer",
                 }}
               >
-                {sendingMethod === "later" && (
-                  <div
-                    style={{
-                      width: "8px",
-                      height: "8px",
-                      borderRadius: "50%",
-                      background: "#FFF",
-                    }}
-                  />
-                )}
+                <div
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    border: "2px solid #4C7EFB",
+                    background: sendingMethod === "later" ? "#4C7EFB" : "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {sendingMethod === "later" && (
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: "#FFF",
+                      }}
+                    />
+                  )}
+                </div>
+                <span style={{ color: "#1B1919", fontSize: "16px" }}>
+                  שליחה במועד אחר
+                </span>
               </div>
-              <span style={{ color: "#1B1919", fontSize: "16px" }}>
-                שליחה במועד אחר
-              </span>
-            </div>
-            
-            <div
-              onClick={() => setSendingMethod("immediately")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
-              }}
-            >
+              
+              {/* Send Now Option */}
               <div
+                onClick={() => {
+                  setSendingMethod("immediately");
+                  setDateTimeError("");
+                }}
                 style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  border: "2px solid #4C7EFB",
-                  background: sendingMethod === "immediately" ? "#4C7EFB" : "transparent",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  gap: "10px",
+                  cursor: "pointer",
                 }}
               >
-                {sendingMethod === "immediately" && (
+                <div
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    border: "2px solid #4C7EFB",
+                    background: sendingMethod === "immediately" ? "#4C7EFB" : "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {sendingMethod === "immediately" && (
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: "#FFF",
+                      }}
+                    />
+                  )}
+                </div>
+                <span style={{ color: "#1B1919", fontSize: "16px" }}>
+                  עכשיו
+                </span>
+              </div>
+            </div>
+
+            {/* Inline Date/Time Picker - shown when "Send Later" is selected */}
+            {sendingMethod === "later" && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "20px",
+                  padding: "20px",
+                  background: "rgba(245, 247, 252, 1)",
+                  borderRadius: "12px",
+                  border: "1px solid #E0E7FF",
+                  marginTop: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "15px",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {/* Day */}
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        color: "#1B1919",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      יום
+                    </label>
+                    <select
+                      value={selectedDate.day}
+                      onChange={(e) =>
+                        setSelectedDate({ ...selectedDate, day: e.target.value })
+                      }
+                      style={{
+                        width: "70px",
+                        height: "44px",
+                        padding: "5px",
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontFamily: "Poppins",
+                        background: "#FFF",
+                        border: "1px solid #E0E7FF",
+                        borderRadius: "10px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="">--</option>
+                      {days.map((day) => (
+                        <option key={day} value={day}>
+                          {day}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Month */}
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        color: "#1B1919",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      חודש
+                    </label>
+                    <select
+                      value={selectedDate.month}
+                      onChange={(e) =>
+                        setSelectedDate({ ...selectedDate, month: e.target.value })
+                      }
+                      style={{
+                        width: "100px",
+                        height: "44px",
+                        padding: "5px",
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontFamily: "Poppins",
+                        background: "#FFF",
+                        border: "1px solid #E0E7FF",
+                        borderRadius: "10px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="">--</option>
+                      {months.map((month, index) => (
+                        <option key={month} value={index + 1}>
+                          {month}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Year */}
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        color: "#1B1919",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      שנה
+                    </label>
+                    <select
+                      value={selectedDate.year}
+                      onChange={(e) =>
+                        setSelectedDate({ ...selectedDate, year: e.target.value })
+                      }
+                      style={{
+                        width: "85px",
+                        height: "44px",
+                        padding: "5px",
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontFamily: "Poppins",
+                        background: "#FFF",
+                        border: "1px solid #E0E7FF",
+                        borderRadius: "10px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="">--</option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div style={{ width: "1px", height: "30px", background: "#E0E7FF", margin: "0 5px" }} />
+
+                  {/* Hour */}
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        color: "#1B1919",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      שעה
+                    </label>
+                    <select
+                      value={selectedTime.hour}
+                      onChange={(e) =>
+                        setSelectedTime({ ...selectedTime, hour: e.target.value })
+                      }
+                      style={{
+                        width: "70px",
+                        height: "44px",
+                        padding: "5px",
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontFamily: "Poppins",
+                        background: "#FFF",
+                        border: "1px solid #E0E7FF",
+                        borderRadius: "10px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="">--</option>
+                      {hours.map((hour) => (
+                        <option key={hour} value={hour}>
+                          {hour}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Minute */}
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        color: "#1B1919",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      דקה
+                    </label>
+                    <select
+                      value={selectedTime.minute}
+                      onChange={(e) =>
+                        setSelectedTime({ ...selectedTime, minute: e.target.value })
+                      }
+                      style={{
+                        width: "70px",
+                        height: "44px",
+                        padding: "5px",
+                        color: "#1B1919",
+                        fontSize: "16px",
+                        fontFamily: "Poppins",
+                        background: "#FFF",
+                        border: "1px solid #E0E7FF",
+                        borderRadius: "10px",
+                        outline: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <option value="">--</option>
+                      {minutes.map((minute) => (
+                        <option key={minute} value={minute}>
+                          {minute}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Error message */}
+                {dateTimeError && (
                   <div
                     style={{
-                      width: "8px",
-                      height: "8px",
-                      borderRadius: "50%",
-                      background: "#FFF",
+                      color: "#DC2626",
+                      fontSize: "14px",
+                      textAlign: "center",
                     }}
-                  />
+                  >
+                    {dateTimeError}
+                  </div>
                 )}
               </div>
-              <span style={{ color: "#1B1919", fontSize: "16px" }}>
-                בדיוק שיימקום כאן
-              </span>
-            </div>
+            )}
           </div>
         </div>
 
@@ -698,238 +964,6 @@ export default function OrderDetails() {
           </button>
         </div>
 
-        {/* Date and Time Selection */}
-        {sendingMethod === "later" && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "30px",
-              width: "100%",
-            }}
-          >
-            <h3
-              style={{
-                color: "#1B1919",
-                fontSize: "20px",
-                textAlign: "center",
-                fontFamily: "Poppins",
-                margin: "0",
-              }}
-            >
-              בחירת תאריך ושעה
-            </h3>
-            <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {/* Day */}
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  יום
-                </label>
-                <select
-                  value={selectedDate.day}
-                  onChange={(e) =>
-                    setSelectedDate({ ...selectedDate, day: e.target.value })
-                  }
-                  style={{
-                    width: "80px",
-                    height: "40px",
-                    padding: "5px",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                >
-                  <option value="">יום</option>
-                  {days.map((day) => (
-                    <option key={day} value={day}>
-                      {day}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Month */}
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  חודש
-                </label>
-                <select
-                  value={selectedDate.month}
-                  onChange={(e) =>
-                    setSelectedDate({ ...selectedDate, month: e.target.value })
-                  }
-                  style={{
-                    width: "100px",
-                    height: "40px",
-                    padding: "5px",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                >
-                  <option value="">חודש</option>
-                  {months.map((month, index) => (
-                    <option key={month} value={index + 1}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Year */}
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  שנה
-                </label>
-                <select
-                  value={selectedDate.year}
-                  onChange={(e) =>
-                    setSelectedDate({ ...selectedDate, year: e.target.value })
-                  }
-                  style={{
-                    width: "80px",
-                    height: "40px",
-                    padding: "5px",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                >
-                  <option value="">שנה</option>
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Hour */}
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  שעה
-                </label>
-                <select
-                  value={selectedTime.hour}
-                  onChange={(e) =>
-                    setSelectedTime({ ...selectedTime, hour: e.target.value })
-                  }
-                  style={{
-                    width: "80px",
-                    height: "40px",
-                    padding: "5px",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                >
-                  <option value="">שעה</option>
-                  {hours.map((hour) => (
-                    <option key={hour} value={hour}>
-                      {hour}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Minute */}
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  דקה
-                </label>
-                <select
-                  value={selectedTime.minute}
-                  onChange={(e) =>
-                    setSelectedTime({ ...selectedTime, minute: e.target.value })
-                  }
-                  style={{
-                    width: "80px",
-                    height: "40px",
-                    padding: "5px",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                >
-                  <option value="">דקה</option>
-                  {minutes.map((minute) => (
-                    <option key={minute} value={minute}>
-                      {minute}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Greeting Text Section */}
         <div
@@ -1007,6 +1041,28 @@ export default function OrderDetails() {
 
           <button
             onClick={() => {
+              // Validate date/time if "Send Later" is selected
+              if (sendingMethod === "later") {
+                if (!selectedDate.day || !selectedDate.month || !selectedDate.year || !selectedTime.hour || !selectedTime.minute) {
+                  setDateTimeError("יש לבחור תאריך ושעה");
+                  return;
+                }
+                
+                // Check if selected datetime is in the past
+                const scheduledDate = new Date(
+                  parseInt(selectedDate.year),
+                  parseInt(selectedDate.month) - 1,
+                  parseInt(selectedDate.day),
+                  parseInt(selectedTime.hour),
+                  parseInt(selectedTime.minute)
+                );
+                
+                if (scheduledDate <= new Date()) {
+                  setDateTimeError("יש לבחור תאריך ושעה עתידיים");
+                  return;
+                }
+              }
+              
               updateGiftData({
                 senderName,
                 senderEmail,
@@ -1023,8 +1079,9 @@ export default function OrderDetails() {
                 selectedTime,
                 greetingMessage: greetingText,
                 uploadedImage,
+                selectedCard: "lightblue",
               });
-              navigate("/gift-design");
+              navigate("/checkout");
             }}
             style={{
               display: "flex",
@@ -1042,7 +1099,7 @@ export default function OrderDetails() {
               cursor: "pointer",
             }}
           >
-            המשך לעיצוב המתנה
+            המשך לתשלום
           </button>
         </div>
       </div>
