@@ -39,8 +39,10 @@ export default function GiftRegistration() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [giftData, setGiftData] = useState<GiftData | null>(null);
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFileFront, setUploadedFileFront] = useState<File | null>(null);
+  const [uploadedFileBack, setUploadedFileBack] = useState<File | null>(null);
+  const [isUploadingFront, setIsUploadingFront] = useState(false);
+  const [isUploadingBack, setIsUploadingBack] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -112,8 +114,11 @@ export default function GiftRegistration() {
     }
   };
 
-  const handleFileSelect = async (file: File) => {
+  const handleFileUpload = async (file: File, side: 'front' | 'back') => {
     if (!token) return;
+    
+    const setIsUploading = side === 'front' ? setIsUploadingFront : setIsUploadingBack;
+    const setUploadedFile = side === 'front' ? setUploadedFileFront : setUploadedFileBack;
     
     setIsUploading(true);
     try {
@@ -133,9 +138,10 @@ export default function GiftRegistration() {
       const { data, error } = await supabase.functions.invoke('upload-kyc-document', {
         body: {
           token,
-          fileName: file.name,
+          fileName: `${side}_${file.name}`,
           fileData,
-          fileType: file.type
+          fileType: file.type,
+          documentSide: side
         }
       });
 
@@ -145,7 +151,7 @@ export default function GiftRegistration() {
       setUploadedFile(file);
       toast({
         title: "הקובץ הועלה בהצלחה",
-        description: "המסמך נשמר במערכת",
+        description: side === 'front' ? "צד קדמי נשמר" : "צד אחורי נשמר",
       });
     } catch (error: any) {
       toast({
@@ -158,12 +164,15 @@ export default function GiftRegistration() {
     }
   };
 
-  const handleFileRemove = async () => {
+  const handleFileRemove = async (side: 'front' | 'back') => {
+    const uploadedFile = side === 'front' ? uploadedFileFront : uploadedFileBack;
+    const setUploadedFile = side === 'front' ? setUploadedFileFront : setUploadedFileBack;
+    
     if (uploadedFile && token) {
       try {
         // Try to remove the file from storage
         const fileExtension = uploadedFile.name.split('.').pop();
-        const fileName = `${token}/${Date.now()}.${fileExtension}`;
+        const fileName = `${token}/${side}_${Date.now()}.${fileExtension}`;
         
         await supabase.storage
           .from('kyc-documents')
@@ -178,11 +187,11 @@ export default function GiftRegistration() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!uploadedFile) {
+    if (!uploadedFileFront || !uploadedFileBack) {
       toast({
         variant: "destructive",
-        title: "חסר מסמך מזהה",
-        description: "אנא העלה מסמך מזהה לפני המשך הרישום",
+        title: "חסרים מסמכי זיהוי",
+        description: "אנא העלה את שני צדי המסמך המזהה (קדמי ואחורי)",
       });
       return;
     }
@@ -200,8 +209,9 @@ export default function GiftRegistration() {
         body: {
           token,
           registrationData: validatedData,
-          documentFileName: uploadedFile.name,
-          documentType: uploadedFile.type
+          documentFileNameFront: uploadedFileFront.name,
+          documentFileNameBack: uploadedFileBack.name,
+          documentType: uploadedFileFront.type
         }
       });
 
@@ -486,22 +496,40 @@ export default function GiftRegistration() {
                   </div>
                 </div>
 
-                {/* Document Upload */}
-                <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="id-document" className="text-right">
-                    מסמך מזהה *
-                  </Label>
+                {/* Document Upload - Front */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold text-primary">מסמכי זיהוי *</h3>
                   <p className="text-sm text-muted-foreground text-right">
-                    אנא העלה תמונה או סריקה של תעודת זהות, דרכון או רישיון נהיגה
+                    אנא העלה תמונה או סריקה של שני צדי תעודת הזהות / דרכון / רישיון נהיגה
                   </p>
-                  <FileUpload
-                    onFileSelect={handleFileSelect}
-                    onFileRemove={handleFileRemove}
-                    uploadedFile={uploadedFile}
-                    isUploading={isUploading}
-                    acceptedTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
-                    maxSizeMB={5}
-                  />
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Front Side */}
+                    <div className="space-y-2">
+                      <Label className="text-right font-medium">צד קדמי *</Label>
+                      <FileUpload
+                        onFileSelect={(file) => handleFileUpload(file, 'front')}
+                        onFileRemove={() => handleFileRemove('front')}
+                        uploadedFile={uploadedFileFront}
+                        isUploading={isUploadingFront}
+                        acceptedTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
+                        maxSizeMB={5}
+                      />
+                    </div>
+                    
+                    {/* Back Side */}
+                    <div className="space-y-2">
+                      <Label className="text-right font-medium">צד אחורי *</Label>
+                      <FileUpload
+                        onFileSelect={(file) => handleFileUpload(file, 'back')}
+                        onFileRemove={() => handleFileRemove('back')}
+                        uploadedFile={uploadedFileBack}
+                        isUploading={isUploadingBack}
+                        acceptedTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
+                        maxSizeMB={5}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Consents */}
@@ -563,8 +591,10 @@ export default function GiftRegistration() {
                   size="lg"
                   disabled={
                     submitting || 
-                    isUploading || 
-                    !uploadedFile ||
+                    isUploadingFront || 
+                    isUploadingBack ||
+                    !uploadedFileFront ||
+                    !uploadedFileBack ||
                     !formData.consentActingOwnBehalf ||
                     !formData.consentInfoTrue ||
                     !formData.consentTermsAccepted

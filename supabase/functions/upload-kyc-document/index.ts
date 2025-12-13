@@ -33,7 +33,8 @@ const requestSchema = z.object({
   token: z.string().uuid(),
   fileName: z.string().max(100),
   fileData: z.string(), // base64 encoded
-  fileType: z.string().regex(/^(image\/(jpeg|jpg|png)|application\/pdf)$/i)
+  fileType: z.string().regex(/^(image\/(jpeg|jpg|png)|application\/pdf)$/i),
+  documentSide: z.enum(['front', 'back']).optional().default('front')
 });
 
 const handler = async (req: Request): Promise<Response> => {
@@ -73,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    const { token, fileName, fileData, fileType } = validationResult.data;
+    const { token, fileName, fileData, fileType, documentSide } = validationResult.data;
 
     // Verify the gift registration exists and is not already completed
     const { data: giftRegistration, error: regError } = await supabase
@@ -117,10 +118,10 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // Generate unique file name with token prefix for isolation
+    // Generate unique file name with token prefix and side for isolation
     const timestamp = Date.now();
     const fileExtension = fileName.split('.').pop();
-    const storagePath = `${token}/${timestamp}.${fileExtension}`;
+    const storagePath = `${token}/${documentSide}_${timestamp}.${fileExtension}`;
 
     // Upload to storage using service role
     const { error: uploadError } = await supabase.storage
@@ -140,13 +141,14 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // Update gift registration with document info
+    // Update gift registration with document info based on side
+    const updateData: Record<string, string> = documentSide === 'front' 
+      ? { id_document_url: storagePath, id_document_type: fileType }
+      : { id_document_back_url: storagePath };
+    
     const { error: updateError } = await supabase
       .from('gift_registrations')
-      .update({
-        id_document_url: storagePath,
-        id_document_type: fileType
-      })
+      .update(updateData)
       .eq('id', giftRegistration.id);
 
     if (updateError) {
