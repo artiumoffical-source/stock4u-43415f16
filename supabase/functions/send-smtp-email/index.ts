@@ -50,12 +50,13 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
   
   console.log(`[CARD_DESIGN] Using card design: ${selectedCard} with color ${cardBgColor}`);
   
-  // Dynamic app URL for links and assets
+  // Dynamic app URL for links (redemption button etc.)
   const appUrl = Deno.env.get('SUPABASE_URL')?.includes('localhost') 
     ? 'http://localhost:5173' 
     : (Deno.env.get('APP_URL') || 'https://stock4u.co.il');
   
-  const stock4uLogoUrl = `${appUrl}/emails/stock4u-logo.png`;
+  // Use production URL for logo (emails need stable public HTTPS URL)
+  const stock4uLogoUrl = 'https://stock4u.co.il/emails/stock4u-logo.png';
 
   const logoSection = emailData.hasLogo && emailData.companyLogo ? `
     <div style="text-align: center; margin-bottom: 16px;">
