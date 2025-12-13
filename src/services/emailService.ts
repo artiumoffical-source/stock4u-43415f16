@@ -50,8 +50,8 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
   console.log('[EMAIL_START] Starting to send gift notification emails...');
   console.log('Gift data:', giftData);
 
-  // Validate required email addresses
-  const recipientEmail = giftData.recipientDetails?.email || giftData.recipientEmail;
+  const recipientEmailRaw = giftData.recipientDetails?.email || giftData.recipientEmail;
+  const recipientEmail = recipientEmailRaw ? recipientEmailRaw.trim() : '';
   if (!recipientEmail) {
     console.error('[EMAIL_VALIDATION_ERROR] Recipient email is required but missing');
     throw new Error('Recipient email is required but missing');
