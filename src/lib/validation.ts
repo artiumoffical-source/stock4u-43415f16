@@ -72,13 +72,45 @@ export const adminCredentialsValidation = z.object({
     .min(8, 'סיסמה חייבת להכיל לפחות 8 תווים')
 });
 
-// Gift registration form validation
+// City validation
+export const cityValidation = z.string()
+  .min(1, 'עיר נדרשת')
+  .min(2, 'עיר חייבת להכיל לפחות 2 תווים')
+  .max(100, 'שם עיר ארוך מדי')
+  .transform(sanitizeInput);
+
+// Street validation
+export const streetValidation = z.string()
+  .min(1, 'רחוב נדרש')
+  .min(2, 'רחוב חייב להכיל לפחות 2 תווים')
+  .max(150, 'שם רחוב ארוך מדי')
+  .transform(sanitizeInput);
+
+// House number validation
+export const houseNumberValidation = z.string()
+  .min(1, 'מספר בית נדרש')
+  .max(20, 'מספר בית ארוך מדי')
+  .transform(sanitizeInput);
+
+// Date of birth validation
+export const dateOfBirthValidation = z.string()
+  .min(1, 'תאריך לידה נדרש')
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'תאריך לידה לא תקין');
+
+// Gift registration form validation (POC KYC)
 export const giftRegistrationValidation = z.object({
   fullName: nameValidation,
   idNumber: idValidation,
   phone: phoneValidation,
   email: emailValidation,
-  address: addressValidation
+  dateOfBirth: dateOfBirthValidation,
+  city: cityValidation,
+  street: streetValidation,
+  houseNumber: houseNumberValidation,
+  country: z.string().default('ישראל'),
+  consentActingOwnBehalf: z.boolean().refine(val => val === true, 'יש לאשר שאתה פועל מטעם עצמך'),
+  consentInfoTrue: z.boolean().refine(val => val === true, 'יש לאשר שהמידע נכון ומדויק'),
+  consentTermsAccepted: z.boolean().refine(val => val === true, 'יש להסכים לתנאי השימוש')
 });
 
 // Rate limiting helper

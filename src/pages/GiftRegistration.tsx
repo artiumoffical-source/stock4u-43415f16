@@ -3,12 +3,17 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileUpload } from "@/components/ui/file-upload";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard } from "lucide-react";
+import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard, Calendar, Building } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { he } from "date-fns/locale";
 import { giftRegistrationValidation } from "@/lib/validation";
 
 interface GiftData {
@@ -36,12 +41,19 @@ export default function GiftRegistration() {
   const [giftData, setGiftData] = useState<GiftData | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState({
     fullName: "",
     idNumber: "",
-    address: "",
     phone: "",
     email: "",
+    city: "",
+    street: "",
+    houseNumber: "",
+    country: "ישראל",
+    consentActingOwnBehalf: false,
+    consentInfoTrue: false,
+    consentTermsAccepted: false,
   });
 
   const token = searchParams.get("token");
@@ -179,7 +191,10 @@ export default function GiftRegistration() {
 
     try {
       // Validate and sanitize all form inputs
-      const validatedData = giftRegistrationValidation.parse(formData);
+      const validatedData = giftRegistrationValidation.parse({
+        ...formData,
+        dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : '',
+      });
 
       const { data, error } = await supabase.functions.invoke('register-gift-recipient', {
         body: {
@@ -378,22 +393,101 @@ export default function GiftRegistration() {
                   </div>
                 </div>
 
+                {/* Date of Birth */}
                 <div className="space-y-2">
-                  <Label htmlFor="address">כתובת מלאה *</Label>
-                  <div className="relative">
-                    <MapPin className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Textarea
-                      id="address"
-                      required
-                      value={formData.address}
-                      onChange={(e) => setFormData(prev => ({...prev, address: e.target.value}))}
-                      className="pr-10 min-h-[80px]"
-                      placeholder="הכנס כתובת מלאה (רחוב, מספר בית, עיר, מיקוד)"
+                  <Label>תאריך לידה *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-right",
+                          !dateOfBirth && "text-muted-foreground"
+                        )}
+                      >
+                        <Calendar className="ml-2 h-4 w-4" />
+                        {dateOfBirth ? format(dateOfBirth, "dd/MM/yyyy") : "בחר תאריך לידה"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={dateOfBirth}
+                        onSelect={setDateOfBirth}
+                        locale={he}
+                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                        initialFocus
+                        className="pointer-events-auto"
+                        captionLayout="dropdown-buttons"
+                        fromYear={1920}
+                        toYear={new Date().getFullYear()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Address Section */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    כתובת מגורים
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">עיר *</Label>
+                      <div className="relative">
+                        <Building className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="city"
+                          type="text"
+                          required
+                          value={formData.city}
+                          onChange={(e) => setFormData(prev => ({...prev, city: e.target.value}))}
+                          className="pr-10"
+                          placeholder="הכנס שם עיר"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="street">רחוב *</Label>
+                      <Input
+                        id="street"
+                        type="text"
+                        required
+                        value={formData.street}
+                        onChange={(e) => setFormData(prev => ({...prev, street: e.target.value}))}
+                        placeholder="הכנס שם רחוב"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="houseNumber">מספר בית *</Label>
+                      <Input
+                        id="houseNumber"
+                        type="text"
+                        required
+                        value={formData.houseNumber}
+                        onChange={(e) => setFormData(prev => ({...prev, houseNumber: e.target.value}))}
+                        placeholder="מספר"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="country">מדינה</Label>
+                    <Input
+                      id="country"
+                      type="text"
+                      value={formData.country}
+                      onChange={(e) => setFormData(prev => ({...prev, country: e.target.value}))}
+                      placeholder="ישראל"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* Document Upload */}
+                <div className="md:col-span-2 space-y-2">
                   <Label htmlFor="id-document" className="text-right">
                     מסמך מזהה *
                   </Label>
@@ -410,7 +504,54 @@ export default function GiftRegistration() {
                   />
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-lg">
+                {/* Consents */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold text-primary">הצהרות והסכמות</h3>
+                  
+                  <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="consentActingOwnBehalf"
+                        checked={formData.consentActingOwnBehalf}
+                        onCheckedChange={(checked) => 
+                          setFormData(prev => ({...prev, consentActingOwnBehalf: checked === true}))
+                        }
+                      />
+                      <Label htmlFor="consentActingOwnBehalf" className="text-sm leading-relaxed cursor-pointer">
+                        אני מאשר/ת שאני פועל/ת מטעם עצמי ולא עבור צד שלישי *
+                      </Label>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="consentInfoTrue"
+                        checked={formData.consentInfoTrue}
+                        onCheckedChange={(checked) => 
+                          setFormData(prev => ({...prev, consentInfoTrue: checked === true}))
+                        }
+                      />
+                      <Label htmlFor="consentInfoTrue" className="text-sm leading-relaxed cursor-pointer">
+                        אני מאשר/ת שכל המידע שמסרתי נכון ומדויק *
+                      </Label>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="consentTermsAccepted"
+                        checked={formData.consentTermsAccepted}
+                        onCheckedChange={(checked) => 
+                          setFormData(prev => ({...prev, consentTermsAccepted: checked === true}))
+                        }
+                      />
+                      <Label htmlFor="consentTermsAccepted" className="text-sm leading-relaxed cursor-pointer">
+                        אני מסכים/ה לתנאי השימוש ומדיניות הפרטיות *
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Security Notice */}
+                <div className="md:col-span-2 bg-muted/50 p-4 rounded-lg">
                   <p className="text-sm text-muted-foreground text-center">
                     המידע שלך מאובטח ומוגן. נשתמש בו רק לצורך פתיחת חשבון המניות שלך בהתאם לחוק.
                   </p>
@@ -418,9 +559,16 @@ export default function GiftRegistration() {
 
                 <Button 
                   type="submit" 
-                  className="w-full" 
+                  className="w-full md:col-span-2" 
                   size="lg"
-                  disabled={submitting || isUploading || !uploadedFile}
+                  disabled={
+                    submitting || 
+                    isUploading || 
+                    !uploadedFile ||
+                    !formData.consentActingOwnBehalf ||
+                    !formData.consentInfoTrue ||
+                    !formData.consentTermsAccepted
+                  }
                 >
                   {submitting ? (
                     <>

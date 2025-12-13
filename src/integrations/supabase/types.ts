@@ -86,58 +86,94 @@ export type Database = {
       gift_registrations: {
         Row: {
           address: string | null
+          city: string | null
+          consent_acting_own_behalf: boolean | null
+          consent_info_true: boolean | null
+          consent_terms_accepted: boolean | null
+          country: string | null
           created_at: string
+          date_of_birth: string | null
+          full_name_hebrew: string | null
+          house_number: string | null
           id: string
           id_document_type: string | null
           id_document_url: string | null
           id_number: string | null
+          kyc_rejection_reason: string | null
           kyc_reviewed_at: string | null
           kyc_reviewed_by: string | null
+          kyc_started_at: string | null
           kyc_status: string | null
+          kyc_submitted_at: string | null
           order_id: string
           recipient_email: string
           recipient_name: string
           recipient_phone: string | null
           registered_at: string | null
           registration_status: string
+          street: string | null
           token: string
           updated_at: string
         }
         Insert: {
           address?: string | null
+          city?: string | null
+          consent_acting_own_behalf?: boolean | null
+          consent_info_true?: boolean | null
+          consent_terms_accepted?: boolean | null
+          country?: string | null
           created_at?: string
+          date_of_birth?: string | null
+          full_name_hebrew?: string | null
+          house_number?: string | null
           id?: string
           id_document_type?: string | null
           id_document_url?: string | null
           id_number?: string | null
+          kyc_rejection_reason?: string | null
           kyc_reviewed_at?: string | null
           kyc_reviewed_by?: string | null
+          kyc_started_at?: string | null
           kyc_status?: string | null
+          kyc_submitted_at?: string | null
           order_id: string
           recipient_email: string
           recipient_name: string
           recipient_phone?: string | null
           registered_at?: string | null
           registration_status?: string
+          street?: string | null
           token: string
           updated_at?: string
         }
         Update: {
           address?: string | null
+          city?: string | null
+          consent_acting_own_behalf?: boolean | null
+          consent_info_true?: boolean | null
+          consent_terms_accepted?: boolean | null
+          country?: string | null
           created_at?: string
+          date_of_birth?: string | null
+          full_name_hebrew?: string | null
+          house_number?: string | null
           id?: string
           id_document_type?: string | null
           id_document_url?: string | null
           id_number?: string | null
+          kyc_rejection_reason?: string | null
           kyc_reviewed_at?: string | null
           kyc_reviewed_by?: string | null
+          kyc_started_at?: string | null
           kyc_status?: string | null
+          kyc_submitted_at?: string | null
           order_id?: string
           recipient_email?: string
           recipient_name?: string
           recipient_phone?: string | null
           registered_at?: string | null
           registration_status?: string
+          street?: string | null
           token?: string
           updated_at?: string
         }
