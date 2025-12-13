@@ -9,7 +9,6 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import StockSelection from "./pages/StockSelection";
 import Cart from "./pages/Cart";
-import GiftDesign from "./pages/GiftDesign";
 import OrderDetails from "./pages/OrderDetails";
 import OrderSummary from "./pages/OrderSummary";
 import Checkout from "./pages/Checkout";
@@ -47,7 +46,6 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/stock-selection" element={<StockSelection />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/gift-design" element={<GiftDesign />} />
               <Route path="/order-details" element={<OrderDetails />} />
               <Route path="/order-summary" element={<OrderSummary />} />
               <Route path="/checkout" element={<Checkout />} />
