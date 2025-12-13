@@ -38,12 +38,12 @@ export const idValidation = z.string()
   }, 'תעודת זהות לא תקינה')
   .transform(sanitizeInput);
 
-// Name validation with Hebrew support
+// Name validation with Hebrew + English support
 export const nameValidation = z.string()
   .min(1, 'שם נדרש')
   .min(2, 'שם חייב להכיל לפחות 2 תווים')
   .max(100, 'שם ארוך מדי')
-  .regex(/^[א-ת\s\-'״]+$/, 'שם יכול להכיל רק אותיות עבריות, רווחים, מקפים וגרשיים')
+  .regex(/^[A-Za-zא-ת\s\-'"]+$/, 'שם יכול להכיל רק אותיות בעברית או אנגלית, רווחים ומקפים')
   .transform(sanitizeInput);
 
 // Address validation
