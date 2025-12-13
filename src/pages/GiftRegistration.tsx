@@ -270,55 +270,55 @@ export default function GiftRegistration() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5" dir="rtl">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto">
           {/* Gift Display Card */}
-          <Card className="mb-8 overflow-hidden">
-            <div className="bg-gradient-to-r from-primary to-accent p-6 text-white text-center">
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <Gift className="h-8 w-8" />
-                <Star className="h-6 w-6" />
+          <Card className="mb-4 sm:mb-8 overflow-hidden">
+            <div className="bg-gradient-to-r from-primary to-accent p-4 sm:p-6 text-white text-center">
+              <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+                <Gift className="h-6 w-6 sm:h-8 sm:w-8" />
+                <Star className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <h1 className="text-3xl font-bold mb-2">🎁 איזה כיף!</h1>
-              <h2 className="text-2xl font-semibold">קיבלת מתנת מניות!</h2>
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">🎁 איזה כיף!</h1>
+              <h2 className="text-xl sm:text-2xl font-semibold">קיבלת מתנת מניות!</h2>
             </div>
             
-            <CardContent className="p-6">
-              <div className="grid md:grid-cols-2 gap-6">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-4 text-primary">פרטי המתנה</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-primary">פרטי המתנה</h3>
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <User className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-center gap-3">
+                      <User className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                       <div>
-                        <p className="font-medium">שולח המתנה</p>
-                        <p className="text-muted-foreground">{giftData.sender_name}</p>
+                        <p className="font-medium text-sm sm:text-base">שולח המתנה</p>
+                        <p className="text-muted-foreground text-sm">{giftData.sender_name}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-3">
-                      <CreditCard className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                       <div>
-                        <p className="font-medium">מספר הזמנה</p>
-                        <p className="text-muted-foreground">{giftData.order_number}</p>
+                        <p className="font-medium text-sm sm:text-base">מספר הזמנה</p>
+                        <p className="text-muted-foreground text-sm">{giftData.order_number}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4 text-primary">המניות שקיבלת</h3>
-                  <div className="bg-accent/10 p-4 rounded-lg">
-                    <p className="font-medium text-accent mb-2">מניות: {stocksList}</p>
-                    <p className="text-2xl font-bold text-primary">
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-primary">המניות שקיבלת</h3>
+                  <div className="bg-accent/10 p-3 sm:p-4 rounded-lg">
+                    <p className="font-medium text-accent mb-2 text-sm sm:text-base">מניות: {stocksList}</p>
+                    <p className="text-xl sm:text-2xl font-bold text-primary">
                       ערך כולל: ₪{giftData.total_amount.toLocaleString()}
                     </p>
                   </div>
                   
                   {giftData.personal_message && (
-                    <div className="mt-4 p-4 bg-muted rounded-lg">
-                      <p className="font-medium text-muted-foreground mb-2">הודעה מ{giftData.sender_name}:</p>
-                      <p className="italic">"{giftData.personal_message}"</p>
+                    <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-muted rounded-lg">
+                      <p className="font-medium text-muted-foreground mb-2 text-sm">הודעה מ{giftData.sender_name}:</p>
+                      <p className="italic text-sm sm:text-base">"{giftData.personal_message}"</p>
                     </div>
                   )}
                 </div>
@@ -328,75 +328,75 @@ export default function GiftRegistration() {
 
           {/* Registration Form */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-center text-primary">השלמת הרשמה</CardTitle>
-              <CardDescription className="text-center">
+            <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+              <CardTitle className="text-center text-primary text-lg sm:text-xl">השלמת הרשמה</CardTitle>
+              <CardDescription className="text-center text-sm">
                 על פי החוק, נדרש לרשום פרטים אישיים לפתיחת חשבון מניות
               </CardDescription>
             </CardHeader>
             
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">שם מלא *</Label>
+            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="fullName" className="text-sm">שם מלא *</Label>
                     <div className="relative">
-                      <User className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <User className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="fullName"
                         type="text"
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData(prev => ({...prev, fullName: e.target.value}))}
-                        className="pr-10"
+                        className="pr-10 h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="הכנס שם מלא"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="idNumber">תעודת זהות *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="idNumber" className="text-sm">תעודת זהות *</Label>
                     <div className="relative">
-                      <CreditCard className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="idNumber"
                         type="text"
                         required
                         value={formData.idNumber}
                         onChange={(e) => setFormData(prev => ({...prev, idNumber: e.target.value}))}
-                        className="pr-10"
+                        className="pr-10 h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="הכנס מספר תעודת זהות"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">טלפון *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="phone" className="text-sm">טלפון *</Label>
                     <div className="relative">
-                      <Phone className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Phone className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="phone"
                         type="tel"
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData(prev => ({...prev, phone: e.target.value}))}
-                        className="pr-10"
+                        className="pr-10 h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="הכנס מספר טלפון"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email">אימייל *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="email" className="text-sm">אימייל *</Label>
                     <div className="relative">
-                      <Mail className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                        className="pr-10"
+                        className="pr-10 h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="הכנס כתובת אימייל"
                       />
                     </div>
@@ -404,14 +404,14 @@ export default function GiftRegistration() {
                 </div>
 
                 {/* Date of Birth */}
-                <div className="space-y-2">
-                  <Label>תאריך לידה *</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-sm">תאריך לידה *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-right",
+                          "w-full justify-start text-right h-11 sm:h-10 text-base sm:text-sm",
                           !dateOfBirth && "text-muted-foreground"
                         )}
                       >
@@ -437,76 +437,79 @@ export default function GiftRegistration() {
                 </div>
 
                 {/* Address Section */}
-                <div className="md:col-span-2 space-y-4">
-                  <h3 className="text-lg font-semibold text-primary flex items-center gap-2">
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-primary flex items-center gap-2">
                     <MapPin className="h-5 w-5" />
                     כתובת מגורים
                   </h3>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="city">עיר *</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="city" className="text-sm">עיר *</Label>
                       <div className="relative">
-                        <Building className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Building className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="city"
                           type="text"
                           required
                           value={formData.city}
                           onChange={(e) => setFormData(prev => ({...prev, city: e.target.value}))}
-                          className="pr-10"
+                          className="pr-10 h-11 sm:h-10 text-base sm:text-sm"
                           placeholder="הכנס שם עיר"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="street">רחוב *</Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="street" className="text-sm">רחוב *</Label>
                       <Input
                         id="street"
                         type="text"
                         required
                         value={formData.street}
                         onChange={(e) => setFormData(prev => ({...prev, street: e.target.value}))}
+                        className="h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="הכנס שם רחוב"
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="houseNumber">מספר בית *</Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="houseNumber" className="text-sm">מספר בית *</Label>
                       <Input
                         id="houseNumber"
                         type="text"
                         required
                         value={formData.houseNumber}
                         onChange={(e) => setFormData(prev => ({...prev, houseNumber: e.target.value}))}
+                        className="h-11 sm:h-10 text-base sm:text-sm"
                         placeholder="מספר"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="country">מדינה</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="country" className="text-sm">מדינה</Label>
                     <Input
                       id="country"
                       type="text"
                       value={formData.country}
                       onChange={(e) => setFormData(prev => ({...prev, country: e.target.value}))}
+                      className="h-11 sm:h-10 text-base sm:text-sm"
                       placeholder="ישראל"
                     />
                   </div>
                 </div>
 
-                {/* Document Upload - Front */}
-                <div className="md:col-span-2 space-y-4">
-                  <h3 className="text-lg font-semibold text-primary">מסמכי זיהוי *</h3>
+                {/* Document Upload */}
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-primary">מסמכי זיהוי *</h3>
                   <p className="text-sm text-muted-foreground text-right">
                     אנא העלה תמונה או סריקה של שני צדי תעודת הזהות / דרכון / רישיון נהיגה
                   </p>
                   
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {/* Front Side */}
-                    <div className="space-y-2">
-                      <Label className="text-right font-medium">צד קדמי *</Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label className="text-right font-medium text-sm">צד קדמי *</Label>
                       <FileUpload
                         onFileSelect={(file) => handleFileUpload(file, 'front')}
                         onFileRemove={() => handleFileRemove('front')}
@@ -518,8 +521,8 @@ export default function GiftRegistration() {
                     </div>
                     
                     {/* Back Side */}
-                    <div className="space-y-2">
-                      <Label className="text-right font-medium">צד אחורי *</Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label className="text-right font-medium text-sm">צד אחורי *</Label>
                       <FileUpload
                         onFileSelect={(file) => handleFileUpload(file, 'back')}
                         onFileRemove={() => handleFileRemove('back')}
@@ -533,10 +536,10 @@ export default function GiftRegistration() {
                 </div>
 
                 {/* Consents */}
-                <div className="md:col-span-2 space-y-4">
-                  <h3 className="text-lg font-semibold text-primary">הצהרות והסכמות</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-primary">הצהרות והסכמות</h3>
                   
-                  <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+                  <div className="space-y-3 sm:space-y-4 bg-muted/30 p-3 sm:p-4 rounded-lg">
                     <div className="flex items-start gap-3">
                       <Checkbox
                         id="consentActingOwnBehalf"
@@ -544,6 +547,7 @@ export default function GiftRegistration() {
                         onCheckedChange={(checked) => 
                           setFormData(prev => ({...prev, consentActingOwnBehalf: checked === true}))
                         }
+                        className="h-5 w-5 mt-0.5"
                       />
                       <Label htmlFor="consentActingOwnBehalf" className="text-sm leading-relaxed cursor-pointer">
                         אני מאשר/ת שאני פועל/ת מטעם עצמי ולא עבור צד שלישי *
@@ -557,6 +561,7 @@ export default function GiftRegistration() {
                         onCheckedChange={(checked) => 
                           setFormData(prev => ({...prev, consentInfoTrue: checked === true}))
                         }
+                        className="h-5 w-5 mt-0.5"
                       />
                       <Label htmlFor="consentInfoTrue" className="text-sm leading-relaxed cursor-pointer">
                         אני מאשר/ת שכל המידע שמסרתי נכון ומדויק *
@@ -570,6 +575,7 @@ export default function GiftRegistration() {
                         onCheckedChange={(checked) => 
                           setFormData(prev => ({...prev, consentTermsAccepted: checked === true}))
                         }
+                        className="h-5 w-5 mt-0.5"
                       />
                       <Label htmlFor="consentTermsAccepted" className="text-sm leading-relaxed cursor-pointer">
                         אני מסכים/ה לתנאי השימוש ומדיניות הפרטיות *
@@ -579,15 +585,15 @@ export default function GiftRegistration() {
                 </div>
 
                 {/* Security Notice */}
-                <div className="md:col-span-2 bg-muted/50 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground text-center">
+                <div className="bg-muted/50 p-3 sm:p-4 rounded-lg">
+                  <p className="text-xs sm:text-sm text-muted-foreground text-center">
                     המידע שלך מאובטח ומוגן. נשתמש בו רק לצורך פתיחת חשבון המניות שלך בהתאם לחוק.
                   </p>
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full md:col-span-2" 
+                  className="w-full h-12 sm:h-11 text-base sm:text-sm" 
                   size="lg"
                   disabled={
                     submitting || 

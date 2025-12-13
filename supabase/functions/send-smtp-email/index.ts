@@ -140,33 +140,31 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
           <td align="center" style="padding: 20px 0;">
             
             <!-- Main Container -->
-            <table role="presentation" class="container" width="100%" cellpadding="0" cellspacing="0" style="max-width: 420px; margin: 0 auto;">
+            <table role="presentation" class="container" width="100%" cellpadding="0" cellspacing="0" style="max-width: 420px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
               
-              <!-- Header Section -->
+              <!-- Clean Header - NO HERO -->
               <tr>
-                <td class="header-section" style="background: linear-gradient(135deg, ${cardBgColor} 0%, ${cardBgColor}dd 100%); padding: 32px 24px; border-radius: 16px 16px 0 0; text-align: center;">
+                <td style="padding: 24px 24px 16px 24px; text-align: center; border-bottom: 1px solid #e2e8f0;">
                   
                   <!-- Logo -->
-                  <div style="margin-bottom: 20px;">
-                    <img src="${stock4uLogoUrl}" alt="Stock4U" style="max-width: 220px; width: 80%; height: auto; display: block; margin: 0 auto;" />
-                  </div>
+                  <img src="${stock4uLogoUrl}" alt="Stock4U" style="max-width: 180px; width: 70%; height: auto; display: block; margin: 0 auto 16px auto;" />
 
                   <!-- Main Headline -->
-                  <h1 class="headline" style="color: white; font-size: 28px; font-weight: 700; margin: 0 0 12px 0; line-height: 1.3;">
+                  <h1 class="headline" style="color: #1e293b; font-size: 24px; font-weight: 700; margin: 0 0 8px 0; line-height: 1.3;">
                     ${isForRecipient ? 'קיבלת מתנה מיוחדת 🎁' : 'המתנה נשלחה בהצלחה! ✓'}
                   </h1>
                   
                   <!-- Sender/Recipient Line -->
-                  <p class="sender-text" style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 500;">
+                  <p class="sender-text" style="color: #64748b; font-size: 16px; margin: 0; font-weight: 500;">
                     ${isForRecipient ? `מ- ${emailData.senderName}` : `ל- ${emailData.recipientName}`}
                   </p>
                   
                 </td>
               </tr>
               
-              <!-- Content Card -->
+              <!-- Content Section -->
               <tr>
-                <td class="content-card" style="background: white; padding: 28px 24px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+                <td class="content-card" style="padding: 24px;">
                   
                   ${logoSection}
                   
