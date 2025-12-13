@@ -45,14 +45,15 @@ const registrationSchema = z.object({
   idNumber: israeliIdSchema,
   phone: z.string().regex(/^05\d{8}$|^0[2-4,8-9]\d{7,8}$/),
   email: z.string().email().max(255),
-  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  city: z.string().min(1).max(100),
-  street: z.string().min(1).max(150),
-  houseNumber: z.string().min(1).max(20),
-  country: z.string().default('ישראל'),
-  consentActingOwnBehalf: z.boolean().refine(val => val === true),
-  consentInfoTrue: z.boolean().refine(val => val === true),
-  consentTermsAccepted: z.boolean().refine(val => val === true)
+  // The following fields are required on the frontend but optional here for backward compatibility
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  city: z.string().min(1).max(100).optional(),
+  street: z.string().min(1).max(150).optional(),
+  houseNumber: z.string().min(1).max(20).optional(),
+  country: z.string().default('ישראל').optional(),
+  consentActingOwnBehalf: z.boolean().optional().default(false),
+  consentInfoTrue: z.boolean().optional().default(false),
+  consentTermsAccepted: z.boolean().optional().default(false)
 });
 
 const requestSchema = z.object({
