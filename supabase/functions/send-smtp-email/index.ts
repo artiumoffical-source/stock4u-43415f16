@@ -38,309 +38,249 @@ interface EmailData {
 }
 
 const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, giftToken?: string): string => {
-  // Get card design colors
+  // Get card design colors (used for header background only, not displayed as text)
   const selectedCard = emailData.selectedCard || 'lightblue';
-  let cardBgColor = '#C4D3E8';
-  let cardName = 'תכלת';
+  let cardBgColor = '#4C7EFB'; // Default blue
   
   if (selectedCard === 'red') {
     cardBgColor = '#E85D4A';
-    cardName = 'אדום';
   } else if (selectedCard === 'yellow') {
     cardBgColor = '#F5B942';
-    cardName = 'צהוב';
   }
   
-  console.log(`[CARD_DESIGN] Using card design: ${selectedCard} (${cardName}) with color ${cardBgColor}`);
+  console.log(`[CARD_DESIGN] Using card design: ${selectedCard} with color ${cardBgColor}`);
   
-  // FIX ISSUE #1: Display gift amounts in ₪, not share counts
-  const stocksHtml = emailData.giftDetails.stocks.map(stock => `
-    <tr>
-      <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #333;">${stock.symbol}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; color: #666;">${stock.name}</td>
-      <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #333; text-align: left;">₪${stock.amount.toLocaleString()}</td>
-    </tr>
-  `).join('');
-
-  const logoSection = emailData.hasLogo && emailData.companyLogo ? `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
-      <tr>
-        <td style="text-align: center;">
-          <img src="${emailData.companyLogo}" alt="לוגו החברה" style="max-width: 120px; height: auto; border-radius: 8px;">
-        </td>
-      </tr>
-    </table>
-  ` : '';
-
   // FIX ISSUE #3: Use dynamic app URL instead of hardcoded domain
   const appUrl = Deno.env.get('SUPABASE_URL')?.includes('localhost') 
     ? 'http://localhost:5173' 
     : (Deno.env.get('APP_URL') || 'https://stock4u.co.il');
 
-  const actionButton = isForRecipient && giftToken ? `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px;">
-      <tr>
-        <td style="text-align: center;">
-          <a href="${appUrl}/redeem?token=${giftToken}" 
-             class="cta-button"
-             style="display: inline-block; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
-            🎁 התחל תהליך זיהוי וקבלת המתנה
-          </a>
-          <p style="color: #666; font-size: 13px; margin: 12px 0 0 0;">
-            לחיצה על הכפתור תעביר אותך לטופס הזיהוי המאובטח
-          </p>
-        </td>
-      </tr>
-    </table>
-    
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px;">
-      <tr>
-        <td style="text-align: center; padding: 16px; background: #f9fafb; border-radius: 8px;">
-          <p style="color: #666; font-size: 13px; margin: 0 0 8px 0;">
-            <strong>זקוק לעזרה?</strong>
-          </p>
-          <p style="color: #666; font-size: 13px; margin: 0;">
-            📧 support@stock4u.co.il | 📞 03-1234567<br>
-            שעות פעילות: ראשון-חמישי 9:00-18:00
-          </p>
-        </td>
-      </tr>
-    </table>
+  const logoSection = emailData.hasLogo && emailData.companyLogo ? `
+    <div style="text-align: center; margin-bottom: 16px;">
+      <img src="${emailData.companyLogo}" alt="לוגו החברה" style="max-width: 80px; height: auto; border-radius: 8px;">
+    </div>
   ` : '';
 
-  // FIX ISSUE #2: Add responsive CSS and viewport meta tag
+  // Build stocks display - compact card style for each stock
+  const stocksHtml = emailData.giftDetails.stocks.map(stock => `
+    <div style="background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 12px; text-align: center;">
+      <div style="font-size: 24px; font-weight: 700; color: #059669; margin-bottom: 4px;">₪${stock.amount.toLocaleString()}</div>
+      <div style="font-size: 18px; font-weight: 600; color: #1e293b;">${stock.symbol}</div>
+      <div style="font-size: 13px; color: #64748b; margin-top: 2px;">${stock.name}</div>
+    </div>
+  `).join('');
+
+  const actionButton = isForRecipient && giftToken ? `
+    <div style="text-align: center; margin-top: 24px;">
+      <a href="${appUrl}/redeem?token=${giftToken}" 
+         style="display: inline-block; background: linear-gradient(135deg, #4C7EFB 0%, #6366f1 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(76, 126, 251, 0.3); min-width: 200px;">
+        🎁 קבל את המתנה
+      </a>
+      <p style="color: #64748b; font-size: 12px; margin: 12px 0 0 0;">
+        לחיצה על הכפתור תעביר אותך לטופס הזיהוי המאובטח
+      </p>
+    </div>
+    
+    <div style="text-align: center; padding: 16px; background: #f8fafc; border-radius: 12px; margin-top: 20px;">
+      <p style="color: #64748b; font-size: 12px; margin: 0;">
+        <strong>זקוק לעזרה?</strong><br>
+        📧 support@stock4u.co.il
+      </p>
+    </div>
+  ` : '';
+
   return `
     <!DOCTYPE html>
     <html dir="rtl" lang="he">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>מתנת מניות מ-Stock4U</title>
+      <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+      <![endif]-->
       <style>
-        body { margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+        
         @media only screen and (max-width: 600px) {
-          .main-table { width: 100% !important; }
-          .gift-card { width: 95% !important; padding: 20px !important; }
-          .hide-mobile { display: none !important; }
-          h1 { font-size: 24px !important; }
-          h2 { font-size: 20px !important; }
-          .cta-button { padding: 14px 24px !important; font-size: 15px !important; }
+          .container { width: 100% !important; padding: 12px !important; }
+          .content-card { padding: 20px !important; }
+          .header-section { padding: 24px 16px !important; }
+          .headline { font-size: 26px !important; }
+          .sender-text { font-size: 16px !important; }
+          .stock-card { padding: 14px !important; }
+          .stock-amount { font-size: 22px !important; }
+          .stock-symbol { font-size: 16px !important; }
+          .cta-button { padding: 14px 24px !important; font-size: 15px !important; width: 100% !important; }
+          .process-section { padding: 16px !important; }
+          .process-item { padding: 12px !important; }
+          .footer-text { font-size: 11px !important; }
         }
       </style>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f1f5f9; direction: rtl;">
       
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; max-width: 100%;">
-        
-        <!-- Header -->
+      <!-- Wrapper Table -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f1f5f9;">
         <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #4C7EFB; padding: 20px;">
+          <td align="center" style="padding: 20px 0;">
+            
+            <!-- Main Container -->
+            <table role="presentation" class="container" width="100%" cellpadding="0" cellspacing="0" style="max-width: 420px; margin: 0 auto;">
+              
+              <!-- Header Section -->
               <tr>
-                <td style="text-align: center;">
-                  <h1 style="margin: 0; color: white; font-size: 28px; font-weight: bold;">Stock4U</h1>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        
-        <!-- Colored Header Section with Selected Card Design -->
-        <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" style="background: ${cardBgColor}; padding: 40px 20px;">
-              <tr>
-                <td style="text-align: center; position: relative;">
+                <td class="header-section" style="background: linear-gradient(135deg, ${cardBgColor} 0%, ${cardBgColor}dd 100%); padding: 32px 24px; border-radius: 16px 16px 0 0; text-align: center;">
                   
-                  <!-- Gift Box Icon -->
-                  <div style="font-size: 48px; margin-bottom: 20px;">🎁</div>
+                  <!-- Logo -->
+                  <div style="margin-bottom: 20px;">
+                    <span style="color: white; font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Stock4U</span>
+                  </div>
                   
-                  <!-- Main Title -->
-                  <h1 style="color: white; font-size: 32px; font-weight: bold; margin: 0 0 10px 0;">
-                    ${isForRecipient ? 'קיבלת מתנה מיוחדת!' : 'המתנה נשלחה בהצלחה!'}
+                  <!-- Main Headline -->
+                  <h1 class="headline" style="color: white; font-size: 28px; font-weight: 700; margin: 0 0 12px 0; line-height: 1.3;">
+                    ${isForRecipient ? 'קיבלת מתנה מיוחדת 🎁' : 'המתנה נשלחה בהצלחה! ✓'}
                   </h1>
                   
-                  <p style="color: white; font-size: 18px; margin: 0;">
-                    ${isForRecipient ? `מ-${emailData.senderName}` : `ל-${emailData.recipientName}`}
-                  </p>
-                  
-                  <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 12px 0 0 0;">
-                    עיצוב כרטיס: ${cardName}
+                  <!-- Sender/Recipient Line -->
+                  <p class="sender-text" style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 500;">
+                    ${isForRecipient ? `מ- ${emailData.senderName}` : `ל- ${emailData.recipientName}`}
                   </p>
                   
                 </td>
               </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Main Content -->
-        <tr>
-          <td style="padding: 20px;">
-            
-            <!-- Centered container with max-width -->
-            <table class="main-table" width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; max-width: 600px;">
+              
+              <!-- Content Card -->
               <tr>
-                <td>
+                <td class="content-card" style="background: white; padding: 28px 24px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
                   
-                  <!-- White Gift Card -->
-                  <table class="gift-card" width="100%" cellpadding="32" cellspacing="0" 
-                         style="background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); margin: 0 auto;">
-                    <tr>
-                      <td style="text-align: center;">
-                        
-                        ${logoSection}
-                        
-                        <h2 style="color: #333; font-size: 24px; font-weight: bold; margin: 0 0 16px 0;">
-                          מתנת מניות
-                        </h2>
-                        
-                        <!-- Stocks Table -->
-                        <table width="100%" cellpadding="0" cellspacing="0" 
-                               style="background: #f8f9fa; border-radius: 12px; margin: 20px 0;">
-                          <tr>
-                            <td style="padding: 20px;">
-                              
-                              <h3 style="color: #333; font-size: 18px; margin: 0 0 16px 0;">המתנה שלך:</h3>
-                              
-                              <table width="100%" cellpadding="0" cellspacing="0" style="word-wrap: break-word;">
-                                ${stocksHtml}
-                              </table>
-                              
-                              <!-- Total Value -->
-                              <table width="100%" cellpadding="0" cellspacing="0" 
-                                     style="border-top: 2px solid #e5e7eb; margin-top: 16px; padding-top: 16px;">
-                                <tr>
-                                  <td style="font-size: 18px; font-weight: bold; color: #333;">סה"כ ערך המתנה:</td>
-                                  <td style="font-size: 18px; font-weight: bold; color: #059669; text-align: left;">
-                                    ₪${emailData.giftDetails.totalValue.toLocaleString()}
-                                  </td>
-                                </tr>
-                              </table>
-                              
-                            </td>
-                          </tr>
-                        </table>
-                        
-                        ${emailData.giftDetails.message ? `
-                          <table width="100%" cellpadding="16" cellspacing="0" 
-                                 style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; margin: 20px 0;">
-                            <tr>
-                              <td>
-                                <p style="color: #92400e; margin: 0; font-style: italic; text-align: center;">
-                                  "${emailData.giftDetails.message}"
-                                </p>
-                              </td>
-                            </tr>
-                          </table>
-                        ` : ''}
-                        
-                        ${isForRecipient ? `
-                          <!-- Legal Process Information -->
-                          <table width="100%" cellpadding="20" cellspacing="0" 
-                                 style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 12px; margin: 24px 0;">
-                            <tr>
-                              <td>
-                                <h3 style="color: #1e40af; font-size: 20px; font-weight: bold; margin: 0 0 16px 0; text-align: center;">
-                                  📋 תהליך מימוש המתנה
-                                </h3>
-                                
-                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
-                                    🏦 חשבון נאמנות ייעודי
-                                  </h4>
-                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">
-                                    ערך המתנה שלך (₪${emailData.giftDetails.totalValue.toLocaleString()}) מוחזק בחשבון נאמנות ייעודי על שמך. 
-                                    הכספים מאובטחים ומוגנים על פי חוק, ואינם נגישים לשום צד שלישי עד להשלמת תהליך הזיהוי.
-                                  </p>
-                                </div>
-                                
-                                <div style="background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                                  <h4 style="color: #333; font-size: 16px; font-weight: bold; margin: 0 0 8px 0;">
-                                    ✅ תהליך זיהוי (KYC/AML) - חובה על פי חוק
-                                  </h4>
-                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0;">
-                                    על מנת לקבל את המתנה, עליך להשלים תהליך זיהוי מלא בהתאם לדרישות הרגולציה הישראלית למניעת הלבנת הון ומימון טרור.
-                                  </p>
-                                  <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 0;">
-                                    <strong>מה נדרש ממך:</strong><br>
-                                    • צילום תעודת זהות / דרכון בתוקף<br>
-                                    • אימות פרטים אישיים (שם, כתובת, טלפון)<br>
-                                    • חתימה דיגיטלית על הצהרות רגולטוריות
-                                  </p>
-                                </div>
-                                
-                                <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border: 1px solid #fbbf24;">
-                                  <p style="color: #92400e; font-size: 13px; line-height: 1.6; margin: 0;">
-                                    <strong>⏱️ זמני טיפול:</strong> התהליך הממוצע נמשך 2-5 ימי עסקים מרגע הגשת כל המסמכים הנדרשים.
-                                    <br><br>
-                                    <strong>🔒 אבטחה:</strong> עד להשלמת התהליך, הכספים נשמרים בנאמנות ואינם ניתנים להעברה או משיכה על ידי אף אחד מלבד המוטב החוקי (אתה).
-                                  </p>
-                                </div>
-                              </td>
-                            </tr>
-                          </table>
-                        ` : ''}
-                        
-                        <!-- Order Details -->
-                        <table width="100%" cellpadding="0" cellspacing="0" 
-                               style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                          <tr>
-                            <td style="text-align: center;">
-                              <p style="color: #666; font-size: 14px; margin: 0;">
-                                מזהה הזמנה: ${emailData.orderId}
-                              </p>
-                              <p style="color: #666; font-size: 14px; margin: 8px 0 0 0;">
-                                תאריך מסירה: ${emailData.giftDetails.deliveryDate}
-                              </p>
-                            </td>
-                          </tr>
-                        </table>
-                        
-                        ${actionButton}
-                        
-                      </td>
-                    </tr>
-                  </table>
+                  ${logoSection}
                   
-                  ${!isForRecipient ? `
-                    <table width="100%" cellpadding="20" cellspacing="0" 
-                           style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; margin: 24px 0;">
-                      <tr>
-                        <td style="text-align: center;">
-                          <h3 style="color: #065f46; font-size: 18px; font-weight: bold; margin: 0 0 12px 0;">
-                            ✅ המתנה נשלחה בהצלחה!
-                          </h3>
-                          <p style="color: #047857; font-size: 14px; line-height: 1.6; margin: 0;">
-                            שלחנו ל-<strong>${emailData.recipientName}</strong> מייל עם הוראות לקבלת המתנה.<br>
-                            המקבל/ת יצטרכו להשלים תהליך זיהוי (KYC) לפני שיוכלו לממש את המתנה.<br><br>
-                            תקבל/י עדכון נוסף ברגע שהמתנה תמומש על ידי המקבל/ת.
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
+                  <!-- Gift Title -->
+                  <h2 style="color: #1e293b; font-size: 20px; font-weight: 600; margin: 0 0 20px 0; text-align: center;">
+                    מניות במתנה
+                  </h2>
+                  
+                  <!-- Stocks Display -->
+                  <div style="margin-bottom: 20px;">
+                    ${stocksHtml}
+                  </div>
+                  
+                  <!-- Total Section -->
+                  <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 16px; text-align: center; border: 1px solid #bbf7d0;">
+                    <span style="color: #64748b; font-size: 14px;">סה״כ</span>
+                    <div style="font-size: 28px; font-weight: 700; color: #059669; margin-top: 4px;">
+                      ₪${emailData.giftDetails.totalValue.toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  ${emailData.giftDetails.message ? `
+                    <!-- Personal Message -->
+                    <div style="background: #fefce8; border: 1px solid #fde047; border-radius: 12px; padding: 16px; margin-top: 20px; text-align: center;">
+                      <p style="color: #854d0e; margin: 0; font-style: italic; font-size: 14px; line-height: 1.5;">
+                        "${emailData.giftDetails.message}"
+                      </p>
+                    </div>
                   ` : ''}
                   
+                  ${actionButton}
+                  
+                  ${isForRecipient ? `
+                    <!-- Redemption Process Section -->
+                    <div class="process-section" style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 20px; margin-top: 24px;">
+                      
+                      <h3 style="color: #0369a1; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; text-align: center;">
+                        📋 תהליך מימוש המתנה
+                      </h3>
+                      
+                      <div class="process-item" style="background: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
+                        <h4 style="color: #1e293b; font-size: 14px; font-weight: 600; margin: 0 0 6px 0;">
+                          🏦 חשבון נאמנות ייעודי
+                        </h4>
+                        <p style="color: #64748b; font-size: 13px; line-height: 1.5; margin: 0;">
+                          ערך המתנה שלך (₪${emailData.giftDetails.totalValue.toLocaleString()}) מוחזק בחשבון נאמנות ייעודי על שמך. הכספים מאובטחים ומוגנים על פי חוק.
+                        </p>
+                      </div>
+                      
+                      <div class="process-item" style="background: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
+                        <h4 style="color: #1e293b; font-size: 14px; font-weight: 600; margin: 0 0 6px 0;">
+                          ✅ תהליך זיהוי (KYC/AML)
+                        </h4>
+                        <p style="color: #64748b; font-size: 13px; line-height: 1.5; margin: 0;">
+                          על מנת לקבל את המתנה, עליך להשלים תהליך זיהוי מלא בהתאם לדרישות הרגולציה הישראלית.
+                        </p>
+                        <p style="color: #64748b; font-size: 13px; line-height: 1.6; margin: 10px 0 0 0;">
+                          <strong>מה נדרש:</strong><br>
+                          • צילום ת.ז / דרכון בתוקף<br>
+                          • אימות פרטים אישיים<br>
+                          • חתימה דיגיטלית
+                        </p>
+                      </div>
+                      
+                      <div style="background: #fefce8; padding: 12px; border-radius: 8px; border: 1px solid #fde047;">
+                        <p style="color: #854d0e; font-size: 12px; line-height: 1.5; margin: 0;">
+                          <strong>⏱️ זמני טיפול:</strong> 2-5 ימי עסקים<br>
+                          <strong>🔒 אבטחה:</strong> הכספים נשמרים בנאמנות עד להשלמת התהליך
+                        </p>
+                      </div>
+                      
+                    </div>
+                  ` : `
+                    <!-- Sender Confirmation -->
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-top: 24px; text-align: center;">
+                      <h3 style="color: #166534; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
+                        ✅ המתנה נשלחה בהצלחה!
+                      </h3>
+                      <p style="color: #15803d; font-size: 13px; line-height: 1.5; margin: 0;">
+                        שלחנו ל-<strong>${emailData.recipientName}</strong> מייל עם הוראות לקבלת המתנה.<br>
+                        תקבל/י עדכון כשהמתנה תמומש.
+                      </p>
+                    </div>
+                  `}
+                  
+                  <!-- Order Details -->
+                  <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                    <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+                      מזהה הזמנה: ${emailData.orderId}
+                    </p>
+                    ${emailData.giftDetails.deliveryDate ? `
+                      <p style="color: #94a3b8; font-size: 12px; margin: 6px 0 0 0;">
+                        תאריך: ${emailData.giftDetails.deliveryDate}
+                      </p>
+                    ` : ''}
+                  </div>
+                  
                 </td>
               </tr>
+              
+              <!-- Footer -->
+              <tr>
+                <td style="text-align: center; padding: 24px 16px;">
+                  <p class="footer-text" style="color: #94a3b8; font-size: 12px; margin: 0;">
+                    © 2024 Stock4U - פלטפורמת המניות המובילה בישראל
+                  </p>
+                  <p class="footer-text" style="color: #94a3b8; font-size: 11px; margin: 6px 0 0 0;">
+                    המייל נשלח אוטומטית, אין צורך להשיב
+                  </p>
+                </td>
+              </tr>
+              
             </table>
             
           </td>
         </tr>
-
-        <!-- Footer -->
-        <tr>
-          <td style="text-align: center; padding: 40px 20px 20px 20px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #666; font-size: 14px; margin: 0;">
-              © 2024 Stock4U - פלטפורמת המניות המובילה בישראל
-            </p>
-            <p style="color: #666; font-size: 12px; margin: 8px 0 0 0;">
-              המייל נשלח אוטומטית, אין צורך להשיב
-            </p>
-          </td>
-        </tr>
-        
       </table>
+      
     </body>
     </html>
   `;
