@@ -204,6 +204,7 @@ export type Database = {
           recipient_email: string | null
           recipient_name: string | null
           recipient_phone: string | null
+          selected_card: string | null
           selected_stocks: Json
           sender_name: string | null
           status: string | null
@@ -226,6 +227,7 @@ export type Database = {
           recipient_email?: string | null
           recipient_name?: string | null
           recipient_phone?: string | null
+          selected_card?: string | null
           selected_stocks: Json
           sender_name?: string | null
           status?: string | null
@@ -248,6 +250,7 @@ export type Database = {
           recipient_email?: string | null
           recipient_name?: string | null
           recipient_phone?: string | null
+          selected_card?: string | null
           selected_stocks?: Json
           sender_name?: string | null
           status?: string | null
