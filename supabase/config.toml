@@ -11,3 +11,12 @@ verify_jwt = false
 
 [functions.upload-kyc-document]
 verify_jwt = false
+
+[functions.get-kyc-document-url]
+verify_jwt = false
+
+[functions.register-gift-recipient]
+verify_jwt = false
+
+[functions.get-gift-details]
+verify_jwt = false

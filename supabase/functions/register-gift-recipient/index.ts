@@ -43,9 +43,16 @@ const israeliIdSchema = z.string().regex(/^\d{9}$/).refine((id) => {
 const registrationSchema = z.object({
   fullName: z.string().min(1).max(100),
   idNumber: israeliIdSchema,
-  address: z.string().min(1).max(200),
-  phone: z.string().regex(/^0\d{1,2}-?\d{7}$/),
-  email: z.string().email().max(255)
+  phone: z.string().regex(/^05\d{8}$|^0[2-4,8-9]\d{7,8}$/),
+  email: z.string().email().max(255),
+  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  city: z.string().min(1).max(100),
+  street: z.string().min(1).max(150),
+  houseNumber: z.string().min(1).max(20),
+  country: z.string().default('ישראל'),
+  consentActingOwnBehalf: z.boolean().refine(val => val === true),
+  consentInfoTrue: z.boolean().refine(val => val === true),
+  consentTermsAccepted: z.boolean().refine(val => val === true)
 });
 
 const requestSchema = z.object({
@@ -64,6 +71,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Rate limiting
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
     if (isRateLimited(ip)) {
+      console.log(`[RATE_LIMITED] IP: ${ip}`);
       return new Response(JSON.stringify({
         success: false,
         message: "יותר מדי ניסיונות. אנא נסה שוב מאוחר יותר"
@@ -79,10 +87,12 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const rawData = await req.json();
+    console.log(`[REGISTER_KYC] Processing registration request`);
     
     // Validate input
     const validationResult = requestSchema.safeParse(rawData);
     if (!validationResult.success) {
+      console.log(`[VALIDATION_ERROR] ${JSON.stringify(validationResult.error.errors)}`);
       return new Response(JSON.stringify({
         success: false,
         message: "נתונים לא תקינים. אנא בדוק את הפרטים ונסה שוב"
@@ -102,6 +112,7 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (regError || !giftRegistration) {
+      console.log(`[NOT_FOUND] Token: ${token}`);
       return new Response(JSON.stringify({
         success: false,
         message: "מתנה לא נמצאה או שהקישור לא תקין"
@@ -112,7 +123,8 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Check if already registered
-    if (giftRegistration.registration_status === 'completed') {
+    if (giftRegistration.registration_status === 'approved' || giftRegistration.registration_status === 'completed') {
+      console.log(`[ALREADY_REGISTERED] Token: ${token}, Status: ${giftRegistration.registration_status}`);
       return new Response(JSON.stringify({
         success: false,
         message: "המתנה כבר נרשמה בעבר"
@@ -122,16 +134,31 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // Prepare update data
-    const updateData: any = {
+    // Prepare update data with KYC POC fields
+    const updateData: Record<string, unknown> = {
       recipient_name: registrationData.fullName,
       recipient_email: registrationData.email,
       recipient_phone: registrationData.phone,
       id_number: registrationData.idNumber,
-      address: registrationData.address,
-      registration_status: 'completed',
+      full_name_hebrew: registrationData.fullName,
+      date_of_birth: registrationData.dateOfBirth,
+      city: registrationData.city,
+      street: registrationData.street,
+      house_number: registrationData.houseNumber,
+      country: registrationData.country,
+      address: `${registrationData.street} ${registrationData.houseNumber}, ${registrationData.city}, ${registrationData.country}`,
+      consent_acting_own_behalf: registrationData.consentActingOwnBehalf,
+      consent_info_true: registrationData.consentInfoTrue,
+      consent_terms_accepted: registrationData.consentTermsAccepted,
+      registration_status: 'submitted',
+      kyc_submitted_at: new Date().toISOString(),
       registered_at: new Date().toISOString()
     };
+
+    // Set kyc_started_at if not already set
+    if (!giftRegistration.kyc_started_at) {
+      updateData.kyc_started_at = new Date().toISOString();
+    }
 
     // Add document information if provided
     if (documentFileName && documentType) {
@@ -141,6 +168,8 @@ const handler = async (req: Request): Promise<Response> => {
       updateData.kyc_status = 'submitted';
     }
 
+    console.log(`[UPDATE_KYC] Updating gift registration: ${giftRegistration.id}`);
+
     // Update the gift registration with the new data
     const { error: updateError } = await supabase
       .from('gift_registrations')
@@ -148,6 +177,7 @@ const handler = async (req: Request): Promise<Response> => {
       .eq('id', giftRegistration.id);
 
     if (updateError) {
+      console.error(`[UPDATE_ERROR] ${updateError.message}`);
       return new Response(JSON.stringify({
         success: false,
         message: "שגיאה בעדכון הרישום"
@@ -157,6 +187,8 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    console.log(`[SUCCESS] KYC registration completed for token: ${token}`);
+
     return new Response(JSON.stringify({
       success: true,
       message: "הרישום הושלם בהצלחה"
@@ -165,7 +197,9 @@ const handler = async (req: Request): Promise<Response> => {
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[SERVER_ERROR] ${errorMessage}`);
     return new Response(JSON.stringify({
       success: false,
       message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"
