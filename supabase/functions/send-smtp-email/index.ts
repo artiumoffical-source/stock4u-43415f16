@@ -318,23 +318,39 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
     
+    // Log basic request info
+    console.log('[EMAIL_FUNCTION] Parsed email data', {
+      to: emailData.to,
+      from: emailData.from,
+      subject: emailData.subject,
+      isForRecipient: emailData.isForRecipient,
+      orderId: emailData.orderId,
+    });
+
     // Validate and sanitize email data
     if (!emailData.to || !emailData.from || !emailData.subject) {
       throw new Error('Missing required email fields');
     }
     
-    // Validate email addresses - support both simple emails and "Name <email>" format
+    // Normalize and validate email addresses
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    // Validate "to" email
-    if (!emailRegex.test(emailData.to)) {
-      console.error('Invalid "to" email format:', emailData.to);
+
+    // Normalize "to" email and support optional "Name <email>" format
+    let toEmail = emailData.to.trim();
+    const toMatch = toEmail.match(/<([^>]+)>/);
+    if (toMatch) {
+      toEmail = toMatch[1];
+    }
+
+    if (!emailRegex.test(toEmail)) {
+      console.error('Invalid "to" email format after normalization:', emailData.to);
       throw new Error(`Invalid recipient email format: ${emailData.to}`);
     }
+    emailData.to = toEmail;
     
     // Extract and validate "from" email - handle both "email" and "Name <email>" formats
-    let fromEmail = emailData.from;
-    const fromEmailMatch = emailData.from.match(/<([^>]+)>/);
+    let fromEmail = emailData.from.trim();
+    const fromEmailMatch = fromEmail.match(/<([^>]+)>/);
     if (fromEmailMatch) {
       fromEmail = fromEmailMatch[1];
     }
@@ -369,6 +385,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
     if (regError) {
+      console.error('[GIFT_REG_ERROR] Failed to create gift registration:', regError);
       throw new Error('Failed to create gift registration');
     }
 
@@ -382,8 +399,25 @@ const handler = async (req: Request): Promise<Response> => {
       subject: emailData.subject,
       html: recipientHTML
     };
-    
-    const result = await resend.emails.send(emailRequest);
+
+    console.log('[EMAIL_SEND_ATTEMPT]', {
+      to: emailRequest.to,
+      subject: emailRequest.subject,
+      isForRecipient,
+      orderId: emailData.orderId,
+    });
+
+    let result;
+    try {
+      result = await resend.emails.send(emailRequest);
+      console.log('[EMAIL_SEND_SUCCESS]', {
+        to: emailRequest.to,
+        id: (result as any)?.id,
+      });
+    } catch (sendError: any) {
+      console.error('[EMAIL_SEND_ERROR]', sendError);
+      throw new Error(sendError?.message || 'Failed to send email via Resend');
+    }
 
     return new Response(JSON.stringify(result), {
       status: 200,
