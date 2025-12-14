@@ -144,25 +144,36 @@ async function sendAdminNotification(orderData: OrderRequest, orderNumber: strin
   `;
 
   try {
+    console.log('[ADMIN_NOTIFICATION] Attempting to send email to support@stock4u.co.il');
+    console.log('[ADMIN_NOTIFICATION] Order number:', orderNumber);
+    console.log('[ADMIN_NOTIFICATION] RESEND_API_KEY exists:', !!resendApiKey);
+    
+    const emailPayload = {
+      from: 'Stock4U <noreply@stock4u.co.il>',
+      to: ['support@stock4u.co.il'],
+      subject: `🔔 הזמנה חדשה - ${orderNumber}`,
+      html: htmlContent,
+    };
+    
+    console.log('[ADMIN_NOTIFICATION] Sending with payload to:', emailPayload.to);
+    
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: 'Stock4U <noreply@stock4u.co.il>',
-        to: ['support@stock4u.co.il'],
-        subject: `🔔 הזמנה חדשה - ${orderNumber}`,
-        html: htmlContent,
-      }),
+      body: JSON.stringify(emailPayload),
     });
 
+    const responseData = await response.json();
+    
     if (response.ok) {
       console.log('[ADMIN_NOTIFICATION] Email sent successfully to support@stock4u.co.il');
+      console.log('[ADMIN_NOTIFICATION] Resend response:', JSON.stringify(responseData));
     } else {
-      const errorData = await response.text();
-      console.error('[ADMIN_NOTIFICATION] Failed to send:', errorData);
+      console.error('[ADMIN_NOTIFICATION] Failed to send. Status:', response.status);
+      console.error('[ADMIN_NOTIFICATION] Error response:', JSON.stringify(responseData));
     }
   } catch (error) {
     console.error('[ADMIN_NOTIFICATION] Error sending notification:', error);
