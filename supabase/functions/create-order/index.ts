@@ -80,6 +80,95 @@ interface OrderRequest {
   payment_status?: string;
 }
 
+// Send admin notification email
+async function sendAdminNotification(orderData: OrderRequest, orderNumber: string) {
+  const resendApiKey = Deno.env.get('RESEND_API_KEY');
+  if (!resendApiKey) {
+    console.error('[ADMIN_NOTIFICATION] Missing RESEND_API_KEY');
+    return;
+  }
+
+  const stocksList = orderData.selected_stocks
+    .map(s => `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;">${s.symbol}</td><td style="padding: 8px; border-bottom: 1px solid #eee; text-align: left;">₪${s.amount.toLocaleString()}</td></tr>`)
+    .join('');
+
+  const htmlContent = `
+    <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px 10px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">🔔 הזמנה חדשה התקבלה!</h1>
+      </div>
+      
+      <div style="background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-top: none;">
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <h3 style="margin: 0 0 10px 0; color: #374151;">מספר הזמנה: ${orderNumber}</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 14px;">${new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}</p>
+        </div>
+        
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <h4 style="margin: 0 0 10px 0; color: #374151;">👤 פרטי הקונה</h4>
+          <p style="margin: 5px 0; color: #4b5563;"><strong>שם:</strong> ${orderData.buyer_name}</p>
+          <p style="margin: 5px 0; color: #4b5563;"><strong>אימייל:</strong> ${orderData.buyer_email}</p>
+          <p style="margin: 5px 0; color: #4b5563;"><strong>טלפון:</strong> ${orderData.buyer_phone || 'לא צוין'}</p>
+        </div>
+        
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <h4 style="margin: 0 0 10px 0; color: #374151;">🎁 מקבל המתנה</h4>
+          <p style="margin: 5px 0; color: #4b5563;"><strong>שם:</strong> ${orderData.recipient_name || 'לא צוין'}</p>
+          <p style="margin: 5px 0; color: #4b5563;"><strong>אימייל:</strong> ${orderData.recipient_email || 'לא צוין'}</p>
+        </div>
+        
+        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+          <h4 style="margin: 0 0 10px 0; color: #374151;">📈 מניות</h4>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f3f4f6;">
+                <th style="padding: 8px; text-align: right;">סימול</th>
+                <th style="padding: 8px; text-align: left;">סכום</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${stocksList}
+            </tbody>
+          </table>
+        </div>
+        
+        <div style="background: #10b981; padding: 15px; border-radius: 8px; text-align: center;">
+          <h3 style="margin: 0; color: white;">סה"כ: ₪${orderData.total_amount.toLocaleString()}</h3>
+        </div>
+      </div>
+      
+      <div style="background: #374151; padding: 15px; border-radius: 0 0 10px 10px; text-align: center;">
+        <p style="margin: 0; color: #9ca3af; font-size: 12px;">Stock4U - התראה אוטומטית</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Stock4U <noreply@stock4u.co.il>',
+        to: ['support@stock4u.co.il'],
+        subject: `🔔 הזמנה חדשה - ${orderNumber}`,
+        html: htmlContent,
+      }),
+    });
+
+    if (response.ok) {
+      console.log('[ADMIN_NOTIFICATION] Email sent successfully to support@stock4u.co.il');
+    } else {
+      const errorData = await response.text();
+      console.error('[ADMIN_NOTIFICATION] Failed to send:', errorData);
+    }
+  } catch (error) {
+    console.error('[ADMIN_NOTIFICATION] Error sending notification:', error);
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -127,7 +216,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert([orderData])
-      .select('id')
+      .select('id, order_number')
       .single();
 
     if (orderError) {
@@ -139,6 +228,12 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
+
+    // Send admin notification in background (don't block response)
+    const orderNumber = order.order_number || `ORD-${order.id.slice(0, 8)}`;
+    sendAdminNotification(orderData, orderNumber).catch(err => {
+      console.error('[ADMIN_NOTIFICATION] Background send failed:', err);
+    });
 
     return new Response(
       JSON.stringify({ success: true, orderId: order.id }),
