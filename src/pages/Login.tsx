@@ -1,17 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { IdCard, Smartphone, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 import loginMascot from '@/assets/login-mascot.png';
 import goldCoin from '@/assets/gold-coin-emoji.png';
 import greenArrow from '@/assets/green-arrow-growth.png';
 
 export default function Login() {
-  const navigate = useNavigate();
   const [idNumber, setIdNumber] = useState('');
   const [phone, setPhone] = useState('');
   const [errors, setErrors] = useState<{ idNumber?: string; phone?: string }>({});
@@ -66,10 +62,8 @@ export default function Login() {
 
     setIsSubmitting(true);
     
-    // Simulation - log data and show success
     console.log('Login attempt:', { idNumber, phone });
     
-    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast.success('קוד נשלח בהצלחה! (סימולציה)');
@@ -78,155 +72,193 @@ export default function Login() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" dir="rtl">
-      {/* Background with gradient and pattern */}
+      {/* Background */}
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(135deg, hsl(210 40% 94%) 0%, hsl(210 50% 90%) 50%, hsl(210 40% 92%) 100%)',
+          background: 'linear-gradient(180deg, hsl(210 40% 96%) 0%, hsl(210 45% 93%) 100%)',
         }}
       />
       
       {/* Zigzag chart pattern */}
       <svg 
-        className="absolute inset-0 w-full h-full opacity-20"
+        className="absolute inset-0 w-full h-full"
         preserveAspectRatio="none"
         viewBox="0 0 1200 800"
       >
         <path
-          d="M0 600 L200 500 L400 550 L600 400 L800 450 L1000 300 L1200 350"
+          d="M0 550 L150 480 L300 520 L450 380 L600 420 L750 320 L900 360 L1050 280 L1200 320"
           fill="none"
-          stroke="hsl(210 50% 70%)"
-          strokeWidth="3"
+          stroke="hsl(210 50% 82%)"
+          strokeWidth="2"
+          opacity="0.6"
         />
         <path
-          d="M0 650 L200 550 L400 600 L600 450 L800 500 L1000 350 L1200 400"
+          d="M0 580 L150 510 L300 550 L450 410 L600 450 L750 350 L900 390 L1050 310 L1200 350"
           fill="none"
-          stroke="hsl(210 50% 75%)"
-          strokeWidth="2"
+          stroke="hsl(210 50% 85%)"
+          strokeWidth="1.5"
+          opacity="0.4"
         />
       </svg>
 
-      {/* Floating decorative elements */}
+      {/* Gold coin - positioned exactly like mockup */}
       <img 
         src={goldCoin} 
         alt="" 
-        className="absolute w-16 h-16 md:w-20 md:h-20 top-1/3 right-4 md:right-[8%] animate-bounce z-10"
-        style={{ animationDuration: '3s' }}
+        className="absolute w-12 h-12 md:w-16 md:h-16 z-10"
+        style={{ 
+          top: '28%',
+          right: 'calc(50% - 320px)',
+        }}
       />
+      
+      {/* Green arrow - bottom right */}
       <img 
         src={greenArrow} 
         alt="" 
-        className="absolute w-20 h-20 md:w-28 md:h-28 bottom-[15%] right-[5%] md:right-[10%] z-10"
-        style={{ transform: 'rotate(-15deg)' }}
+        className="absolute w-16 h-16 md:w-24 md:h-24 z-10"
+        style={{ 
+          bottom: '18%',
+          right: 'calc(50% - 340px)',
+          transform: 'rotate(-20deg)'
+        }}
       />
       
-      {/* Blue geometric shapes */}
-      <div className="absolute left-[5%] md:left-[10%] top-[40%] w-6 h-10 md:w-8 md:h-12 rounded-full bg-blue-400/40 rotate-45" />
-      <div className="absolute left-[8%] md:left-[15%] top-[25%] w-2 h-2 md:w-3 md:h-3 rounded-full bg-blue-300/60" />
-      <div className="absolute right-[15%] md:right-[25%] top-[15%] w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-400/50" />
+      {/* Blue crescent shape - left side */}
+      <div 
+        className="absolute w-6 h-10 md:w-8 md:h-14 rounded-full z-10"
+        style={{
+          background: 'hsl(210 60% 65%)',
+          left: 'calc(50% + 280px)',
+          top: '38%',
+          transform: 'rotate(30deg)',
+          opacity: 0.7
+        }}
+      />
       
-      {/* Sparkle decorations */}
-      <div className="absolute bottom-[10%] right-[3%] md:right-[5%]">
-        <svg width="24" height="24" viewBox="0 0 24 24" className="text-blue-300/60">
-          <path fill="currentColor" d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" />
-        </svg>
-      </div>
+      {/* Small dots */}
+      <div className="absolute w-2 h-2 rounded-full bg-blue-300/50" style={{ left: 'calc(50% + 200px)', top: '22%' }} />
+      <div className="absolute w-1.5 h-1.5 rounded-full bg-blue-400/40" style={{ right: 'calc(50% + 180px)', top: '18%' }} />
+      
+      {/* Sparkle - bottom right corner */}
+      <svg 
+        className="absolute z-10" 
+        width="20" 
+        height="20" 
+        viewBox="0 0 24 24"
+        style={{ bottom: '12%', right: 'calc(50% - 380px)' }}
+      >
+        <path fill="hsl(210 50% 75%)" d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" />
+      </svg>
 
       {/* Main content */}
       <div className="relative z-20 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-lg">
           {/* Login Card */}
           <div 
-            className="bg-white rounded-[2rem] shadow-2xl p-6 md:p-8 relative"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)' }}
+            className="bg-white rounded-[2.5rem] p-8 md:p-10 relative"
+            style={{ 
+              boxShadow: '0 20px 60px -15px rgba(0, 0, 0, 0.1)',
+            }}
           >
             {/* Mascot */}
-            <div className="absolute -top-24 md:-top-28 left-1/2 transform -translate-x-1/2">
+            <div className="absolute -top-20 md:-top-24 left-1/2 transform -translate-x-1/2">
               <img 
                 src={loginMascot} 
                 alt="Stock4U Mascot" 
-                className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
+                className="w-28 h-28 md:w-36 md:h-36 object-contain"
+                style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}
               />
             </div>
 
-            {/* Content with top padding for mascot */}
-            <div className="pt-12 md:pt-16">
+            {/* Content */}
+            <div className="pt-10 md:pt-14">
               {/* Headline */}
-              <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-900 mb-2">
+              <h1 
+                className="text-3xl md:text-4xl font-bold text-center mb-3"
+                style={{ color: 'hsl(210 80% 35%)' }}
+              >
                 איזה כיף שחזרת!
               </h1>
               
               {/* Subtitle */}
-              <p className="text-center text-gray-600 text-sm md:text-base mb-6 md:mb-8 leading-relaxed">
-                הכנס פרטים ונשלח לך קוד גישה מהיר לנייד.
-                <br />
-                המתנות שלך מחכות.
+              <p className="text-center text-gray-500 text-sm md:text-base mb-8 leading-relaxed">
+                הכנס פרטים ונשלח לך קוד גישה מהיר לנייד. המתנות שלך מחכות.
               </p>
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* ID Number Field */}
-                <div className="space-y-2">
-                  <Label 
-                    htmlFor="idNumber" 
-                    className="text-sm font-medium text-gray-700"
+                {/* ID Number Field - Integrated label inside */}
+                <div>
+                  <div 
+                    className={`relative flex items-center rounded-xl border-2 transition-colors ${
+                      errors.idNumber 
+                        ? 'border-red-400 bg-red-50/30' 
+                        : 'border-blue-200 bg-blue-50/40'
+                    }`}
+                    style={{ height: '56px' }}
                   >
-                    מספר תעודת זהות
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="idNumber"
+                    {/* Icon */}
+                    <div className="absolute left-4 text-blue-400">
+                      <IdCard className="w-5 h-5" />
+                    </div>
+                    
+                    {/* Input */}
+                    <input
                       type="text"
                       inputMode="numeric"
                       value={idNumber}
                       onChange={handleIdChange}
                       placeholder="הזן 9 ספרות..."
-                      className={`h-12 pr-4 pl-12 text-right bg-blue-50/50 border-2 rounded-xl transition-colors ${
-                        errors.idNumber 
-                          ? 'border-red-400 focus:border-red-500' 
-                          : 'border-blue-200 focus:border-blue-400'
-                      }`}
+                      className="flex-1 h-full bg-transparent border-none outline-none text-center text-gray-700 placeholder:text-gray-400 px-12"
                       dir="ltr"
                     />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                      <IdCard className="w-5 h-5" />
+                    
+                    {/* Label inside field */}
+                    <div className="absolute right-4 text-sm font-medium text-gray-600">
+                      מספר תעודת זהות
                     </div>
                   </div>
                   {errors.idNumber && (
-                    <p className="text-red-500 text-xs mt-1">{errors.idNumber}</p>
+                    <p className="text-red-500 text-xs mt-1.5 text-right">{errors.idNumber}</p>
                   )}
                 </div>
 
-                {/* Phone Field */}
-                <div className="space-y-2">
-                  <Label 
-                    htmlFor="phone" 
-                    className="text-sm font-medium text-gray-700"
+                {/* Phone Field - Integrated label inside */}
+                <div>
+                  <div 
+                    className={`relative flex items-center rounded-xl border-2 transition-colors ${
+                      errors.phone 
+                        ? 'border-red-400 bg-red-50/30' 
+                        : 'border-blue-200 bg-blue-50/40'
+                    }`}
+                    style={{ height: '56px' }}
                   >
-                    מספר טלפון נייד
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="phone"
+                    {/* Icon */}
+                    <div className="absolute left-4 text-blue-400">
+                      <Smartphone className="w-5 h-5" />
+                    </div>
+                    
+                    {/* Input */}
+                    <input
                       type="tel"
                       inputMode="numeric"
                       value={phone}
                       onChange={handlePhoneChange}
                       placeholder="050-0000000"
                       maxLength={11}
-                      className={`h-12 pr-4 pl-12 text-right bg-blue-50/50 border-2 rounded-xl transition-colors ${
-                        errors.phone 
-                          ? 'border-red-400 focus:border-red-500' 
-                          : 'border-blue-200 focus:border-blue-400'
-                      }`}
+                      className="flex-1 h-full bg-transparent border-none outline-none text-center text-gray-700 placeholder:text-gray-400 px-12"
                       dir="ltr"
                     />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                      <Smartphone className="w-5 h-5" />
+                    
+                    {/* Label inside field */}
+                    <div className="absolute right-4 text-sm font-medium text-gray-600">
+                      מספר טלפון נייד
                     </div>
                   </div>
                   {errors.phone && (
-                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                    <p className="text-red-500 text-xs mt-1.5 text-right">{errors.phone}</p>
                   )}
                 </div>
 
@@ -234,25 +266,28 @@ export default function Login() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-12 mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full text-base shadow-lg transition-all hover:shadow-xl"
+                  className="w-full h-12 mt-2 text-white font-medium rounded-full text-base shadow-md transition-all hover:shadow-lg"
+                  style={{ 
+                    background: 'hsl(220 70% 50%)',
+                  }}
                 >
                   {isSubmitting ? (
                     'שולח...'
                   ) : (
-                    <>
+                    <span className="flex items-center justify-center gap-2">
                       שלח לי קוד ב-SMS
-                      <ChevronLeft className="w-5 h-5 mr-2" />
-                    </>
+                      <ChevronLeft className="w-5 h-5" />
+                    </span>
                   )}
                 </Button>
               </form>
 
               {/* Support Link */}
-              <p className="text-center mt-6 text-sm text-gray-600">
+              <p className="text-center mt-6 text-sm text-gray-500">
                 נתקלת בבעיה?{' '}
                 <a 
                   href="mailto:support@stock4u.co.il" 
-                  className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                  className="text-blue-500 hover:text-blue-600 hover:underline font-medium"
                 >
                   צור קשר עם התמיכה
                 </a>
