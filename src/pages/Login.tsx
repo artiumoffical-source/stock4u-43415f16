@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Phone, CreditCard, TrendingUp } from 'lucide-react';
+import { ChevronLeft, Phone, CreditCard } from 'lucide-react';
+import loginBg from '@/assets/login-bg.png';
 import loginMascot from '@/assets/login-mascot.png';
 
 export default function Login() {
@@ -65,110 +66,43 @@ export default function Login() {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden" dir="rtl">
-      {/* LAYER 1: CSS GRADIENT BACKGROUND (No PNG!) */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(135deg, #E8EEF7 0%, #D4DFEF 30%, #C8D7EC 60%, #BED0EA 100%)',
-        }}
-      />
-
-      {/* Decorative Chart Lines (SVG) */}
-      <svg 
-        className="absolute bottom-0 left-0 w-full h-1/2 opacity-20"
-        viewBox="0 0 1200 400"
-        preserveAspectRatio="none"
-      >
-        <path 
-          d="M0 350 Q200 300 400 320 T800 250 T1200 180" 
-          stroke="#4C7EFB" 
-          strokeWidth="3" 
-          fill="none"
-        />
-        <path 
-          d="M0 380 Q300 350 500 340 T900 280 T1200 220" 
-          stroke="#4C7EFB" 
-          strokeWidth="2" 
-          fill="none"
-          opacity="0.5"
-        />
-      </svg>
-
-      {/* Floating Coin (Top Right) */}
-      <div 
-        className="absolute z-10 animate-bounce"
-        style={{ top: '20%', right: '15%', animationDuration: '3s' }}
-      >
-        <div 
-          className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+      {/* LAYER 1: BACKGROUND IMAGE (Zoomed 110% to push elements outward) */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <img 
+          src={loginBg}
+          alt=""
+          className="absolute w-full h-full object-cover"
           style={{ 
-            background: 'linear-gradient(145deg, #FFD700, #FFA500)',
-            border: '3px solid #FFE55C'
-          }}
-        >
-          <span className="text-2xl">🤑</span>
-        </div>
-      </div>
-
-      {/* Floating Arrow (Bottom Right) */}
-      <div 
-        className="absolute z-10"
-        style={{ bottom: '15%', right: '10%' }}
-      >
-        <div 
-          className="w-16 h-16 flex items-center justify-center"
-          style={{ transform: 'rotate(-30deg)' }}
-        >
-          <TrendingUp className="w-14 h-14 text-green-400 drop-shadow-lg" strokeWidth={3} />
-        </div>
-      </div>
-
-      {/* Small Moon Shape (Left Side) */}
-      <div 
-        className="absolute z-10"
-        style={{ top: '35%', left: '8%' }}
-      >
-        <div 
-          className="w-8 h-8 rounded-full"
-          style={{ 
-            background: 'linear-gradient(145deg, #6B8DD6, #4C7EFB)',
-            boxShadow: '3px 3px 0 #4C7EFB'
+            transform: 'scale(1.15)',
+            transformOrigin: 'center center'
           }}
         />
+        {/* Semi-transparent overlay to soften background distractions */}
+        <div className="absolute inset-0 bg-white/20" />
       </div>
 
-      {/* Sparkle (Bottom Right) */}
-      <div 
-        className="absolute z-10"
-        style={{ bottom: '10%', right: '5%' }}
-      >
-        <span className="text-3xl opacity-40">✦</span>
-      </div>
-
-      {/* LAYER 2: THE MAIN CARD */}
-      <div className="relative z-20 min-h-screen flex items-center justify-center p-4 pt-24">
-        <div className="relative w-full max-w-[520px]">
+      {/* LAYER 2: THE REAL UI CARD (Solid White Shield) */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div className="relative w-full max-w-[560px]">
           
-          {/* Mascot - Positioned Above Card */}
+          {/* Mascot floating above */}
           <div 
             className="absolute left-1/2 z-30"
-            style={{ 
-              transform: 'translateX(-50%)',
-              top: '-100px'
-            }}
+            style={{ transform: 'translateX(-50%)', top: '-90px' }}
           >
             <img 
               src={loginMascot} 
               alt="Stock4U Mascot" 
-              className="w-36 h-auto drop-shadow-xl"
+              className="w-32 h-auto drop-shadow-xl"
             />
           </div>
 
-          {/* White Card */}
+          {/* The White Card - Extra large to cover background card */}
           <div 
-            className="bg-white rounded-[32px] pt-16 pb-10 px-8 sm:px-12"
+            className="bg-white rounded-[32px] pt-14 pb-10 px-8 sm:px-14"
             style={{ 
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.12)',
+              boxShadow: '0 30px 70px rgba(0, 0, 0, 0.12)',
+              minHeight: '480px'
             }}
           >
             {/* Header */}
@@ -194,13 +128,13 @@ export default function Login() {
                   מספר תעודת זהות
                 </label>
                 <div 
-                  className="flex items-center h-14 px-4 rounded-xl border-2 bg-white"
+                  className="flex items-center h-14 px-4 rounded-2xl border-2 bg-white"
                   style={{ 
                     borderColor: errors.idNumber ? '#E53E3E' : 'rgba(76,126,251,0.35)',
                   }}
                 >
                   <div 
-                    className="w-9 h-9 flex items-center justify-center rounded-lg ml-3"
+                    className="w-10 h-10 flex items-center justify-center rounded-xl ml-3"
                     style={{ backgroundColor: 'rgba(76,126,251,0.1)' }}
                   >
                     <CreditCard className="w-5 h-5" style={{ color: '#4C7EFB' }} />
@@ -226,13 +160,13 @@ export default function Login() {
                   מספר טלפון נייד
                 </label>
                 <div 
-                  className="flex items-center h-14 px-4 rounded-xl border-2 bg-white"
+                  className="flex items-center h-14 px-4 rounded-2xl border-2 bg-white"
                   style={{ 
                     borderColor: errors.phone ? '#E53E3E' : 'rgba(76,126,251,0.35)',
                   }}
                 >
                   <div 
-                    className="w-9 h-9 flex items-center justify-center rounded-lg ml-3"
+                    className="w-10 h-10 flex items-center justify-center rounded-xl ml-3"
                     style={{ backgroundColor: 'rgba(76,126,251,0.1)' }}
                   >
                     <Phone className="w-5 h-5" style={{ color: '#4C7EFB' }} />
@@ -257,10 +191,10 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={!isFormValid() || isSubmitting}
-                className="w-full h-14 flex items-center justify-center gap-2 rounded-xl text-white font-semibold text-lg transition-all mt-6"
+                className="w-full h-14 flex items-center justify-center gap-2 rounded-2xl text-white font-semibold text-lg transition-all mt-6"
                 style={{
                   backgroundColor: isFormValid() && !isSubmitting ? '#4C7EFB' : '#A0B4D9',
-                  boxShadow: isFormValid() && !isSubmitting ? '0 10px 25px rgba(76,126,251,0.35)' : 'none',
+                  boxShadow: isFormValid() && !isSubmitting ? '0 12px 28px rgba(76,126,251,0.35)' : 'none',
                   cursor: isFormValid() && !isSubmitting ? 'pointer' : 'not-allowed',
                 }}
               >
