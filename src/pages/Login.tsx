@@ -64,14 +64,13 @@ export default function Login() {
   };
 
   return (
-    <div 
-      className="min-h-screen w-full relative overflow-hidden"
-      dir="rtl"
-    >
-      {/* LAYER 1: Background image from reference (login-bg.png) */}
+    <div className="min-h-screen w-full relative overflow-hidden" dir="rtl">
+      {/* ========== LAYER 1: Background Image (z-index: 0) ========== */}
       <div 
-        className="absolute inset-0"
         style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
           backgroundImage: `url(${loginBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -79,57 +78,57 @@ export default function Login() {
         }}
       />
 
-      {/* LAYER 2: White overlay to hide the PNG's card area */}
+      {/* ========== LAYER 2: White Eraser Mask (z-index: 10) ========== */}
+      {/* This completely covers the "baked-in" card from the PNG */}
       <div 
-        className="absolute left-1/2 bg-white"
         style={{
-          width: 'min(92vw, 560px)',
-          height: '520px',
+          position: 'absolute',
+          zIndex: 10,
           top: '50%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
+          width: 'min(92vw, 560px)',
+          height: '540px',
+          backgroundColor: '#FFFFFF',
           borderRadius: '28px',
           boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
         }}
       />
 
-      {/* LAYER 3: Single real UI card (positioned exactly over the overlay) */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4">
+      {/* ========== LAYER 3: Real Interactive UI (z-index: 20) ========== */}
+      <div 
+        style={{
+          position: 'relative',
+          zIndex: 20,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '48px 16px',
+        }}
+      >
         <div 
-          className="relative bg-white"
           style={{
+            position: 'relative',
             width: 'min(92vw, 560px)',
             maxWidth: '560px',
+            backgroundColor: '#FFFFFF',
             borderRadius: '28px',
             boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
             padding: '44px 48px',
           }}
         >
-          {/* Mascot - positioned above card */}
-          <div 
-            className="absolute left-1/2"
-            style={{
-              transform: 'translateX(-50%)',
-              top: '-130px',
-              width: '180px',
-              height: '180px',
-              backgroundImage: `url(${loginBg})`,
-              backgroundSize: '1920px auto',
-              backgroundPosition: 'center top',
-              backgroundRepeat: 'no-repeat',
-            }}
-          />
-
           {/* Card content */}
-          <div style={{ paddingTop: '60px' }}>
+          <div style={{ paddingTop: '20px' }}>
             {/* Title */}
             <h1 
-              className="text-center font-bold"
               style={{
+                textAlign: 'center',
+                fontWeight: 700,
                 fontSize: '38px',
                 color: '#2D7DD2',
                 marginBottom: '12px',
                 lineHeight: 1.2,
-                fontFamily: 'inherit',
               }}
             >
               איזה כיף שחזרת!
@@ -137,8 +136,8 @@ export default function Login() {
 
             {/* Subtitle */}
             <p 
-              className="text-center"
               style={{
+                textAlign: 'center',
                 fontSize: '16px',
                 color: '#6B7C93',
                 marginBottom: '36px',
@@ -153,24 +152,27 @@ export default function Login() {
               {/* ID Number Input */}
               <div style={{ marginBottom: '16px' }}>
                 <div 
-                  className="flex items-center"
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
                     height: '68px',
                     borderRadius: '16px',
                     border: errors.idNumber ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
-                    background: errors.idNumber ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
+                    backgroundColor: errors.idNumber ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
                     padding: '0 20px',
                     direction: 'rtl',
                   }}
                 >
-                  <div className="flex items-center gap-3 flex-shrink-0">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                     <div 
-                      className="flex items-center justify-center"
                       style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         width: '38px',
                         height: '38px',
-                        background: 'rgba(76,126,251,0.10)',
+                        backgroundColor: 'rgba(76,126,251,0.10)',
                         borderRadius: '10px',
                       }}
                     >
@@ -193,8 +195,12 @@ export default function Login() {
                     value={idNumber}
                     onChange={handleIdChange}
                     placeholder="הזן 9 ספרות..."
-                    className="flex-1 h-full bg-transparent border-none outline-none"
                     style={{
+                      flex: 1,
+                      height: '100%',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      outline: 'none',
                       fontSize: '15px',
                       color: '#718096',
                       textAlign: 'left',
@@ -213,24 +219,27 @@ export default function Login() {
               {/* Phone Input */}
               <div style={{ marginBottom: '24px' }}>
                 <div 
-                  className="flex items-center"
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
                     height: '68px',
                     borderRadius: '16px',
                     border: errors.phone ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
-                    background: errors.phone ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
+                    backgroundColor: errors.phone ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
                     padding: '0 20px',
                     direction: 'rtl',
                   }}
                 >
-                  <div className="flex items-center gap-3 flex-shrink-0">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                     <div 
-                      className="flex items-center justify-center"
                       style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         width: '38px',
                         height: '38px',
-                        background: 'rgba(76,126,251,0.10)',
+                        backgroundColor: 'rgba(76,126,251,0.10)',
                         borderRadius: '10px',
                       }}
                     >
@@ -251,8 +260,12 @@ export default function Login() {
                     onChange={handlePhoneChange}
                     placeholder="050-00000000"
                     maxLength={11}
-                    className="flex-1 h-full bg-transparent border-none outline-none"
                     style={{
+                      flex: 1,
+                      height: '100%',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      outline: 'none',
                       fontSize: '15px',
                       color: '#718096',
                       textAlign: 'left',
@@ -272,22 +285,32 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={!isFormValid() || isSubmitting}
-                className="w-full flex items-center justify-center gap-2 text-white font-medium transition-all"
                 style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
                   height: '64px',
                   borderRadius: '16px',
                   fontSize: '18px',
-                  background: isFormValid() && !isSubmitting ? '#4C7EFB' : '#A0B4D9',
+                  fontWeight: 500,
+                  color: '#FFFFFF',
+                  backgroundColor: isFormValid() && !isSubmitting ? '#4C7EFB' : '#A0B4D9',
                   boxShadow: isFormValid() && !isSubmitting ? '0 12px 24px rgba(76,126,251,0.25)' : 'none',
                   cursor: isFormValid() && !isSubmitting ? 'pointer' : 'not-allowed',
                   border: 'none',
+                  transition: 'all 0.2s ease',
                 }}
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin" style={{ width: '22px', height: '22px' }} viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <svg 
+                      style={{ width: '22px', height: '22px', animation: 'spin 1s linear infinite' }} 
+                      viewBox="0 0 24 24"
+                    >
+                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     <span>שולח...</span>
                   </>
@@ -301,8 +324,13 @@ export default function Login() {
 
               {successMessage && (
                 <p 
-                  className="text-center font-medium"
-                  style={{ color: '#38A169', fontSize: '15px', marginTop: '16px' }}
+                  style={{ 
+                    textAlign: 'center', 
+                    fontWeight: 500, 
+                    color: '#38A169', 
+                    fontSize: '15px', 
+                    marginTop: '16px' 
+                  }}
                 >
                   ✓ {successMessage}
                 </p>
@@ -310,10 +338,7 @@ export default function Login() {
             </form>
 
             {/* Support Link */}
-            <p 
-              className="text-center"
-              style={{ marginTop: '24px', fontSize: '14px', color: '#6B7C93' }}
-            >
+            <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: '#6B7C93' }}>
               נתקלת בבעיה?{' '}
               <a 
                 href="mailto:support@stock4u.co.il"
@@ -325,6 +350,14 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {/* Keyframes for spinner */}
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
