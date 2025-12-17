@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import loginMascot from '@/assets/login-mascot.png';
-import goldCoin from '@/assets/gold-coin-emoji.png';
-import greenArrow from '@/assets/green-arrow-growth.png';
+import loginBg from '@/assets/login-bg.png';
 
 export default function Login() {
   const [idNumber, setIdNumber] = useState('');
@@ -69,126 +67,69 @@ export default function Login() {
     <div 
       className="min-h-screen w-full relative overflow-hidden"
       dir="rtl"
-      style={{ background: 'linear-gradient(180deg, #E8EEF7 0%, #D9E3F1 100%)' }}
     >
-      {/* LAYER 1: Decorative background only */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Chart zigzag lines */}
-        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1920 900">
-          <path
-            d="M0 650 L200 580 L400 620 L600 480 L800 520 L1000 400 L1200 450 L1400 350 L1600 400 L1920 350"
-            fill="none"
-            stroke="rgba(180,200,230,0.5)"
-            strokeWidth="3"
-          />
-          <path
-            d="M0 700 L200 630 L400 670 L600 530 L800 570 L1000 450 L1200 500 L1400 400 L1600 450 L1920 400"
-            fill="none"
-            stroke="rgba(180,200,230,0.3)"
-            strokeWidth="2"
-          />
-        </svg>
+      {/* LAYER 1: Background image from reference (login-bg.png) */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${loginBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
-        {/* Blue crescent */}
-        <div 
-          className="absolute"
-          style={{
-            width: '28px',
-            height: '56px',
-            background: '#7BA3D8',
-            borderRadius: '50%',
-            left: '18%',
-            top: '38%',
-            transform: 'rotate(25deg)',
-            opacity: 0.7
-          }}
-        />
+      {/* LAYER 2: White overlay to hide the PNG's card area */}
+      <div 
+        className="absolute left-1/2 bg-white"
+        style={{
+          width: 'min(92vw, 560px)',
+          height: '520px',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          borderRadius: '28px',
+          boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
+        }}
+      />
 
-        {/* Gold coin */}
-        <img 
-          src={goldCoin} 
-          alt="" 
-          className="absolute"
-          style={{
-            width: '72px',
-            height: '72px',
-            right: 'calc(50% - 320px)',
-            top: '220px',
-          }}
-        />
-
-        {/* Green arrow */}
-        <img 
-          src={greenArrow} 
-          alt="" 
-          className="absolute"
-          style={{
-            width: '100px',
-            height: '100px',
-            right: 'calc(50% - 340px)',
-            bottom: '140px',
-            transform: 'rotate(-10deg)'
-          }}
-        />
-
-        {/* Sparkle star */}
-        <svg 
-          className="absolute" 
-          width="32" 
-          height="32" 
-          viewBox="0 0 24 24"
-          style={{ right: '12%', bottom: '8%' }}
-        >
-          <path fill="rgba(180,200,230,0.6)" d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" />
-        </svg>
-
-        {/* Small dots */}
-        <div className="absolute w-3 h-3 rounded-full" style={{ background: 'rgba(120,160,210,0.4)', right: '22%', top: '15%' }} />
-        <div className="absolute w-2 h-2 rounded-full" style={{ background: 'rgba(120,160,210,0.3)', left: '25%', top: '20%' }} />
-      </div>
-
-      {/* LAYER 2: Single real UI card */}
+      {/* LAYER 3: Single real UI card (positioned exactly over the overlay) */}
       <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4">
         <div 
           className="relative bg-white"
           style={{
-            width: 'min(92vw, 480px)',
-            maxWidth: '480px',
+            width: 'min(92vw, 560px)',
+            maxWidth: '560px',
             borderRadius: '28px',
             boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
-            padding: '44px 42px',
+            padding: '44px 48px',
           }}
         >
-          {/* Mascot */}
+          {/* Mascot - positioned above card */}
           <div 
             className="absolute left-1/2"
             style={{
               transform: 'translateX(-50%)',
-              top: '-100px',
+              top: '-130px',
+              width: '180px',
+              height: '180px',
+              backgroundImage: `url(${loginBg})`,
+              backgroundSize: '1920px auto',
+              backgroundPosition: 'center top',
+              backgroundRepeat: 'no-repeat',
             }}
-          >
-            <img 
-              src={loginMascot} 
-              alt="Stock4U Mascot" 
-              style={{
-                width: '160px',
-                height: '160px',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))'
-              }}
-            />
-          </div>
+          />
 
           {/* Card content */}
-          <div style={{ paddingTop: '70px' }}>
+          <div style={{ paddingTop: '60px' }}>
             {/* Title */}
             <h1 
               className="text-center font-bold"
               style={{
-                fontSize: '36px',
-                color: '#1E4A8D',
+                fontSize: '38px',
+                color: '#2D7DD2',
                 marginBottom: '12px',
                 lineHeight: 1.2,
+                fontFamily: 'inherit',
               }}
             >
               איזה כיף שחזרת!
@@ -200,7 +141,7 @@ export default function Login() {
               style={{
                 fontSize: '16px',
                 color: '#6B7C93',
-                marginBottom: '32px',
+                marginBottom: '36px',
                 lineHeight: 1.5,
               }}
             >
@@ -217,7 +158,7 @@ export default function Login() {
                     height: '68px',
                     borderRadius: '16px',
                     border: errors.idNumber ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
-                    background: errors.idNumber ? 'rgba(229,62,62,0.05)' : 'rgba(76,126,251,0.06)',
+                    background: errors.idNumber ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
                     padding: '0 20px',
                     direction: 'rtl',
@@ -227,13 +168,13 @@ export default function Login() {
                     <div 
                       className="flex items-center justify-center"
                       style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'rgba(76,126,251,0.12)',
-                        borderRadius: '8px',
+                        width: '38px',
+                        height: '38px',
+                        background: 'rgba(76,126,251,0.10)',
+                        borderRadius: '10px',
                       }}
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                         <rect x="2" y="4" width="20" height="16" rx="2" stroke="#4C7EFB" strokeWidth="2"/>
                         <circle cx="8" cy="10" r="2" stroke="#4C7EFB" strokeWidth="1.5"/>
                         <path d="M5 16c0-1.5 1.5-3 3-3s3 1.5 3 3" stroke="#4C7EFB" strokeWidth="1.5" strokeLinecap="round"/>
@@ -255,7 +196,7 @@ export default function Login() {
                     className="flex-1 h-full bg-transparent border-none outline-none"
                     style={{
                       fontSize: '15px',
-                      color: '#2D3748',
+                      color: '#718096',
                       textAlign: 'left',
                       direction: 'ltr',
                       paddingLeft: '8px',
@@ -277,7 +218,7 @@ export default function Login() {
                     height: '68px',
                     borderRadius: '16px',
                     border: errors.phone ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
-                    background: errors.phone ? 'rgba(229,62,62,0.05)' : 'rgba(76,126,251,0.06)',
+                    background: errors.phone ? 'rgba(229,62,62,0.05)' : '#FFFFFF',
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
                     padding: '0 20px',
                     direction: 'rtl',
@@ -287,13 +228,13 @@ export default function Login() {
                     <div 
                       className="flex items-center justify-center"
                       style={{
-                        width: '36px',
-                        height: '36px',
-                        background: 'rgba(76,126,251,0.12)',
-                        borderRadius: '8px',
+                        width: '38px',
+                        height: '38px',
+                        background: 'rgba(76,126,251,0.10)',
+                        borderRadius: '10px',
                       }}
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                         <rect x="5" y="2" width="14" height="20" rx="2" stroke="#4C7EFB" strokeWidth="2"/>
                         <line x1="9" y1="18" x2="15" y2="18" stroke="#4C7EFB" strokeWidth="1.5" strokeLinecap="round"/>
                       </svg>
@@ -313,7 +254,7 @@ export default function Login() {
                     className="flex-1 h-full bg-transparent border-none outline-none"
                     style={{
                       fontSize: '15px',
-                      color: '#2D3748',
+                      color: '#718096',
                       textAlign: 'left',
                       direction: 'ltr',
                       paddingLeft: '8px',
