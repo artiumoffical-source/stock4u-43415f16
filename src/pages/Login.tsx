@@ -67,33 +67,44 @@ export default function Login() {
     <div 
       dir="rtl"
       style={{
-        minHeight: '100vh',
-        width: '100%',
         position: 'relative',
+        width: '100vw',
+        height: '100vh',
         overflow: 'hidden',
-        /* Background layer - login-bg.png */
-        backgroundImage: `url(${loginBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        /* Center-Anchor using grid */
-        display: 'grid',
-        placeItems: 'center',
-        padding: '20px',
       }}
     >
-      {/* ========== SINGLE SOLID WHITE CARD ========== */}
-      {/* This card is large enough to physically block the PNG's baked-in UI */}
+      {/* ========== LAYER 1: Background Image as <img> tag ========== */}
+      <img
+        src={loginBg}
+        alt=""
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 1,
+        }}
+      />
+
+      {/* ========== LAYER 2: Solid White Card (Eraser + Form) ========== */}
       <div 
         style={{
-          position: 'relative',
-          zIndex: 50,
-          width: 'min(92vw, 580px)',
-          minHeight: '560px',
+          position: 'absolute',
+          zIndex: 10,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(90vw, 560px)',
+          minHeight: 'min(85vh, 560px)',
           backgroundColor: '#FFFFFF',
           borderRadius: '28px',
-          boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.12)',
           padding: '48px 52px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
         {/* Title */}
@@ -101,11 +112,10 @@ export default function Login() {
           style={{
             textAlign: 'center',
             fontWeight: 700,
-            fontSize: '38px',
+            fontSize: 'clamp(28px, 5vw, 38px)',
             color: '#2D7DD2',
             marginBottom: '12px',
             lineHeight: 1.2,
-            marginTop: '20px',
           }}
         >
           איזה כיף שחזרת!
@@ -115,7 +125,7 @@ export default function Login() {
         <p 
           style={{
             textAlign: 'center',
-            fontSize: '16px',
+            fontSize: 'clamp(14px, 2.5vw, 16px)',
             color: '#6B7C93',
             marginBottom: '36px',
             lineHeight: 1.5,
