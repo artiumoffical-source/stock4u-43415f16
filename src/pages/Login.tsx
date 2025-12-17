@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { IdCard, Smartphone, ChevronLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 import loginMascot from '@/assets/login-mascot.png';
 import goldCoin from '@/assets/gold-coin-emoji.png';
@@ -37,292 +36,349 @@ export default function Login() {
     const formatted = formatPhone(e.target.value);
     setPhone(formatted);
     setSuccessMessage('');
-    if (errors.phone) {
-      setErrors((prev) => ({ ...prev, phone: undefined }));
-    }
+    if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 9);
     setIdNumber(value);
     setSuccessMessage('');
-    if (errors.idNumber) {
-      setErrors((prev) => ({ ...prev, idNumber: undefined }));
-    }
+    if (errors.idNumber) setErrors((prev) => ({ ...prev, idNumber: undefined }));
   };
 
   const isFormValid = (): boolean => {
     const cleanPhone = phone.replace(/-/g, '');
-    const idValid = /^\d{8,9}$/.test(idNumber);
-    const phoneValid = /^05\d{8}$/.test(cleanPhone);
-    return idValid && phoneValid;
+    return /^\d{8,9}$/.test(idNumber) && /^05\d{8}$/.test(cleanPhone);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const idError = validateIdNumber(idNumber);
     const phoneError = validatePhone(phone);
-    
     if (idError || phoneError) {
       setErrors({ idNumber: idError, phone: phoneError });
       return;
     }
-
     setIsSubmitting(true);
     setSuccessMessage('');
-    
-    // Simulate 1.5s loading
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setSuccessMessage('קוד נשלח (דמו)');
     setIsSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden" dir="rtl">
-      {/* Background gradient */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(180deg, hsl(210 50% 97%) 0%, hsl(210 55% 94%) 100%)',
-        }}
-      />
-      
-      {/* Zigzag chart pattern */}
-      <svg 
-        className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="none"
-        viewBox="0 0 1200 800"
-      >
-        <path
-          d="M0 550 L150 480 L300 520 L450 380 L600 420 L750 320 L900 360 L1050 280 L1200 320"
-          fill="none"
-          stroke="hsl(210 50% 85%)"
-          strokeWidth="2"
-          opacity="0.5"
-        />
-        <path
-          d="M0 580 L150 510 L300 550 L450 410 L600 450 L750 350 L900 390 L1050 310 L1200 350"
-          fill="none"
-          stroke="hsl(210 50% 88%)"
-          strokeWidth="1.5"
-          opacity="0.3"
-        />
-      </svg>
+    <div 
+      className="min-h-screen w-full relative overflow-hidden"
+      dir="rtl"
+      style={{ background: 'linear-gradient(180deg, #E8EEF7 0%, #D9E3F1 100%)' }}
+    >
+      {/* Background decorations */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Chart zigzag lines */}
+        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1920 900">
+          <path
+            d="M0 650 L200 580 L400 620 L600 480 L800 520 L1000 400 L1200 450 L1400 350 L1600 400 L1920 350"
+            fill="none"
+            stroke="rgba(180,200,230,0.5)"
+            strokeWidth="3"
+          />
+          <path
+            d="M0 700 L200 630 L400 670 L600 530 L800 570 L1000 450 L1200 500 L1400 400 L1600 450 L1920 400"
+            fill="none"
+            stroke="rgba(180,200,230,0.3)"
+            strokeWidth="2"
+          />
+        </svg>
 
-      {/* Gold coin - right side of card */}
-      <img 
-        src={goldCoin} 
-        alt="" 
-        className="absolute w-14 h-14 md:w-18 md:h-18 z-10 hidden md:block"
-        style={{ 
-          top: '26%',
-          right: 'calc(50% - 300px)',
-        }}
-      />
-      
-      {/* Green arrow - bottom right */}
-      <img 
-        src={greenArrow} 
-        alt="" 
-        className="absolute w-20 h-20 md:w-28 md:h-28 z-10 hidden md:block"
-        style={{ 
-          bottom: '16%',
-          right: 'calc(50% - 320px)',
-          transform: 'rotate(-15deg)'
-        }}
-      />
-      
-      {/* Blue crescent shape - left side */}
-      <div 
-        className="absolute w-7 h-12 md:w-9 md:h-16 rounded-full z-10 hidden md:block"
-        style={{
-          background: 'hsl(210 55% 70%)',
-          left: 'calc(50% + 260px)',
-          top: '36%',
-          transform: 'rotate(25deg)',
-          opacity: 0.6
-        }}
-      />
-      
-      {/* Small decorative dots */}
-      <div className="absolute w-2 h-2 rounded-full hidden md:block" style={{ background: 'hsl(210 50% 80%)', left: 'calc(50% + 200px)', top: '20%' }} />
-      <div className="absolute w-1.5 h-1.5 rounded-full hidden md:block" style={{ background: 'hsl(210 50% 75%)', right: 'calc(50% + 200px)', top: '16%' }} />
-      <div className="absolute w-2.5 h-2.5 rounded-full hidden md:block" style={{ background: 'hsl(210 50% 78%)', left: 'calc(50% + 280px)', bottom: '28%' }} />
-      
-      {/* Sparkle star - bottom right */}
-      <svg 
-        className="absolute z-10 hidden md:block" 
-        width="24" 
-        height="24" 
-        viewBox="0 0 24 24"
-        style={{ bottom: '10%', right: 'calc(50% - 360px)' }}
-      >
-        <path fill="hsl(210 45% 78%)" d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" />
-      </svg>
+        {/* Blue crescent - left side */}
+        <div 
+          className="absolute"
+          style={{
+            width: '28px',
+            height: '56px',
+            background: '#7BA3D8',
+            borderRadius: '50%',
+            left: '18%',
+            top: '38%',
+            transform: 'rotate(25deg)',
+            opacity: 0.7
+          }}
+        />
 
-      {/* Main content */}
-      <div className="relative z-20 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Login Card */}
+        {/* Gold coin - right of card */}
+        <img 
+          src={goldCoin} 
+          alt="" 
+          className="absolute"
+          style={{
+            width: '72px',
+            height: '72px',
+            right: 'calc(50% - 520px)',
+            top: '200px',
+          }}
+        />
+
+        {/* Green arrow - bottom right */}
+        <img 
+          src={greenArrow} 
+          alt="" 
+          className="absolute"
+          style={{
+            width: '100px',
+            height: '100px',
+            right: 'calc(50% - 540px)',
+            bottom: '120px',
+            transform: 'rotate(-10deg)'
+          }}
+        />
+
+        {/* Sparkle star - bottom right corner */}
+        <svg 
+          className="absolute" 
+          width="32" 
+          height="32" 
+          viewBox="0 0 24 24"
+          style={{ right: '12%', bottom: '8%' }}
+        >
+          <path fill="rgba(180,200,230,0.6)" d="M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10Z" />
+        </svg>
+
+        {/* Small dots */}
+        <div className="absolute w-3 h-3 rounded-full" style={{ background: 'rgba(120,160,210,0.4)', right: '22%', top: '15%' }} />
+        <div className="absolute w-2 h-2 rounded-full" style={{ background: 'rgba(120,160,210,0.3)', left: '25%', top: '20%' }} />
+      </div>
+
+      {/* Main content container */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4">
+        {/* Card */}
+        <div 
+          className="relative bg-white"
+          style={{
+            width: 'min(92vw, 580px)',
+            maxWidth: '580px',
+            borderRadius: '28px',
+            boxShadow: '0 18px 55px rgba(0,0,0,0.12)',
+            padding: '44px 42px',
+          }}
+        >
+          {/* Mascot - anchored to top center */}
           <div 
-            className="bg-white rounded-[2rem] p-7 md:p-9 relative"
-            style={{ 
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02)',
+            className="absolute left-1/2"
+            style={{
+              transform: 'translateX(-50%)',
+              top: '-100px',
             }}
           >
-            {/* Mascot */}
-            <div className="absolute -top-16 md:-top-20 left-1/2 transform -translate-x-1/2">
-              <img 
-                src={loginMascot} 
-                alt="Stock4U Mascot" 
-                className="w-24 h-24 md:w-32 md:h-32 object-contain"
-                style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' }}
-              />
-            </div>
+            <img 
+              src={loginMascot} 
+              alt="Stock4U Mascot" 
+              style={{
+                width: '160px',
+                height: '160px',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))'
+              }}
+            />
+          </div>
 
-            {/* Content */}
-            <div className="pt-10 md:pt-14">
-              {/* Headline */}
-              <h1 
-                className="text-2xl md:text-3xl font-bold text-center mb-2"
-                style={{ color: 'hsl(210 70% 35%)' }}
-              >
-                איזה כיף שחזרת!
-              </h1>
-              
-              {/* Subtitle */}
-              <p className="text-center text-gray-500 text-sm mb-6 leading-relaxed px-2">
-                הכנס פרטים ונשלח לך קוד גישה מהיר לנייד. המתנות שלך מחכות.
-              </p>
+          {/* Content */}
+          <div style={{ paddingTop: '70px' }}>
+            {/* Title */}
+            <h1 
+              className="text-center font-bold"
+              style={{
+                fontSize: '36px',
+                color: '#1E4A8D',
+                marginBottom: '12px',
+                lineHeight: 1.2,
+              }}
+            >
+              איזה כיף שחזרת!
+            </h1>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* ID Number Field */}
-                <div>
-                  <div 
-                    className={`rounded-xl overflow-hidden transition-all ${
-                      errors.idNumber 
-                        ? 'ring-2 ring-red-300' 
-                        : 'ring-1 ring-blue-200'
-                    }`}
-                    style={{ 
-                      background: errors.idNumber ? 'hsl(0 80% 97%)' : 'hsl(210 60% 97%)',
-                    }}
-                  >
-                    {/* Top row - icon + label */}
-                    <div 
-                      className="flex items-center gap-2 px-4 pt-3 pb-1"
-                      style={{ borderBottom: '1px solid hsl(210 50% 92%)' }}
-                    >
-                      <IdCard className="w-4 h-4" style={{ color: 'hsl(210 50% 60%)' }} />
-                      <span className="text-sm font-medium" style={{ color: 'hsl(210 30% 40%)' }}>
-                        מספר תעודת זהות
-                      </span>
-                    </div>
-                    
-                    {/* Bottom row - input */}
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={idNumber}
-                      onChange={handleIdChange}
-                      placeholder="הזן 9 ספרות..."
-                      className="w-full px-4 py-3 bg-transparent border-none outline-none text-right text-gray-700 placeholder:text-gray-400"
-                      dir="rtl"
-                    />
-                  </div>
-                  {errors.idNumber && (
-                    <p className="text-red-500 text-xs mt-1.5 text-right">{errors.idNumber}</p>
-                  )}
-                </div>
+            {/* Subtitle */}
+            <p 
+              className="text-center"
+              style={{
+                fontSize: '16px',
+                color: '#6B7C93',
+                marginBottom: '32px',
+                lineHeight: 1.5,
+              }}
+            >
+              הכנס פרטים ונשלח לך קוד גישה מהיר לנייד. המתנות שלך מחכות.
+            </p>
 
-                {/* Phone Field */}
-                <div>
-                  <div 
-                    className={`rounded-xl overflow-hidden transition-all ${
-                      errors.phone 
-                        ? 'ring-2 ring-red-300' 
-                        : 'ring-1 ring-blue-200'
-                    }`}
-                    style={{ 
-                      background: errors.phone ? 'hsl(0 80% 97%)' : 'hsl(210 60% 97%)',
-                    }}
-                  >
-                    {/* Top row - icon + label */}
-                    <div 
-                      className="flex items-center gap-2 px-4 pt-3 pb-1"
-                      style={{ borderBottom: '1px solid hsl(210 50% 92%)' }}
-                    >
-                      <Smartphone className="w-4 h-4" style={{ color: 'hsl(210 50% 60%)' }} />
-                      <span className="text-sm font-medium" style={{ color: 'hsl(210 30% 40%)' }}>
-                        מספר טלפון נייד
-                      </span>
-                    </div>
-                    
-                    {/* Bottom row - input */}
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      value={phone}
-                      onChange={handlePhoneChange}
-                      placeholder="050-0000000"
-                      maxLength={11}
-                      className="w-full px-4 py-3 bg-transparent border-none outline-none text-right text-gray-700 placeholder:text-gray-400"
-                      dir="rtl"
-                    />
-                  </div>
-                  {errors.phone && (
-                    <p className="text-red-500 text-xs mt-1.5 text-right">{errors.phone}</p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <Button
-                  type="submit"
-                  disabled={!isFormValid() || isSubmitting}
-                  className="w-full h-12 mt-3 text-white font-medium rounded-full text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ 
-                    background: isFormValid() && !isSubmitting ? 'hsl(220 75% 55%)' : 'hsl(220 30% 70%)',
+            {/* Form */}
+            <form onSubmit={handleSubmit}>
+              {/* ID Number Input */}
+              <div style={{ marginBottom: '16px' }}>
+                <div 
+                  className="flex items-center"
+                  style={{
+                    height: '68px',
+                    borderRadius: '16px',
+                    border: errors.idNumber ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
+                    background: errors.idNumber ? 'rgba(229,62,62,0.05)' : 'rgba(76,126,251,0.06)',
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
+                    padding: '0 20px',
+                    direction: 'rtl',
                   }}
                 >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      שולח...
+                  {/* Right side: Icon + Label */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div 
+                      className="flex items-center justify-center"
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        background: 'rgba(76,126,251,0.12)',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      <IdCard style={{ width: '20px', height: '20px', color: '#4C7EFB' }} />
+                    </div>
+                    <span style={{ fontSize: '15px', fontWeight: 500, color: '#4A5568', whiteSpace: 'nowrap' }}>
+                      מספר תעודת זהות
                     </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      שלח לי קוד ב-SMS
-                      <ChevronLeft className="w-5 h-5" />
-                    </span>
-                  )}
-                </Button>
+                  </div>
 
-                {/* Success Message - Inline */}
-                {successMessage && (
-                  <p className="text-center text-green-600 text-sm font-medium mt-2">
-                    ✓ {successMessage}
+                  {/* Input */}
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={idNumber}
+                    onChange={handleIdChange}
+                    placeholder="הזן 9 ספרות..."
+                    className="flex-1 h-full bg-transparent border-none outline-none"
+                    style={{
+                      fontSize: '15px',
+                      color: '#2D3748',
+                      textAlign: 'left',
+                      direction: 'ltr',
+                      paddingLeft: '8px',
+                    }}
+                  />
+                </div>
+                {errors.idNumber && (
+                  <p style={{ color: '#E53E3E', fontSize: '13px', marginTop: '6px', textAlign: 'right' }}>
+                    {errors.idNumber}
                   </p>
                 )}
-              </form>
+              </div>
 
-              {/* Support Link */}
-              <p className="text-center mt-5 text-sm text-gray-500">
-                נתקלת בבעיה?{' '}
-                <a 
-                  href="mailto:support@stock4u.co.il" 
-                  className="hover:underline font-medium"
-                  style={{ color: 'hsl(220 70% 50%)' }}
+              {/* Phone Input */}
+              <div style={{ marginBottom: '24px' }}>
+                <div 
+                  className="flex items-center"
+                  style={{
+                    height: '68px',
+                    borderRadius: '16px',
+                    border: errors.phone ? '2px solid #E53E3E' : '2px solid rgba(76,126,251,0.35)',
+                    background: errors.phone ? 'rgba(229,62,62,0.05)' : 'rgba(76,126,251,0.06)',
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
+                    padding: '0 20px',
+                    direction: 'rtl',
+                  }}
                 >
-                  צור קשר עם התמיכה
-                </a>
-              </p>
-            </div>
+                  {/* Right side: Icon + Label */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div 
+                      className="flex items-center justify-center"
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        background: 'rgba(76,126,251,0.12)',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      <Smartphone style={{ width: '20px', height: '20px', color: '#4C7EFB' }} />
+                    </div>
+                    <span style={{ fontSize: '15px', fontWeight: 500, color: '#4A5568', whiteSpace: 'nowrap' }}>
+                      מספר טלפון נייד
+                    </span>
+                  </div>
+
+                  {/* Input */}
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    placeholder="050-00000000"
+                    maxLength={11}
+                    className="flex-1 h-full bg-transparent border-none outline-none"
+                    style={{
+                      fontSize: '15px',
+                      color: '#2D3748',
+                      textAlign: 'left',
+                      direction: 'ltr',
+                      paddingLeft: '8px',
+                    }}
+                  />
+                </div>
+                {errors.phone && (
+                  <p style={{ color: '#E53E3E', fontSize: '13px', marginTop: '6px', textAlign: 'right' }}>
+                    {errors.phone}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={!isFormValid() || isSubmitting}
+                className="w-full flex items-center justify-center gap-2 text-white font-medium transition-all"
+                style={{
+                  height: '64px',
+                  borderRadius: '16px',
+                  fontSize: '18px',
+                  background: isFormValid() && !isSubmitting ? '#4C7EFB' : '#A0B4D9',
+                  boxShadow: isFormValid() && !isSubmitting ? '0 12px 24px rgba(76,126,251,0.25)' : 'none',
+                  cursor: isFormValid() && !isSubmitting ? 'pointer' : 'not-allowed',
+                  border: 'none',
+                }}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin" style={{ width: '22px', height: '22px' }} viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>שולח...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>שלח לי קוד ב-SMS</span>
+                    <ChevronLeft style={{ width: '22px', height: '22px' }} />
+                  </>
+                )}
+              </button>
+
+              {/* Success Message */}
+              {successMessage && (
+                <p 
+                  className="text-center font-medium"
+                  style={{ color: '#38A169', fontSize: '15px', marginTop: '16px' }}
+                >
+                  ✓ {successMessage}
+                </p>
+              )}
+            </form>
+
+            {/* Support Link */}
+            <p 
+              className="text-center"
+              style={{ marginTop: '24px', fontSize: '14px', color: '#6B7C93' }}
+            >
+              נתקלת בבעיה?{' '}
+              <a 
+                href="mailto:support@stock4u.co.il"
+                style={{ color: '#4C7EFB', fontWeight: 500, textDecoration: 'underline' }}
+              >
+                צור קשר עם התמיכה
+              </a>
+            </p>
           </div>
         </div>
       </div>
