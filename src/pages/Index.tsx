@@ -9,7 +9,7 @@ import MobileFooter from "../components/mobile/MobileFooter";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-white hebrew-font" dir="rtl">
+    <div className="min-h-screen bg-white hebrew-font overflow-x-hidden max-w-full" dir="rtl">
       {/* ========== MOBILE VERSION ========== */}
       <div className="block md:hidden">
         <MobileHeader />
@@ -122,39 +122,32 @@ export default function Index() {
           />
         </section>
 
-        {/* Video and Blue Background Section */}
-        <div className="relative -mt-[200px] z-30">
-          {/* Blue Extension Background */}
-          <div className="w-full h-[395px] bg-[hsl(var(--stock4u-light-blue))] relative mt-[200px]">
-            {/* Video Section */}
-            <div className="absolute -top-[30px] left-1/2 transform -translate-x-1/2 w-full">
-              <div className="w-[1342px] h-[684px] bg-black rounded-[25px] border-[19px] border-[hsl(var(--stock4u-light-blue))] relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.3)] mx-auto">
-                <div className="w-full h-full flex items-center justify-center">
-                  <button
-                    onClick={() =>
-                      window.open(
-                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                        "_blank",
-                      )
-                    }
-                    className="w-[178px] h-[178px] bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-[10px_10px_0_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border-[15px] border-white"
+        {/* Video Section - Contained & Premium */}
+        <section className="bg-[hsl(var(--stock4u-light-blue))] py-12">
+          <div className="max-w-5xl mx-auto px-4">
+            <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button
+                  onClick={() =>
+                    window.open(
+                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                      "_blank",
+                    )
+                  }
+                  className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+                >
+                  <svg
+                    className="w-10 h-10 text-white ml-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-16 h-16 text-white ml-3"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
-                </div>
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
-
-          {/* Space below blue background */}
-          <div className="h-[351px] bg-white"></div>
-        </div>
+        </section>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
