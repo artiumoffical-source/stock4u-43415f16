@@ -51,14 +51,54 @@ export default function Index() {
           </Link>
         </section>
 
-        {/* Mobile Gift Packages */}
-        <section className="py-6 px-4">
-          <Link to="/stock-selection?continue=true" className="block">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fdd35d8126d3046409354f589f2bbc58e?format=webp&width=800&quality=85"
-              alt="Gift Package Cards"
-              className="w-full h-auto rounded-xl shadow-md"
-            />
+        {/* Mobile Gift Packages - Code-Based Cards */}
+        <section className="py-6 px-4 space-y-4">
+          {/* Card 1 - Israeli Stocks (Blue) */}
+          <Link 
+            to="/stock-selection?package=israeli" 
+            className="block bg-gradient-to-br from-[#4A90D9] to-[#3B7DC4] rounded-2xl p-5 text-white shadow-lg active:scale-[0.98] transition-transform"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                <span className="text-3xl">🇮🇱</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold hebrew-font">חבילת מניות ישראלית</h3>
+                <p className="text-sm opacity-90 hebrew-font">עיזרו לכלכלה שלנו לפרוח!</p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Card 2 - Brave Stocks (Yellow) */}
+          <Link 
+            to="/stock-selection?package=brave" 
+            className="block bg-gradient-to-br from-[#F5C754] to-[#E5B544] rounded-2xl p-5 text-[hsl(var(--stock4u-dark-grey))] shadow-lg active:scale-[0.98] transition-transform"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center shrink-0">
+                <span className="text-3xl">🔍</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold hebrew-font">חבילת מניות לאמיצים!</h3>
+                <p className="text-sm hebrew-font">מקסימום סיכון ומקסימום רווח!</p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Card 3 - Pick Yourself (Orange) */}
+          <Link 
+            to="/stock-selection?continue=true" 
+            className="block bg-gradient-to-br from-[#F5A054] to-[#E59044] rounded-2xl p-5 text-white shadow-lg active:scale-[0.98] transition-transform"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                <span className="text-3xl">🎁</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold hebrew-font">בחר את המתנה בעצמך!</h3>
+                <p className="text-sm opacity-90 hebrew-font">בחרו מניות לבד</p>
+              </div>
+            </div>
           </Link>
         </section>
 
@@ -113,13 +153,73 @@ export default function Index() {
       <div className="hidden md:block overflow-x-hidden">
         <Header />
 
-        {/* Hero Section with Characters */}
-        <section className="relative bg-[hsl(var(--stock4u-light-blue))] overflow-hidden">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
-            alt="Stock4U Characters with Main Title"
-            className="w-full h-auto object-cover object-center"
-          />
+        {/* Hero Section - Code-Based with Decorative Elements */}
+        <section className="relative bg-[hsl(var(--stock4u-light-blue))] pt-8 pb-4 overflow-hidden">
+          {/* Decorative Elements */}
+          <div className="absolute top-4 right-8 text-4xl animate-bounce" style={{ animationDelay: '0.2s' }}>⭐</div>
+          <div className="absolute top-20 right-1/4 text-2xl text-orange-400">✦</div>
+          <div className="absolute top-8 left-1/4 text-3xl">⚡</div>
+          <div className="absolute bottom-20 left-8 text-2xl text-blue-400">+</div>
+          <div className="absolute top-1/3 right-12 text-xl text-yellow-500">✦</div>
+          
+          {/* Main Content */}
+          <div className="max-w-6xl mx-auto px-6 relative z-10">
+            <div className="flex items-center justify-between">
+              {/* Left Character - Gold Coin */}
+              <div className="hidden lg:flex flex-col items-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg border-4 border-yellow-300">
+                  <span className="text-4xl">💰</span>
+                </div>
+              </div>
+
+              {/* Left Side Characters */}
+              <div className="hidden lg:flex flex-col items-center gap-4">
+                <div className="w-20 h-28 flex items-center justify-center">
+                  <span className="text-5xl">📱</span>
+                </div>
+                <div className="w-16 h-20 flex items-center justify-center">
+                  <span className="text-4xl">💙</span>
+                </div>
+              </div>
+
+              {/* Center Title */}
+              <div className="flex-1 text-center py-8">
+                <h1 className="text-5xl lg:text-6xl font-black text-[hsl(var(--stock4u-happy-blue))] hebrew-font leading-tight mb-2" style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.1)' }}>
+                  מתנות
+                </h1>
+                <h1 className="text-5xl lg:text-6xl font-black text-[hsl(var(--stock4u-happy-blue))] hebrew-font leading-tight mb-2" style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.1)' }}>
+                  שעושות
+                </h1>
+                <h1 className="text-5xl lg:text-6xl font-black text-[hsl(var(--stock4u-happy-blue))] hebrew-font leading-tight" style={{ textShadow: '3px 3px 0 rgba(0,0,0,0.1)' }}>
+                  כסף!
+                </h1>
+              </div>
+
+              {/* Right Side Characters */}
+              <div className="hidden lg:flex flex-col items-center gap-4">
+                <div className="w-20 h-24 flex items-center justify-center">
+                  <span className="text-5xl">🎁</span>
+                </div>
+                <div className="w-16 h-20 flex items-center justify-center">
+                  <span className="text-4xl">🏆</span>
+                </div>
+              </div>
+
+              {/* Right Character - Money */}
+              <div className="hidden lg:flex flex-col items-center">
+                <div className="w-20 h-28 flex items-center justify-center">
+                  <span className="text-5xl">💵</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Wave Bottom Decoration */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 80" fill="none" className="w-full">
+              <path d="M0 40 Q360 80 720 40 T1440 40 V80 H0 Z" fill="hsl(var(--stock4u-light-blue))" opacity="0.5"/>
+            </svg>
+          </div>
         </section>
 
         {/* Video Section - Centered & Premium */}
