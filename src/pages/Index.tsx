@@ -108,48 +108,43 @@ export default function Index() {
 
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
-        {/* Hero Section */}
-        <section className="relative h-[566px] bg-[hsl(var(--stock4u-light-blue))] overflow-hidden">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
-            alt="Stock4U Characters with Main Title"
-            className="w-full h-full object-cover object-center"
-          />
-        </section>
-
-        {/* Video and Blue Background Section */}
-        <div className="relative -mt-[200px] z-30">
-          {/* Blue Extension Background */}
-          <div className="w-full h-[395px] bg-[hsl(var(--stock4u-light-blue))] relative mt-[200px]">
-            {/* Video Section */}
-            <div className="absolute -top-[30px] left-1/2 transform -translate-x-1/2 w-full">
-              <div className="w-[1342px] h-[684px] bg-black rounded-[25px] border-[19px] border-[hsl(var(--stock4u-light-blue))] relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.3)] mx-auto">
-                <div className="w-full h-full flex items-center justify-center">
-                  <button
-                    onClick={() =>
-                      window.open(
-                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                        "_blank",
-                      )
-                    }
-                    className="w-[178px] h-[178px] bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-[10px_10px_0_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border-[15px] border-white"
-                  >
-                    <svg
-                      className="w-16 h-16 text-white ml-3"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+        {/* Hero Section with Video Overlap */}
+        <section className="relative bg-[hsl(var(--stock4u-light-blue))] pb-0">
+          {/* Hero Background Image */}
+          <div className="relative h-[500px] overflow-visible">
+            <img
+              src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
+              alt="Stock4U Characters with Main Title"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+          
+          {/* Video Container - Overlaps onto white section below */}
+          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32 mt-8">
+            <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center overflow-hidden">
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "_blank",
+                  )
+                }
+                className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+              >
+                <svg
+                  className="w-10 h-10 text-white ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
             </div>
           </div>
+        </section>
 
-          {/* Space below blue background */}
-          <div className="h-[351px] bg-white"></div>
-        </div>
+        {/* White section that video overlaps onto */}
+        <div className="pt-40 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
