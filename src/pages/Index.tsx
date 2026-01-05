@@ -1,19 +1,16 @@
 import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
-import Header from "../components/Header";
-import MobileHeader from "../components/mobile/MobileHeader";
+import Layout from "../components/Layout";
 import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
 import MobileStats from "../components/mobile/MobileStats";
 import MobileFooter from "../components/mobile/MobileFooter";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-white hebrew-font" dir="rtl">
+    <Layout>
       {/* ========== MOBILE VERSION ========== */}
       <div className="block md:hidden">
-        <MobileHeader />
-
         {/* Mobile Hero Section */}
         <section className="bg-[hsl(var(--stock4u-light-blue))] px-4 py-8">
           {/* Main Title */}
@@ -111,8 +108,6 @@ export default function Index() {
 
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
-        <Header />
-
         {/* Hero Section */}
         <section className="relative h-[566px] bg-[hsl(var(--stock4u-light-blue))] overflow-hidden">
           <img
@@ -260,6 +255,6 @@ export default function Index() {
 
         <Footer />
       </div>
-    </div>
+    </Layout>
   );
 }

@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
 import CompanyTicker from "@/components/CompanyTicker";
 import { Button } from "@/components/ui/button";
@@ -51,9 +51,7 @@ const jobOpenings = [
 
 const Careers = () => {
   return (
-    <div className="min-h-screen bg-background hebrew-font" dir="rtl">
-      <Header />
-      
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -203,7 +201,7 @@ const Careers = () => {
       <CompanyTicker />
       
       <Footer />
-    </div>
+    </Layout>
   );
 };
 
