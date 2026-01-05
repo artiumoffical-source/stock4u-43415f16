@@ -1,8 +1,4 @@
 import { Link } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -10,105 +6,6 @@ import MobileHeader from "../components/mobile/MobileHeader";
 import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
 import MobileStats from "../components/mobile/MobileStats";
 import MobileFooter from "../components/mobile/MobileFooter";
-
-// Package cards data
-const packageCards = [
-  {
-    id: "israeli",
-    title: "חבילת מניות ישראליות",
-    subtitle: "מניות מהבורסה הישראלית",
-    bgColor: "bg-sky-100",
-    emoji: "🇮🇱",
-  },
-  {
-    id: "brave",
-    title: "חבילת מניות אמיצות",
-    subtitle: "מניות עם פוטנציאל צמיחה",
-    bgColor: "bg-red-100",
-    emoji: "🚀",
-  },
-  {
-    id: "gift",
-    title: "חבילת מתנה",
-    subtitle: "המתנה המושלמת",
-    bgColor: "bg-yellow-100",
-    emoji: "🎁",
-  },
-];
-
-// Packages Carousel Component
-function PackagesCarousel() {
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { 
-      loop: true,
-      align: "center",
-      skipSnaps: false,
-    },
-    [Autoplay({ delay: 3500, stopOnInteraction: false, stopOnMouseEnter: true })]
-  );
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  return (
-    <section className="w-full py-10 mb-6">
-      <div className="max-w-6xl mx-auto px-4 relative">
-        {/* Carousel Container */}
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex touch-pan-y -ml-4">
-            {packageCards.map((pkg) => (
-              <div 
-                key={pkg.id}
-                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 pl-4"
-              >
-                <Link 
-                  to={`/stock-selection?package=${pkg.id}`}
-                  className={`
-                    ${pkg.bgColor} 
-                    block rounded-2xl p-6 
-                    transform transition-all duration-300 
-                    hover:scale-105 hover:shadow-xl
-                    mx-2 h-full
-                  `}
-                >
-                  <div className="text-6xl text-center mb-4">
-                    {pkg.emoji}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800 text-center mb-2 hebrew-font">
-                    {pkg.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 text-center hebrew-font">
-                    {pkg.subtitle}
-                  </p>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={scrollPrev}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 lg:-translate-x-6 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 z-10 border border-gray-200"
-        >
-          <ChevronLeft className="w-5 h-5 text-gray-600" />
-        </button>
-        
-        <button
-          onClick={scrollNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 lg:translate-x-6 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 z-10 border border-gray-200"
-        >
-          <ChevronRight className="w-5 h-5 text-gray-600" />
-        </button>
-      </div>
-    </section>
-  );
-}
 
 export default function Index() {
   return (
@@ -225,12 +122,13 @@ export default function Index() {
           />
         </section>
 
-        {/* Video Section - Resized */}
-        <div className="relative -mt-[100px] z-30 pb-12">
-          <div className="w-full bg-[hsl(var(--stock4u-light-blue))] pt-[120px] pb-16">
-            {/* Video Container - Centered with max-width */}
-            <div className="max-w-[900px] mx-auto px-4">
-              <div className="aspect-video bg-black rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] relative overflow-hidden">
+        {/* Video and Blue Background Section */}
+        <div className="relative -mt-[200px] z-30">
+          {/* Blue Extension Background */}
+          <div className="w-full h-[395px] bg-[hsl(var(--stock4u-light-blue))] relative mt-[200px]">
+            {/* Video Section */}
+            <div className="absolute -top-[30px] left-1/2 transform -translate-x-1/2 w-full">
+              <div className="w-[1342px] h-[684px] bg-black rounded-[25px] border-[19px] border-[hsl(var(--stock4u-light-blue))] relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.3)] mx-auto">
                 <div className="w-full h-full flex items-center justify-center">
                   <button
                     onClick={() =>
@@ -239,10 +137,10 @@ export default function Index() {
                         "_blank",
                       )
                     }
-                    className="w-20 h-20 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+                    className="w-[178px] h-[178px] bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-[10px_10px_0_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border-[15px] border-white"
                   >
                     <svg
-                      className="w-8 h-8 text-white ml-1"
+                      className="w-16 h-16 text-white ml-3"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -253,10 +151,25 @@ export default function Index() {
               </div>
             </div>
           </div>
+
+          {/* Space below blue background */}
+          <div className="h-[351px] bg-white"></div>
         </div>
 
-        {/* Gift Packages Carousel - Auto-rotating */}
-        <PackagesCarousel />
+        {/* Gift Packages Carousel */}
+        <section className="w-full py-6 mb-6">
+          <div className="max-w-[1639px] mx-auto relative">
+            <div className="flex justify-center items-center">
+              <Link to="/stock-selection?continue=true" className="block w-full">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fdd35d8126d3046409354f589f2bbc58e?format=webp&width=1600&quality=90"
+                  alt="Gift Package Cards"
+                  className="w-full max-w-[1472px] h-auto object-contain hover:opacity-90 transition-opacity cursor-pointer"
+                />
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* How It Works Section */}
         <section className="h-[566px] relative overflow-hidden">
