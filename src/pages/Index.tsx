@@ -109,9 +109,9 @@ export default function Index() {
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
         {/* Hero Section with Video Overlap */}
-        <section className="relative bg-[#E6F0FF] pb-0 overflow-visible">
+        <section className="relative overflow-visible">
           {/* Hero Background Image */}
-          <div className="relative h-[500px] overflow-visible">
+          <div className="relative h-[500px] overflow-visible bg-[#E6F0FF]">
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
               alt="Stock4U Characters with Main Title"
@@ -119,32 +119,48 @@ export default function Index() {
             />
           </div>
           
-          {/* Video Container - Overlaps onto white section below */}
-          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32">
-            <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center">
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                    "_blank",
-                  )
-                }
-                className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
-              >
-                <svg
-                  className="w-10 h-10 text-white ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Extended Blue Background for Video */}
+          <div className="bg-[#E6F0FF] pb-8">
+            {/* Video Container - Overlaps onto white section below */}
+            <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32">
+              <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center">
+                <button
+                  onClick={() =>
+                    window.open(
+                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                      "_blank",
+                    )
+                  }
+                  className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
                 >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </button>
+                  <svg
+                    className="w-10 h-10 text-white ml-1"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
+          
+          {/* Wave Divider SVG */}
+          <svg 
+            className="w-full h-16 -mt-1" 
+            viewBox="0 0 1440 64" 
+            fill="none" 
+            preserveAspectRatio="none"
+          >
+            <path 
+              d="M0,0 L1440,0 L1440,32 Q1080,64 720,32 Q360,0 0,32 L0,0 Z" 
+              fill="#E6F0FF"
+            />
+          </svg>
         </section>
 
         {/* White section that video overlaps onto */}
-        <div className="pt-48 bg-white"></div>
+        <div className="pt-32 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
