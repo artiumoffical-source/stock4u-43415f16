@@ -110,22 +110,22 @@ export default function Index() {
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
         {/* Hero Section with floating characters */}
-        <section className="relative overflow-visible">
-          {/* Hero Background with Characters - uses exact provided image */}
-          <div 
-            className="relative w-full h-[420px] overflow-visible"
-            style={{ backgroundColor: '#E0E7F5' }}
-          >
+        <section 
+          className="relative overflow-visible flex flex-col"
+          style={{ backgroundColor: '#E0E7F5' }}
+        >
+          {/* Hero Background with Characters - fully visible */}
+          <div className="relative w-full z-10 pt-8">
             <img
               src={heroCharacters}
               alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-auto object-contain"
             />
           </div>
           
-          {/* Video Container - floats seamlessly, overlaps white section */}
+          {/* Video Container - sits BELOW title, overlaps white section */}
           <div 
-            className="relative z-20 mx-auto max-w-4xl px-4 -mt-8 -mb-24"
+            className="relative z-20 mx-auto max-w-4xl px-4 mt-8 -mb-32"
             style={{ background: 'transparent' }}
           >
             <div className="bg-black rounded-3xl aspect-video flex items-center justify-center shadow-2xl">
@@ -151,7 +151,7 @@ export default function Index() {
         </section>
 
         {/* White section that video overlaps onto */}
-        <div className="pt-32 bg-white"></div>
+        <div className="pt-40 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
