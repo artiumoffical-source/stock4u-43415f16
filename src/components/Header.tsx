@@ -88,20 +88,26 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* Center - Logo */}
-      <img
-        src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
-        className="max-w-none"
+      {/* Center - Logo (Clickable link to homepage) */}
+      <Link 
+        to="/"
         style={{
-          height: "min(66px, 12vw)",
-          width: "auto",
           position: "absolute",
           left: "50%",
           transform: "translateX(-50%)",
-          maxHeight: "60px",
         }}
-        alt="Stock4U Logo"
-      />
+      >
+        <img
+          src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
+          className="max-w-none hover:opacity-80 transition-opacity cursor-pointer"
+          style={{
+            height: "min(66px, 12vw)",
+            width: "auto",
+            maxHeight: "60px",
+          }}
+          alt="Stock4U Logo"
+        />
+      </Link>
 
       {/* Mobile Menu */}
       <div className="md:hidden">
