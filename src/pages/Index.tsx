@@ -125,10 +125,10 @@ export default function Index() {
           
           {/* Video Container - sits BELOW title, overlaps white section */}
           <div 
-            className="relative z-20 mx-auto max-w-4xl px-4 mt-8 -mb-32"
+            className="relative z-20 mx-auto w-full max-w-5xl px-4 mt-12 -mb-32"
             style={{ background: 'transparent' }}
           >
-            <div className="bg-black rounded-3xl aspect-video flex items-center justify-center shadow-2xl">
+            <div className="w-full aspect-video bg-gray-900 rounded-3xl shadow-2xl flex items-center justify-center">
               <button
                 onClick={() =>
                   window.open(
