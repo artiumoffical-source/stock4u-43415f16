@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
 import MobileStats from "../components/mobile/MobileStats";
 import MobileFooter from "../components/mobile/MobileFooter";
+import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
   return (
@@ -108,19 +109,25 @@ export default function Index() {
 
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
-        {/* Hero Section - Master Color #E0E7F5 */}
-        <section className="relative overflow-visible bg-[#E0E7F5]">
-          {/* Hero Background Image */}
-          <div className="relative h-[500px] overflow-visible">
+        {/* Hero Section with floating characters */}
+        <section className="relative overflow-visible">
+          {/* Hero Background with Characters - uses exact provided image */}
+          <div 
+            className="relative w-full h-[420px] overflow-visible"
+            style={{ backgroundColor: '#E0E7F5' }}
+          >
             <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
-              alt="Stock4U Characters with Main Title"
-              className="w-full h-full object-cover object-center"
+              src={heroCharacters}
+              alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
+              className="w-full h-full object-cover object-top"
             />
           </div>
           
-          {/* Video Container - NO wrapper styles, floats directly on #E0E7F5 */}
-          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-24" style={{ background: 'transparent', border: 'none', padding: 0, boxShadow: 'none' }}>
+          {/* Video Container - floats seamlessly, overlaps white section */}
+          <div 
+            className="relative z-20 mx-auto max-w-4xl px-4 -mt-8 -mb-24"
+            style={{ background: 'transparent' }}
+          >
             <div className="bg-black rounded-3xl aspect-video flex items-center justify-center shadow-2xl">
               <button
                 onClick={() =>
@@ -141,23 +148,10 @@ export default function Index() {
               </button>
             </div>
           </div>
-          
-          {/* Wave Divider SVG - fill #E0E7F5 */}
-          <svg 
-            className="w-full h-12" 
-            viewBox="0 0 1440 48" 
-            fill="none" 
-            preserveAspectRatio="none"
-          >
-            <path 
-              d="M0,0 L1440,0 L1440,24 Q1080,48 720,24 Q360,0 0,24 L0,0 Z" 
-              fill="#E0E7F5"
-            />
-          </svg>
         </section>
 
         {/* White section that video overlaps onto */}
-        <div className="pt-28 bg-white"></div>
+        <div className="pt-32 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
