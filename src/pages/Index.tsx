@@ -109,7 +109,7 @@ export default function Index() {
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
         {/* Hero Section with Video Overlap */}
-        <section className="relative bg-[hsl(var(--stock4u-light-blue))] pb-0">
+        <section className="relative bg-[#E6F0FF] pb-0 overflow-visible">
           {/* Hero Background Image */}
           <div className="relative h-[500px] overflow-visible">
             <img
@@ -120,8 +120,8 @@ export default function Index() {
           </div>
           
           {/* Video Container - Overlaps onto white section below */}
-          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32 mt-8">
-            <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center overflow-hidden">
+          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32">
+            <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center">
               <button
                 onClick={() =>
                   window.open(
@@ -144,7 +144,7 @@ export default function Index() {
         </section>
 
         {/* White section that video overlaps onto */}
-        <div className="pt-40 bg-white"></div>
+        <div className="pt-48 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
