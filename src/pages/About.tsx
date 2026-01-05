@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
 import CompanyTicker from "@/components/CompanyTicker";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,9 +6,7 @@ import { TrendingUp, Shield, Users, Award } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background hebrew-font" dir="rtl">
-      <Header />
-      
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold mb-6">אודות Stock4U</h1>
@@ -145,7 +143,7 @@ const About = () => {
       <CompanyTicker />
       
       <Footer />
-    </div>
+    </Layout>
   );
 };
 

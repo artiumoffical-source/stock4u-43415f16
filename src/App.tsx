@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GiftProvider } from "./contexts/GiftContext";
+import { CartProvider } from "./contexts/CartContext";
 import { AdminAuthProvider } from "./hooks/useAdminAuth";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
@@ -39,48 +40,50 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AdminAuthProvider>
-          <GiftProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/stock-selection" element={<StockSelection />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/order-details" element={<OrderDetails />} />
-              <Route path="/order-summary" element={<OrderSummary />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/purchase-success" element={<PurchaseSuccess />} />
-              <Route path="/purchase-error" element={<PurchaseError />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/admin-portal-s4u" element={<AdminLogin />} />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              
-              {/* New Admin Back Office Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<DashboardOverview />} />
-                <Route path="dashboard" element={<DashboardOverview />} />
-                <Route path="orders" element={<OrdersPage />} />
-                <Route path="gifts" element={<GiftsPage />} />
-                <Route path="customers" element={<CustomersPage />} />
-                <Route path="users" element={<AdminUsersPage />} />
-                <Route path="logs" element={<AuditLogsPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-              </Route>
-              
-              <Route path="/gift-registration" element={<GiftRegistration />} />
-              <Route path="/redeem" element={<RedeemGift />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </GiftProvider>
-      </AdminAuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+          <CartProvider>
+            <GiftProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/stock-selection" element={<StockSelection />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/order-details" element={<OrderDetails />} />
+                <Route path="/order-summary" element={<OrderSummary />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/purchase-success" element={<PurchaseSuccess />} />
+                <Route path="/purchase-error" element={<PurchaseError />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/admin-portal-s4u" element={<AdminLogin />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                
+                {/* New Admin Back Office Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<DashboardOverview />} />
+                  <Route path="dashboard" element={<DashboardOverview />} />
+                  <Route path="orders" element={<OrdersPage />} />
+                  <Route path="gifts" element={<GiftsPage />} />
+                  <Route path="customers" element={<CustomersPage />} />
+                  <Route path="users" element={<AdminUsersPage />} />
+                  <Route path="logs" element={<AuditLogsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                </Route>
+                
+                <Route path="/gift-registration" element={<GiftRegistration />} />
+                <Route path="/redeem" element={<RedeemGift />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </GiftProvider>
+          </CartProvider>
+        </AdminAuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
   </ErrorBoundary>
 );
 
