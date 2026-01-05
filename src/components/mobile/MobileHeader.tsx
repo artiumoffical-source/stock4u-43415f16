@@ -7,7 +7,7 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))] sticky top-0 z-50 max-w-full">
+      <header className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))]">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
           Stock4U

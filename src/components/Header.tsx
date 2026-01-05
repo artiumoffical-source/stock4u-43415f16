@@ -4,7 +4,7 @@ import MobileMenu from "./MobileMenu";
 export default function Header() {
   return (
     <header
-      className="w-full bg-white border-b border-gray-200 sticky top-0 z-50 max-w-full"
+      className="w-full bg-white border-b border-gray-200 relative"
       style={{
         height: "75px",
         padding: "0 max(16px, min(35px, 5vw))",
