@@ -108,7 +108,7 @@ export default function Index() {
 
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
-        {/* Hero Section with Video Overlap - Unified #E0E7F5 background */}
+        {/* Hero Section - Master Color #E0E7F5 */}
         <section className="relative overflow-visible bg-[#E0E7F5]">
           {/* Hero Background Image */}
           <div className="relative h-[500px] overflow-visible">
@@ -119,47 +119,45 @@ export default function Index() {
             />
           </div>
           
-          {/* Video Container - Transparent wrapper, floats seamlessly */}
-          <div className="bg-transparent pb-8">
-            <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32">
-              <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center">
-                <button
-                  onClick={() =>
-                    window.open(
-                      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                      "_blank",
-                    )
-                  }
-                  className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+          {/* Video Container - NO wrapper styles, floats directly on #E0E7F5 */}
+          <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-24" style={{ background: 'transparent', border: 'none', padding: 0, boxShadow: 'none' }}>
+            <div className="bg-black rounded-3xl aspect-video flex items-center justify-center shadow-2xl">
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "_blank",
+                  )
+                }
+                className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+              >
+                <svg
+                  className="w-10 h-10 text-white ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-10 h-10 text-white ml-1"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </button>
-              </div>
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
             </div>
           </div>
           
-          {/* Wave Divider SVG - Matched to #E0E7F5 */}
+          {/* Wave Divider SVG - fill #E0E7F5 */}
           <svg 
-            className="w-full h-16 -mt-1" 
-            viewBox="0 0 1440 64" 
+            className="w-full h-12" 
+            viewBox="0 0 1440 48" 
             fill="none" 
             preserveAspectRatio="none"
           >
             <path 
-              d="M0,0 L1440,0 L1440,32 Q1080,64 720,32 Q360,0 0,32 L0,0 Z" 
+              d="M0,0 L1440,0 L1440,24 Q1080,48 720,24 Q360,0 0,24 L0,0 Z" 
               fill="#E0E7F5"
             />
           </svg>
         </section>
 
         {/* White section that video overlaps onto */}
-        <div className="pt-32 bg-white"></div>
+        <div className="pt-28 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
