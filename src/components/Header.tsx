@@ -1,172 +1,79 @@
 import { Link } from "react-router-dom";
+import { Search, ShoppingBag } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   return (
     <header
-      className="w-full bg-white border-b border-gray-200 relative"
-      style={{
-        height: "75px",
-        padding: "0 max(16px, min(35px, 5vw))",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
+      dir="rtl"
+      className="w-full bg-white sticky top-0 z-50 flex items-center justify-between px-8 py-4"
     >
-      {/* Left side - Cart and Login */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        {/* Shopping Cart */}
-        <Link to="/order-summary" style={{ textDecoration: "none" }}>
-          <div
-            className="mobile-button"
-            style={{
-              width: "48px",
-              height: "47px",
-              borderRadius: "56px",
-              background: "#4C7EFB",
-              boxShadow: "6px 6px 0 0 rgba(0, 0, 0, 0.10)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              minWidth: "44px",
-              minHeight: "44px",
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 25 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M19.9491 10.3121H5.35309C5.0577 10.3124 4.76621 10.3795 4.50041 10.5083C4.2346 10.6372 4.00135 10.8244 3.81809 11.0561C3.63559 11.2871 3.50807 11.5566 3.44517 11.8442C3.38228 12.1318 3.38567 12.43 3.45509 12.7161L5.02009 19.1241C5.24668 19.9497 5.73865 20.6778 6.42009 21.1961C7.10209 21.7151 7.93709 21.9961 8.79609 21.9961H16.5041C17.3631 21.9961 18.1981 21.7151 18.8801 21.1961C19.5615 20.6778 20.0535 19.9497 20.2801 19.1241L21.8451 12.7171C21.9504 12.2851 21.9042 11.8301 21.7142 11.4282C21.5241 11.0262 21.2018 10.7018 20.8011 10.5091C20.5345 10.3811 20.2428 10.3138 19.9471 10.3121M8.73809 14.2061V18.1011M12.6511 14.2061V18.1011M16.5641 14.2061V18.1011M19.4991 10.3121C19.4987 9.41614 19.3213 8.52909 18.9771 7.70191C18.6328 6.87473 18.1285 6.12374 17.4931 5.4921C16.2066 4.21259 14.4655 3.4949 12.6511 3.4961C10.8366 3.4949 9.09561 4.21259 7.80909 5.4921C7.17385 6.12383 6.66971 6.87485 6.32562 7.70203C5.98154 8.5292 5.8043 9.41621 5.80409 10.3121"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+      {/* RIGHT SIDE - Logo + Navigation Links (RTL: appears on right) */}
+      <div className="flex items-center gap-8">
+        {/* Logo */}
+        <Link to="/" className="flex-shrink-0">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
+            className="h-10 w-auto"
+            alt="Stock4U Logo"
+          />
         </Link>
 
-        {/* Login Button */}
-        <Link to="/login" style={{ textDecoration: "none" }}>
-          <div
-            className="mobile-button"
-            style={{
-              display: "flex",
-              width: "auto",
-              minWidth: "100px",
-              height: "47px",
-              padding: "12px 16px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
-              borderRadius: "50px",
-              background: "#DBE3F3",
-              cursor: "pointer",
-              minHeight: "44px",
-            }}
-          >
-            <span
-              style={{
-                color: "#4C7EFB",
-                textAlign: "center",
-                fontFamily:
-                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "18px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "normal",
-              }}
-            >
-              כניסה
-            </span>
-          </div>
-        </Link>
-      </div>
-
-      {/* Center - Logo */}
-      <img
-        src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
-        className="max-w-none"
-        style={{
-          height: "min(66px, 12vw)",
-          width: "auto",
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          maxHeight: "60px",
-        }}
-        alt="Stock4U Logo"
-      />
-
-      {/* Mobile Menu */}
-      <div className="md:hidden">
-        <MobileMenu />
-      </div>
-
-      {/* Right side - Navigation - Desktop Only */}
-      <div className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
+        {/* Navigation Links - Desktop Only */}
+        <nav className="hidden md:flex items-center gap-6">
+          <Link
+            to="/"
+            className="text-[#4C7EFB] font-medium text-base hover:opacity-80 transition-opacity"
           >
             בית
-          </span>
-        </Link>
-
-        <Link to="/about" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
+          </Link>
+          <Link
+            to="/about"
+            className="text-[#4C7EFB] font-medium text-base hover:opacity-80 transition-opacity"
           >
             אודות
-          </span>
-        </Link>
-
-        <Link
-          to="/stock-selection?continue=true"
-          style={{ textDecoration: "none" }}
-        >
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
+          </Link>
+          <Link
+            to="/stock-selection?continue=true"
+            className="text-[#4C7EFB] font-medium text-base hover:opacity-80 transition-opacity"
           >
             רשימת מתנות
-          </span>
-        </Link>
-
-        <Link to="/careers" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
+          </Link>
+          <Link
+            to="/careers"
+            className="text-[#4C7EFB] font-medium text-base hover:opacity-80 transition-opacity"
           >
             קריירה
-          </span>
+          </Link>
+        </nav>
+
+        {/* Search - Desktop Only */}
+        <div className="hidden md:flex items-center gap-2 text-[#4C7EFB] border-b border-[#4C7EFB]/30 pb-1 cursor-pointer hover:opacity-80 transition-opacity">
+          <span className="text-base">חיפוש</span>
+          <div className="w-24 border-b border-[#4C7EFB]/30" />
+          <Search className="w-4 h-4" />
+        </div>
+      </div>
+
+      {/* LEFT SIDE - Login Button + Cart Icon (RTL: appears on left) */}
+      <div className="flex items-center gap-3">
+        {/* Mobile Menu - Mobile Only */}
+        <div className="md:hidden">
+          <MobileMenu />
+        </div>
+
+        {/* Login Button - Desktop Only */}
+        <Link to="/login" className="hidden md:block">
+          <div className="bg-[#DBE3F3] text-[#4C7EFB] font-bold text-base px-8 py-2.5 rounded-full hover:bg-[#c9d5eb] transition-colors cursor-pointer">
+            כניסה
+          </div>
+        </Link>
+
+        {/* Cart Icon */}
+        <Link to="/order-summary">
+          <div className="w-12 h-12 rounded-full bg-[#4C7EFB] flex items-center justify-center hover:bg-[#3a6ae8] transition-colors cursor-pointer shadow-[4px_4px_0_0_rgba(0,0,0,0.1)]">
+            <ShoppingBag className="w-5 h-5 text-white" />
+          </div>
         </Link>
       </div>
     </header>
