@@ -1,122 +1,174 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, ShoppingBag, Menu, X } from "lucide-react";
+import MobileMenu from "./MobileMenu";
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const navLinks = [
-    { label: "בית", to: "/" },
-    { label: "אודות", to: "/about" },
-    { label: "רשימת מתנות", to: "/stock-selection?continue=true" },
-    { label: "קריירה", to: "/careers" },
-  ];
-
+export default function Header() {
   return (
-    <>
-      <header 
-        dir="rtl"
-        className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100"
-      >
-        <div className="flex justify-between items-center w-full px-6 py-4">
-          
-          {/* RIGHT SIDE - Navigation & Search (RTL: appears on right) */}
-          <div className="hidden md:flex items-center gap-8">
-            {/* Nav Links */}
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="text-gray-700 hover:text-blue-600 font-medium text-sm transition-colors hebrew-font"
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            {/* Divider */}
-            <div className="w-px h-5 bg-gray-200" />
-
-            {/* Search Input */}
-            <div className="flex items-center gap-2 text-gray-400">
-              <span className="text-sm text-gray-400 hebrew-font">חיפוש</span>
-              <div className="w-24 border-b border-gray-300" />
-              <Search className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Mobile: Hamburger Menu (RTL: appears on right) */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="תפריט"
-          >
-            {isMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
-            )}
-          </button>
-
-          {/* LEFT SIDE - Actions (RTL: appears on left) */}
-          <div className="flex items-center gap-3">
-            {/* Cart Icon - Circle with shadow */}
-            <Link to="/order-summary">
-              <button 
-                className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-md hover:bg-blue-700 transition-colors"
-                aria-label="עגלת קניות"
-              >
-                <ShoppingBag className="w-5 h-5 text-white" />
-              </button>
-            </Link>
-
-            {/* Login Button - Pill shape, light blue bg */}
-            <Link to="/login">
-              <button className="px-6 py-2 rounded-full bg-blue-100 text-blue-600 font-medium text-sm hover:bg-blue-200 transition-colors hebrew-font">
-                כניסה
-              </button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" dir="rtl">
-          {/* Backdrop */}
+    <header
+      className="w-full bg-white border-b border-gray-200 relative"
+      style={{
+        height: "75px",
+        padding: "0 max(16px, min(35px, 5vw))",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      {/* Left side - Cart and Login */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {/* Shopping Cart */}
+        <Link to="/order-summary" style={{ textDecoration: "none" }}>
           <div
-            className="fixed inset-0 bg-black/25"
-            onClick={() => setIsMenuOpen(false)}
-          />
-
-          {/* Menu Panel - slides from top */}
-          <div className="fixed top-[72px] right-0 left-0 bg-white shadow-lg border-t border-gray-100">
-            <nav className="p-4 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block py-3 px-4 text-gray-700 text-lg font-medium rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-colors hebrew-font text-right"
-                >
-                  {link.label}
-                </Link>
-              ))}
-
-              {/* Search in Mobile */}
-              <div className="flex items-center gap-3 py-3 px-4 text-gray-400 border-t border-gray-100 mt-2 pt-4">
-                <Search className="w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="חיפוש..."
-                  className="bg-transparent border-none outline-none text-base placeholder:text-gray-400 flex-1 hebrew-font"
-                />
-              </div>
-            </nav>
+            className="mobile-button"
+            style={{
+              width: "48px",
+              height: "47px",
+              borderRadius: "56px",
+              background: "#4C7EFB",
+              boxShadow: "6px 6px 0 0 rgba(0, 0, 0, 0.10)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              minWidth: "44px",
+              minHeight: "44px",
+            }}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19.9491 10.3121H5.35309C5.0577 10.3124 4.76621 10.3795 4.50041 10.5083C4.2346 10.6372 4.00135 10.8244 3.81809 11.0561C3.63559 11.2871 3.50807 11.5566 3.44517 11.8442C3.38228 12.1318 3.38567 12.43 3.45509 12.7161L5.02009 19.1241C5.24668 19.9497 5.73865 20.6778 6.42009 21.1961C7.10209 21.7151 7.93709 21.9961 8.79609 21.9961H16.5041C17.3631 21.9961 18.1981 21.7151 18.8801 21.1961C19.5615 20.6778 20.0535 19.9497 20.2801 19.1241L21.8451 12.7171C21.9504 12.2851 21.9042 11.8301 21.7142 11.4282C21.5241 11.0262 21.2018 10.7018 20.8011 10.5091C20.5345 10.3811 20.2428 10.3138 19.9471 10.3121M8.73809 14.2061V18.1011M12.6511 14.2061V18.1011M16.5641 14.2061V18.1011M19.4991 10.3121C19.4987 9.41614 19.3213 8.52909 18.9771 7.70191C18.6328 6.87473 18.1285 6.12374 17.4931 5.4921C16.2066 4.21259 14.4655 3.4949 12.6511 3.4961C10.8366 3.4949 9.09561 4.21259 7.80909 5.4921C7.17385 6.12383 6.66971 6.87485 6.32562 7.70203C5.98154 8.5292 5.8043 9.41621 5.80409 10.3121"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
-        </div>
-      )}
-    </>
-  );
-};
+        </Link>
 
-export default Header;
+        {/* Login Button */}
+        <Link to="/login" style={{ textDecoration: "none" }}>
+          <div
+            className="mobile-button"
+            style={{
+              display: "flex",
+              width: "auto",
+              minWidth: "100px",
+              height: "47px",
+              padding: "12px 16px",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+              borderRadius: "50px",
+              background: "#DBE3F3",
+              cursor: "pointer",
+              minHeight: "44px",
+            }}
+          >
+            <span
+              style={{
+                color: "#4C7EFB",
+                textAlign: "center",
+                fontFamily:
+                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "normal",
+              }}
+            >
+              כניסה
+            </span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Center - Logo */}
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
+        className="max-w-none"
+        style={{
+          height: "min(66px, 12vw)",
+          width: "auto",
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+          maxHeight: "60px",
+        }}
+        alt="Stock4U Logo"
+      />
+
+      {/* Mobile Menu */}
+      <div className="md:hidden">
+        <MobileMenu />
+      </div>
+
+      {/* Right side - Navigation - Desktop Only */}
+      <div className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <span
+            style={{
+              color: "#4C7EFB",
+              fontFamily:
+                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              fontSize: "20px",
+              fontWeight: "400",
+            }}
+          >
+            בית
+          </span>
+        </Link>
+
+        <Link to="/about" style={{ textDecoration: "none" }}>
+          <span
+            style={{
+              color: "#4C7EFB",
+              fontFamily:
+                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              fontSize: "20px",
+              fontWeight: "400",
+            }}
+          >
+            אודות
+          </span>
+        </Link>
+
+        <Link
+          to="/stock-selection?continue=true"
+          style={{ textDecoration: "none" }}
+        >
+          <span
+            style={{
+              color: "#4C7EFB",
+              fontFamily:
+                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              fontSize: "20px",
+              fontWeight: "400",
+            }}
+          >
+            רשימת מתנות
+          </span>
+        </Link>
+
+        <Link to="/careers" style={{ textDecoration: "none" }}>
+          <span
+            style={{
+              color: "#4C7EFB",
+              fontFamily:
+                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              fontSize: "20px",
+              fontWeight: "400",
+            }}
+          >
+            קריירה
+          </span>
+        </Link>
+      </div>
+    </header>
+  );
+}
