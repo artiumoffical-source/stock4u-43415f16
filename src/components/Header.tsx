@@ -1,174 +1,149 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import MobileMenu from "./MobileMenu";
+import { Search, ShoppingBag, Menu, X } from "lucide-react";
 
-export default function Header() {
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const navLinks = [
+    { label: "בית", to: "/" },
+    { label: "אודות", to: "/about" },
+    { label: "רשימת מתנות", to: "/stock-selection?continue=true" },
+    { label: "קריירה", to: "/careers" },
+  ];
+
   return (
-    <header
-      className="w-full bg-white border-b border-gray-200 relative"
-      style={{
-        height: "75px",
-        padding: "0 max(16px, min(35px, 5vw))",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      {/* Left side - Cart and Login */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        {/* Shopping Cart */}
-        <Link to="/order-summary" style={{ textDecoration: "none" }}>
-          <div
-            className="mobile-button"
-            style={{
-              width: "48px",
-              height: "47px",
-              borderRadius: "56px",
-              background: "#4C7EFB",
-              boxShadow: "6px 6px 0 0 rgba(0, 0, 0, 0.10)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              minWidth: "44px",
-              minHeight: "44px",
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 25 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M19.9491 10.3121H5.35309C5.0577 10.3124 4.76621 10.3795 4.50041 10.5083C4.2346 10.6372 4.00135 10.8244 3.81809 11.0561C3.63559 11.2871 3.50807 11.5566 3.44517 11.8442C3.38228 12.1318 3.38567 12.43 3.45509 12.7161L5.02009 19.1241C5.24668 19.9497 5.73865 20.6778 6.42009 21.1961C7.10209 21.7151 7.93709 21.9961 8.79609 21.9961H16.5041C17.3631 21.9961 18.1981 21.7151 18.8801 21.1961C19.5615 20.6778 20.0535 19.9497 20.2801 19.1241L21.8451 12.7171C21.9504 12.2851 21.9042 11.8301 21.7142 11.4282C21.5241 11.0262 21.2018 10.7018 20.8011 10.5091C20.5345 10.3811 20.2428 10.3138 19.9471 10.3121M8.73809 14.2061V18.1011M12.6511 14.2061V18.1011M16.5641 14.2061V18.1011M19.4991 10.3121C19.4987 9.41614 19.3213 8.52909 18.9771 7.70191C18.6328 6.87473 18.1285 6.12374 17.4931 5.4921C16.2066 4.21259 14.4655 3.4949 12.6511 3.4961C10.8366 3.4949 9.09561 4.21259 7.80909 5.4921C7.17385 6.12383 6.66971 6.87485 6.32562 7.70203C5.98154 8.5292 5.8043 9.41621 5.80409 10.3121"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+    <>
+      <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100">
+        <div className="w-full px-4 md:px-8 lg:px-12">
+          <div className="flex items-center justify-between h-16 md:h-[72px]">
+            
+            {/* Left Side - Cart & Login (appears on left in RTL) */}
+            <div className="flex items-center gap-3">
+              {/* Cart Button */}
+              <Link to="/order-summary">
+                <button 
+                  className="w-11 h-11 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
+                  aria-label="עגלת קניות"
+                >
+                  <ShoppingBag className="w-5 h-5 text-white" />
+                </button>
+              </Link>
+
+              {/* Login Button - Desktop */}
+              <Link to="/login" className="hidden md:block">
+                <button className="px-6 py-2.5 rounded-full bg-blue-100 text-primary font-medium text-base hover:bg-blue-200 transition-colors hebrew-font">
+                  כניסה
+                </button>
+              </Link>
+            </div>
+
+            {/* Center - Logo (Mobile only) */}
+            <Link to="/" className="md:hidden absolute left-1/2 -translate-x-1/2">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
+                alt="Stock4U Logo"
+                className="h-10"
               />
-            </svg>
-          </div>
-        </Link>
+            </Link>
 
-        {/* Login Button */}
-        <Link to="/login" style={{ textDecoration: "none" }}>
-          <div
-            className="mobile-button"
-            style={{
-              display: "flex",
-              width: "auto",
-              minWidth: "100px",
-              height: "47px",
-              padding: "12px 16px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "10px",
-              borderRadius: "50px",
-              background: "#DBE3F3",
-              cursor: "pointer",
-              minHeight: "44px",
-            }}
-          >
-            <span
-              style={{
-                color: "#4C7EFB",
-                textAlign: "center",
-                fontFamily:
-                  "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-                fontSize: "18px",
-                fontStyle: "normal",
-                fontWeight: "700",
-                lineHeight: "normal",
-              }}
+            {/* Right Side - Navigation & Search (Desktop) */}
+            <nav className="hidden md:flex items-center gap-8">
+              {/* Search */}
+              <div className="flex items-center gap-2 text-gray-400">
+                <Search className="w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="חיפוש"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent border-none outline-none text-base placeholder:text-gray-400 w-20 hebrew-font"
+                  dir="rtl"
+                />
+                <div className="w-px h-5 bg-gray-200 mr-2" />
+              </div>
+
+              {/* Nav Links */}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="text-primary font-normal text-base hover:text-primary/80 transition-colors hebrew-font"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden w-11 h-11 flex items-center justify-center"
+              aria-label="תפריט"
             >
-              כניסה
-            </span>
+              {isMenuOpen ? (
+                <X className="w-6 h-6 text-primary" />
+              ) : (
+                <Menu className="w-6 h-6 text-primary" />
+              )}
+            </button>
           </div>
-        </Link>
-      </div>
+        </div>
+      </header>
 
-      {/* Center - Logo */}
-      <img
-        src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
-        className="max-w-none"
-        style={{
-          height: "min(66px, 12vw)",
-          width: "auto",
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          maxHeight: "60px",
-        }}
-        alt="Stock4U Logo"
-      />
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/25"
+            onClick={() => setIsMenuOpen(false)}
+          />
 
-      {/* Mobile Menu */}
-      <div className="md:hidden">
-        <MobileMenu />
-      </div>
+          {/* Menu Panel */}
+          <div className="fixed top-16 right-0 left-0 bg-white shadow-lg border-t border-gray-100 animate-in slide-in-from-top-2">
+            <nav className="p-4 space-y-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block py-3 px-4 text-primary text-lg font-medium rounded-xl hover:bg-blue-50 transition-colors hebrew-font text-right"
+                >
+                  {link.label}
+                </Link>
+              ))}
 
-      {/* Right side - Navigation - Desktop Only */}
-      <div className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
-          >
-            בית
-          </span>
-        </Link>
+              {/* Search in Mobile */}
+              <div className="flex items-center gap-2 py-3 px-4 text-gray-400">
+                <Search className="w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="חיפוש"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent border-none outline-none text-base placeholder:text-gray-400 flex-1 hebrew-font"
+                  dir="rtl"
+                />
+              </div>
 
-        <Link to="/about" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
-          >
-            אודות
-          </span>
-        </Link>
-
-        <Link
-          to="/stock-selection?continue=true"
-          style={{ textDecoration: "none" }}
-        >
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
-          >
-            רשימת מתנות
-          </span>
-        </Link>
-
-        <Link to="/careers" style={{ textDecoration: "none" }}>
-          <span
-            style={{
-              color: "#4C7EFB",
-              fontFamily:
-                "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
-              fontSize: "20px",
-              fontWeight: "400",
-            }}
-          >
-            קריירה
-          </span>
-        </Link>
-      </div>
-    </header>
+              {/* Login Button */}
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="block mt-4"
+              >
+                <button className="w-full py-3 rounded-xl bg-primary text-white font-bold text-lg hover:bg-primary/90 transition-colors hebrew-font">
+                  כניסה
+                </button>
+              </Link>
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
-}
+};
+
+export default Header;
