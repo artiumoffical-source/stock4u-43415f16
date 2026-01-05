@@ -108,10 +108,10 @@ export default function Index() {
 
       {/* ========== DESKTOP VERSION ========== */}
       <div className="hidden md:block">
-        {/* Hero Section with Video Overlap */}
-        <section className="relative overflow-visible">
+        {/* Hero Section with Video Overlap - Unified #E0E7F5 background */}
+        <section className="relative overflow-visible bg-[#E0E7F5]">
           {/* Hero Background Image */}
-          <div className="relative h-[500px] overflow-visible bg-[#E6F0FF]">
+          <div className="relative h-[500px] overflow-visible">
             <img
               src="https://api.builder.io/api/v1/image/assets/TEMP/c861279ab775a02162db7807d6d5056d3eb1252d?width=3840"
               alt="Stock4U Characters with Main Title"
@@ -119,9 +119,8 @@ export default function Index() {
             />
           </div>
           
-          {/* Extended Blue Background for Video */}
-          <div className="bg-[#E6F0FF] pb-8">
-            {/* Video Container - Overlaps onto white section below */}
+          {/* Video Container - Transparent wrapper, floats seamlessly */}
+          <div className="bg-transparent pb-8">
             <div className="relative z-20 mx-auto max-w-4xl px-4 -mb-32">
               <div className="bg-black rounded-3xl shadow-2xl aspect-video flex items-center justify-center">
                 <button
@@ -145,7 +144,7 @@ export default function Index() {
             </div>
           </div>
           
-          {/* Wave Divider SVG */}
+          {/* Wave Divider SVG - Matched to #E0E7F5 */}
           <svg 
             className="w-full h-16 -mt-1" 
             viewBox="0 0 1440 64" 
@@ -154,7 +153,7 @@ export default function Index() {
           >
             <path 
               d="M0,0 L1440,0 L1440,32 Q1080,64 720,32 Q360,0 0,32 L0,0 Z" 
-              fill="#E6F0FF"
+              fill="#E0E7F5"
             />
           </svg>
         </section>
