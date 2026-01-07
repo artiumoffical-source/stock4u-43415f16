@@ -40,89 +40,81 @@ export default function StockSelection() {
     return stock ? stock.amount : 0;
   };
 
-  // Top 5 US stocks (מניות בודדות)
+  // Top 3 US stocks (מניות בודדות) - matching reference image
   const individualStocks = [
     {
-      symbol: "AAPL",
-      company: "Apple Inc.",
+      symbol: "MSFT",
+      company: "Microsoft Corporation",
       logo: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="#1d1d1f">
-          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none">
+          <rect x="1" y="1" width="10" height="10" fill="#F25022" />
+          <rect x="13" y="1" width="10" height="10" fill="#7FBA00" />
+          <rect x="1" y="13" width="10" height="10" fill="#00A4EF" />
+          <rect x="13" y="13" width="10" height="10" fill="#FFB900" />
         </svg>
       ),
       description:
-        "אפל היא חברת הטכנולוגיה הגדולה והמוכרת בעולם. מייצרת iPhone, iPad, Mac, Apple Watch ושירותים דיגיטליים. החברה מפורסמת בחדשנות, איכות בנייה ומערכת אקולוגית אינטגרטיבית שמחברת בין כל המוצרים.",
+        "מיקרוסופט היא ענקית תוכנה וטכנולוגיה עם התמחות במחשוב בענן, פרודוקטיביות עסקית ובינה מלאכותית. החברה מפעילה את Azure, Office 365, Windows ורכשה חברות מובילות.",
+      brandColor: "#00A4EF",
     },
     {
       symbol: "NVDA",
       company: "NVIDIA Corporation",
       logo: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
+        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none">
           <rect width="24" height="24" rx="4" fill="#76B900" />
-          <path d="M12 4L20 12L12 20L4 12Z" fill="#FFF" />
-          <path d="M12 8L16 12L12 16L8 12Z" fill="#76B900" />
+          <path d="M5 12C5 8.13401 8.13401 5 12 5V19C8.13401 19 5 15.866 5 12Z" fill="#FFF" />
+          <path d="M12 5C15.866 5 19 8.13401 19 12C19 15.866 15.866 19 12 19V5Z" fill="#FFF" opacity="0.7" />
         </svg>
       ),
       description:
-        "NVIDIA מובילה עולמית בתחום עיבוד גרפי ובינה מלאכותית. החברה מייצרת כרטיסי גרפיקה מתקדמים, מעבדי AI וחומרה לרכב אוטונומי. גם פיתוח תחום הבינה המלאכותית, NVIDIA נחשבת להשקעה עתידנית.",
+        "NVIDIA מובילה עולמית בתחום עיבוד גרפי ובינה מלאכותית. החברה מייצרת כרטיסי גרפיקה מתקדמים, מעבדי AI וחומרה לרכב אוטונומי. מניה מובילה בשוק ה-AI.",
+      brandColor: "#76B900",
     },
     {
-      symbol: "MSFT",
-      company: "Microsoft Corporation",
+      symbol: "AAPL",
+      company: "Apple Inc.",
       logo: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
-          <rect x="2" y="2" width="9" height="9" fill="#F25022" />
-          <rect x="13" y="2" width="9" height="9" fill="#7FBA00" />
-          <rect x="2" y="13" width="9" height="9" fill="#00A4EF" />
-          <rect x="13" y="13" width="9" height="9" fill="#FFB900" />
+        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="#1d1d1f">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
         </svg>
       ),
       description:
-        "מיקרוסופט היא ענקית תוכנה וטכנולוגיה עם התמחות במחשוב בענן, פרודוקטיביות עסקית ובינה מלאכותית. החברה מפעילה את Azure, Office 365, Windows ורכשה חברות מובילות כמו GitHub ו-LinkedIn.",
+        "אפל היא חברת הטכנולוגיה הגדולה והמוכרת בעולם. מייצרת iPhone, iPad, Mac, Apple Watch ושירותים דיגיטליים. החברה מפורסמת בחדשנות ואיכות בנייה.",
+      brandColor: "#1d1d1f",
     },
     {
       symbol: "GOOGL",
       company: "Alphabet Inc. (Google)",
       logo: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
-          <circle cx="12" cy="12" r="11" fill="#4285F4" />
-          <circle cx="12" cy="12" r="8" fill="#FFF" />
-          <circle cx="12" cy="8" r="2" fill="#EA4335" />
-          <circle cx="8" cy="16" r="2" fill="#FBBC05" />
-          <circle cx="16" cy="16" r="2" fill="#34A853" />
-          <text
-            x="12"
-            y="15"
-            textAnchor="middle"
-            fontSize="6"
-            fill="#4285F4"
-            fontWeight="bold"
-            fontFamily="sans-serif"
-          >
-            G
-          </text>
+        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
       ),
       description:
-        "אלפבית היא החברה האם של גוגל, המובילה בתחום החיפוש, פרסום דיגיטלי וטכנולוגיות חדשניות. החברה מפתחת מוצרים כמו Android, YouTube, Google Cloud ומשקיעה בטכנולוגיות עתיד כמו רכב אוטונומי.",
+        "אלפבית היא החברה האם של גוגל, המובילה בתחום החיפוש, פרסום דיגיטלי וטכנולוגיות חדשניות. החברה מפתחת Android, YouTube, Google Cloud ומשקיעה בטכנולוגיות עתיד.",
+      brandColor: "#4285F4",
     },
     {
       symbol: "AMZN",
       company: "Amazon.com Inc.",
       logo: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
+        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none">
           <rect x="2" y="2" width="20" height="20" rx="3" fill="#232F3E" />
           <path
-            d="M5 16c4 2 10 2 14 0"
+            d="M5 15c4 2 10 2 14 0"
             stroke="#FF9900"
             strokeWidth="2"
             fill="none"
             strokeLinecap="round"
           />
-          <circle cx="18" cy="15" r="1" fill="#FF9900" />
+          <path d="M17.5 14.5L19 16L17.5 17.5" stroke="#FF9900" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           <text
             x="12"
-            y="10"
+            y="11"
             textAnchor="middle"
             fontSize="4"
             fill="#FFF"
@@ -134,7 +126,8 @@ export default function StockSelection() {
         </svg>
       ),
       description:
-        "אמזון היא ענקית המסחר האלקטרוני והענן החישובי בעולם. החברה מפעילה את פלטפורמת הקניות הגדולה ביותר, שירותי AWS לענן החישובי, ושירותי סטרימינג ובידור דרך Amazon Prime.",
+        "אמזון היא ענקית המסחר האלקטרוני והענן החישובי בעולם. החברה מפעילה את פלטפורמת הקניות הגדולה ביותר, שירותי AWS לענן החישובי ושירותי סטרימינג.",
+      brandColor: "#FF9900",
     },
   ];
 
