@@ -13,114 +13,72 @@ export default function Index() {
     <Layout>
       {/* ========== MOBILE VERSION ========== */}
       <div className="block md:hidden overflow-x-hidden">
-        {/* Mobile Hero Section */}
+        {/* Mobile Hero Section - Tight Clustered Layout */}
         <section 
-          className="relative overflow-hidden min-h-[480px] pb-4"
+          className="relative w-full h-[560px] overflow-hidden"
           style={{ backgroundColor: '#E0E7F5' }}
         >
-          {/* Zigzag Background Pattern - Bold Lines */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <svg className="absolute w-[200%] h-full -left-1/4" viewBox="0 0 800 600" preserveAspectRatio="none">
-              {/* Main zigzag lines */}
-              <path 
-                d="M0 150 L100 100 L200 180 L300 80 L400 200 L500 100 L600 220 L700 120 L800 180" 
-                stroke="#4880FF" 
-                strokeWidth="8" 
-                fill="none"
-                opacity="0.15"
-              />
-              <path 
-                d="M0 280 L100 220 L200 320 L300 200 L400 350 L500 250 L600 380 L700 280 L800 340" 
-                stroke="#4880FF" 
-                strokeWidth="8" 
-                fill="none"
-                opacity="0.12"
-              />
-              <path 
-                d="M0 420 L100 360 L200 450 L300 340 L400 480 L500 380 L600 500 L700 400 L800 460" 
-                stroke="#4880FF" 
-                strokeWidth="8" 
-                fill="none"
-                opacity="0.08"
-              />
+          {/* Zigzag Background Pattern */}
+          <div className="absolute inset-0 pointer-events-none">
+            <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
+              <path d="M-50 200 L50 150 L150 230 L250 130 L350 250 L450 160" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.12" />
+              <path d="M-50 350 L50 300 L150 380 L250 280 L350 400 L450 310" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.08" />
+              <path d="M-50 500 L50 450 L150 530 L250 430 L350 550 L450 460" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.05" />
             </svg>
           </div>
 
-          {/* Floating Characters & Title Area */}
-          <div className="relative w-full min-h-[320px] pt-2">
-            {/* Hero Characters Image - Large and centered */}
+          {/* Hero Characters - SCALED UP and CENTERED */}
+          <div className="absolute inset-x-0 top-0 h-[340px] flex items-center justify-center">
             <img
               src={heroCharacters}
               alt="Stock4U Characters - מתנות שעושות כסף!"
-              className="relative w-full h-auto object-contain z-10 scale-[1.15] transform-gpu"
-              style={{ maxHeight: '320px' }}
+              className="w-[130%] max-w-none h-auto object-contain transform-gpu"
             />
-            
-            {/* Decorative Stars - Scattered */}
-            <div className="absolute top-3 left-[12%] w-5 h-5 z-20">
-              <svg viewBox="0 0 24 24" fill="#FF6B4A">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
-            <div className="absolute top-6 right-[18%] w-4 h-4 z-20">
-              <svg viewBox="0 0 24 24" fill="#4880FF">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
-            <div className="absolute top-20 left-[5%] w-6 h-6 z-20">
-              <svg viewBox="0 0 24 24" fill="#FFC845">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
-            <div className="absolute top-14 right-[3%] w-5 h-5 z-20">
-              <svg viewBox="0 0 24 24" fill="#00C9A7">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
-            <div className="absolute top-[45%] left-[2%] w-4 h-4 z-20">
-              <svg viewBox="0 0 24 24" fill="#FF6B4A">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
-            <div className="absolute top-[50%] right-[6%] w-3 h-3 z-20">
-              <svg viewBox="0 0 24 24" fill="#FFC845">
-                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-              </svg>
-            </div>
           </div>
 
-          {/* Pagination Dots */}
-          <div className="flex justify-center gap-2 py-3">
+          {/* Decorative Stars - Scattered around */}
+          <div className="absolute top-4 left-[8%] w-6 h-6 z-30">
+            <svg viewBox="0 0 24 24" fill="#FF6B4A"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+          <div className="absolute top-8 right-[15%] w-4 h-4 z-30">
+            <svg viewBox="0 0 24 24" fill="#4880FF"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+          <div className="absolute top-24 left-[3%] w-5 h-5 z-30">
+            <svg viewBox="0 0 24 24" fill="#FFC845"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+          <div className="absolute top-16 right-[5%] w-5 h-5 z-30">
+            <svg viewBox="0 0 24 24" fill="#00C9A7"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+          <div className="absolute top-36 left-[6%] w-4 h-4 z-30">
+            <svg viewBox="0 0 24 24" fill="#FF6B4A"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+          <div className="absolute top-32 right-[8%] w-3 h-3 z-30">
+            <svg viewBox="0 0 24 24" fill="#FFC845"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
+          </div>
+
+          {/* Pagination Dots - Positioned in the middle */}
+          <div className="absolute top-[340px] left-1/2 -translate-x-1/2 flex gap-2 z-20">
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]"></div>
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
           </div>
 
-          {/* Video Player - Overlapping effect */}
-          <div className="relative z-20 w-[92%] mx-auto -mt-2">
+          {/* Video Player - Anchored near bottom */}
+          <div className="absolute top-[365px] left-1/2 -translate-x-1/2 w-[90%] z-20">
             <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
               <button
-                onClick={() =>
-                  window.open(
-                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                    "_blank",
-                  )
-                }
+                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
                 className="w-16 h-16 bg-[#4880FF] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
               >
-                <svg
-                  className="w-6 h-6 text-white ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </button>
             </div>
           </div>
 
-          {/* CTA Banner */}
-          <div className="px-4 pt-4 pb-2">
+          {/* CTA Banner - At the very bottom */}
+          <div className="absolute bottom-4 left-4 right-4 z-20">
             <Link
               to="/stock-selection?continue=true"
               className="block w-full bg-[#00C9A7] text-white text-center py-4 rounded-2xl font-bold text-base shadow-lg active:scale-[0.98] transition-transform"
