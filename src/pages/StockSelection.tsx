@@ -257,8 +257,8 @@ export default function StockSelection() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <div className="w-full h-[400px] relative">
+      {/* Hero Section - Mobile optimized */}
+      <div className="w-full h-[200px] md:h-[400px] relative">
         <img
           src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fcdbf23f1263346e6b8dd2417d75a13ce?format=webp&width=2400&quality=90"
           alt="כל המניות שתוכלו לרצות במקום אחד"
@@ -269,13 +269,13 @@ export default function StockSelection() {
       {/* Filters Section */}
       <StockFilters onFiltersChange={handleFiltersChange} initialFilters={filters} />
 
-      {/* Main Content */}
-      <div className="px-6 py-12">
+      {/* Main Content - Mobile padding */}
+      <div className="px-4 md:px-6 py-8 md:py-12">
         <div className="max-w-[1400px] mx-auto">
           {/* Section Title */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-6 md:mb-10">
             <h2
-              className="text-[26px] font-bold text-[#486284] mb-3"
+              className="text-xl md:text-[26px] font-bold text-[#486284] mb-2 md:mb-3"
               style={{
                 fontFamily:
                   "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
@@ -286,7 +286,7 @@ export default function StockSelection() {
                 : "תעודות הסל המובילות"}
             </h2>
             <p
-              className="text-[16px] text-[#486284] opacity-70"
+              className="text-sm md:text-[16px] text-[#486284] opacity-70"
               style={{
                 fontFamily:
                   "Hanken Grotesk, -apple-system, Roboto, Helvetica, sans-serif",
@@ -298,9 +298,9 @@ export default function StockSelection() {
             </p>
           </div>
 
-          {/* Stock Cards Grid - Only show current data, no repetition */}
+          {/* Stock Cards Grid - Mobile: Full width cards */}
           <div
-            className={`grid gap-6 mb-12 ${
+            className={`grid gap-4 md:gap-6 mb-8 md:mb-12 ${
               selectedTab === "individual"
                 ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                 : "grid-cols-1 md:grid-cols-2 max-w-[900px] mx-auto"
@@ -360,13 +360,13 @@ export default function StockSelection() {
         </div>
       </div>
 
-      {/* Statistics Section */}
-      <div className="bg-gray-50 py-12">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid grid-cols-3 gap-6">
-            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-6 text-center hover:bg-white transition-colors">
+      {/* Statistics Section - Mobile: Stack vertically */}
+      <div className="bg-gray-50 py-8 md:py-12">
+        <div className="max-w-5xl mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-4 md:p-6 text-center hover:bg-white transition-colors">
               <div
-                className="text-[48px] font-bold text-[#486284] mb-3 leading-[60px]"
+                className="text-4xl md:text-[48px] font-bold text-[#486284] mb-2 md:mb-3 leading-tight md:leading-[60px]"
                 style={{
                   fontFamily:
                     "DM Sans, -apple-system, Roboto, Helvetica, sans-serif",
@@ -375,7 +375,7 @@ export default function StockSelection() {
                 24+
               </div>
               <div
-                className="text-[16px] text-[#8CA2C0] leading-[24px]"
+                className="text-sm md:text-[16px] text-[#8CA2C0] leading-relaxed md:leading-[24px]"
                 style={{
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
@@ -384,9 +384,9 @@ export default function StockSelection() {
                 מדינות שבהם אנו עובדים
               </div>
             </div>
-            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-6 text-center hover:bg-white transition-colors">
+            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-4 md:p-6 text-center hover:bg-white transition-colors">
               <div
-                className="text-[48px] font-bold text-[#486284] mb-3 leading-[60px]"
+                className="text-4xl md:text-[48px] font-bold text-[#486284] mb-2 md:mb-3 leading-tight md:leading-[60px]"
                 style={{
                   fontFamily:
                     "DM Sans, -apple-system, Roboto, Helvetica, sans-serif",
@@ -395,7 +395,7 @@ export default function StockSelection() {
                 17M
               </div>
               <div
-                className="text-[16px] text-[#8CA2C0] leading-[24px]"
+                className="text-sm md:text-[16px] text-[#8CA2C0] leading-relaxed md:leading-[24px]"
                 style={{
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
@@ -404,9 +404,9 @@ export default function StockSelection() {
                 אנשים שהאמינו בנו
               </div>
             </div>
-            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-6 text-center hover:bg-white transition-colors">
+            <div className="bg-[rgba(239,242,246,0.40)] rounded-[20px] p-4 md:p-6 text-center hover:bg-white transition-colors">
               <div
-                className="text-[48px] font-bold text-[#486284] mb-3 leading-[60px]"
+                className="text-4xl md:text-[48px] font-bold text-[#486284] mb-2 md:mb-3 leading-tight md:leading-[60px]"
                 style={{
                   fontFamily:
                     "DM Sans, -apple-system, Roboto, Helvetica, sans-serif",
@@ -415,7 +415,7 @@ export default function StockSelection() {
                 +95%
               </div>
               <div
-                className="text-[16px] text-[#8CA2C0] leading-[24px]"
+                className="text-sm md:text-[16px] text-[#8CA2C0] leading-relaxed md:leading-[24px]"
                 style={{
                   fontFamily:
                     "Poppins, -apple-system, Roboto, Helvetica, sans-serif",

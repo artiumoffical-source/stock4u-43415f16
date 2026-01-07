@@ -38,16 +38,16 @@ export function StockCard({ stock, investmentAmount, onInvestmentAmountChange }:
         className="w-full bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
         dir="rtl"
       >
-        {/* Card Content */}
-        <div className="p-5">
+        {/* Card Content - Mobile optimized padding */}
+        <div className="p-4 md:p-5">
           {/* Header: Logo on Left, Ticker & Name on Right */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
             {/* Right Side: Ticker & Company Name */}
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-[#1e3a5f]">
+              <h3 className="text-lg md:text-xl font-bold text-[#1e3a5f]">
                 {stock.symbol}
               </h3>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 line-clamp-1">
                 {stock.company}
               </p>
             </div>
@@ -68,15 +68,15 @@ export function StockCard({ stock, investmentAmount, onInvestmentAmountChange }:
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-sm text-gray-600 leading-relaxed mb-5 line-clamp-3">
+          {/* Description - Mobile: 2 lines, Desktop: 3 lines */}
+          <p className="text-sm text-gray-600 leading-relaxed mb-4 md:mb-5 line-clamp-2 md:line-clamp-3">
             {stock.description}
           </p>
 
-          {/* Investment Input */}
-          <div className="mb-4">
+          {/* Investment Input - Larger touch target on mobile */}
+          <div className="mb-3 md:mb-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">סכום להשקעה:</span>
+              <span className="text-sm text-gray-500 whitespace-nowrap">סכום:</span>
               <div className="relative flex-1">
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">₪</span>
                 <Input
@@ -87,7 +87,7 @@ export function StockCard({ stock, investmentAmount, onInvestmentAmountChange }:
                   onBlur={handleAmountBlur}
                   min="0"
                   step="1"
-                  className="h-10 pr-8 pl-3 rounded-lg border-gray-200 bg-gray-50 text-sm w-full"
+                  className="h-12 md:h-10 pr-8 pl-3 rounded-lg border-gray-200 bg-gray-50 text-base md:text-sm w-full"
                   dir="rtl"
                 />
               </div>
@@ -96,18 +96,18 @@ export function StockCard({ stock, investmentAmount, onInvestmentAmountChange }:
 
           {/* Amount indicator - Show when amount selected */}
           {amount > 0 && (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg py-2 px-3 text-center mb-4">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg py-2 px-3 text-center mb-3 md:mb-4">
               <span className="text-sm font-semibold text-emerald-700">
                 נבחר: ₪{amount.toLocaleString()}
               </span>
             </div>
           )}
 
-          {/* Chart Button */}
+          {/* Chart Button - Larger on mobile */}
           <Button
             variant="outline"
             onClick={() => setShowChart(true)}
-            className="w-full h-10 rounded-lg border-gray-200 hover:bg-gray-50 text-gray-700 gap-2"
+            className="w-full h-12 md:h-10 rounded-lg border-gray-200 hover:bg-gray-50 text-gray-700 gap-2 text-base md:text-sm active:scale-[0.98] transition-transform"
           >
             <TrendingUp className="h-4 w-4 text-emerald-500" />
             הצגת גרף

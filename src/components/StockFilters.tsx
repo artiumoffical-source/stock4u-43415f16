@@ -90,10 +90,80 @@ export default function StockFilters({ onFiltersChange, initialFilters }: StockF
   };
 
   return (
-    <div className="bg-white py-6" dir="rtl">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* TOP BAR - Always Visible */}
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+    <div className="bg-white py-4 md:py-6" dir="rtl">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        {/* TOP BAR - Mobile: Horizontal scroll for filters, Desktop: Flex wrap */}
+        
+        {/* Mobile Filter Bar - Horizontal scroll */}
+        <div className="md:hidden">
+          {/* Category Toggle */}
+          <div className="flex items-center bg-gray-100 rounded-full p-1 mb-4">
+            <button
+              onClick={() => updateFilter("category", "single_stocks")}
+              className={`flex-1 px-4 py-3 rounded-full text-sm font-medium transition-all ${
+                filters.category === "single_stocks"
+                  ? "bg-[#2563EB] text-white shadow-sm"
+                  : "text-[#2563EB]"
+              }`}
+            >
+              מניות בודדות
+            </button>
+            <button
+              onClick={() => updateFilter("category", "etfs")}
+              className={`flex-1 px-4 py-3 rounded-full text-sm font-medium transition-all ${
+                filters.category === "etfs"
+                  ? "bg-[#2563EB] text-white shadow-sm"
+                  : "text-[#2563EB]"
+              }`}
+            >
+              תעודות סל
+            </button>
+          </div>
+
+          {/* Mobile Filter Pills - Horizontal Scroll */}
+          <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 mb-4">
+            <div className="flex items-center gap-2 min-w-max">
+              <Select defaultValue="technology">
+                <SelectTrigger className="h-10 px-4 rounded-full border-gray-200 bg-white min-w-[120px] text-sm">
+                  <SelectValue placeholder="טכנולוגיה" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                  <SelectItem value="technology">טכנולוגיה</SelectItem>
+                  <SelectItem value="finance">פיננסים</SelectItem>
+                  <SelectItem value="healthcare">בריאות</SelectItem>
+                  <SelectItem value="energy">אנרגיה</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant="outline"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="h-10 px-4 rounded-full border-gray-200 gap-2 text-sm font-medium whitespace-nowrap"
+              >
+                <Filter className="h-4 w-4" />
+                סינון
+                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Search Bar */}
+          <div className="relative mb-2">
+            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="חיפוש מניה..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              className="h-12 pr-10 pl-4 rounded-full border-gray-200 bg-white text-base w-full"
+              dir="rtl"
+            />
+          </div>
+        </div>
+
+        {/* Desktop Filter Bar */}
+        <div className="hidden md:flex items-center justify-between gap-4 flex-wrap">
           {/* Right Side: Segmented Tab Switcher */}
           <div className="flex items-center bg-gray-100 rounded-full p-1 order-1">
             <button

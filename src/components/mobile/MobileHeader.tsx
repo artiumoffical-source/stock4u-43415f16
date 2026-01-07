@@ -10,21 +10,21 @@ export default function MobileHeader() {
   return (
     <>
       <header className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))] sticky top-0 z-50">
-        {/* Logo */}
+        {/* Right Side (RTL): Logo */}
         <Link to="/" className="flex-shrink-0">
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-            className="h-8 w-auto"
+            className="h-10 w-auto"
             alt="Stock4U Logo"
           />
         </Link>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3">
-          {/* Cart Button with Badge */}
+        {/* Left Side (RTL): Action Buttons - 44x44 tap targets */}
+        <div className="flex items-center gap-2">
+          {/* Cart Button with Badge - 44x44 touch target */}
           <Link
             to="/order-summary"
-            className="relative w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md"
+            className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
           >
             <ShoppingBag className="w-5 h-5 text-white" />
             {cartCount > 0 && (
@@ -34,18 +34,18 @@ export default function MobileHeader() {
             )}
           </Link>
 
-          {/* Profile Button */}
+          {/* Profile Button - 44x44 touch target */}
           <Link
             to="/login"
-            className="w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md"
+            className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
           >
             <User className="w-5 h-5 text-white" />
           </Link>
 
-          {/* Menu Button */}
+          {/* Menu Button - 44x44 touch target */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md"
+            className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
           >
             {isMenuOpen ? (
               <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
@@ -60,16 +60,16 @@ export default function MobileHeader() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white">
           <div className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))]">
-            <Link to="/" className="flex-shrink-0">
+            <Link to="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-                className="h-8 w-auto"
+                className="h-10 w-auto"
                 alt="Stock4U Logo"
               />
             </Link>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md"
+              className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
             >
               <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
             </button>
@@ -79,35 +79,35 @@ export default function MobileHeader() {
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200"
+              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               בית
             </Link>
             <Link
               to="/stock-selection?continue=true"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200"
+              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               בחירת מתנה
             </Link>
             <Link
               to="/about"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200"
+              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               אודות
             </Link>
             <Link
               to="/careers"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200"
+              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               קריירה
             </Link>
             <Link
               to="/login"
               onClick={() => setIsMenuOpen(false)}
-              className="mt-4 bg-[hsl(var(--stock4u-happy-blue))] text-white text-center py-4 rounded-full font-bold text-lg"
+              className="mt-4 bg-[hsl(var(--stock4u-happy-blue))] text-white text-center py-4 rounded-full font-bold text-lg min-h-[52px] flex items-center justify-center active:scale-95 transition-transform"
             >
               התחברות
             </Link>

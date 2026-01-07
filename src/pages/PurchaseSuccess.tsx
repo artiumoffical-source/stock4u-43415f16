@@ -107,81 +107,40 @@ export default function PurchaseSuccess() {
     <div style={{ direction: "rtl", minHeight: "100vh", background: "#FFF" }}>
       <Header />
 
-      {/* Hero Section - Original Figma Design */}
-      <div style={{ position: "relative", width: "100%", height: "559px", overflow: "hidden" }}>
+      {/* Hero Section - Mobile responsive */}
+      <div className="relative w-full h-[300px] md:h-[559px] overflow-hidden">
         <img
           src="https://api.builder.io/api/v1/image/assets/TEMP/5cafa848e255474fc771e474fc37970f0e1c731b?width=3840"
           alt="הרכישה בוצעה בהצלחה!"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center"
-          }}
+          className="w-full h-full object-cover object-center"
         />
       </div>
 
-      {/* Gift Details Section */}
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        padding: "60px 20px",
-        background: "#F5F7FC"
-      }}>
-        <div style={{
-          width: "100%",
-          maxWidth: "1275px",
-          background: "#FFF",
-          borderRadius: "30px",
-          padding: "40px",
-          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)"
-        }}>
+      {/* Gift Details Section - Mobile responsive */}
+      <div className="flex justify-center px-4 md:px-5 py-8 md:py-16 bg-[#F5F7FC]">
+        <div className="w-full max-w-[1275px] bg-white rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-xl">
           {/* Main Gift Info */}
-          <div style={{
-            background: "linear-gradient(135deg, #F5F7FC 0%, #E8F1FF 100%)",
-            borderRadius: "20px",
-            padding: "30px",
-            marginBottom: "30px",
-            textAlign: "center"
-          }}>
-            <p style={{
-              fontSize: "28px",
-              fontWeight: "700",
-              color: "#486284",
-              margin: "0",
-              lineHeight: "1.4",
-              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
-              המתנה מ- <span style={{ color: "#E96036" }}>{senderName}</span> תישלח אל{" "}
-              <span style={{ color: "#E96036" }}>{recipientName}</span> ב-{" "}
-              <span style={{ color: "#E96036" }}>{formatDeliveryDateTime()}</span>
+          <div className="bg-gradient-to-br from-[#F5F7FC] to-[#E8F1FF] rounded-xl md:rounded-2xl p-5 md:p-8 mb-6 md:mb-8 text-center">
+            <p className="text-lg md:text-[28px] font-bold text-[#486284] leading-relaxed"
+               style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
+              המתנה מ- <span className="text-[#E96036]">{senderName}</span> תישלח אל{" "}
+              <span className="text-[#E96036]">{recipientName}</span> ב-{" "}
+              <span className="text-[#E96036]">{formatDeliveryDateTime()}</span>
             </p>
           </div>
 
           {/* Receipt Download */}
-          <div style={{
-            background: "rgba(76, 126, 251, 0.1)",
-            borderRadius: "16px",
-            padding: "24px",
-            textAlign: "center",
-            border: "2px solid rgba(76, 126, 251, 0.2)"
-          }}>
-            <h3 style={{
-              fontSize: "20px",
-              fontWeight: "700",
-              color: "#4C7EFB",
-              margin: "0 0 16px",
-              fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+          <div className="bg-[rgba(76,126,251,0.1)] rounded-xl md:rounded-2xl p-5 md:p-6 text-center border-2 border-[rgba(76,126,251,0.2)]">
+            <h3 className="text-lg md:text-xl font-bold text-[#4C7EFB] mb-4"
+                style={{ fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif" }}>
               הורד קבלה
             </h3>
             <Button
               onClick={generateReceiptPDF}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 h-12 md:h-auto px-6"
               style={{
                 fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif",
                 fontSize: "16px",
-                padding: "12px 24px"
               }}
             >
               <Download className="h-4 w-4" />
@@ -191,97 +150,38 @@ export default function PurchaseSuccess() {
         </div>
       </div>
 
-      {/* Statistics Section */}
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        padding: "60px 20px",
-        background: "#FFF"
-      }}>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "24px",
-          width: "100%",
-          maxWidth: "1200px"
-        }}>
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: "32px",
-            borderRadius: "24px",
-            background: "rgba(239, 242, 246, 0.40)"
-          }}>
-            <div style={{
-              fontSize: "60px",
-              fontWeight: "700",
-              color: "#486284",
-              margin: "0 0 16px",
-              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+      {/* Statistics Section - Mobile responsive */}
+      <div className="flex justify-center px-4 md:px-5 py-8 md:py-16 bg-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-[1200px]">
+          <div className="flex flex-col items-center p-6 md:p-8 rounded-2xl md:rounded-3xl bg-[rgba(239,242,246,0.40)]">
+            <div className="text-4xl md:text-6xl font-bold text-[#486284] mb-3 md:mb-4"
+                 style={{ fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif" }}>
               24+
             </div>
-            <div style={{
-              fontSize: "20px",
-              color: "#8CA2C0",
-              textAlign: "center",
-              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+            <div className="text-base md:text-xl text-[#8CA2C0] text-center"
+                 style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
               מדינות שבהם אנו עובדים
             </div>
           </div>
 
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: "32px",
-            borderRadius: "24px",
-            background: "rgba(239, 242, 246, 0.40)"
-          }}>
-            <div style={{
-              fontSize: "60px",
-              fontWeight: "700",
-              color: "#486284",
-              margin: "0 0 16px",
-              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+          <div className="flex flex-col items-center p-6 md:p-8 rounded-2xl md:rounded-3xl bg-[rgba(239,242,246,0.40)]">
+            <div className="text-4xl md:text-6xl font-bold text-[#486284] mb-3 md:mb-4"
+                 style={{ fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif" }}>
               17M
             </div>
-            <div style={{
-              fontSize: "20px",
-              color: "#8CA2C0",
-              textAlign: "center",
-              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+            <div className="text-base md:text-xl text-[#8CA2C0] text-center"
+                 style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
               אנשים שהאמינו בנו
             </div>
           </div>
 
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            padding: "32px",
-            borderRadius: "24px",
-            background: "rgba(239, 242, 246, 0.40)"
-          }}>
-            <div style={{
-              fontSize: "60px",
-              fontWeight: "700",
-              color: "#486284",
-              margin: "0 0 16px",
-              fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+          <div className="flex flex-col items-center p-6 md:p-8 rounded-2xl md:rounded-3xl bg-[rgba(239,242,246,0.40)]">
+            <div className="text-4xl md:text-6xl font-bold text-[#486284] mb-3 md:mb-4"
+                 style={{ fontFamily: "'DM Sans', -apple-system, Roboto, Helvetica, sans-serif" }}>
               +95%
             </div>
-            <div style={{
-              fontSize: "20px",
-              color: "#8CA2C0",
-              textAlign: "center",
-              fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif"
-            }}>
+            <div className="text-base md:text-xl text-[#8CA2C0] text-center"
+                 style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
               לקוחות מרוצים
             </div>
           </div>
@@ -324,45 +224,20 @@ export default function PurchaseSuccess() {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "24px",
-        padding: "60px 20px",
-        background: "#FFF"
-      }}>
+      {/* Action Buttons - Mobile responsive */}
+      <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 px-4 md:px-5 py-8 md:py-16 bg-white">
         <Link
           to="/"
-          style={{
-            display: "inline-flex",
-            padding: "16px 32px",
-            borderRadius: "50px",
-            background: "#4C7EFB",
-            color: "#FFF",
-            fontSize: "18px",
-            fontWeight: "700",
-            textDecoration: "none",
-            boxShadow: "10px 10px 0 0 rgba(0, 0, 0, 0.10)",
-            fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
-          }}
+          className="inline-flex justify-center items-center py-4 px-8 rounded-full bg-[#4C7EFB] text-white text-base md:text-lg font-bold no-underline shadow-lg active:scale-95 transition-transform"
+          style={{ fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif" }}
         >
           חזור לעמוד הבית
         </Link>
 
         <Link
           to="/stock-selection"
-          style={{
-            display: "inline-flex",
-            padding: "16px 32px",
-            borderRadius: "50px",
-            background: "#DBE3F3",
-            color: "#4C7EFB",
-            fontSize: "18px",
-            fontWeight: "700",
-            textDecoration: "none",
-            fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif"
-          }}
+          className="inline-flex justify-center items-center py-4 px-8 rounded-full bg-[#DBE3F3] text-[#4C7EFB] text-base md:text-lg font-bold no-underline active:scale-95 transition-transform"
+          style={{ fontFamily: "'Greycliff Hebrew CF', -apple-system, Roboto, Helvetica, sans-serif" }}
         >
           שלח מתנה נוספת
         </Link>
