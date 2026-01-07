@@ -15,46 +15,99 @@ export default function Index() {
       <div className="block md:hidden overflow-x-hidden">
         {/* Mobile Hero Section */}
         <section 
-          className="px-4 pt-4 pb-6 relative overflow-hidden"
+          className="relative overflow-hidden min-h-[520px]"
           style={{ backgroundColor: '#E0E7F5' }}
         >
-          {/* Hero Characters Image with Title */}
-          <div className="relative w-full mb-4">
+          {/* Zigzag Background Pattern */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <svg className="w-full h-full" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+              <path 
+                d="M0 100 L50 80 L100 120 L150 60 L200 140 L250 80 L300 150 L350 90 L400 130" 
+                stroke="#4880FF" 
+                strokeWidth="3" 
+                fill="none"
+                opacity="0.5"
+              />
+              <path 
+                d="M0 200 L50 180 L100 220 L150 160 L200 240 L250 180 L300 250 L350 190 L400 230" 
+                stroke="#4880FF" 
+                strokeWidth="3" 
+                fill="none"
+                opacity="0.4"
+              />
+              <path 
+                d="M0 300 L50 280 L100 320 L150 260 L200 340 L250 280 L300 350 L350 290 L400 330" 
+                stroke="#4880FF" 
+                strokeWidth="3" 
+                fill="none"
+                opacity="0.3"
+              />
+            </svg>
+          </div>
+
+          {/* Floating Stickers Container */}
+          <div className="relative w-full h-[320px]">
+            {/* Hero Characters Image - positioned as the stickers */}
             <img
               src={heroCharacters}
               alt="Stock4U Characters - מתנות שעושות כסף!"
-              className="w-full h-auto object-contain"
+              className="absolute inset-0 w-full h-full object-contain object-center z-10 scale-110"
             />
+            
+            {/* Decorative Stars */}
+            <svg className="absolute top-4 left-[15%] w-4 h-4 text-[#FF6B4A] z-20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+            </svg>
+            <svg className="absolute top-8 right-[20%] w-3 h-3 text-[#4880FF] z-20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+            </svg>
+            <svg className="absolute top-16 left-[8%] w-5 h-5 text-[#FFC845] z-20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+            </svg>
+            <svg className="absolute top-12 right-[5%] w-4 h-4 text-[#00C9A7] z-20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+            </svg>
+          </div>
+
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-[#4880FF]"></div>
+            <div className="w-2 h-2 rounded-full bg-[#4880FF]/30"></div>
+            <div className="w-2 h-2 rounded-full bg-[#4880FF]/30"></div>
           </div>
 
           {/* Video Placeholder - Full width */}
-          <div className="w-full aspect-video bg-gray-900 rounded-2xl mb-4 flex items-center justify-center shadow-xl">
-            <button
-              onClick={() =>
-                window.open(
-                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                  "_blank",
-                )
-              }
-              className="w-14 h-14 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
-            >
-              <svg
-                className="w-5 h-5 text-white ml-0.5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
+          <div className="mx-4 mb-4">
+            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-xl">
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "_blank",
+                  )
+                }
+                className="w-14 h-14 bg-[#4880FF] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
               >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </button>
+                <svg
+                  className="w-5 h-5 text-white ml-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* CTA Banner */}
-          <Link
-            to="/stock-selection?continue=true"
-            className="block w-full bg-[hsl(var(--stock4u-green))] text-white text-center py-4 rounded-2xl font-bold text-base shadow-md active:scale-[0.98] transition-transform"
-          >
-            חבילת מניות מקצועית &gt;
-          </Link>
+          <div className="px-4 pb-6">
+            <Link
+              to="/stock-selection?continue=true"
+              className="block w-full bg-[#00C9A7] text-white text-center py-4 rounded-2xl font-bold text-base shadow-md active:scale-[0.98] transition-transform"
+            >
+              חבילת מניות מקצועית &gt;
+            </Link>
+          </div>
         </section>
 
         {/* Mobile Packages Carousel with Swipe & Dots */}
