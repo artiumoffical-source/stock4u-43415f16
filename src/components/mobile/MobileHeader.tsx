@@ -9,22 +9,22 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))] sticky top-0 z-50">
-        {/* Right Side (RTL): Logo */}
+      <header className="flex items-center justify-between px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
+        {/* Left Side (RTL): Logo */}
         <Link to="/" className="flex-shrink-0">
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-            className="h-10 w-auto"
+            className="h-8 w-auto"
             alt="Stock4U Logo"
           />
         </Link>
 
-        {/* Left Side (RTL): Action Buttons - 44x44 tap targets */}
-        <div className="flex items-center gap-2">
-          {/* Cart Button with Badge - 44x44 touch target */}
+        {/* Right Side (RTL): Action Buttons */}
+        <div className="flex items-center gap-3">
+          {/* Cart Button with Badge */}
           <Link
             to="/order-summary"
-            className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
+            className="relative min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
           >
             <ShoppingBag className="w-5 h-5 text-white" />
             {cartCount > 0 && (
@@ -34,18 +34,18 @@ export default function MobileHeader() {
             )}
           </Link>
 
-          {/* Profile Button - 44x44 touch target */}
+          {/* Profile Button - Blue Circle */}
           <Link
             to="/login"
-            className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
+            className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
           >
             <User className="w-5 h-5 text-white" />
           </Link>
 
-          {/* Menu Button - 44x44 touch target */}
+          {/* Menu Button - Yellow Circle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
+            className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
           >
             {isMenuOpen ? (
               <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
@@ -59,17 +59,17 @@ export default function MobileHeader() {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white">
-          <div className="flex items-center justify-between px-4 py-3 bg-[hsl(var(--stock4u-light-blue))]">
+          <div className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
             <Link to="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-                className="h-10 w-auto"
+                className="h-8 w-auto"
                 alt="Stock4U Logo"
               />
             </Link>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-md active:scale-95 transition-transform"
+              className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
             >
               <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
             </button>
