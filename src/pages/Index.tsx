@@ -15,70 +15,90 @@ export default function Index() {
       <div className="block md:hidden overflow-x-hidden">
         {/* Mobile Hero Section */}
         <section 
-          className="relative overflow-hidden min-h-[520px]"
+          className="relative overflow-hidden min-h-[480px] pb-4"
           style={{ backgroundColor: '#E0E7F5' }}
         >
-          {/* Zigzag Background Pattern */}
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <svg className="w-full h-full" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          {/* Zigzag Background Pattern - Bold Lines */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <svg className="absolute w-[200%] h-full -left-1/4" viewBox="0 0 800 600" preserveAspectRatio="none">
+              {/* Main zigzag lines */}
               <path 
-                d="M0 100 L50 80 L100 120 L150 60 L200 140 L250 80 L300 150 L350 90 L400 130" 
+                d="M0 150 L100 100 L200 180 L300 80 L400 200 L500 100 L600 220 L700 120 L800 180" 
                 stroke="#4880FF" 
-                strokeWidth="3" 
+                strokeWidth="8" 
                 fill="none"
-                opacity="0.5"
+                opacity="0.15"
               />
               <path 
-                d="M0 200 L50 180 L100 220 L150 160 L200 240 L250 180 L300 250 L350 190 L400 230" 
+                d="M0 280 L100 220 L200 320 L300 200 L400 350 L500 250 L600 380 L700 280 L800 340" 
                 stroke="#4880FF" 
-                strokeWidth="3" 
+                strokeWidth="8" 
                 fill="none"
-                opacity="0.4"
+                opacity="0.12"
               />
               <path 
-                d="M0 300 L50 280 L100 320 L150 260 L200 340 L250 280 L300 350 L350 290 L400 330" 
+                d="M0 420 L100 360 L200 450 L300 340 L400 480 L500 380 L600 500 L700 400 L800 460" 
                 stroke="#4880FF" 
-                strokeWidth="3" 
+                strokeWidth="8" 
                 fill="none"
-                opacity="0.3"
+                opacity="0.08"
               />
             </svg>
           </div>
 
-          {/* Floating Stickers Container */}
-          <div className="relative w-full h-[320px]">
-            {/* Hero Characters Image - positioned as the stickers */}
+          {/* Floating Characters & Title Area */}
+          <div className="relative w-full min-h-[320px] pt-2">
+            {/* Hero Characters Image - Large and centered */}
             <img
               src={heroCharacters}
               alt="Stock4U Characters - מתנות שעושות כסף!"
-              className="absolute inset-0 w-full h-full object-contain object-center z-10 scale-110"
+              className="relative w-full h-auto object-contain z-10 scale-[1.15] transform-gpu"
+              style={{ maxHeight: '320px' }}
             />
             
-            {/* Decorative Stars */}
-            <svg className="absolute top-4 left-[15%] w-4 h-4 text-[#FF6B4A] z-20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-            </svg>
-            <svg className="absolute top-8 right-[20%] w-3 h-3 text-[#4880FF] z-20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-            </svg>
-            <svg className="absolute top-16 left-[8%] w-5 h-5 text-[#FFC845] z-20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-            </svg>
-            <svg className="absolute top-12 right-[5%] w-4 h-4 text-[#00C9A7] z-20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-            </svg>
+            {/* Decorative Stars - Scattered */}
+            <div className="absolute top-3 left-[12%] w-5 h-5 z-20">
+              <svg viewBox="0 0 24 24" fill="#FF6B4A">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
+            <div className="absolute top-6 right-[18%] w-4 h-4 z-20">
+              <svg viewBox="0 0 24 24" fill="#4880FF">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
+            <div className="absolute top-20 left-[5%] w-6 h-6 z-20">
+              <svg viewBox="0 0 24 24" fill="#FFC845">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
+            <div className="absolute top-14 right-[3%] w-5 h-5 z-20">
+              <svg viewBox="0 0 24 24" fill="#00C9A7">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
+            <div className="absolute top-[45%] left-[2%] w-4 h-4 z-20">
+              <svg viewBox="0 0 24 24" fill="#FF6B4A">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
+            <div className="absolute top-[50%] right-[6%] w-3 h-3 z-20">
+              <svg viewBox="0 0 24 24" fill="#FFC845">
+                <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
+              </svg>
+            </div>
           </div>
 
           {/* Pagination Dots */}
-          <div className="flex justify-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-[#4880FF]"></div>
-            <div className="w-2 h-2 rounded-full bg-[#4880FF]/30"></div>
-            <div className="w-2 h-2 rounded-full bg-[#4880FF]/30"></div>
+          <div className="flex justify-center gap-2 py-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
           </div>
 
-          {/* Video Placeholder - Full width */}
-          <div className="mx-4 mb-4">
-            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-xl">
+          {/* Video Player - Overlapping effect */}
+          <div className="relative z-20 w-[92%] mx-auto -mt-2">
+            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
               <button
                 onClick={() =>
                   window.open(
@@ -86,10 +106,10 @@ export default function Index() {
                     "_blank",
                   )
                 }
-                className="w-14 h-14 bg-[#4880FF] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
+                className="w-16 h-16 bg-[#4880FF] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
               >
                 <svg
-                  className="w-5 h-5 text-white ml-0.5"
+                  className="w-6 h-6 text-white ml-1"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -100,10 +120,10 @@ export default function Index() {
           </div>
 
           {/* CTA Banner */}
-          <div className="px-4 pb-6">
+          <div className="px-4 pt-4 pb-2">
             <Link
               to="/stock-selection?continue=true"
-              className="block w-full bg-[#00C9A7] text-white text-center py-4 rounded-2xl font-bold text-base shadow-md active:scale-[0.98] transition-transform"
+              className="block w-full bg-[#00C9A7] text-white text-center py-4 rounded-2xl font-bold text-base shadow-lg active:scale-[0.98] transition-transform"
             >
               חבילת מניות מקצועית &gt;
             </Link>
