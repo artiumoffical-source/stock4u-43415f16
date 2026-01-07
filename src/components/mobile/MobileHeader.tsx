@@ -9,46 +9,34 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 h-16 bg-white sticky top-0 z-50">
-        {/* Left Side: STOCK4U Text Logo - Bold chunky style */}
+      <header className="flex items-center justify-between px-5 h-[70px] bg-white border-b border-gray-100 sticky top-0 z-50">
+        {/* Logo (Left) */}
         <Link to="/" className="flex-shrink-0">
           <span 
-            className="text-[26px] font-black tracking-tight english-font"
+            className="text-[28px] font-black tracking-tight"
             style={{ 
-              color: '#4F80FF',
-              fontWeight: 900,
-              letterSpacing: '-0.02em'
+              color: '#4880FF',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              fontWeight: 900
             }}
           >
             STOCK4U
           </span>
         </Link>
 
-        {/* Right Side: Action Buttons */}
+        {/* Actions (Right) */}
         <div className="flex items-center gap-3">
-          {/* Cart Button - Blue Circle with shadow */}
+          {/* Cart Button */}
           <Link
             to="/order-summary"
-            className="relative w-11 h-11 rounded-full flex items-center justify-center transition-transform active:scale-95"
-            style={{ 
-              backgroundColor: '#4F80FF',
-              boxShadow: '0 4px 8px rgba(79, 128, 255, 0.35)'
-            }}
+            className="relative w-11 h-11 bg-[#4880FF] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
           >
-            {/* Shopping Basket Icon - White */}
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="white" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m5 11 4-7"></path>
+              <path d="m19 11-4-7"></path>
+              <path d="M2 11h20"></path>
+              <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8c.9 0 1.8-.7 2-1.6l1.7-7.4"></path>
+              <path d="m9 11 1 9"></path>
             </svg>
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
@@ -57,28 +45,18 @@ export default function MobileHeader() {
             )}
           </Link>
 
-          {/* Menu Button - Yellow Circle with Orange Lines */}
+          {/* Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-11 h-11 rounded-full flex items-center justify-center transition-transform active:scale-95"
-            style={{ 
-              backgroundColor: '#FFC845',
-              boxShadow: '0 4px 8px rgba(255, 200, 69, 0.4)'
-            }}
+            className="relative w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
           >
             {isMenuOpen ? (
-              <X className="w-5 h-5" style={{ color: '#E85C3F' }} />
+              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
             ) : (
-              /* Custom Hamburger with Orange/Red lines */
-              <svg 
-                width="20" 
-                height="16" 
-                viewBox="0 0 20 16" 
-                fill="none"
-              >
-                <line x1="2" y1="2" x2="18" y2="2" stroke="#E85C3F" strokeWidth="2.5" strokeLinecap="round"/>
-                <line x1="2" y1="8" x2="18" y2="8" stroke="#E85C3F" strokeWidth="2.5" strokeLinecap="round"/>
-                <line x1="2" y1="14" x2="18" y2="14" stroke="#E85C3F" strokeWidth="2.5" strokeLinecap="round"/>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M4 12H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M4 18H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
               </svg>
             )}
           </button>
@@ -88,24 +66,20 @@ export default function MobileHeader() {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white">
-          <div className="flex items-center justify-between px-4 h-16 bg-white border-b border-gray-100">
+          <div className="flex items-center justify-between px-5 h-[70px] bg-white border-b border-gray-100">
             <Link to="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <span 
-                className="text-[26px] font-black tracking-tight english-font"
-                style={{ color: '#4F80FF', fontWeight: 900 }}
+                className="text-[28px] font-black tracking-tight"
+                style={{ color: '#4880FF', fontWeight: 900 }}
               >
                 STOCK4U
               </span>
             </Link>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="w-11 h-11 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-              style={{ 
-                backgroundColor: '#FFC845',
-                boxShadow: '0 4px 8px rgba(255, 200, 69, 0.4)'
-              }}
+              className="w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
             >
-              <X className="w-5 h-5" style={{ color: '#E85C3F' }} />
+              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
             </button>
           </div>
 
@@ -113,36 +87,35 @@ export default function MobileHeader() {
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
+              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               בית
             </Link>
             <Link
               to="/stock-selection?continue=true"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
+              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               בחירת מתנה
             </Link>
             <Link
               to="/about"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
+              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               אודות
             </Link>
             <Link
               to="/careers"
               onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] py-3 border-b border-gray-200 min-h-[48px] flex items-center"
+              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               קריירה
             </Link>
             <Link
               to="/login"
               onClick={() => setIsMenuOpen(false)}
-              className="mt-4 text-white text-center py-4 rounded-full font-bold text-lg min-h-[52px] flex items-center justify-center active:scale-95 transition-transform"
-              style={{ backgroundColor: '#4F80FF' }}
+              className="mt-4 text-white text-center py-4 rounded-full font-bold text-lg min-h-[52px] flex items-center justify-center bg-[#4880FF] active:translate-y-1 transition-all"
             >
               התחברות
             </Link>
