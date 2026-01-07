@@ -5,6 +5,7 @@ interface GiftData {
     symbol: string;
     name: string;
     amount: number;
+    price?: number;
   }>;
   selectedCard: string | null;
   greetingMessage: string;
