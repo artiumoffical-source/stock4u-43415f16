@@ -7,11 +7,12 @@ interface StepHeroProps {
 }
 
 export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "default" }) => {
-  // Steps ordered for RTL: Step 1 (right) -> Step 2 (center) -> Step 3 (left)
+  // Steps in VISUAL order (Left to Right on screen): 3, 2, 1
+  // This ensures Step 1 appears on the RIGHT side
   const steps = [
-    { number: 1, label: "פרטים וברכה" },
-    { number: 2, label: "עיצוב המתנה" },
     { number: 3, label: "סיום ותשלום" },
+    { number: 2, label: "עיצוב המתנה" },
+    { number: 1, label: "פרטים וברכה" },
   ];
 
   const getStepStyle = (stepNumber: number) => {
@@ -44,83 +45,66 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
     <div 
       className="w-full h-[220px] md:h-[280px] lg:h-[320px] relative overflow-hidden"
       style={{ backgroundColor: '#E0E7F5' }}
-      dir="rtl"
     >
-      {/* 3D Currency Stickers */}
-      {/* Euro - Top Right */}
-      <div className="absolute top-4 md:top-6 right-[3%] text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
-      
+      {/* 3D Currency Stickers - Positioned to match reference */}
       {/* Euro - Top Left */}
-      <div className="absolute top-8 md:top-12 left-[5%] text-3xl md:text-4xl font-black z-10 -rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
+      <div className="absolute top-4 md:top-6 left-[3%] text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
+      
+      {/* Euro - Top Right */}
+      <div className="absolute top-8 md:top-12 right-[5%] text-3xl md:text-4xl font-black z-10 -rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
       
       {/* Shekel - Top Center */}
-      <div className="absolute top-2 md:top-4 left-1/2 -translate-x-1/2 text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>₪</div>
+      <div className="absolute top-0 md:top-2 left-1/2 -translate-x-1/2 text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>₪</div>
       
-      {/* Dollar - Upper Center Right */}
-      <div className="absolute top-12 md:top-16 right-[28%] text-3xl md:text-4xl font-black z-10 rotate-6" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>$</div>
+      {/* Dollar - Upper area */}
+      <div className="absolute top-12 md:top-16 left-[32%] text-3xl md:text-4xl font-black z-10 rotate-6" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>$</div>
       
-      {/* Pound - Left Side */}
+      {/* Pound - Bottom Left */}
       <div className="absolute bottom-16 md:bottom-20 left-[6%] text-3xl md:text-4xl font-black z-10 rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>£</div>
       
       {/* Yen - Bottom Right */}
       <div className="absolute bottom-12 md:bottom-16 right-[4%] text-3xl md:text-4xl font-black z-10 -rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>¥</div>
-      
-      {/* Dollar - Right Side Mid */}
-      <div className="absolute top-20 md:top-24 right-[8%] text-2xl md:text-3xl font-black z-10 rotate-3" style={{ color: '#22c55e', textShadow: '2px 2px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>$</div>
 
       {/* Decorative Stars */}
-      {/* Red Star - Left */}
       <div className="absolute top-16 md:top-20 left-[2%] z-10">
         <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="#FF6347">
           <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
         </svg>
       </div>
-      
-      {/* Red Star - Top Right */}
       <div className="absolute top-6 md:top-8 right-[25%] z-10">
         <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#FF6347">
           <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
         </svg>
       </div>
-      
-      {/* Yellow 4-pointed Star - Center Left */}
       <div className="absolute top-14 md:top-16 left-[22%] z-10">
         <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="#FFD93D">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      
-      {/* Blue 4-pointed Star - Center */}
-      <div className="absolute top-10 md:top-12 left-[38%] z-10">
+      <div className="absolute top-20 md:top-24 left-[38%] z-10">
         <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#4880FF">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      
-      {/* Green Star - Far Right */}
       <div className="absolute top-16 md:top-20 right-[2%] z-10">
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#22c55e">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      
-      {/* Yellow Star - Bottom Left */}
       <div className="absolute bottom-20 md:bottom-24 left-[15%] z-10">
         <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#FFD93D">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      
-      {/* Blue Star - Bottom Right */}
       <div className="absolute bottom-24 md:bottom-28 right-[18%] z-10">
         <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="#4880FF">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
 
-      {/* Stepper Container - Positioned at bottom center */}
-      <div className="absolute bottom-6 md:bottom-10 left-0 right-0 flex items-center justify-center z-20">
-        <div className="flex items-center gap-0">
+      {/* STEPPER - Laid out LEFT to RIGHT: 3 -> 2 -> 1 */}
+      <div className="absolute bottom-8 md:bottom-12 left-0 right-0 flex items-center justify-center z-20">
+        <div className="flex items-center">
           {steps.map((step, index) => {
             const style = getStepStyle(step.number);
             const isLast = index === steps.length - 1;
@@ -150,9 +134,9 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
                   </span>
                 </div>
 
-                {/* Connecting Line */}
+                {/* Connecting Line - after each step except last */}
                 {!isLast && (
-                  <div className="w-20 md:w-32 lg:w-40 h-1 bg-[#4880FF] mx-3 md:mx-4 mb-10 md:mb-12 rounded-full" />
+                  <div className="w-16 md:w-28 lg:w-36 h-1 bg-[#4880FF] mx-4 md:mx-6 -mt-8 md:-mt-10 rounded-full" />
                 )}
               </div>
             );
