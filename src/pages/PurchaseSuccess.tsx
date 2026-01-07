@@ -1,3 +1,4 @@
+// Purchase Success Page with PDF Receipt Generation
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useGift } from "@/contexts/GiftContext";
