@@ -17,41 +17,68 @@ export default function MobileHowItWorks() {
     },
   ];
 
+  // Curved arrow SVG pointing downward
+  const CurvedArrow = () => (
+    <svg
+      width="40"
+      height="50"
+      viewBox="0 0 40 50"
+      fill="none"
+      className="text-[hsl(var(--stock4u-yellow))]"
+    >
+      <path
+        d="M20 0 C20 20, 35 25, 35 35 C35 45, 20 50, 20 50"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M15 44 L20 50 L25 44"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+
   return (
-    <section className="py-8 px-4 bg-[hsl(var(--stock4u-light-blue))]/20">
+    <section className="py-10 px-4 bg-white">
       {/* Title */}
-      <h2 className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-6 hebrew-font">
+      <h2 className="text-2xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-8 hebrew-font">
         רגע! איך זה עובד?
       </h2>
 
-      {/* Steps - Vertical Stack */}
-      <div className="flex flex-col gap-8 relative max-w-sm mx-auto">
+      {/* Steps - Vertical Stack with Curved Arrows */}
+      <div className="flex flex-col items-center gap-2 max-w-sm mx-auto">
         {steps.map((step, index) => (
-          <div key={index} className="relative">
-            {/* Card */}
-            <div className="relative bg-white rounded-2xl shadow-lg p-5 pt-8 border border-gray-100">
-              {/* Number Badge */}
-              <div className="absolute -top-4 right-4 w-10 h-10 bg-[hsl(var(--stock4u-yellow))] rounded-full flex items-center justify-center shadow-md">
+          <div key={index} className="w-full flex flex-col items-center">
+            {/* Step Card */}
+            <div className="relative w-full bg-[hsl(var(--stock4u-light-blue))]/30 rounded-2xl p-5 text-center">
+              {/* Number Badge - Positioned at top center */}
+              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-10 h-10 bg-[hsl(var(--stock4u-yellow))] rounded-full flex items-center justify-center shadow-md z-10">
                 <span className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
                   {step.number}
                 </span>
               </div>
 
               {/* Content */}
-              <h3 className="text-base font-bold text-[hsl(var(--stock4u-happy-blue))] mb-1 hebrew-font">
-                {step.title}
-              </h3>
-              <p className="text-sm text-[hsl(var(--stock4u-grey))] hebrew-font leading-relaxed">
-                {step.subtitle}
-              </p>
+              <div className="pt-4">
+                <h3 className="text-lg font-bold text-[hsl(var(--stock4u-happy-blue))] mb-1 hebrew-font">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[hsl(var(--stock4u-grey))] hebrew-font leading-relaxed">
+                  {step.subtitle}
+                </p>
+              </div>
             </div>
 
-            {/* Connector Arrow (between cards) */}
+            {/* Curved Arrow (between cards) */}
             {index < steps.length - 1 && (
-              <div className="flex justify-center mt-2">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[hsl(var(--stock4u-yellow))]">
-                  <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+              <div className="my-1">
+                <CurvedArrow />
               </div>
             )}
           </div>

@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
 import MobileStats from "../components/mobile/MobileStats";
 import MobileFooter from "../components/mobile/MobileFooter";
+import MobilePackagesCarousel from "../components/mobile/MobilePackagesCarousel";
 import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
@@ -14,16 +15,20 @@ export default function Index() {
       <div className="block md:hidden overflow-x-hidden">
         {/* Mobile Hero Section */}
         <section 
-          className="px-4 py-6 relative overflow-hidden"
+          className="px-4 pt-4 pb-6 relative overflow-hidden"
           style={{ backgroundColor: '#E0E7F5' }}
         >
-          {/* Main Title - Scaled for mobile */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-5 hebrew-font leading-tight">
-            מתנות ששוות כסף!
-          </h1>
+          {/* Hero Characters Image with Title */}
+          <div className="relative w-full mb-4">
+            <img
+              src={heroCharacters}
+              alt="Stock4U Characters - מתנות שעושות כסף!"
+              className="w-full h-auto object-contain"
+            />
+          </div>
 
-          {/* Video Placeholder - Full width with padding */}
-          <div className="w-full aspect-video bg-gray-900 rounded-2xl mb-5 flex items-center justify-center shadow-xl">
+          {/* Video Placeholder - Full width */}
+          <div className="w-full aspect-video bg-gray-900 rounded-2xl mb-4 flex items-center justify-center shadow-xl">
             <button
               onClick={() =>
                 window.open(
@@ -52,19 +57,8 @@ export default function Index() {
           </Link>
         </section>
 
-        {/* Mobile Gift Packages - Stacked Vertically */}
-        <section className="py-6 px-4 bg-white">
-          <h2 className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-5 hebrew-font">
-            חבילות מתנה פופולאריות
-          </h2>
-          <Link to="/stock-selection?continue=true" className="block">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fdd35d8126d3046409354f589f2bbc58e?format=webp&width=800&quality=85"
-              alt="Gift Package Cards"
-              className="w-full h-auto rounded-xl shadow-lg"
-            />
-          </Link>
-        </section>
+        {/* Mobile Packages Carousel with Swipe & Dots */}
+        <MobilePackagesCarousel />
 
         {/* Mobile How It Works */}
         <MobileHowItWorks />
@@ -72,22 +66,9 @@ export default function Index() {
         {/* Mobile Stats */}
         <MobileStats />
 
-        {/* Mobile CTA */}
-        <section className="text-center py-8 px-4 bg-white">
-          <h2 className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-4 hebrew-font">
-            אוקיי אני רוצה לשלוח מתנה, מה עכשיו?
-          </h2>
-          <Link
-            to="/stock-selection?continue=true"
-            className="inline-block bg-[hsl(var(--stock4u-happy-blue))] text-white px-6 py-4 rounded-full font-bold text-base shadow-lg active:scale-95 transition-transform"
-          >
-            מתחילים בבחירת מתנה &gt;
-          </Link>
-        </section>
-
         {/* Mobile Ticker */}
         <section className="py-4 overflow-hidden bg-[hsl(var(--stock4u-light-blue))]/30">
-          <p className="text-center text-[hsl(var(--stock4u-dark-grey))] mb-3 text-sm px-4">
+          <p className="text-center text-[hsl(var(--stock4u-grey))] mb-3 text-sm px-4">
             חברות פופולאריות להשקעה
           </p>
           <div className="relative overflow-hidden">

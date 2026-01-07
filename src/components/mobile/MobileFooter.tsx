@@ -1,36 +1,48 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail } from "lucide-react";
 
 export default function MobileFooter() {
   return (
     <footer className="bg-[hsl(var(--stock4u-light-blue))] py-8 px-4">
-      {/* Logo */}
+      {/* Mascot and Tagline */}
       <div className="text-center mb-6">
-        <span className="text-2xl font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
-          Stock4U
-        </span>
+        <p className="text-lg font-medium text-[hsl(var(--stock4u-dark-grey))] english-font mb-1">
+          Stock Up! With<br />Smart Gifts.
+        </p>
       </div>
 
-      {/* Links */}
-      <div className="flex flex-col items-center gap-3 mb-6">
-        <Link to="/about" className="text-[hsl(var(--stock4u-dark-grey))] hover:underline">
-          אודות
-        </Link>
-        <Link to="/careers" className="text-[hsl(var(--stock4u-dark-grey))] hover:underline">
-          קריירה
-        </Link>
-        <span className="text-[hsl(var(--stock4u-grey))]">ישראל 🇮🇱</span>
+      {/* Navigation Links - Two Columns */}
+      <div className="grid grid-cols-2 gap-x-8 gap-y-3 max-w-xs mx-auto mb-6 text-center">
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-[hsl(var(--stock4u-dark-grey))] text-sm mb-1">שומרים קשר</p>
+          <Link to="/about" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
+            אודות
+          </Link>
+          <Link to="/careers" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
+            קריירה
+          </Link>
+          <Link to="/stock-selection?continue=true" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
+            בחירת מתנה
+          </Link>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="font-bold text-[hsl(var(--stock4u-dark-grey))] text-sm mb-1">מידע חוקי</p>
+          <Link to="/terms" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
+            תנאי שימוש
+          </Link>
+          <Link to="/privacy" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
+            מדיניות פרטיות
+          </Link>
+        </div>
       </div>
 
-      {/* Contact */}
-      <div className="flex flex-col items-center gap-3 mb-6 text-[hsl(var(--stock4u-dark-grey))]">
-        <a href="tel:+972-XX-XXX-XXXX" className="flex items-center gap-2">
-          <Phone className="w-4 h-4" />
-          <span className="english-font">+972-XX-XXX-XXXX</span>
+      {/* Contact Section */}
+      <div className="text-center mb-6">
+        <p className="font-bold text-[hsl(var(--stock4u-dark-grey))] text-sm mb-2">צרו קשר</p>
+        <a href="mailto:info@stock4u.co.il" className="text-[hsl(var(--stock4u-grey))] text-sm english-font block mb-1">
+          info@stock4u.co.il
         </a>
-        <a href="mailto:support@stock4u.co.il" className="flex items-center gap-2">
-          <Mail className="w-4 h-4" />
-          <span className="english-font">support@stock4u.co.il</span>
+        <a href="tel:+972522456789" className="text-[hsl(var(--stock4u-grey))] text-sm english-font block">
+          +972-52-245-6789
         </a>
       </div>
 
@@ -68,15 +80,13 @@ export default function MobileFooter() {
         </a>
       </div>
 
-      {/* Legal Links */}
-      <div className="flex justify-center gap-4 text-sm text-[hsl(var(--stock4u-grey))]">
-        <Link to="/privacy" className="hover:underline">מדיניות פרטיות</Link>
-        <span>|</span>
-        <Link to="/terms" className="hover:underline">תנאי שימוש</Link>
-      </div>
+      {/* Legal Notice */}
+      <p className="text-center text-xs text-[hsl(var(--stock4u-grey))] mb-4 hebrew-font px-2">
+        אנחנו ברשתות
+      </p>
 
       {/* Copyright */}
-      <p className="text-center text-xs text-[hsl(var(--stock4u-grey))] mt-4 english-font">
+      <p className="text-center text-xs text-[hsl(var(--stock4u-grey))] english-font">
         © 2024 Stock4U. All rights reserved.
       </p>
     </footer>
