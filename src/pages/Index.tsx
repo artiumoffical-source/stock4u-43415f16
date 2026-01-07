@@ -11,16 +11,19 @@ export default function Index() {
   return (
     <Layout>
       {/* ========== MOBILE VERSION ========== */}
-      <div className="block md:hidden">
+      <div className="block md:hidden overflow-x-hidden">
         {/* Mobile Hero Section */}
-        <section className="bg-[hsl(var(--stock4u-light-blue))] px-4 py-8">
-          {/* Main Title */}
-          <h1 className="text-3xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-6 hebrew-font leading-tight">
+        <section 
+          className="px-4 py-6 relative overflow-hidden"
+          style={{ backgroundColor: '#E0E7F5' }}
+        >
+          {/* Main Title - Scaled for mobile */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-5 hebrew-font leading-tight">
             מתנות ששוות כסף!
           </h1>
 
-          {/* Video Placeholder */}
-          <div className="w-full aspect-video bg-black rounded-2xl mb-6 flex items-center justify-center shadow-lg">
+          {/* Video Placeholder - Full width with padding */}
+          <div className="w-full aspect-video bg-gray-900 rounded-2xl mb-5 flex items-center justify-center shadow-xl">
             <button
               onClick={() =>
                 window.open(
@@ -28,10 +31,10 @@ export default function Index() {
                   "_blank",
                 )
               }
-              className="w-16 h-16 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg border-4 border-white"
+              className="w-14 h-14 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
             >
               <svg
-                className="w-6 h-6 text-white ml-1"
+                className="w-5 h-5 text-white ml-0.5"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -43,19 +46,22 @@ export default function Index() {
           {/* CTA Banner */}
           <Link
             to="/stock-selection?continue=true"
-            className="block w-full bg-[hsl(var(--stock4u-green))] text-white text-center py-4 rounded-2xl font-bold text-lg shadow-md"
+            className="block w-full bg-[hsl(var(--stock4u-green))] text-white text-center py-4 rounded-2xl font-bold text-base shadow-md active:scale-[0.98] transition-transform"
           >
             חבילת מניות מקצועית &gt;
           </Link>
         </section>
 
-        {/* Mobile Gift Packages */}
-        <section className="py-6 px-4">
+        {/* Mobile Gift Packages - Stacked Vertically */}
+        <section className="py-6 px-4 bg-white">
+          <h2 className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] text-center mb-5 hebrew-font">
+            חבילות מתנה פופולאריות
+          </h2>
           <Link to="/stock-selection?continue=true" className="block">
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fdd35d8126d3046409354f589f2bbc58e?format=webp&width=800&quality=85"
               alt="Gift Package Cards"
-              className="w-full h-auto rounded-xl shadow-md"
+              className="w-full h-auto rounded-xl shadow-lg"
             />
           </Link>
         </section>
@@ -67,35 +73,35 @@ export default function Index() {
         <MobileStats />
 
         {/* Mobile CTA */}
-        <section className="text-center py-8 px-4">
+        <section className="text-center py-8 px-4 bg-white">
           <h2 className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-4 hebrew-font">
             אוקיי אני רוצה לשלוח מתנה, מה עכשיו?
           </h2>
           <Link
             to="/stock-selection?continue=true"
-            className="inline-block bg-[hsl(var(--stock4u-happy-blue))] text-white px-6 py-3 rounded-full font-bold text-base shadow-lg"
+            className="inline-block bg-[hsl(var(--stock4u-happy-blue))] text-white px-6 py-4 rounded-full font-bold text-base shadow-lg active:scale-95 transition-transform"
           >
             מתחילים בבחירת מתנה &gt;
           </Link>
         </section>
 
         {/* Mobile Ticker */}
-        <section className="py-4 overflow-hidden">
-          <p className="text-center text-[hsl(var(--stock4u-dark-grey))] mb-4 text-sm">
+        <section className="py-4 overflow-hidden bg-[hsl(var(--stock4u-light-blue))]/30">
+          <p className="text-center text-[hsl(var(--stock4u-dark-grey))] mb-3 text-sm px-4">
             חברות פופולאריות להשקעה
           </p>
           <div className="relative overflow-hidden">
-            <div className="flex items-center gap-6 opacity-30 animate-marquee">
+            <div className="flex items-center gap-6 opacity-40 animate-marquee">
               <div className="flex items-center gap-6 shrink-0">
                 {["GOOG", "AMZN", "AAPL", "NVDA", "MSFT", "META", "TSLA"].map((ticker) => (
-                  <span key={ticker} className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
+                  <span key={ticker} className="text-lg font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
                     {ticker}
                   </span>
                 ))}
               </div>
               <div className="flex items-center gap-6 shrink-0">
                 {["GOOG", "AMZN", "AAPL", "NVDA", "MSFT", "META", "TSLA"].map((ticker) => (
-                  <span key={`${ticker}-2`} className="text-xl font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
+                  <span key={`${ticker}-2`} className="text-lg font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
                     {ticker}
                   </span>
                 ))}

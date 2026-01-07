@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ children, hideHeader = false }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-white hebrew-font" dir="rtl">
+    <div className="min-h-screen bg-white hebrew-font overflow-x-hidden" dir="rtl">
       {!hideHeader && (
         <>
           {/* Desktop Header */}
