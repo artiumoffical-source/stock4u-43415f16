@@ -57,148 +57,74 @@ const GiftDesign = () => {
 
       <StepHero currentStep={2} />
 
-      {/* Main Content */}
+      {/* Main Content - Mobile responsive */}
       <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "48px",
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "60px 40px 80px",
-          background: "#fff",
-        }}
+        className="flex flex-col justify-center items-center gap-6 md:gap-12 max-w-[1200px] mx-auto px-4 md:px-10 py-8 md:py-16 bg-white"
       >
         {/* Title */}
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
+        <div className="text-center">
           <h2
-            style={{
-              color: "#486284",
-              fontSize: "32px",
-              fontWeight: "700",
-              fontFamily: "Assistant, sans-serif",
-              margin: "0",
-            }}
+            className="text-2xl md:text-[32px] font-bold text-[#486284]"
+            style={{ fontFamily: "Assistant, sans-serif" }}
           >
             בחרו עיצוב:
           </h2>
         </div>
 
-        {/* Card Templates */}
+        {/* Card Templates - Mobile: Full width scroll, Desktop: Flex wrap */}
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            gap: "40px",
-            width: "100%",
-            flexWrap: "wrap",
-            maxWidth: "1100px",
-          }}
+          className="flex md:justify-center items-start gap-4 md:gap-10 w-full md:flex-wrap overflow-x-auto md:overflow-visible scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 pb-4 md:pb-0"
+          style={{ maxWidth: "1100px" }}
         >
           {cardTemplates.map((card) => (
             <div
               key={card.id}
               onClick={() => setSelectedCard(card.id)}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "20px",
-                cursor: "pointer",
-                position: "relative",
-                padding: "20px",
-                borderRadius: "24px",
-                border: selectedCard === card.id ? "5px solid #5B8DEE" : "5px solid transparent",
-                transition: "all 0.2s ease",
-                background: selectedCard === card.id ? "#F0F4FF" : "transparent",
-              }}
+              className={`flex flex-col items-center gap-4 md:gap-5 cursor-pointer p-3 md:p-5 rounded-2xl md:rounded-3xl transition-all flex-shrink-0 ${
+                selectedCard === card.id 
+                  ? "border-[3px] md:border-[5px] border-[#5B8DEE] bg-[#F0F4FF]" 
+                  : "border-[3px] md:border-[5px] border-transparent"
+              }`}
             >
-              {/* Card Preview Image */}
+              {/* Card Preview Image - Mobile: Smaller */}
               <div
-                style={{
-                  width: "340px",
-                  height: "260px",
-                  borderRadius: "20px",
-                  overflow: "hidden",
-                  boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-                }}
+                className="w-[200px] md:w-[340px] h-[150px] md:h-[260px] rounded-xl md:rounded-2xl overflow-hidden shadow-lg"
               >
                 <img
                   src={card.image}
                   alt={card.name}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transform: "scale(1.2)",
-                    transformOrigin: "center center",
-                  }}
+                  className="w-full h-full object-cover scale-[1.2]"
                 />
               </div>
 
               {/* Card Name and Eye Icon */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  justifyContent: "center",
-                }}
-              >
+              <div className="flex items-center gap-2 md:gap-3 justify-center">
                 <span
-                  style={{
-                    color: "#486284",
-                    fontSize: "20px",
-                    fontFamily: "Assistant, sans-serif",
-                    fontWeight: "600",
-                  }}
+                  className="text-base md:text-xl text-[#486284] font-semibold"
+                  style={{ fontFamily: "Assistant, sans-serif" }}
                 >
                   {card.name}
                 </span>
                 <Eye
-                  size={28}
-                  color="#486284"
-                  strokeWidth={2}
-                  style={{ cursor: "pointer" }}
+                  size={24}
+                  className="text-[#486284] cursor-pointer md:w-7 md:h-7"
                 />
               </div>
             </div>
           ))}
         </div>
 
-        {/* Continue Button */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "20px",
-          }}
-        >
+        {/* Continue Button - Mobile optimized */}
+        <div className="flex justify-center mt-4 md:mt-5 w-full px-4 md:px-0">
           <button
             onClick={handleContinue}
             disabled={!selectedCard}
-            style={{
-              width: "340px",
-              height: "60px",
-              background: selectedCard ? "#486284" : "#D1D5DB",
-              color: "#FFF",
-              border: "none",
-              borderRadius: "30px",
-              fontSize: "20px",
-              fontFamily: "Assistant, sans-serif",
-              cursor: selectedCard ? "pointer" : "not-allowed",
-              fontWeight: "700",
-              opacity: selectedCard ? 1 : 0.6,
-              transition: "all 0.2s ease",
-              boxShadow: selectedCard ? "0 4px 12px rgba(72, 98, 132, 0.3)" : "none",
-            }}
+            className={`w-full md:w-[340px] h-14 md:h-[60px] rounded-full text-lg md:text-xl font-bold transition-all ${
+              selectedCard 
+                ? "bg-[#486284] text-white cursor-pointer shadow-lg" 
+                : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
+            }`}
+            style={{ fontFamily: "Assistant, sans-serif" }}
           >
             המשך לתשלום
           </button>
