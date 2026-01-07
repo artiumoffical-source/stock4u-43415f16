@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { SlidersHorizontal, Sparkles, Search } from "lucide-react";
+import { Checkbox } from "./ui/checkbox";
+import { SlidersHorizontal, Sparkles, Search, ChevronDown } from "lucide-react";
 
 export interface FilterState {
-  category: "packages" | "technology" | "single_stocks";
+  category: "etfs" | "single_stocks";
   search: string;
   priceMin: number;
   priceMax: number;
@@ -17,6 +17,7 @@ export interface FilterState {
   growthMin: number;
   growthMax: number;
   country: string;
+  sectors: string[];
 }
 
 interface StockFiltersProps {
@@ -36,14 +37,25 @@ const defaultFilters: FilterState = {
   growthMin: 1,
   growthMax: 5,
   country: "israel",
+  sectors: [],
 };
+
+const sectorOptions = [
+  { id: "ai", label: "בינה מלאכותית" },
+  { id: "software", label: "פיתוח תוכנה" },
+  { id: "cloud", label: "מחשוב ענן" },
+  { id: "iot", label: "אינטרנט של הדברים" },
+  { id: "cyber", label: "סייבר ואבטחת מידע" },
+  { id: "bigdata", label: "נתונים גדולים" },
+  { id: "vr", label: "מציאות מדומה" },
+  { id: "robotics", label: "רובוטיקה" },
+];
 
 export default function StockFilters({ onFiltersChange, initialFilters }: StockFiltersProps) {
   const [filters, setFilters] = useState<FilterState>({
     ...defaultFilters,
     ...initialFilters,
   });
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [searchInput, setSearchInput] = useState(filters.search);
 
   // Debounced search
@@ -63,10 +75,11 @@ export default function StockFilters({ onFiltersChange, initialFilters }: StockF
     onFiltersChange(newFilters);
   };
 
-  const resetFilters = () => {
-    setFilters(defaultFilters);
-    setSearchInput("");
-    onFiltersChange(defaultFilters);
+  const toggleSector = (sectorId: string) => {
+    const newSectors = filters.sectors.includes(sectorId)
+      ? filters.sectors.filter((s) => s !== sectorId)
+      : [...filters.sectors, sectorId];
+    updateFilter("sectors", newSectors);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,263 +88,228 @@ export default function StockFilters({ onFiltersChange, initialFilters }: StockF
     }
   };
 
-  // Validation helpers
-  const isPriceValid = filters.priceMin <= filters.priceMax;
-  const isMarketCapValid = () => {
-    const minValue = filters.marketCapMin * (filters.marketCapMinUnit === "billion" ? 1e9 : 1e6);
-    const maxValue = filters.marketCapMax * (filters.marketCapMaxUnit === "billion" ? 1e9 : 1e6);
-    return minValue <= maxValue;
-  };
-  const isGrowthValid = filters.growthMin <= filters.growthMax;
-
   return (
     <div className="bg-white py-8" dir="rtl">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Main Filter Bar */}
-        <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-          {/* Category Tabs (Right side in RTL) */}
-          <div className="flex items-center gap-2 order-1">
-            <Button
-              variant={filters.category === "single_stocks" ? "default" : "outline"}
+      <div className="max-w-6xl mx-auto px-6">
+        {/* TOP BAR - Controls */}
+        <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+          {/* Right Side: Segmented Tab Switcher */}
+          <div className="flex items-center bg-gray-100 rounded-full p-1 order-1">
+            <button
               onClick={() => updateFilter("category", "single_stocks")}
-              className="h-12 px-6 rounded-full text-base font-medium"
+              className={`px-6 py-3 rounded-full text-sm font-medium transition-all ${
+                filters.category === "single_stocks"
+                  ? "bg-[#2563EB] text-white shadow-sm"
+                  : "text-[#2563EB] hover:bg-gray-200"
+              }`}
             >
               מניות בודדות
-            </Button>
-            <Button
-              variant={filters.category === "technology" ? "default" : "outline"}
-              onClick={() => updateFilter("category", "technology")}
-              className="h-12 px-6 rounded-full text-base font-medium"
-            >
-              טכנולוגיה
-            </Button>
-            <Button
-              variant={filters.category === "packages" ? "default" : "outline"}
-              onClick={() => updateFilter("category", "packages")}
-              className="h-12 px-6 rounded-full text-base font-medium"
+            </button>
+            <button
+              onClick={() => updateFilter("category", "etfs")}
+              className={`px-6 py-3 rounded-full text-sm font-medium transition-all ${
+                filters.category === "etfs"
+                  ? "bg-[#2563EB] text-white shadow-sm"
+                  : "text-[#2563EB] hover:bg-gray-200"
+              }`}
             >
               תעודות סל
-            </Button>
+            </button>
           </div>
 
-          {/* Search Input (Center) */}
-          <div className="relative flex-1 min-w-[300px] max-w-md order-2">
-            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          {/* Center: Technology Dropdown */}
+          <div className="order-2">
+            <Select defaultValue="technology">
+              <SelectTrigger className="h-11 px-5 rounded-full border-gray-200 bg-white min-w-[140px]">
+                <SelectValue placeholder="טכנולוגיה" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                <SelectItem value="technology">טכנולוגיה</SelectItem>
+                <SelectItem value="finance">פיננסים</SelectItem>
+                <SelectItem value="healthcare">בריאות</SelectItem>
+                <SelectItem value="energy">אנרגיה</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Center-Left: Search Bar */}
+          <div className="relative flex-1 min-w-[200px] max-w-sm order-3">
+            <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               type="text"
               placeholder="חיפוש"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleSearchKeyDown}
-              className="h-12 pr-12 rounded-full text-base"
+              className="h-11 pr-10 pl-4 rounded-full border-gray-200 bg-white text-sm"
             />
           </div>
 
-          {/* Icon Buttons (Left side in RTL) */}
-          <div className="flex items-center gap-2 order-3">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                    className="h-12 w-12 rounded-full"
-                  >
-                    <SlidersHorizontal className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>סינון מתקדם</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={resetFilters}
-                    className="h-12 w-12 rounded-full"
-                  >
-                    <Sparkles className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>איפוס פילטרים</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {/* Far Left: Filter Icons */}
+          <div className="flex items-center gap-3 order-4">
+            <button className="p-2 text-red-400 hover:text-red-500 transition-colors">
+              <SlidersHorizontal className="h-5 w-5" />
+            </button>
+            <button className="p-2 text-[#2563EB] hover:text-blue-600 transition-colors">
+              <Sparkles className="h-5 w-5" />
+            </button>
           </div>
         </div>
 
-        {/* Advanced Filters Row */}
-        {showAdvancedFilters && (
-          <div className="bg-muted/30 rounded-2xl p-6 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Share Price (שווי מניה) */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">שווי מניה</label>
-                <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                      $
-                    </span>
-                    <Input
-                      type="number"
-                      value={filters.priceMin}
-                      onChange={(e) => updateFilter("priceMin", parseFloat(e.target.value) || 0)}
-                      className={`h-10 pr-8 rounded-full text-center ${
-                        !isPriceValid ? "border-destructive" : ""
-                      }`}
-                      min="0"
-                    />
-                  </div>
-                  <span className="text-muted-foreground">-</span>
-                  <div className="relative flex-1">
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                      $
-                    </span>
-                    <Input
-                      type="number"
-                      value={filters.priceMax}
-                      onChange={(e) => updateFilter("priceMax", parseFloat(e.target.value) || 0)}
-                      className={`h-10 pr-8 rounded-full text-center ${
-                        !isPriceValid ? "border-destructive" : ""
-                      }`}
-                      min="0"
-                    />
-                  </div>
-                </div>
+        {/* FILTERS GRID */}
+        <div className="space-y-5 mb-8">
+          {/* Row 1: Share Price (שווי מניה) */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-sm font-medium text-gray-600 w-24 text-right">שווי מניה</span>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={`$${filters.priceMax}`}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    updateFilter("priceMax", parseInt(val) || 0);
+                  }}
+                  className="h-10 w-20 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+                />
               </div>
-
-              {/* Market Cap (שווי שוק) */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">שווי שוק</label>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 flex-1">
-                    <Select
-                      value={filters.marketCapMinUnit}
-                      onValueChange={(value: "million" | "billion") =>
-                        updateFilter("marketCapMinUnit", value)
-                      }
-                    >
-                      <SelectTrigger className="h-10 rounded-full w-24">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="million">Million</SelectItem>
-                        <SelectItem value="billion">Billion</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="relative flex-1">
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                        $
-                      </span>
-                      <Input
-                        type="number"
-                        value={filters.marketCapMin}
-                        onChange={(e) =>
-                          updateFilter("marketCapMin", parseFloat(e.target.value) || 0)
-                        }
-                        className={`h-10 pr-8 rounded-full text-center ${
-                          !isMarketCapValid() ? "border-destructive" : ""
-                        }`}
-                        min="0"
-                      />
-                    </div>
-                  </div>
-                  <span className="text-muted-foreground">-</span>
-                  <div className="flex items-center gap-1 flex-1">
-                    <Select
-                      value={filters.marketCapMaxUnit}
-                      onValueChange={(value: "million" | "billion") =>
-                        updateFilter("marketCapMaxUnit", value)
-                      }
-                    >
-                      <SelectTrigger className="h-10 rounded-full w-24">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="million">Million</SelectItem>
-                        <SelectItem value="billion">Billion</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="relative flex-1">
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                        $
-                      </span>
-                      <Input
-                        type="number"
-                        value={filters.marketCapMax}
-                        onChange={(e) =>
-                          updateFilter("marketCapMax", parseFloat(e.target.value) || 0)
-                        }
-                        className={`h-10 pr-8 rounded-full text-center ${
-                          !isMarketCapValid() ? "border-destructive" : ""
-                        }`}
-                        min="0"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Annual Growth (צמיחה שנתית) */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">צמיחה שנתית</label>
-                <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <Input
-                      type="number"
-                      value={filters.growthMin}
-                      onChange={(e) => updateFilter("growthMin", parseFloat(e.target.value) || 0)}
-                      className={`h-10 rounded-full text-center ${
-                        !isGrowthValid ? "border-destructive" : ""
-                      }`}
-                      min="0"
-                      max="100"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                  <span className="text-muted-foreground">-</span>
-                  <div className="relative flex-1">
-                    <Input
-                      type="number"
-                      value={filters.growthMax}
-                      onChange={(e) => updateFilter("growthMax", parseFloat(e.target.value) || 0)}
-                      className={`h-10 rounded-full text-center ${
-                        !isGrowthValid ? "border-destructive" : ""
-                      }`}
-                      min="0"
-                      max="100"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                      %
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Country (מדינה) */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">מדינה</label>
-                <Select value={filters.country} onValueChange={(value) => updateFilter("country", value)}>
-                  <SelectTrigger className="h-10 rounded-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="israel">ישראל</SelectItem>
-                    <SelectItem value="usa">ארצות הברית</SelectItem>
-                    <SelectItem value="other">אחר</SelectItem>
-                  </SelectContent>
-                </Select>
+              <span className="text-gray-400">—</span>
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={`$${filters.priceMin}`}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    updateFilter("priceMin", parseInt(val) || 0);
+                  }}
+                  className="h-10 w-20 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+                />
               </div>
             </div>
           </div>
-        )}
+
+          {/* Row 2: Market Cap (שווי שוק) */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-sm font-medium text-gray-600 w-24 text-right">שווי שוק</span>
+            <div className="flex items-center gap-3">
+              {/* Max Value */}
+              <div className="flex items-center gap-1">
+                <Select
+                  value={filters.marketCapMaxUnit}
+                  onValueChange={(value: "million" | "billion") =>
+                    updateFilter("marketCapMaxUnit", value)
+                  }
+                >
+                  <SelectTrigger className="h-10 w-24 rounded-lg border-gray-200 bg-gray-50 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                    <SelectItem value="million">Million</SelectItem>
+                    <SelectItem value="billion">Billion</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  type="text"
+                  value={`$${filters.marketCapMax}`}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    updateFilter("marketCapMax", parseInt(val) || 0);
+                  }}
+                  className="h-10 w-16 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+                />
+              </div>
+              <span className="text-gray-400">—</span>
+              {/* Min Value */}
+              <div className="flex items-center gap-1">
+                <Select
+                  value={filters.marketCapMinUnit}
+                  onValueChange={(value: "million" | "billion") =>
+                    updateFilter("marketCapMinUnit", value)
+                  }
+                >
+                  <SelectTrigger className="h-10 w-24 rounded-lg border-gray-200 bg-gray-50 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                    <SelectItem value="million">Million</SelectItem>
+                    <SelectItem value="billion">Billion</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  type="text"
+                  value={`$${filters.marketCapMin}`}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    updateFilter("marketCapMin", parseInt(val) || 0);
+                  }}
+                  className="h-10 w-16 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Annual Growth (צמיחה שנתית) */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-sm font-medium text-[#2563EB] w-24 text-right">צמיחה שנתית</span>
+            <div className="flex items-center gap-3">
+              <Input
+                type="text"
+                value={`${filters.growthMax}%`}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, '');
+                  updateFilter("growthMax", parseInt(val) || 0);
+                }}
+                className="h-10 w-16 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+              />
+              <span className="text-gray-400">—</span>
+              <Input
+                type="text"
+                value={`${filters.growthMin}%`}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, '');
+                  updateFilter("growthMin", parseInt(val) || 0);
+                }}
+                className="h-10 w-16 rounded-lg border-gray-200 bg-gray-50 text-center text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Row 4: Country (מדינה) */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-sm font-medium text-gray-600 w-24 text-right">מדינה</span>
+            <Select value={filters.country} onValueChange={(value) => updateFilter("country", value)}>
+              <SelectTrigger className="h-10 w-40 rounded-lg border-gray-200 bg-gray-50 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                <SelectItem value="israel">ישראל</SelectItem>
+                <SelectItem value="usa">ארצות הברית</SelectItem>
+                <SelectItem value="europe">אירופה</SelectItem>
+                <SelectItem value="other">אחר</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* SECTORS AREA */}
+        <div className="bg-[#EEF3FB] rounded-2xl p-6">
+          <h3 className="text-center text-sm font-medium text-gray-700 mb-6">סקטורים</h3>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+            {sectorOptions.map((sector) => (
+              <label
+                key={sector.id}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <span className="text-sm text-gray-700">{sector.label}</span>
+                <Checkbox
+                  checked={filters.sectors.includes(sector.id)}
+                  onCheckedChange={() => toggleSector(sector.id)}
+                  className="h-5 w-5 rounded border-gray-300 data-[state=checked]:bg-[#2563EB] data-[state=checked]:border-[#2563EB]"
+                />
+              </label>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

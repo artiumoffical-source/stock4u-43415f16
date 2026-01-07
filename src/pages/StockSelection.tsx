@@ -21,6 +21,7 @@ export default function StockSelection() {
     growthMin: 1,
     growthMax: 5,
     country: "israel",
+    sectors: [],
   });
   const { giftData, addStock, removeStock, resetGiftData } = useGift();
   const navigate = useNavigate();
