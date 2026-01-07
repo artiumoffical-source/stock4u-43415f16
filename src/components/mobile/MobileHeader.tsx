@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { User, Menu, X, ShoppingBag } from "lucide-react";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 
@@ -9,24 +9,26 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-3 bg-white shadow-sm sticky top-0 z-50">
-        {/* Left Side (RTL): Logo */}
+      <header className="flex items-center justify-between px-4 h-16 bg-white sticky top-0 z-50">
+        {/* Left Side: STOCK4U Text Logo */}
         <Link to="/" className="flex-shrink-0">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-            className="h-8 w-auto"
-            alt="Stock4U Logo"
-          />
+          <span className="text-2xl font-black tracking-tight english-font" style={{ color: '#4F86F9' }}>
+            STOCK4U
+          </span>
         </Link>
 
-        {/* Right Side (RTL): Action Buttons */}
+        {/* Right Side: Action Buttons */}
         <div className="flex items-center gap-3">
-          {/* Cart Button with Badge */}
+          {/* Cart Button - Blue Circle */}
           <Link
             to="/order-summary"
-            className="relative min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+            className="relative w-11 h-11 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+            style={{ backgroundColor: '#4F86F9' }}
           >
-            <ShoppingBag className="w-5 h-5 text-white" />
+            {/* Shopping Basket Icon */}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h17.234l-2.546-4.243a.5.5 0 1 1 .858-.514L21.929 6H22a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-.382l-1.56 7.803A3 3 0 0 1 17.117 19H6.883a3 3 0 0 1-2.94-2.397L2.382 9H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h.071L5.071.757a.5.5 0 0 1 .686-.172z"/>
+            </svg>
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
                 {cartCount > 9 ? "9+" : cartCount}
@@ -34,23 +36,21 @@ export default function MobileHeader() {
             )}
           </Link>
 
-          {/* Profile Button - Blue Circle */}
-          <Link
-            to="/login"
-            className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-happy-blue))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
-          >
-            <User className="w-5 h-5 text-white" />
-          </Link>
-
-          {/* Menu Button - Yellow Circle */}
+          {/* Menu Button - Yellow Circle with Orange Lines */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+            className="w-11 h-11 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+            style={{ backgroundColor: '#FFCA42' }}
           >
             {isMenuOpen ? (
-              <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
+              <X className="w-5 h-5" style={{ color: '#E67E22' }} />
             ) : (
-              <Menu className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
+              /* Hamburger Menu with Orange Lines */
+              <div className="flex flex-col gap-1.5">
+                <span className="w-5 h-0.5 rounded-full" style={{ backgroundColor: '#E67E22' }}></span>
+                <span className="w-5 h-0.5 rounded-full" style={{ backgroundColor: '#E67E22' }}></span>
+                <span className="w-5 h-0.5 rounded-full" style={{ backgroundColor: '#E67E22' }}></span>
+              </div>
             )}
           </button>
         </div>
@@ -59,19 +59,18 @@ export default function MobileHeader() {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white">
-          <div className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
+          <div className="flex items-center justify-between px-4 h-16 bg-white border-b border-gray-100">
             <Link to="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=400"
-                className="h-8 w-auto"
-                alt="Stock4U Logo"
-              />
+              <span className="text-2xl font-black tracking-tight english-font" style={{ color: '#4F86F9' }}>
+                STOCK4U
+              </span>
             </Link>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="min-w-[40px] min-h-[40px] w-10 h-10 rounded-full bg-[hsl(var(--stock4u-yellow))] flex items-center justify-center shadow-sm active:scale-95 transition-transform"
+              className="w-11 h-11 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+              style={{ backgroundColor: '#FFCA42' }}
             >
-              <X className="w-5 h-5 text-[hsl(var(--stock4u-dark-grey))]" />
+              <X className="w-5 h-5" style={{ color: '#E67E22' }} />
             </button>
           </div>
 
@@ -107,7 +106,8 @@ export default function MobileHeader() {
             <Link
               to="/login"
               onClick={() => setIsMenuOpen(false)}
-              className="mt-4 bg-[hsl(var(--stock4u-happy-blue))] text-white text-center py-4 rounded-full font-bold text-lg min-h-[52px] flex items-center justify-center active:scale-95 transition-transform"
+              className="mt-4 text-white text-center py-4 rounded-full font-bold text-lg min-h-[52px] flex items-center justify-center active:scale-95 transition-transform"
+              style={{ backgroundColor: '#4F86F9' }}
             >
               התחברות
             </Link>
