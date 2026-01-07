@@ -9,23 +9,25 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-5 h-[70px] bg-white border-b border-gray-100 sticky top-0 z-50">
-        {/* Logo (Left) */}
-        <Link to="/" className="flex-shrink-0">
-          <span 
-            className="text-[28px] font-black tracking-tight"
-            style={{ 
-              color: '#4880FF',
-              fontFamily: 'system-ui, -apple-system, sans-serif',
-              fontWeight: 900
-            }}
-          >
-            STOCK4U
-          </span>
-        </Link>
-
-        {/* Actions (Right) */}
+      <header className="flex md:hidden items-center justify-between px-5 h-[70px] bg-white border-b border-gray-100 sticky top-0 z-50">
+        {/* Actions (Left) - Menu first, then Cart */}
         <div className="flex items-center gap-3">
+          {/* Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="relative w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
+          >
+            {isMenuOpen ? (
+              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
+            ) : (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M4 12H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M4 18H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+            )}
+          </button>
+
           {/* Cart Button */}
           <Link
             to="/order-summary"
@@ -44,29 +46,33 @@ export default function MobileHeader() {
               </span>
             )}
           </Link>
-
-          {/* Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="relative w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
-          >
-            {isMenuOpen ? (
-              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
-            ) : (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M4 6H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M4 12H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M4 18H20" stroke="#EF5A3D" strokeWidth="3" strokeLinecap="round"/>
-              </svg>
-            )}
-          </button>
         </div>
+
+        {/* Logo (Right) */}
+        <Link to="/" className="flex-shrink-0">
+          <span 
+            className="text-[28px] font-black tracking-tight"
+            style={{ 
+              color: '#4880FF',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              fontWeight: 900
+            }}
+          >
+            STOCK4U
+          </span>
+        </Link>
       </header>
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-white">
+        <div className="fixed inset-0 z-50 bg-white md:hidden">
           <div className="flex items-center justify-between px-5 h-[70px] bg-white border-b border-gray-100">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
+            >
+              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
+            </button>
             <Link to="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <span 
                 className="text-[28px] font-black tracking-tight"
@@ -75,12 +81,6 @@ export default function MobileHeader() {
                 STOCK4U
               </span>
             </Link>
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="w-11 h-11 bg-[#FFC845] rounded-full flex items-center justify-center shadow-[2px_3px_0px_#E2E8F0] active:translate-y-1 active:shadow-none transition-all"
-            >
-              <X className="w-5 h-5" style={{ color: '#EF5A3D' }} />
-            </button>
           </div>
 
           <nav className="flex flex-col p-6 gap-4">
