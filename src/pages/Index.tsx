@@ -15,7 +15,7 @@ export default function Index() {
       <div className="block md:hidden overflow-x-hidden">
         {/* Mobile Hero Section - Tight Clustered Layout */}
         <section 
-          className="relative w-full h-[560px] overflow-hidden"
+          className="relative w-full h-[520px] overflow-hidden"
           style={{ backgroundColor: '#E0E7F5' }}
         >
           {/* Zigzag Background Pattern */}
@@ -23,48 +23,41 @@ export default function Index() {
             <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
               <path d="M-50 200 L50 150 L150 230 L250 130 L350 250 L450 160" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.12" />
               <path d="M-50 350 L50 300 L150 380 L250 280 L350 400 L450 310" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.08" />
-              <path d="M-50 500 L50 450 L150 530 L250 430 L350 550 L450 460" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.05" />
             </svg>
           </div>
 
-          {/* Hero Characters - SCALED UP and CENTERED */}
-          <div className="absolute inset-x-0 top-0 h-[340px] flex items-center justify-center">
+          {/* Hero Characters - MAXIMUM SCALE, TIGHT CLUSTER */}
+          <div className="absolute inset-x-0 -top-4 h-[320px] flex items-center justify-center overflow-visible">
             <img
               src={heroCharacters}
               alt="Stock4U Characters - מתנות שעושות כסף!"
-              className="w-[130%] max-w-none h-auto object-contain transform-gpu"
+              className="w-[150%] max-w-none h-auto object-contain transform-gpu scale-110"
             />
           </div>
 
-          {/* Decorative Stars - Scattered around */}
-          <div className="absolute top-4 left-[8%] w-6 h-6 z-30">
+          {/* Decorative Stars - Scattered tightly */}
+          <div className="absolute top-2 left-[10%] w-5 h-5 z-30">
             <svg viewBox="0 0 24 24" fill="#FF6B4A"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
           </div>
-          <div className="absolute top-8 right-[15%] w-4 h-4 z-30">
+          <div className="absolute top-6 right-[12%] w-4 h-4 z-30">
             <svg viewBox="0 0 24 24" fill="#4880FF"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
           </div>
-          <div className="absolute top-24 left-[3%] w-5 h-5 z-30">
+          <div className="absolute top-16 left-[4%] w-5 h-5 z-30">
             <svg viewBox="0 0 24 24" fill="#FFC845"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
           </div>
-          <div className="absolute top-16 right-[5%] w-5 h-5 z-30">
+          <div className="absolute top-12 right-[4%] w-4 h-4 z-30">
             <svg viewBox="0 0 24 24" fill="#00C9A7"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
           </div>
-          <div className="absolute top-36 left-[6%] w-4 h-4 z-30">
-            <svg viewBox="0 0 24 24" fill="#FF6B4A"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
-          <div className="absolute top-32 right-[8%] w-3 h-3 z-30">
-            <svg viewBox="0 0 24 24" fill="#FFC845"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
 
-          {/* Pagination Dots - Positioned in the middle */}
-          <div className="absolute top-[340px] left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {/* Pagination Dots - Tighter to image */}
+          <div className="absolute top-[300px] left-1/2 -translate-x-1/2 flex gap-2 z-20">
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]"></div>
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
             <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
           </div>
 
-          {/* Video Player - Anchored near bottom */}
-          <div className="absolute top-[365px] left-1/2 -translate-x-1/2 w-[90%] z-20">
+          {/* Video Player - Tighter spacing */}
+          <div className="absolute top-[320px] left-1/2 -translate-x-1/2 w-[92%] z-20">
             <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
               <button
                 onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
