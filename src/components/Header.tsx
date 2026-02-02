@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header
-      className="w-full bg-white px-6 py-3 h-[80px] flex items-center border-b border-[#DDD] sticky top-0 z-50"
+      className="w-full bg-white px-3 md:px-6 py-2 md:py-3 h-[60px] md:h-[80px] flex items-center border-b border-[#DDD] sticky top-0 z-50"
       style={{ boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)" }}
     >
       <div className="w-full flex items-center justify-between">
@@ -63,12 +63,12 @@ export default function Header() {
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2F1980a1c23e6842f3ad4ec2fcdce81e95?format=webp&width=800"
             alt="Stock4U Logo"
-            className="h-12 w-auto"
+            className="h-8 md:h-12 w-auto"
           />
         </Link>
 
-        {/* Right side - Navigation */}
-        <div className="flex items-center gap-4">
+        {/* Right side - Navigation - Hidden on mobile */}
+        <div className="hidden md:flex items-center gap-4">
           <div className="flex items-center justify-center p-[10px]">
             <button
               onClick={() => {
