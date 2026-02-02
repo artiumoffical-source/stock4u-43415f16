@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import Header from "./Header";
-import MobileHeader from "./mobile/MobileHeader";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,18 +9,7 @@ interface LayoutProps {
 export default function Layout({ children, hideHeader = false }: LayoutProps) {
   return (
     <div className="min-h-screen bg-white hebrew-font overflow-x-hidden" dir="rtl">
-      {!hideHeader && (
-        <>
-          {/* Desktop Header */}
-          <div className="hidden md:block">
-            <Header />
-          </div>
-          {/* Mobile Header */}
-          <div className="block md:hidden">
-            <MobileHeader />
-          </div>
-        </>
-      )}
+      {!hideHeader && <Header />}
       {children}
     </div>
   );

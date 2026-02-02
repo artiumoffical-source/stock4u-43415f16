@@ -2,124 +2,13 @@ import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import Layout from "../components/Layout";
-import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
-import MobileStats from "../components/mobile/MobileStats";
-import MobileFooter from "../components/mobile/MobileFooter";
-import MobilePackagesCarousel from "../components/mobile/MobilePackagesCarousel";
 import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
   return (
     <Layout>
-      {/* ========== MOBILE VERSION ========== */}
-      <div className="block md:hidden overflow-x-hidden">
-        {/* Mobile Hero Section - Tight Clustered Layout */}
-        <section 
-          className="relative w-full h-[520px] overflow-hidden"
-          style={{ backgroundColor: '#E0E7F5' }}
-        >
-          {/* Zigzag Background Pattern */}
-          <div className="absolute inset-0 pointer-events-none">
-            <svg className="absolute w-full h-full" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
-              <path d="M-50 200 L50 150 L150 230 L250 130 L350 250 L450 160" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.12" />
-              <path d="M-50 350 L50 300 L150 380 L250 280 L350 400 L450 310" stroke="#4880FF" strokeWidth="12" fill="none" opacity="0.08" />
-            </svg>
-          </div>
-
-          {/* Hero Characters - MAXIMUM SCALE, TIGHT CLUSTER */}
-          <div className="absolute inset-x-0 -top-4 h-[320px] flex items-center justify-center overflow-visible">
-            <img
-              src={heroCharacters}
-              alt="Stock4U Characters - מתנות שעושות כסף!"
-              className="w-[150%] max-w-none h-auto object-contain transform-gpu scale-110"
-            />
-          </div>
-
-          {/* Decorative Stars - Scattered tightly */}
-          <div className="absolute top-2 left-[10%] w-5 h-5 z-30">
-            <svg viewBox="0 0 24 24" fill="#FF6B4A"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
-          <div className="absolute top-6 right-[12%] w-4 h-4 z-30">
-            <svg viewBox="0 0 24 24" fill="#4880FF"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
-          <div className="absolute top-16 left-[4%] w-5 h-5 z-30">
-            <svg viewBox="0 0 24 24" fill="#FFC845"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
-          <div className="absolute top-12 right-[4%] w-4 h-4 z-30">
-            <svg viewBox="0 0 24 24" fill="#00C9A7"><polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" /></svg>
-          </div>
-
-          {/* Pagination Dots - Tighter to image */}
-          <div className="absolute top-[300px] left-1/2 -translate-x-1/2 flex gap-2 z-20">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-[#4880FF]/30"></div>
-          </div>
-
-          {/* Video Player - Tighter spacing */}
-          <div className="absolute top-[320px] left-1/2 -translate-x-1/2 w-[92%] z-20">
-            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
-              <button
-                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
-                className="w-16 h-16 bg-[#4880FF] rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform"
-              >
-                <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* CTA Banner - At the very bottom */}
-          <div className="absolute bottom-4 left-4 right-4 z-20">
-            <Link
-              to="/stock-selection?continue=true"
-              className="block w-full bg-[#00C9A7] text-white text-center py-4 rounded-2xl font-bold text-base shadow-lg active:scale-[0.98] transition-transform"
-            >
-              חבילת מניות מקצועית &gt;
-            </Link>
-          </div>
-        </section>
-
-        {/* Mobile Packages Carousel with Swipe & Dots */}
-        <MobilePackagesCarousel />
-
-        {/* Mobile How It Works */}
-        <MobileHowItWorks />
-
-        {/* Mobile Stats */}
-        <MobileStats />
-
-        {/* Mobile Ticker */}
-        <section className="py-4 overflow-hidden bg-[hsl(var(--stock4u-light-blue))]/30">
-          <p className="text-center text-[hsl(var(--stock4u-grey))] mb-3 text-sm px-4">
-            חברות פופולאריות להשקעה
-          </p>
-          <div className="relative overflow-hidden">
-            <div className="flex items-center gap-6 opacity-40 animate-marquee">
-              <div className="flex items-center gap-6 shrink-0">
-                {["GOOG", "AMZN", "AAPL", "NVDA", "MSFT", "META", "TSLA"].map((ticker) => (
-                  <span key={ticker} className="text-lg font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
-                    {ticker}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center gap-6 shrink-0">
-                {["GOOG", "AMZN", "AAPL", "NVDA", "MSFT", "META", "TSLA"].map((ticker) => (
-                  <span key={`${ticker}-2`} className="text-lg font-bold text-[hsl(var(--stock4u-dark-grey))] english-font">
-                    {ticker}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <MobileFooter />
-      </div>
-
-      {/* ========== DESKTOP VERSION ========== */}
-      <div className="hidden md:block">
+      {/* ========== DESKTOP VERSION - Always shown ========== */}
+      <div>
         {/* Hero Section with floating characters */}
         <section 
           className="relative overflow-visible flex flex-col"
