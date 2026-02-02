@@ -165,38 +165,18 @@ export default function OrderDetails() {
 
       {/* Main Form Content */}
       <div
+        className="flex flex-col justify-center items-center gap-8 md:gap-[60px] max-w-[1200px] mx-auto px-4 md:px-10 py-8 md:py-[60px]"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "60px",
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "60px 40px",
           background: "#fff",
         }}
       >
         {/* Top Row: Upload | Transfer Methods | Gift From */}
         <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            gap: "60px",
-            width: "100%",
-          }}
+          className="flex flex-col md:flex-row justify-center items-center md:items-start gap-8 md:gap-[60px] w-full"
         >
           {/* Upload Image - Left */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "20px",
-              flex: "1",
-              maxWidth: "320px",
-            }}
+            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
             <h3
               style={{
@@ -259,14 +239,7 @@ export default function OrderDetails() {
 
           {/* Transfer Methods - Center */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "20px",
-              flex: "1",
-              maxWidth: "320px",
-            }}
+            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
             <h3
               style={{
@@ -344,14 +317,7 @@ export default function OrderDetails() {
 
           {/* Gift From - Right */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "20px",
-              flex: "1",
-              maxWidth: "320px",
-            }}
+            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
             <h3
               style={{
