@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import Layout from "../components/Layout";
-import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
 import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
@@ -69,17 +68,14 @@ export default function Index() {
           </div>
         </section>
 
-        {/* How It Works Section - Desktop: image, Mobile: component */}
-        <section className="hidden md:block h-[566px] relative overflow-hidden">
+        {/* How It Works Section - Same image for all screens */}
+        <section className="relative overflow-hidden">
           <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/d2a8fbb0bc7d24e0fc8879295b276f6758c8be62?width=3840"
             alt="How It Works - זה כללו פשוט!"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-auto md:h-[566px] object-contain md:object-cover object-center"
           />
         </section>
-        <div className="block md:hidden">
-          <MobileHowItWorks />
-        </div>
 
         {/* Statistics Section */}
         <section className="max-w-6xl mx-auto py-12">
