@@ -78,25 +78,25 @@ export default function Index() {
         </section>
 
         {/* Statistics Section */}
-        <section className="max-w-6xl mx-auto py-12">
-          <div className="grid grid-cols-3 gap-8">
-            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-3xl p-8 text-center">
-              <div className="text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-4 english-font">
+        <section className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-2xl md:rounded-3xl p-5 md:p-8 text-center">
+              <div className="text-4xl md:text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-2 md:mb-4 english-font">
                 24+
               </div>
-              <p className="text-[hsl(var(--stock4u-grey))] text-xl">מדינות שבהם אנו עובדים</p>
+              <p className="text-[hsl(var(--stock4u-grey))] text-base md:text-xl">מדינות שבהם אנו עובדים</p>
             </div>
-            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-3xl p-8 text-center">
-              <div className="text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-4 english-font">
+            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-2xl md:rounded-3xl p-5 md:p-8 text-center">
+              <div className="text-4xl md:text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-2 md:mb-4 english-font">
                 17M
               </div>
-              <p className="text-[hsl(var(--stock4u-grey))] text-xl">אנשים שהאמינו בנו</p>
+              <p className="text-[hsl(var(--stock4u-grey))] text-base md:text-xl">אנשים שהאמינו בנו</p>
             </div>
-            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-3xl p-8 text-center">
-              <div className="text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-4 english-font">
+            <div className="bg-[hsl(var(--stock4u-light-blue))]/40 rounded-2xl md:rounded-3xl p-5 md:p-8 text-center">
+              <div className="text-4xl md:text-6xl font-bold text-[hsl(var(--stock4u-dark-grey))] mb-2 md:mb-4 english-font">
                 +95%
               </div>
-              <p className="text-[hsl(var(--stock4u-grey))] text-xl">לקוחות מרוצים</p>
+              <p className="text-[hsl(var(--stock4u-grey))] text-base md:text-xl">לקוחות מרוצים</p>
             </div>
           </div>
         </section>
