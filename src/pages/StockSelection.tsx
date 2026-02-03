@@ -316,8 +316,8 @@ export default function StockSelection() {
             ))}
           </div>
 
-          {/* Continue to Gift Design Button - Always visible */}
-          <div className="text-center mb-12">
+          {/* Continue to Gift Design Button - Desktop only */}
+          <div className="hidden md:block text-center mb-12">
             {getTotalSelectedStocks() > 0 && (
               <div className="mb-4">
                 <p
@@ -359,6 +359,31 @@ export default function StockSelection() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Floating CTA Button */}
+      {getTotalSelectedStocks() > 0 && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-right flex-1">
+              <p className="text-sm font-bold text-[#486284]">
+                סך הכל: ₪{getTotalGiftAmount().toLocaleString()}
+              </p>
+              <p className="text-xs text-[#486284] opacity-70">
+                {getTotalSelectedStocks()} מניות נבחרו
+              </p>
+            </div>
+            <button
+              onClick={continueToGiftDesign}
+              className="bg-[#4C7EFB] hover:bg-blue-600 text-white px-6 py-3 rounded-full font-bold text-sm transition-all duration-200 whitespace-nowrap"
+              style={{
+                fontFamily: "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
+            >
+              המשך לפרטים וברכה
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Statistics Section - Mobile: Stack vertically */}
       <div className="bg-gray-50 py-8 md:py-12">
