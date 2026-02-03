@@ -1,34 +1,24 @@
 
-
-# תכנית: התאמת סקשן "זה כל כך פשוט" למובייל
+# תכנית: הצגת אותה תמונה במובייל - ללא שימוש בקומפוננטה MobileHowItWorks
 
 ## הבעיה
-הסקשן השלישי בעמוד הבית "זה כל כך פשוט" (How It Works) משתמש בתמונה עם גובה קבוע של 566px. במובייל התמונה נחתכת ומציגה רק חלק מהתוכן - רואים רק שלב 2 במקום את כל 3 השלבים.
+הקומפוננטה `MobileHowItWorks` היא עיצוב שונה לגמרי מהתמונה המקורית של הדסקטופ. במקום להציג את התמונה של "זה כל כך פשוט" עם 3 השלבים בקו אופקי, היא מציגה כרטיסים אנכיים עם חיצים - עיצוב שונה לחלוטין.
 
 ## הפתרון
-נשתמש בקומפוננטה `MobileHowItWorks` שכבר קיימת בפרויקט - היא מציגה את 3 השלבים בפריסה אנכית המותאמת למובייל עם כרטיסים וחיצים ביניהם.
+נסיר את הקומפוננטה `MobileHowItWorks` ונציג את **אותה תמונה** גם במובייל, רק עם התאמות גובה:
+- **דסקטופ**: גובה קבוע של 566px עם `object-cover`
+- **מובייל**: גובה אוטומטי (`h-auto`) עם `object-contain` כדי שהתמונה תוצג במלואה
 
 ## שינויים נדרשים
 
 ### קובץ: `src/pages/Index.tsx`
 
-**שורות 71-78 - הסקשן הנוכחי:**
+**שורות 5, 72-82 - הסרת MobileHowItWorks והצגת התמונה בכל המסכים:**
 
+```text
 לפני:
-```jsx
-{/* How It Works Section */}
-<section className="h-[566px] relative overflow-hidden">
-  <img
-    src="https://api.builder.io/api/v1/image/assets/TEMP/..."
-    alt="How It Works - זה כללו פשוט!"
-    className="w-full h-full object-cover object-center"
-  />
-</section>
-```
-
-אחרי:
-```jsx
-{/* How It Works Section - Desktop: image, Mobile: component */}
+import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
+...
 <section className="hidden md:block h-[566px] relative overflow-hidden">
   <img
     src="https://api.builder.io/api/v1/image/assets/TEMP/..."
@@ -39,16 +29,21 @@
 <div className="block md:hidden">
   <MobileHowItWorks />
 </div>
+
+אחרי:
+{/* How It Works Section - Same image for all screens */}
+<section className="relative overflow-hidden">
+  <img
+    src="https://api.builder.io/api/v1/image/assets/TEMP/d2a8fbb0bc7d24e0fc8879295b276f6758c8be62?width=3840"
+    alt="How It Works - זה כללו פשוט!"
+    className="w-full h-auto md:h-[566px] object-contain md:object-cover object-center"
+  />
+</section>
 ```
 
-### Import נוסף בראש הקובץ:
-```jsx
-import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
-```
-
----
+**הסרת Import:**
+- הסרת `import MobileHowItWorks from "../components/mobile/MobileHowItWorks";`
 
 ## תוצאה צפויה
-- **דסקטופ (768px+)**: מציג את התמונה המקורית כמו היום
-- **מובייל (עד 768px)**: מציג את הקומפוננטה MobileHowItWorks עם 3 שלבים אנכיים עם כרטיסים וחיצים
-
+- **דסקטופ**: נשאר אותו דבר - תמונה בגובה 566px
+- **מובייל**: אותה תמונה מוצגת במלואה, מוקטנת לפי רוחב המסך
