@@ -164,12 +164,13 @@ export default function OrderDetails() {
       <StepHero currentStep={1} />
 
       {/* Section Title */}
-      <div className="flex justify-center items-center py-6 md:py-8">
-        <img 
-          src="/images/section-title-details.png" 
-          alt="פרטים" 
-          className="h-5 md:h-7"
-        />
+      <div className="flex justify-center items-center py-4 md:py-6">
+        <span 
+          className="text-sm md:text-base font-semibold"
+          style={{ color: '#486284' }}
+        >
+          פרטים
+        </span>
       </div>
 
       {/* Main Form Content */}
@@ -266,57 +267,57 @@ export default function OrderDetails() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "18px",
+                gap: "12px",
               }}
             >
+              {/* Email Button */}
               <div
                 onClick={() => toggleDeliveryMethod("email")}
                 style={{
                   display: "flex",
-                  width: "140px",
-                  height: "50px",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "5px",
+                  gap: "8px",
+                  padding: "12px 20px",
                   borderRadius: "10px",
-                  border: selectedDeliveryMethods.includes("email") ? "2px solid #4C7EFB" : "1px solid #e0e7ff",
-                  background: selectedDeliveryMethods.includes("email") ? "#4C7EFB" : "rgba(245, 247, 252, 1)",
+                  border: selectedDeliveryMethods.includes("email") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
+                  background: "#FFF",
                   cursor: "pointer",
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={selectedDeliveryMethods.includes("email") ? "#FFF" : "#4C7EFB"} strokeWidth="2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                   <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <div style={{ color: selectedDeliveryMethods.includes("email") ? "#FFF" : "#4C7EFB", fontSize: "12px" }}>
+                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "500" }}>
                   דואר אלקטרוני
-                </div>
+                </span>
               </div>
               
+              {/* Mobile Button */}
               <div
                 onClick={() => toggleDeliveryMethod("mobile")}
                 style={{
                   display: "flex",
-                  width: "140px",
-                  height: "50px",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "5px",
+                  gap: "8px",
+                  padding: "12px 20px",
                   borderRadius: "10px",
-                  border: selectedDeliveryMethods.includes("mobile") ? "2px solid #4C7EFB" : "1px solid #e0e7ff",
-                  background: selectedDeliveryMethods.includes("mobile") ? "#4C7EFB" : "rgba(245, 247, 252, 1)",
+                  border: selectedDeliveryMethods.includes("mobile") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
+                  background: "#FFF",
                   cursor: "pointer",
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={selectedDeliveryMethods.includes("mobile") ? "#FFF" : "#4C7EFB"} strokeWidth="2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
                   <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
                   <line x1="12" y1="18" x2="12.01" y2="18" />
                 </svg>
-                <div style={{ color: selectedDeliveryMethods.includes("mobile") ? "#FFF" : "#4C7EFB", fontSize: "12px" }}>
+                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "500" }}>
                   הודעה לנייד
-                </div>
+                </span>
               </div>
             </div>
           </div>
