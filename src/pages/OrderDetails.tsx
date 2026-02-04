@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "../contexts/GiftContext";
+import sectionTitleDetails from "@/assets/section-title-details.png";
 
 interface Recipient {
   id: string;
@@ -164,13 +165,13 @@ export default function OrderDetails() {
       <StepHero currentStep={1} />
 
       {/* Section Title */}
-      <div className="flex justify-center items-center py-4 md:py-6">
-        <span 
-          className="text-sm md:text-base font-semibold"
-          style={{ color: '#486284' }}
-        >
-          פרטים
-        </span>
+      <div className="flex justify-center items-center py-6 md:py-8">
+        <img 
+          src={sectionTitleDetails} 
+          alt="פרטים" 
+          className="h-auto w-auto"
+          style={{ maxHeight: '24px' }}
+        />
       </div>
 
       {/* Main Form Content */}
