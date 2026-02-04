@@ -1,42 +1,36 @@
 import React from "react";
 import { Check } from "lucide-react";
 
+// Import real PNG assets
+import euro1 from "@/assets/step-hero/euro-1.png";
+import euro2 from "@/assets/step-hero/euro-2.png";
+import pound from "@/assets/step-hero/pound.png";
+import redStar from "@/assets/step-hero/red-star.png";
+import yellowSparkle from "@/assets/step-hero/yellow-sparkle.png";
+import stepCircle2 from "@/assets/step-hero/step-circle-2.png";
+import stepCircle3 from "@/assets/step-hero/step-circle-3.png";
+import labelStep2 from "@/assets/step-hero/label-step-2.png";
+import labelStep3 from "@/assets/step-hero/label-step-3.png";
+
 interface StepHeroProps {
   currentStep: 1 | 2 | 3 | 4;
-  variant?: "default" | "all-numbers";
 }
 
-export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "default" }) => {
+export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
   // Steps in VISUAL order (Left to Right on screen): 3, 2, 1
-  // This ensures Step 1 appears on the RIGHT side
   const steps = [
-    { number: 3, label: "סיום ותשלום" },
-    { number: 2, label: "עיצוב המתנה" },
-    { number: 1, label: "פרטים וברכה" },
+    { number: 3, label: "סיום ותשלום", labelImage: labelStep3, circleImage: stepCircle3 },
+    { number: 2, label: "עיצוב המתנה", labelImage: labelStep2, circleImage: stepCircle2 },
+    { number: 1, label: "פרטים וברכה", labelImage: null, circleImage: null },
   ];
 
-  const getStepStyle = (stepNumber: number) => {
+  const getStepState = (stepNumber: number) => {
     if (stepNumber < currentStep) {
-      // Completed step - blue circle with checkmark
-      return {
-        circle: "bg-[#4880FF] text-white",
-        showCheck: true,
-        shadow: "",
-      };
+      return "completed"; // Show checkmark
     } else if (stepNumber === currentStep) {
-      // Current step - white circle with blue number and gray shadow
-      return {
-        circle: "bg-white text-[#4880FF]",
-        showCheck: false,
-        shadow: "shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
-      };
+      return "current"; // White circle with shadow
     } else {
-      // Future step - blue circle with white number
-      return {
-        circle: "bg-[#4880FF] text-white",
-        showCheck: false,
-        shadow: "",
-      };
+      return "future"; // Blue circle (PNG)
     }
   };
 
@@ -45,84 +39,149 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
       className="w-full h-[180px] md:h-[280px] lg:h-[320px] relative overflow-hidden"
       style={{ backgroundColor: '#E0E7F5' }}
     >
-      {/* 3D Currency Stickers - Positioned to match reference */}
-      {/* Euro - Top Left - Hidden on mobile */}
-      <div className="hidden md:block absolute top-4 md:top-6 left-[3%] text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
+      {/* ===== DECORATIVE 3D STICKERS ===== */}
       
-      {/* Euro - Top Right - Hidden on mobile */}
-      <div className="hidden md:block absolute top-8 md:top-12 right-[5%] text-3xl md:text-4xl font-black z-10 -rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>€</div>
+      {/* Euro 1 - Top Left */}
+      <img 
+        src={euro1} 
+        alt="" 
+        className="hidden md:block absolute top-4 md:top-8 left-[2%] md:left-[4%] w-12 md:w-16 lg:w-20 h-auto z-10"
+      />
       
-      {/* Shekel - Top Center - Hidden on mobile */}
-      <div className="hidden md:block absolute top-0 md:top-2 left-1/2 -translate-x-1/2 text-4xl md:text-5xl font-black z-10" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>₪</div>
+      {/* Euro 2 - Top Right */}
+      <img 
+        src={euro2} 
+        alt="" 
+        className="hidden md:block absolute top-6 md:top-10 right-[3%] md:right-[5%] w-10 md:w-14 lg:w-16 h-auto z-10 -rotate-12"
+      />
       
-      {/* Dollar - Upper area - Hidden on mobile */}
-      <div className="hidden md:block absolute top-12 md:top-16 left-[32%] text-3xl md:text-4xl font-black z-10 rotate-6" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>$</div>
+      {/* Pound - Bottom Left */}
+      <img 
+        src={pound} 
+        alt="" 
+        className="hidden md:block absolute bottom-16 md:bottom-20 left-[4%] md:left-[6%] w-10 md:w-14 lg:w-16 h-auto z-10"
+      />
       
-      {/* Pound - Bottom Left - Hidden on mobile */}
-      <div className="hidden md:block absolute bottom-16 md:bottom-20 left-[6%] text-3xl md:text-4xl font-black z-10 rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>£</div>
+      {/* Red Star - Top Left area */}
+      <img 
+        src={redStar} 
+        alt="" 
+        className="hidden md:block absolute top-14 md:top-20 left-[1%] md:left-[2%] w-6 md:w-8 lg:w-10 h-auto z-10"
+      />
       
-      {/* Yen - Bottom Right - Hidden on mobile */}
-      <div className="hidden md:block absolute bottom-12 md:bottom-16 right-[4%] text-3xl md:text-4xl font-black z-10 -rotate-12" style={{ color: '#22c55e', textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' }}>¥</div>
+      {/* Red Star - Top Right area */}
+      <img 
+        src={redStar} 
+        alt="" 
+        className="hidden md:block absolute top-4 md:top-6 right-[22%] md:right-[24%] w-4 md:w-6 lg:w-7 h-auto z-10"
+      />
+      
+      {/* Yellow Sparkle - Upper center-left */}
+      <img 
+        src={yellowSparkle} 
+        alt="" 
+        className="hidden md:block absolute top-12 md:top-16 left-[18%] md:left-[20%] w-5 md:w-6 lg:w-8 h-auto z-10"
+      />
+      
+      {/* Yellow Sparkle - Bottom left area */}
+      <img 
+        src={yellowSparkle} 
+        alt="" 
+        className="hidden md:block absolute bottom-20 md:bottom-24 left-[12%] md:left-[14%] w-4 md:w-5 lg:w-6 h-auto z-10"
+      />
 
-      {/* Decorative Stars - Hidden on mobile */}
-      <div className="hidden md:block absolute top-16 md:top-20 left-[2%] z-10">
-        <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="#FF6347">
-          <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-        </svg>
+      {/* CSS Fallback Stickers for missing assets */}
+      {/* Shekel - Top Center */}
+      <div 
+        className="hidden md:block absolute top-0 md:top-2 left-1/2 -translate-x-1/2 text-3xl md:text-4xl lg:text-5xl font-black z-10" 
+        style={{ 
+          color: '#22c55e', 
+          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
+        }}
+      >
+        ₪
       </div>
-      <div className="hidden md:block absolute top-6 md:top-8 right-[25%] z-10">
-        <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#FF6347">
-          <polygon points="12,2 15,9 22,9 17,14 19,22 12,17 5,22 7,14 2,9 9,9" />
-        </svg>
+      
+      {/* Dollar - Upper area */}
+      <div 
+        className="hidden md:block absolute top-10 md:top-14 left-[30%] md:left-[32%] text-2xl md:text-3xl lg:text-4xl font-black z-10 rotate-6" 
+        style={{ 
+          color: '#22c55e', 
+          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
+        }}
+      >
+        $
       </div>
-      <div className="hidden md:block absolute top-14 md:top-16 left-[22%] z-10">
-        <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="#FFD93D">
-          <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
-        </svg>
+      
+      {/* Yen - Bottom Right */}
+      <div 
+        className="hidden md:block absolute bottom-14 md:bottom-18 right-[3%] md:right-[4%] text-2xl md:text-3xl lg:text-4xl font-black z-10 -rotate-12" 
+        style={{ 
+          color: '#22c55e', 
+          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
+        }}
+      >
+        ¥
       </div>
-      <div className="hidden md:block absolute top-20 md:top-24 left-[38%] z-10">
+
+      {/* CSS Sparkles for variety */}
+      <div className="hidden md:block absolute top-20 md:top-24 left-[36%] md:left-[38%] z-10">
         <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#4880FF">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      <div className="hidden md:block absolute top-16 md:top-20 right-[2%] z-10">
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#22c55e">
+      <div className="hidden md:block absolute top-14 md:top-18 right-[2%] md:right-[3%] z-10">
+        <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="#22c55e">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
-      <div className="hidden md:block absolute bottom-20 md:bottom-24 left-[15%] z-10">
-        <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="#FFD93D">
-          <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
-        </svg>
-      </div>
-      <div className="hidden md:block absolute bottom-24 md:bottom-28 right-[18%] z-10">
+      <div className="hidden md:block absolute bottom-24 md:bottom-28 right-[16%] md:right-[18%] z-10">
         <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="#4880FF">
           <path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" />
         </svg>
       </div>
 
-      {/* STEPPER - Laid out LEFT to RIGHT: 3 -> 2 -> 1 */}
+      {/* ===== STEPPER - NO CONNECTING LINES ===== */}
       <div className="absolute bottom-4 md:bottom-12 left-0 right-0 flex items-center justify-center z-20 px-2">
-        <div className="flex items-center">
-          {steps.map((step, index) => {
-            const style = getStepStyle(step.number);
-            const isLast = index === steps.length - 1;
+        <div className="flex items-center gap-6 md:gap-16 lg:gap-24">
+          {steps.map((step) => {
+            const state = getStepState(step.number);
 
             return (
-              <div key={step.number} className="flex items-center">
-                {/* Step Item */}
-                <div className="flex flex-col items-center gap-2 md:gap-3">
-                  {/* Circle */}
-                  <div
-                    className={`w-9 h-9 md:w-14 md:h-14 rounded-full flex items-center justify-center font-bold text-base md:text-2xl ${style.circle} ${style.shadow}`}
-                  >
-                    {style.showCheck ? (
-                      <Check className="w-5 h-5 md:w-7 md:h-7" strokeWidth={3} />
-                    ) : (
-                      step.number
-                    )}
+              <div key={step.number} className="flex flex-col items-center gap-2 md:gap-3">
+                {/* Circle */}
+                {state === "completed" ? (
+                  // Completed - Blue circle with checkmark (CSS)
+                  <div className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-[#4880FF] flex items-center justify-center">
+                    <Check className="w-5 h-5 md:w-7 md:h-7 text-white" strokeWidth={3} />
                   </div>
-                  {/* Label */}
+                ) : state === "current" ? (
+                  // Current - White circle with blue number and shadow (CSS)
+                  <div 
+                    className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center font-bold text-base md:text-2xl text-[#4880FF]"
+                    style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
+                  >
+                    {step.number}
+                  </div>
+                ) : (
+                  // Future - Use PNG image for circle
+                  step.circleImage ? (
+                    <img 
+                      src={step.circleImage} 
+                      alt={`שלב ${step.number}`}
+                      className="w-9 h-9 md:w-14 md:h-14"
+                    />
+                  ) : (
+                    // Fallback CSS for step 1 if needed
+                    <div className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-[#4880FF] flex items-center justify-center font-bold text-base md:text-2xl text-white">
+                      {step.number}
+                    </div>
+                  )
+                )}
+
+                {/* Label */}
+                {state === "current" || !step.labelImage ? (
+                  // Current step or no image - CSS label with white stroke
                   <span 
                     className="text-xs md:text-lg font-bold text-[#4880FF] whitespace-nowrap"
                     style={{
@@ -131,11 +190,13 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
                   >
                     {step.label}
                   </span>
-                </div>
-
-                {/* Connecting Line - after each step except last */}
-                {!isLast && (
-                  <div className="w-8 md:w-28 lg:w-36 h-0.5 md:h-1 bg-[#4880FF] mx-2 md:mx-6 -mt-6 md:-mt-10 rounded-full" />
+                ) : (
+                  // Use PNG label image
+                  <img 
+                    src={step.labelImage} 
+                    alt={step.label}
+                    className="h-4 md:h-6 lg:h-7 w-auto"
+                  />
                 )}
               </div>
             );
