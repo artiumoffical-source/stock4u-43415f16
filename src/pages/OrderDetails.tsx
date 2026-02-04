@@ -164,14 +164,20 @@ export default function OrderDetails() {
 
       <StepHero currentStep={1} />
 
-      {/* Section Title */}
+      {/* Section Title - פרטים */}
       <div className="flex justify-center items-center py-6 md:py-8">
-        <img 
-          src={sectionTitleDetails} 
-          alt="פרטים" 
-          className="h-auto w-auto"
-          style={{ maxHeight: '24px' }}
-        />
+        <h2 
+          style={{ 
+            color: '#486284',
+            fontSize: '18px',
+            fontWeight: '700',
+            fontFamily: 'Poppins, sans-serif',
+            letterSpacing: '0.5px',
+            margin: 0
+          }}
+        >
+          פרטים
+        </h2>
       </div>
 
       {/* Main Form Content */}
