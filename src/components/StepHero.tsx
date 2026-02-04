@@ -16,27 +16,26 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
   ];
 
   const getStepStyle = (stepNumber: number) => {
-    if (variant === "all-numbers") {
-      return {
-        circle: "bg-[#4880FF] text-white",
-        showCheck: false,
-      };
-    }
-
     if (stepNumber < currentStep) {
+      // Completed step - blue circle with checkmark
       return {
         circle: "bg-[#4880FF] text-white",
         showCheck: true,
+        shadow: "",
       };
     } else if (stepNumber === currentStep) {
+      // Current step - white circle with blue number and gray shadow
       return {
-        circle: "bg-white text-[#4880FF] ring-4 ring-[#4880FF]",
+        circle: "bg-white text-[#4880FF]",
         showCheck: false,
+        shadow: "shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
       };
     } else {
+      // Future step - blue circle with white number
       return {
-        circle: "bg-gray-200 text-gray-400",
+        circle: "bg-[#4880FF] text-white",
         showCheck: false,
+        shadow: "",
       };
     }
   };
@@ -115,7 +114,7 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep, variant = "defa
                 <div className="flex flex-col items-center gap-2 md:gap-3">
                   {/* Circle */}
                   <div
-                    className={`w-9 h-9 md:w-14 md:h-14 rounded-full flex items-center justify-center font-bold text-base md:text-2xl shadow-lg ${style.circle}`}
+                    className={`w-9 h-9 md:w-14 md:h-14 rounded-full flex items-center justify-center font-bold text-base md:text-2xl ${style.circle} ${style.shadow}`}
                   >
                     {style.showCheck ? (
                       <Check className="w-5 h-5 md:w-7 md:h-7" strokeWidth={3} />
