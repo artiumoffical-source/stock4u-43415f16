@@ -1,49 +1,85 @@
 
-# תכנית: הצגת אותה תמונה במובייל - ללא שימוש בקומפוננטה MobileHowItWorks
+# תכנית: התאמת ה-StepHero לעיצוב המקורי
 
-## הבעיה
-הקומפוננטה `MobileHowItWorks` היא עיצוב שונה לגמרי מהתמונה המקורית של הדסקטופ. במקום להציג את התמונה של "זה כל כך פשוט" עם 3 השלבים בקו אופקי, היא מציגה כרטיסים אנכיים עם חיצים - עיצוב שונה לחלוטין.
+## הבעיה הנוכחית
+ב-`/order-details` (שלב 1), הקומפוננטה `StepHero` משתמשת ב-`variant="all-numbers"` שמציג את **כל** השלבים כעיגולים כחולים. אבל לפי העיצוב:
+- **שלב נוכחי**: עיגול **לבן** עם מספר **כחול** וצל אפור מאחוריו (drop shadow)
+- **שלבים עתידיים**: עיגולים **כחולים** עם מספרים **לבנים**
 
-## הפתרון
-נסיר את הקומפוננטה `MobileHowItWorks` ונציג את **אותה תמונה** גם במובייל, רק עם התאמות גובה:
-- **דסקטופ**: גובה קבוע של 566px עם `object-cover`
-- **מובייל**: גובה אוטומטי (`h-auto`) עם `object-contain` כדי שהתמונה תוצג במלואה
+## השינויים הנדרשים
 
-## שינויים נדרשים
+### 1. עדכון הלוגיקה של `getStepStyle` בקומפוננטה `StepHero`
 
-### קובץ: `src/pages/Index.tsx`
-
-**שורות 5, 72-82 - הסרת MobileHowItWorks והצגת התמונה בכל המסכים:**
-
-```text
-לפני:
-import MobileHowItWorks from "../components/mobile/MobileHowItWorks";
-...
-<section className="hidden md:block h-[566px] relative overflow-hidden">
-  <img
-    src="https://api.builder.io/api/v1/image/assets/TEMP/..."
-    alt="How It Works - זה כללו פשוט!"
-    className="w-full h-full object-cover object-center"
-  />
-</section>
-<div className="block md:hidden">
-  <MobileHowItWorks />
-</div>
-
-אחרי:
-{/* How It Works Section - Same image for all screens */}
-<section className="relative overflow-hidden">
-  <img
-    src="https://api.builder.io/api/v1/image/assets/TEMP/d2a8fbb0bc7d24e0fc8879295b276f6758c8be62?width=3840"
-    alt="How It Works - זה כללו פשוט!"
-    className="w-full h-auto md:h-[566px] object-contain md:object-cover object-center"
-  />
-</section>
+**מצב נוכחי** (variant="all-numbers"):
+```javascript
+if (variant === "all-numbers") {
+  return {
+    circle: "bg-[#4880FF] text-white",  // הכל כחול
+    showCheck: false,
+  };
+}
 ```
 
-**הסרת Import:**
-- הסרת `import MobileHowItWorks from "../components/mobile/MobileHowItWorks";`
+**מצב חדש** - הסרת variant="all-numbers" ושימוש בלוגיקה ברירת מחדל עם תיקון הסגנון:
+
+| שלב | מצב | עיצוב |
+|-----|-----|-------|
+| שלב < currentStep | הושלם | עיגול כחול + ✓ לבן |
+| שלב = currentStep | נוכחי | עיגול לבן + מספר כחול + **צל אפור** (לא ring) |
+| שלב > currentStep | עתידי | עיגול כחול + מספר לבן |
+
+### 2. קובץ `src/components/StepHero.tsx`
+
+**שינוי בלוגיקת הסגנון:**
+- שלב נוכחי: `bg-white text-[#4880FF]` עם `shadow-[0_4px_20px_rgba(0,0,0,0.15)]` (צל אפור)
+- שלבים עתידיים: `bg-[#4880FF] text-white` (כחול עם מספר לבן)
+- הסרת ה-ring הכחול מהשלב הנוכחי
+
+### 3. קובץ `src/pages/OrderDetails.tsx`
+
+**שינוי:**
+```jsx
+// לפני:
+<StepHero currentStep={1} variant="all-numbers" />
+
+// אחרי:
+<StepHero currentStep={1} />
+```
+
+הסרת ה-variant כדי להשתמש בברירת המחדל המתוקנת.
+
+## פירוט טכני
+
+### עדכון `getStepStyle`:
+
+```typescript
+const getStepStyle = (stepNumber: number) => {
+  if (stepNumber < currentStep) {
+    // Completed step - blue circle with checkmark
+    return {
+      circle: "bg-[#4880FF] text-white",
+      showCheck: true,
+      shadow: "",
+    };
+  } else if (stepNumber === currentStep) {
+    // Current step - white circle with blue number and gray shadow
+    return {
+      circle: "bg-white text-[#4880FF]",
+      showCheck: false,
+      shadow: "shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
+    };
+  } else {
+    // Future step - blue circle with white number
+    return {
+      circle: "bg-[#4880FF] text-white",
+      showCheck: false,
+      shadow: "",
+    };
+  }
+};
+```
 
 ## תוצאה צפויה
-- **דסקטופ**: נשאר אותו דבר - תמונה בגובה 566px
-- **מובייל**: אותה תמונה מוצגת במלואה, מוקטנת לפי רוחב המסך
+- **שלב 1 (נוכחי)**: עיגול לבן עם "1" כחול וצל אפור - בדיוק כמו בעיצוב
+- **שלבים 2 ו-3**: עיגולים כחולים עם מספרים לבנים
+- הלייבלים יישארו עם ה-stroke הלבן כמו שיש עכשיו
