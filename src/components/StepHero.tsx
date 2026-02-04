@@ -13,6 +13,9 @@ import stepCircle3 from "@/assets/step-hero/step-circle-3.png";
 import labelStep1 from "@/assets/step-hero/label-step-1.png";
 import labelStep2 from "@/assets/step-hero/label-step-2.png";
 import labelStep3 from "@/assets/step-hero/label-step-3.png";
+import shekel from "@/assets/step-hero/shekel.png";
+import dollar from "@/assets/step-hero/dollar.png";
+import yen from "@/assets/step-hero/yen.png";
 
 interface StepHeroProps {
   currentStep: 1 | 2 | 3 | 4;
@@ -92,39 +95,26 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
         className="hidden md:block absolute bottom-20 md:bottom-24 left-[12%] md:left-[14%] w-4 md:w-5 lg:w-6 h-auto z-10"
       />
 
-      {/* CSS Fallback Stickers for missing assets */}
       {/* Shekel - Top Center */}
-      <div 
-        className="hidden md:block absolute top-0 md:top-2 left-1/2 -translate-x-1/2 text-3xl md:text-4xl lg:text-5xl font-black z-10" 
-        style={{ 
-          color: '#22c55e', 
-          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
-        }}
-      >
-        ₪
-      </div>
+      <img 
+        src={shekel} 
+        alt="" 
+        className="hidden md:block absolute top-0 md:top-2 left-1/2 -translate-x-1/2 w-10 md:w-14 lg:w-16 h-auto z-10"
+      />
       
       {/* Dollar - Upper area */}
-      <div 
-        className="hidden md:block absolute top-10 md:top-14 left-[30%] md:left-[32%] text-2xl md:text-3xl lg:text-4xl font-black z-10 rotate-6" 
-        style={{ 
-          color: '#22c55e', 
-          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
-        }}
-      >
-        $
-      </div>
+      <img 
+        src={dollar} 
+        alt="" 
+        className="hidden md:block absolute top-10 md:top-14 left-[30%] md:left-[32%] w-8 md:w-12 lg:w-14 h-auto z-10 rotate-6"
+      />
       
       {/* Yen - Bottom Right */}
-      <div 
-        className="hidden md:block absolute bottom-14 md:bottom-18 right-[3%] md:right-[4%] text-2xl md:text-3xl lg:text-4xl font-black z-10 -rotate-12" 
-        style={{ 
-          color: '#22c55e', 
-          textShadow: '3px 3px 0 #166534, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff' 
-        }}
-      >
-        ¥
-      </div>
+      <img 
+        src={yen} 
+        alt="" 
+        className="hidden md:block absolute bottom-14 md:bottom-18 right-[3%] md:right-[4%] w-10 md:w-14 lg:w-16 h-auto z-10 -rotate-12"
+      />
 
       {/* CSS Sparkles for variety */}
       <div className="hidden md:block absolute top-20 md:top-24 left-[36%] md:left-[38%] z-10">
@@ -166,25 +156,12 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
                   />
                 )}
 
-                {/* Label */}
-                {state === "current" || !step.labelImage ? (
-                  // Current step or no image - CSS label with white stroke
-                  <span 
-                    className="text-xs md:text-lg font-bold text-[#4880FF] whitespace-nowrap"
-                    style={{
-                      textShadow: '2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white, 0px 2px 0px white, 0px -2px 0px white, 2px 0px 0px white, -2px 0px 0px white'
-                    }}
-                  >
-                    {step.label}
-                  </span>
-                ) : (
-                  // Use PNG label image
-                  <img 
-                    src={step.labelImage} 
-                    alt={step.label}
-                    className="h-4 md:h-6 lg:h-7 w-auto"
-                  />
-                )}
+                {/* Label - Always use PNG image */}
+                <img 
+                  src={step.labelImage} 
+                  alt={step.label}
+                  className="h-5 md:h-8 lg:h-9 w-auto"
+                />
               </div>
             );
           })}
