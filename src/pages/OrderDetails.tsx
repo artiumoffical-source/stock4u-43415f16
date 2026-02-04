@@ -5,6 +5,8 @@ import Header from "../components/Header";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "../contexts/GiftContext";
 import sectionTitleDetails from "@/assets/section-title-details.png";
+import btnEmail from "@/assets/btn-email.png";
+import btnMobile from "@/assets/btn-mobile.png";
 
 interface Recipient {
   id: string;
@@ -277,54 +279,38 @@ export default function OrderDetails() {
                 gap: "12px",
               }}
             >
-              {/* Email Button */}
+              {/* Email Button - Using PNG image */}
               <div
                 onClick={() => toggleDeliveryMethod("email")}
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  padding: "12px 20px",
-                  borderRadius: "10px",
-                  border: selectedDeliveryMethods.includes("email") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
-                  background: "#FFF",
                   cursor: "pointer",
+                  borderRadius: "10px",
+                  border: selectedDeliveryMethods.includes("email") ? "2px solid #4C7EFB" : "none",
+                  padding: selectedDeliveryMethods.includes("email") ? "0" : "2px",
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                  <polyline points="22,6 12,13 2,6" />
-                </svg>
-                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "500" }}>
-                  דואר אלקטרוני
-                </span>
+                <img 
+                  src={btnEmail} 
+                  alt="דואר אלקטרוני" 
+                  style={{ height: "42px", width: "auto", display: "block" }}
+                />
               </div>
               
-              {/* Mobile Button */}
+              {/* Mobile Button - Using PNG image */}
               <div
                 onClick={() => toggleDeliveryMethod("mobile")}
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  padding: "12px 20px",
-                  borderRadius: "10px",
-                  border: selectedDeliveryMethods.includes("mobile") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
-                  background: "#FFF",
                   cursor: "pointer",
+                  borderRadius: "10px",
+                  border: selectedDeliveryMethods.includes("mobile") ? "2px solid #4C7EFB" : "none",
+                  padding: selectedDeliveryMethods.includes("mobile") ? "0" : "2px",
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
-                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-                  <line x1="12" y1="18" x2="12.01" y2="18" />
-                </svg>
-                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "500" }}>
-                  הודעה לנייד
-                </span>
+                <img 
+                  src={btnMobile} 
+                  alt="הודעה לנייד" 
+                  style={{ height: "42px", width: "auto", display: "block" }}
+                />
               </div>
             </div>
           </div>
