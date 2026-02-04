@@ -157,28 +157,13 @@ export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
                   <div className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-[#4880FF] flex items-center justify-center">
                     <Check className="w-5 h-5 md:w-7 md:h-7 text-white" strokeWidth={3} />
                   </div>
-                ) : state === "current" ? (
-                  // Current - White circle with blue number and shadow (CSS)
-                  <div 
-                    className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center font-bold text-base md:text-2xl text-[#4880FF]"
-                    style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
-                  >
-                    {step.number}
-                  </div>
                 ) : (
-                  // Future - Use PNG image for circle
-                  step.circleImage ? (
-                    <img 
-                      src={step.circleImage} 
-                      alt={`שלב ${step.number}`}
-                      className="w-9 h-9 md:w-14 md:h-14"
-                    />
-                  ) : (
-                    // Fallback CSS for step 1 if needed
-                    <div className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-[#4880FF] flex items-center justify-center font-bold text-base md:text-2xl text-white">
-                      {step.number}
-                    </div>
-                  )
+                  // Current or Future - Use PNG image for circle
+                  <img 
+                    src={step.circleImage} 
+                    alt={`שלב ${step.number}`}
+                    className="w-9 h-9 md:w-14 md:h-14"
+                  />
                 )}
 
                 {/* Label */}
