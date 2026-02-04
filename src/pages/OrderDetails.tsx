@@ -161,7 +161,7 @@ export default function OrderDetails() {
     >
       <Header />
 
-      <StepHero currentStep={1} variant="all-numbers" />
+      <StepHero currentStep={1} />
 
       {/* Main Form Content */}
       <div
