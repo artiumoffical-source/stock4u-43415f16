@@ -7,8 +7,10 @@ import euro2 from "@/assets/step-hero/euro-2.png";
 import pound from "@/assets/step-hero/pound.png";
 import redStar from "@/assets/step-hero/red-star.png";
 import yellowSparkle from "@/assets/step-hero/yellow-sparkle.png";
+import stepCircle1 from "@/assets/step-hero/step-circle-1.png";
 import stepCircle2 from "@/assets/step-hero/step-circle-2.png";
 import stepCircle3 from "@/assets/step-hero/step-circle-3.png";
+import labelStep1 from "@/assets/step-hero/label-step-1.png";
 import labelStep2 from "@/assets/step-hero/label-step-2.png";
 import labelStep3 from "@/assets/step-hero/label-step-3.png";
 
@@ -17,11 +19,11 @@ interface StepHeroProps {
 }
 
 export const StepHero: React.FC<StepHeroProps> = ({ currentStep }) => {
-  // Steps in VISUAL order (Left to Right on screen): 3, 2, 1
+  // RTL: Step 1 appears on the RIGHT, Step 3 on the LEFT
   const steps = [
-    { number: 3, label: "סיום ותשלום", labelImage: labelStep3, circleImage: stepCircle3 },
+    { number: 1, label: "פרטים וברכה", labelImage: labelStep1, circleImage: stepCircle1 },
     { number: 2, label: "עיצוב המתנה", labelImage: labelStep2, circleImage: stepCircle2 },
-    { number: 1, label: "פרטים וברכה", labelImage: null, circleImage: null },
+    { number: 3, label: "סיום ותשלום", labelImage: labelStep3, circleImage: stepCircle3 },
   ];
 
   const getStepState = (stepNumber: number) => {
