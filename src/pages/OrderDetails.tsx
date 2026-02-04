@@ -163,6 +163,15 @@ export default function OrderDetails() {
 
       <StepHero currentStep={1} />
 
+      {/* Section Title */}
+      <div className="flex justify-center items-center py-6 md:py-8">
+        <img 
+          src="/images/section-title-details.png" 
+          alt="פרטים" 
+          className="h-5 md:h-7"
+        />
+      </div>
+
       {/* Main Form Content */}
       <div
         className="flex flex-col justify-center items-center gap-8 md:gap-[60px] max-w-[1200px] mx-auto px-4 md:px-10 py-8 md:py-[60px]"
@@ -170,11 +179,11 @@ export default function OrderDetails() {
           background: "#fff",
         }}
       >
-        {/* Top Row: Upload | Transfer Methods | Gift From */}
+        {/* Top Row: Gift From (RIGHT) | Transfer Methods (CENTER) | Upload (LEFT) */}
         <div
           className="flex flex-col md:flex-row justify-center items-center md:items-start gap-8 md:gap-[60px] w-full"
         >
-          {/* Upload Image - Left */}
+          {/* Gift From - RIGHT (first in RTL) */}
           <div
             className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
@@ -188,56 +197,53 @@ export default function OrderDetails() {
                 margin: "0",
               }}
             >
-              העלאת תמונה/לוגו
+              ממי המתנה?{" "}
+              <span style={{ color: "#486284", fontSize: "16px" }}>
+                (רשמו את השם שלכם)
+              </span>
             </h3>
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                display: "flex",
-                width: "100%",
-                height: "120px",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "10px",
-                borderRadius: "10px",
-                border: "2px dashed #4C7EFB",
-                background: "rgba(245, 247, 252, 1)",
-                cursor: "pointer",
-              }}
-            >
-              {uploadedImage ? (
-                <img 
-                  src={uploadedImage} 
-                  alt="Uploaded" 
-                  style={{ 
-                    width: "80px", 
-                    height: "80px", 
-                    objectFit: "cover", 
-                    borderRadius: "8px" 
-                  }} 
-                />
-              ) : (
-                <>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7,10 12,5 17,10" />
-                    <line x1="12" y1="5" x2="12" y2="15" />
-                  </svg>
-                  <div style={{ color: "#4C7EFB", fontSize: "16px" }}>העלאה</div>
-                </>
-              )}
-            </div>
             <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
+              type="text"
+              value={senderName}
+              onChange={(e) => setSenderName(e.target.value)}
+              placeholder="השם שלכם"
+              style={{
+                width: "100%",
+                height: "50px",
+                padding: "15px 20px",
+                color: "#1B1919",
+                textAlign: "center",
+                fontSize: "16px",
+                fontFamily: "Poppins",
+                background: "rgba(245, 247, 252, 1)",
+                border: "1px solid #4C7EFB",
+                borderRadius: "10px",
+                outline: "none",
+                marginBottom: "10px",
+              }}
+            />
+            <input
+              type="email"
+              value={senderEmail}
+              onChange={(e) => setSenderEmail(e.target.value)}
+              placeholder="המייל שלכם"
+              style={{
+                width: "100%",
+                height: "50px",
+                padding: "15px 20px",
+                color: "#1B1919",
+                textAlign: "center",
+                fontSize: "16px",
+                fontFamily: "Poppins",
+                background: "rgba(245, 247, 252, 1)",
+                border: "1px solid #4C7EFB",
+                borderRadius: "10px",
+                outline: "none",
+              }}
             />
           </div>
 
-          {/* Transfer Methods - Center */}
+          {/* Transfer Methods - CENTER */}
           <div
             className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
@@ -315,7 +321,7 @@ export default function OrderDetails() {
             </div>
           </div>
 
-          {/* Gift From - Right */}
+          {/* Upload Image - LEFT (last in RTL) */}
           <div
             className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
           >
@@ -329,49 +335,52 @@ export default function OrderDetails() {
                 margin: "0",
               }}
             >
-              ממי המתנה?{" "}
-              <span style={{ color: "#486284", fontSize: "16px" }}>
-                (רשמו את השם שלכם)
-              </span>
+              העלאת תמונה/לוגו
             </h3>
-            <input
-              type="text"
-              value={senderName}
-              onChange={(e) => setSenderName(e.target.value)}
-              placeholder="השם שלכם"
+            <div
+              onClick={() => fileInputRef.current?.click()}
               style={{
+                display: "flex",
                 width: "100%",
-                height: "50px",
-                padding: "15px 20px",
-                color: "#1B1919",
-                textAlign: "center",
-                fontSize: "16px",
-                fontFamily: "Poppins",
-                background: "rgba(245, 247, 252, 1)",
-                border: "1px solid #4C7EFB",
+                height: "120px",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
                 borderRadius: "10px",
-                outline: "none",
-                marginBottom: "10px",
+                border: "2px dashed #4C7EFB",
+                background: "rgba(245, 247, 252, 1)",
+                cursor: "pointer",
               }}
-            />
+            >
+              {uploadedImage ? (
+                <img 
+                  src={uploadedImage} 
+                  alt="Uploaded" 
+                  style={{ 
+                    width: "80px", 
+                    height: "80px", 
+                    objectFit: "cover", 
+                    borderRadius: "8px" 
+                  }} 
+                />
+              ) : (
+                <>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7,10 12,5 17,10" />
+                    <line x1="12" y1="5" x2="12" y2="15" />
+                  </svg>
+                  <div style={{ color: "#4C7EFB", fontSize: "16px" }}>העלאה</div>
+                </>
+              )}
+            </div>
             <input
-              type="email"
-              value={senderEmail}
-              onChange={(e) => setSenderEmail(e.target.value)}
-              placeholder="המייל שלכם"
-              style={{
-                width: "100%",
-                height: "50px",
-                padding: "15px 20px",
-                color: "#1B1919",
-                textAlign: "center",
-                fontSize: "16px",
-                fontFamily: "Poppins",
-                background: "rgba(245, 247, 252, 1)",
-                border: "1px solid #4C7EFB",
-                borderRadius: "10px",
-                outline: "none",
-              }}
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
             />
           </div>
         </div>
