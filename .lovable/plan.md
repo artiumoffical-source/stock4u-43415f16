@@ -1,85 +1,128 @@
 
-# תכנית: התאמת ה-StepHero לעיצוב המקורי
 
-## הבעיה הנוכחית
-ב-`/order-details` (שלב 1), הקומפוננטה `StepHero` משתמשת ב-`variant="all-numbers"` שמציג את **כל** השלבים כעיגולים כחולים. אבל לפי העיצוב:
-- **שלב נוכחי**: עיגול **לבן** עם מספר **כחול** וצל אפור מאחוריו (drop shadow)
-- **שלבים עתידיים**: עיגולים **כחולים** עם מספרים **לבנים**
+# תכנית: בניית StepHero מחדש עם Assets אמיתיים
 
-## השינויים הנדרשים
+## סקירת המצב
 
-### 1. עדכון הלוגיקה של `getStepStyle` בקומפוננטה `StepHero`
+### מה יש עכשיו (לא נכון):
+- סימני מטבע מצוירים ב-CSS עם `textShadow`
+- SVG פשוטים לכוכבים
+- **קווים מחברים** בין השלבים (לא קיימים בעיצוב!)
+- עיגולי שלבים מיוצרים ב-CSS
 
-**מצב נוכחי** (variant="all-numbers"):
-```javascript
-if (variant === "all-numbers") {
-  return {
-    circle: "bg-[#4880FF] text-white",  // הכל כחול
-    showCheck: false,
-  };
-}
+### מה צריך (לפי העיצוב):
+- **תמונות PNG אמיתיות** של סטיקרים תלת-ממדיים
+- **ללא קווים מחברים** בין השלבים
+- עיגולי שלבים עם צל עדין
+- מיקום מדויק של כל אלמנט
+
+## Assets שהתקבלו
+
+| Asset | שם קובץ | שימוש |
+|-------|---------|-------|
+| אירו 1 | Group_108301.png | שמאל למעלה |
+| אירו 2 | Group_108301_1.png | ימין למעלה |
+| פאונד | Group_108298.png | שמאל למטה |
+| כוכב אדום | Vector_4.png | עיטורים |
+| נצנוץ צהוב | Vector_3.png | עיטורים |
+| עיגול 3 | Frame_108285.png | שלב 3 |
+| עיגול 2 | Frame_108279.png | שלב 2 |
+| לייבל "סיום ותשלום" | סיום_ותשלום.png | תווית שלב 3 |
+| לייבל "עיצוב המתנה" | עיצוב_המתנה.png | תווית שלב 2 |
+
+## Assets חסרים (ניצור ב-CSS או נבקש)
+
+| Asset חסר | פתרון מוצע |
+|-----------|------------|
+| דולר ($) | ליצור ב-CSS עם סגנון דומה או לבקש PNG |
+| שקל (₪) | ליצור ב-CSS עם סגנון דומה או לבקש PNG |
+| ין (¥) | ליצור ב-CSS עם סגנון דומה או לבקש PNG |
+| עיגול שלב 1 (לבן+צל) | ליצור ב-CSS (רקע לבן עם drop shadow) |
+| לייבל "פרטים וברכה" | ליצור ב-CSS עם stroke לבן |
+| נצנוצים כחולים/ירוקים | ליצור ב-CSS או SVG פשוט |
+
+## שינויים נדרשים
+
+### 1. העתקת Assets לפרויקט
+העתקת כל התמונות שהועלו לתיקיית `src/assets/step-hero/`:
+- `euro-1.png`
+- `euro-2.png`
+- `pound.png`
+- `red-star.png`
+- `yellow-sparkle.png`
+- `step-circle-2.png`
+- `step-circle-3.png`
+- `label-step-2.png`
+- `label-step-3.png`
+
+### 2. בנייה מחדש של StepHero.tsx
+
+**מבנה חדש:**
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                      רקע #E0E7F5                                │
+│  €(img)     ₪(css)                    $(css)    ★(img)   €(img) │
+│     ★(img)        ✦(img)        ✦(css)                   ✦(css) │
+│                                                                 │
+│  £(img)   [3]סיום ותשלום   [2]עיצוב המתנה   [1]פרטים וברכה  ¥(css)│
+│       ✦(img)                                          ✦(css)    │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-**מצב חדש** - הסרת variant="all-numbers" ושימוש בלוגיקה ברירת מחדל עם תיקון הסגנון:
+**שינויים עיקריים:**
+1. החלפת כל סימני המטבע ב-CSS לתמונות PNG
+2. הסרת הקווים המחברים בין השלבים
+3. שימוש בתמונות עיגולי השלבים לשלבים 2 ו-3
+4. יצירת עיגול שלב 1 ב-CSS (רקע לבן + צל)
+5. מיקום מדויק של כל אלמנט לפי העיצוב
 
-| שלב | מצב | עיצוב |
-|-----|-----|-------|
-| שלב < currentStep | הושלם | עיגול כחול + ✓ לבן |
-| שלב = currentStep | נוכחי | עיגול לבן + מספר כחול + **צל אפור** (לא ring) |
-| שלב > currentStep | עתידי | עיגול כחול + מספר לבן |
+### 3. לוגיקת השלבים
 
-### 2. קובץ `src/components/StepHero.tsx`
+| שלב נוכחי | שלב 1 | שלב 2 | שלב 3 |
+|-----------|-------|-------|-------|
+| 1 | לבן+צל (CSS) | כחול (PNG) | כחול (PNG) |
+| 2 | וי (CSS) | לבן+צל (CSS) | כחול (PNG) |
+| 3 | וי (CSS) | וי (CSS) | לבן+צל (CSS) |
 
-**שינוי בלוגיקת הסגנון:**
-- שלב נוכחי: `bg-white text-[#4880FF]` עם `shadow-[0_4px_20px_rgba(0,0,0,0.15)]` (צל אפור)
-- שלבים עתידיים: `bg-[#4880FF] text-white` (כחול עם מספר לבן)
-- הסרת ה-ring הכחול מהשלב הנוכחי
+### 4. פירוט קובץ StepHero.tsx החדש
 
-### 3. קובץ `src/pages/OrderDetails.tsx`
-
-**שינוי:**
-```jsx
-// לפני:
-<StepHero currentStep={1} variant="all-numbers" />
-
-// אחרי:
-<StepHero currentStep={1} />
-```
-
-הסרת ה-variant כדי להשתמש בברירת המחדל המתוקנת.
-
-## פירוט טכני
-
-### עדכון `getStepStyle`:
-
-```typescript
-const getStepStyle = (stepNumber: number) => {
-  if (stepNumber < currentStep) {
-    // Completed step - blue circle with checkmark
-    return {
-      circle: "bg-[#4880FF] text-white",
-      showCheck: true,
-      shadow: "",
-    };
-  } else if (stepNumber === currentStep) {
-    // Current step - white circle with blue number and gray shadow
-    return {
-      circle: "bg-white text-[#4880FF]",
-      showCheck: false,
-      shadow: "shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
-    };
-  } else {
-    // Future step - blue circle with white number
-    return {
-      circle: "bg-[#4880FF] text-white",
-      showCheck: false,
-      shadow: "",
-    };
-  }
-};
+```text
+קומפוננטה:
+├── Container (רקע #E0E7F5, גובה 180px-320px)
+│
+├── Decorative Elements (תמונות PNG)
+│   ├── Euro Left (Group_108301.png) - top-left
+│   ├── Euro Right (Group_108301_1.png) - top-right  
+│   ├── Shekel (CSS fallback) - top-center
+│   ├── Dollar (CSS fallback) - upper-center-right
+│   ├── Pound (Group_108298.png) - bottom-left
+│   ├── Yen (CSS fallback) - bottom-right
+│   ├── Red Star (Vector_4.png) - decorative
+│   └── Yellow Sparkles (Vector_3.png) - decorative
+│
+└── Stepper (bottom-center)
+    ├── Step 3 - Circle(PNG) + Label(PNG)
+    ├── Step 2 - Circle(PNG) + Label(PNG)  
+    └── Step 1 - Circle(CSS white+shadow) + Label(CSS with stroke)
 ```
 
 ## תוצאה צפויה
-- **שלב 1 (נוכחי)**: עיגול לבן עם "1" כחול וצל אפור - בדיוק כמו בעיצוב
-- **שלבים 2 ו-3**: עיגולים כחולים עם מספרים לבנים
-- הלייבלים יישארו עם ה-stroke הלבן כמו שיש עכשיו
+
+לאחר השינויים, ה-StepHero יהיה **זהה לעיצוב**:
+- סטיקרים תלת-ממדיים אמיתיים (PNG)
+- ללא קווים מחברים בין שלבים
+- עיגול לבן עם צל לשלב הנוכחי
+- עיגולים כחולים לשלבים האחרים
+- מיקום מדויק של כל אלמנט
+
+## שאלה לפני יישום
+
+האם יש לך גם את ה-assets הבאים? (אם כן, אשמח שתעלה אותם):
+- **דולר** ($) - סטיקר PNG
+- **שקל** (₪) - סטיקר PNG  
+- **ין** (¥) - סטיקר PNG
+- **עיגול שלב 1** - PNG (אם שונה מ-2 ו-3)
+- **לייבל "פרטים וברכה"** - PNG
+
+אם אין - אשתמש בפתרונות CSS דומים לאלו שכבר יש בעיצוב.
+
