@@ -24,17 +24,6 @@ export default function Index() {
             />
           </div>
           
-          {/* Centered CTA Button Only */}
-          <div className="relative z-20 max-w-4xl mx-auto px-4 pb-12 text-center">
-            <div className="flex justify-center">
-              <Link 
-                to="/stock-selection?continue=true"
-                className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-600 text-white text-lg md:text-xl font-bold py-4 px-10 rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1"
-              >
-                בחירת מתנה ➜
-              </Link>
-            </div>
-          </div>
         </section>
 
         {/* Gift Packages Carousel */}
