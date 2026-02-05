@@ -8,8 +8,8 @@ import heroCharacters from "@/assets/hero-characters.png";
 export default function Index() {
   return (
     <Layout>
-      {/* ========== DESKTOP VERSION - Always shown ========== */}
-      <div>
+      {/* ========== Main wrapper with brand background to hide gaps ========== */}
+      <div className="bg-[#E0E7F5]">
         {/* Hero Section - Clean, no padding filler */}
         <section className="bg-[#E0E7F5]">
           <img
@@ -19,8 +19,8 @@ export default function Index() {
           />
         </section>
 
-        {/* Gift Packages Carousel */}
-        <section className="w-full py-6 mb-6">
+        {/* Gift Packages Carousel - Pull up to close gap */}
+        <section className="w-full py-6 mb-6 bg-white -mt-1">
           <div className="max-w-[1639px] mx-auto relative">
             <div className="flex justify-center items-center">
               <Link to="/stock-selection?continue=true" className="block w-full">
