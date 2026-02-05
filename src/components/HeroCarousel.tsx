@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import heroCharacters from "@/assets/hero-characters.png";
+import HowItWorksSteps from "@/components/HowItWorksSteps";
 
 export const HeroCarousel: React.FC = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -144,87 +144,7 @@ export const HeroCarousel: React.FC = () => {
 
           {/* SLIDE 3: It's So Simple (3 Steps) */}
           <div className="flex-[0_0_100%] min-w-0">
-            <div className="relative w-full min-h-[300px] md:min-h-[400px] flex flex-col items-center justify-center px-4 py-8">
-              {/* Floating Currency Decorations */}
-              <div className="absolute top-4 left-4 text-4xl md:text-5xl font-bold text-[#22A652]/30 rotate-12">€</div>
-              <div className="absolute top-8 right-16 text-3xl md:text-4xl font-bold text-[#4880FF]/30 -rotate-6">₪</div>
-              <div className="absolute bottom-24 left-12 text-3xl md:text-4xl font-bold text-[#FFB800]/40 rotate-6">$</div>
-              <div className="absolute bottom-20 right-6 text-2xl md:text-3xl font-bold text-[#22A652]/30 -rotate-12">¥</div>
-              
-              {/* Main Title */}
-              <div
-                className="inline-block bg-white px-6 py-3 md:px-8 md:py-4 rounded-2xl mb-8"
-                style={{
-                  boxShadow: "4px 4px 0 rgba(0,0,0,0.1)",
-                  border: "3px solid white",
-                }}
-              >
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-[#486284] hebrew-font">
-                  זה כל כך פשוט!
-                </h2>
-              </div>
-
-              {/* 3 Step Cards */}
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 max-w-4xl">
-                {/* Step 1 */}
-                <div className="relative">
-                  <div
-                    className="bg-white/90 backdrop-blur-sm px-6 py-4 md:px-8 md:py-5 rounded-xl text-center min-w-[160px] md:min-w-[180px]"
-                    style={{
-                      boxShadow: "2px 2px 8px rgba(0,0,0,0.08)",
-                      border: "2px solid rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    <div className="text-3xl md:text-4xl font-bold text-[#FFB800] mb-2">1</div>
-                    <p className="text-sm md:text-base font-medium text-[#486284] hebrew-font">בוחרים חבילה</p>
-                    <p className="text-xs text-[#486284]/60 hebrew-font">או חברה</p>
-                  </div>
-                  {/* Arrow to next */}
-                  <div className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 text-[#4880FF] text-2xl">←</div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="relative">
-                  <div
-                    className="bg-white/90 backdrop-blur-sm px-6 py-4 md:px-8 md:py-5 rounded-xl text-center min-w-[160px] md:min-w-[180px]"
-                    style={{
-                      boxShadow: "2px 2px 8px rgba(0,0,0,0.08)",
-                      border: "2px solid rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    <div className="text-3xl md:text-4xl font-bold text-[#FFB800] mb-2">2</div>
-                    <p className="text-sm md:text-base font-medium text-[#486284] hebrew-font">מוסיפים ברכה</p>
-                    <p className="text-xs text-[#486284]/60 hebrew-font">(נעזור לך)</p>
-                  </div>
-                  {/* Arrow to next */}
-                  <div className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 text-[#4880FF] text-2xl">←</div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="relative">
-                  <div
-                    className="bg-white/90 backdrop-blur-sm px-6 py-4 md:px-8 md:py-5 rounded-xl text-center min-w-[160px] md:min-w-[180px]"
-                    style={{
-                      boxShadow: "2px 2px 8px rgba(0,0,0,0.08)",
-                      border: "2px solid rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    <div className="text-3xl md:text-4xl font-bold text-[#FFB800] mb-2">3</div>
-                    <p className="text-sm md:text-base font-medium text-[#486284] hebrew-font">מעניקים מתנות</p>
-                    <p className="text-xs text-[#486284]/60 hebrew-font">במתנה!</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Characters around the steps */}
-              <div className="absolute top-12 left-1/4 hidden lg:block">
-                <div className="w-10 h-10 bg-[#FFB800] rounded-full border-2 border-white flex items-center justify-center"
-                  style={{ filter: "drop-shadow(2px 2px 0 white)" }}
-                >
-                  <span className="text-white text-lg font-bold">$</span>
-                </div>
-              </div>
-            </div>
+            <HowItWorksSteps />
           </div>
         </div>
       </div>
