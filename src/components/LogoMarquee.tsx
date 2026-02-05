@@ -32,6 +32,22 @@ const companyLogos = [
     logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
   },
   {
+    name: "AMD",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg",
+  },
+  {
+    name: "Intel",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg",
+  },
+  {
+    name: "PayPal",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg",
+  },
+  {
+    name: "Visa",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg",
+  },
+  {
     name: "Bitcoin",
     logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
   },
@@ -47,9 +63,6 @@ interface LogoMarqueeProps {
 }
 
 export default function LogoMarquee({ showTitle = true, className = "" }: LogoMarqueeProps) {
-  // Quadruple the logos to ensure seamless loop on all screen sizes
-  const allLogos = [...companyLogos, ...companyLogos, ...companyLogos, ...companyLogos];
-
   return (
     <div className={`py-8 md:py-10 bg-blue-50/50 overflow-hidden ${className}`}>
       {/* Header */}
@@ -62,25 +75,44 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
       {/* Marquee Container */}
       <div className="w-full overflow-hidden relative">
         {/* Gradient Fade Left */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-blue-50/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-blue-50 to-transparent z-10 pointer-events-none" />
         
         {/* Gradient Fade Right */}
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-blue-50/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-blue-50 to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling Track - w-max allows infinite stretch */}
-        <div className="flex w-max animate-[marquee-scroll_15s_linear_infinite] hover:[animation-play-state:paused]">
-          {allLogos.map((company, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-center mx-6 md:mx-10 shrink-0"
-            >
-              <img
-                src={company.logoUrl}
-                alt={company.name}
-                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
-              />
-            </div>
-          ))}
+        {/* Scrolling Track - Two identical sets for seamless loop */}
+        <div className="flex animate-[marquee-scroll_20s_linear_infinite] hover:[animation-play-state:paused]">
+          {/* First Set */}
+          <div className="flex shrink-0">
+            {companyLogos.map((company, index) => (
+              <div
+                key={`set1-${index}`}
+                className="flex items-center justify-center mx-6 md:mx-8 shrink-0"
+              >
+                <img
+                  src={company.logoUrl}
+                  alt={company.name}
+                  className="h-7 md:h-9 w-auto object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            ))}
+          </div>
+          
+          {/* Second Set (Duplicate) */}
+          <div className="flex shrink-0">
+            {companyLogos.map((company, index) => (
+              <div
+                key={`set2-${index}`}
+                className="flex items-center justify-center mx-6 md:mx-8 shrink-0"
+              >
+                <img
+                  src={company.logoUrl}
+                  alt={company.name}
+                  className="h-7 md:h-9 w-auto object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -90,7 +122,7 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-25%);
+            transform: translateX(-50%);
           }
         }
       `}</style>
