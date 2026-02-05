@@ -4,9 +4,25 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { StepHero } from "@/components/StepHero";
 import { useGift } from "../contexts/GiftContext";
-import sectionTitleDetails from "@/assets/section-title-details.png";
-import btnEmail from "@/assets/btn-email.png";
-import btnMobile from "@/assets/btn-mobile.png";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  User, 
+  Users, 
+  Mail, 
+  Smartphone, 
+  Clock, 
+  Send, 
+  Upload, 
+  Plus, 
+  Trash2, 
+  Info,
+  Building2,
+  ChevronLeft
+} from "lucide-react";
+
+type GiftMode = "personal" | "business";
 
 interface Recipient {
   id: string;
@@ -17,29 +33,27 @@ interface Recipient {
 
 export default function OrderDetails() {
   const { giftData, updateGiftData } = useGift();
+  const navigate = useNavigate();
 
-  // Scroll to top when component mounts
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
-  const [selectedDeliveryMethods, setSelectedDeliveryMethods] = useState<
-    string[]
-  >(["email"]);
-  const [dateTimeError, setDateTimeError] = useState("");
+
+  // Mode toggle
+  const [mode, setMode] = useState<GiftMode>("personal");
+
+  // Sender details
   const [senderName, setSenderName] = useState(giftData?.senderName || "");
   const [senderEmail, setSenderEmail] = useState(giftData?.senderEmail || "");
-  const [recipients, setRecipients] = useState<Recipient[]>([
-    {
-      id: "1",
-      name: giftData?.recipientDetails?.name || "",
-      phone: "",
-      email: giftData?.recipientDetails?.email || "",
-    },
-  ]);
-  const [sendingMethod, setSendingMethod] = useState(
-    giftData?.sendingMethod || "immediately",
-  );
+  const [companyName, setCompanyName] = useState("");
+
+  // Delivery methods
+  const [selectedDeliveryMethods, setSelectedDeliveryMethods] = useState<string[]>(["email"]);
+
+  // Scheduling
+  const [sendingMethod, setSendingMethod] = useState(giftData?.sendingMethod || "immediately");
+  const [dateTimeError, setDateTimeError] = useState("");
   const [selectedDate, setSelectedDate] = useState({
     day: giftData?.selectedDate?.day || "",
     month: giftData?.selectedDate?.month || "",
@@ -49,63 +63,43 @@ export default function OrderDetails() {
     hour: giftData?.selectedTime?.hour || "",
     minute: giftData?.selectedTime?.minute || "",
   });
-  const [greetingText, setGreetingText] = useState(
-    giftData?.greetingMessage || "",
-  );
+
+  // Recipients
+  const [recipients, setRecipients] = useState<Recipient[]>([
+    {
+      id: "1",
+      name: giftData?.recipientDetails?.name || "",
+      phone: "",
+      email: giftData?.recipientDetails?.email || "",
+    },
+  ]);
+  const [currentRecipient, setCurrentRecipient] = useState<Omit<Recipient, "id">>({
+    name: "",
+    phone: "",
+    email: "",
+  });
+
+  // Greeting & branding
+  const [greetingText, setGreetingText] = useState(giftData?.greetingMessage || "");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
 
-  // Phone validation
-  const isValidPhone = (phone: string) => {
-    const phoneRegex = /^0\d{2}-\d{7}$|^0\d{9}$/;
-    return phoneRegex.test(phone);
-  };
+  // Calculate totals
+  const cartTotal = giftData.selectedStocks.reduce((sum, stock) => sum + (stock.amount || 0), 0);
+  const recipientCount = mode === "personal" ? 1 : Math.max(1, recipients.length);
+  const grandTotal = cartTotal * recipientCount;
 
-  // Recipient management
-  const updateRecipient = (
-    id: string,
-    field: keyof Omit<Recipient, "id">,
-    value: string,
-  ) => {
-    const updatedRecipients = recipients.map((recipient) =>
-      recipient.id === id ? { ...recipient, [field]: value } : recipient,
-    );
-    setRecipients(updatedRecipients);
+  // Date/time options
+  const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0"));
+  const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
+  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const months = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+  const years = Array.from({ length: 10 }, (_, i) => (new Date().getFullYear() + i).toString());
 
-    // Auto-save first recipient to context
-    if (updatedRecipients[0]) {
-      updateGiftData({
-        recipientDetails: {
-          name: updatedRecipients[0].name,
-          email: updatedRecipients[0].email,
-          deliveryDate: selectedDate.day && selectedDate.month && selectedDate.year 
-            ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}` 
-            : null,
-        },
-      });
-    }
-  };
-
-  const addRecipient = () => {
-    const newId = Date.now().toString();
-    setRecipients((prev) => [
-      ...prev,
-      { id: newId, name: "", phone: "", email: "" },
-    ]);
-  };
-
-  const removeRecipient = (id: string) => {
-    if (recipients.length > 1) {
-      setRecipients((prev) => prev.filter((recipient) => recipient.id !== id));
-    }
-  };
-
+  // Handlers
   const toggleDeliveryMethod = (method: string) => {
     setSelectedDeliveryMethods((prev) =>
-      prev.includes(method)
-        ? prev.filter((m) => m !== method)
-        : [...prev, method],
+      prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method]
     );
   };
 
@@ -116,979 +110,499 @@ export default function OrderDetails() {
       reader.onload = (e) => {
         const imageData = e.target?.result as string;
         setUploadedImage(imageData);
-        
-        // Update the gift context with logo data
-        updateGiftData({
-          uploadedImage: imageData,
-          companyLogo: imageData,
-          hasLogo: true
-        });
+        updateGiftData({ uploadedImage: imageData, companyLogo: imageData, hasLogo: true });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const hours = Array.from({ length: 24 }, (_, i) =>
-    i.toString().padStart(2, "0"),
-  );
-  const minutes = Array.from({ length: 60 }, (_, i) =>
-    i.toString().padStart(2, "0"),
-  );
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-  const months = [
-    "ינואר",
-    "פברואר",
-    "מרץ",
-    "אפריל",
-    "מאי",
-    "יוני",
-    "יולי",
-    "אוגוסט",
-    "ספטמבר",
-    "אוקטובר",
-    "נובמבר",
-    "דצמבר",
-  ];
-  const years = Array.from({ length: 10 }, (_, i) =>
-    (new Date().getFullYear() + i).toString(),
-  );
+  const addRecipientToList = () => {
+    if (!currentRecipient.name.trim()) return;
+    const newRecipient: Recipient = {
+      id: Date.now().toString(),
+      ...currentRecipient,
+    };
+    setRecipients((prev) => [...prev, newRecipient]);
+    setCurrentRecipient({ name: "", phone: "", email: "" });
+  };
+
+  const removeRecipient = (id: string) => {
+    setRecipients((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const updateRecipient = (id: string, field: keyof Omit<Recipient, "id">, value: string) => {
+    setRecipients((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, [field]: value } : r))
+    );
+  };
+
+  const handleSubmit = () => {
+    // Validate scheduling
+    if (sendingMethod === "later") {
+      if (!selectedDate.day || !selectedDate.month || !selectedDate.year || !selectedTime.hour || !selectedTime.minute) {
+        setDateTimeError("יש לבחור תאריך ושעה");
+        return;
+      }
+      const scheduledDate = new Date(
+        parseInt(selectedDate.year),
+        parseInt(selectedDate.month) - 1,
+        parseInt(selectedDate.day),
+        parseInt(selectedTime.hour),
+        parseInt(selectedTime.minute)
+      );
+      if (scheduledDate <= new Date()) {
+        setDateTimeError("יש לבחור תאריך ושעה עתידיים");
+        return;
+      }
+    }
+
+    updateGiftData({
+      senderName,
+      senderEmail,
+      recipientDetails: {
+        name: recipients[0]?.name || "",
+        email: recipients[0]?.email || "",
+        deliveryDate: selectedDate.day && selectedDate.month && selectedDate.year
+          ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}`
+          : "",
+      },
+      deliveryMethods: selectedDeliveryMethods,
+      sendingMethod,
+      selectedDate,
+      selectedTime,
+      greetingMessage: greetingText,
+      uploadedImage,
+      selectedCard: "lightblue",
+      recipients: mode === "business" ? recipients : [recipients[0]],
+    });
+    navigate("/checkout");
+  };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        minHeight: "100vh",
-        background: "#FFF",
-        direction: "rtl",
-      }}
-    >
+    <div className="min-h-screen bg-background" dir="rtl">
       <Header />
-
       <StepHero currentStep={1} />
 
-      {/* Section Title - פרטים */}
+      {/* Page Title */}
       <div className="flex justify-center items-center py-6 md:py-8">
-        <h2 
-          style={{ 
-            color: '#486284',
-            fontSize: '18px',
-            fontWeight: '700',
-            fontFamily: 'Poppins, sans-serif',
-            letterSpacing: '0.5px',
-            margin: 0
-          }}
-        >
-          פרטים
-        </h2>
+        <h2 className="text-lg font-bold text-[#486284] tracking-wide">פרטי ההזמנה</h2>
       </div>
 
-      {/* Main Form Content */}
-      <div
-        className="flex flex-col justify-center items-center gap-8 md:gap-[60px] max-w-[1200px] mx-auto px-4 md:px-10 py-8 md:py-[60px]"
-        style={{
-          background: "#fff",
-        }}
-      >
-        {/* Top Row: Gift From (RIGHT) | Transfer Methods (CENTER) | Upload (LEFT) */}
-        <div
-          className="flex flex-col md:flex-row justify-center items-center md:items-start gap-8 md:gap-[60px] w-full"
-        >
-          {/* Gift From - RIGHT (first in RTL) */}
-          <div
-            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
-          >
-            <h3
-              style={{
-                color: "#1B1919",
-                textAlign: "center",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                fontWeight: "400",
-                margin: "0",
-              }}
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 md:px-6 pb-32 space-y-6">
+        
+        {/* Mode Toggle */}
+        <div className="flex justify-center">
+          <div className="inline-flex bg-muted p-1.5 rounded-xl">
+            <button
+              onClick={() => setMode("personal")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                mode === "personal"
+                  ? "bg-background shadow-sm text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              ממי המתנה?{" "}
-              <span style={{ color: "#486284", fontSize: "16px" }}>
-                (רשמו את השם שלכם)
-              </span>
-            </h3>
-            <input
-              type="text"
-              value={senderName}
-              onChange={(e) => setSenderName(e.target.value)}
-              placeholder="השם שלכם"
-              style={{
-                width: "100%",
-                height: "50px",
-                padding: "15px 20px",
-                color: "#1B1919",
-                textAlign: "center",
-                fontSize: "16px",
-                fontFamily: "Poppins",
-                background: "rgba(245, 247, 252, 1)",
-                border: "1px solid #4C7EFB",
-                borderRadius: "10px",
-                outline: "none",
-                marginBottom: "10px",
-              }}
-            />
-            <input
-              type="email"
-              value={senderEmail}
-              onChange={(e) => setSenderEmail(e.target.value)}
-              placeholder="המייל שלכם"
-              style={{
-                width: "100%",
-                height: "50px",
-                padding: "15px 20px",
-                color: "#1B1919",
-                textAlign: "center",
-                fontSize: "16px",
-                fontFamily: "Poppins",
-                background: "rgba(245, 247, 252, 1)",
-                border: "1px solid #4C7EFB",
-                borderRadius: "10px",
-                outline: "none",
-              }}
-            />
-          </div>
-
-          {/* Transfer Methods - CENTER */}
-          <div
-            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
-          >
-            <h3
-              style={{
-                color: "#1B1919",
-                textAlign: "center",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                fontWeight: "400",
-                margin: "0",
-              }}
+              <User className="w-4 h-4" />
+              מתנה אישית
+            </button>
+            <button
+              onClick={() => setMode("business")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                mode === "business"
+                  ? "bg-background shadow-sm text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              אמצעי העברה{" "}
-              <span style={{ color: "#486284", fontSize: "16px" }}>
-                (אפשר לבחור יותר מאחד)
-              </span>
-            </h3>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              {/* Email Button */}
-              <button
-                type="button"
-                onClick={() => toggleDeliveryMethod("email")}
-                style={{
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: "10px 16px",
-                  borderRadius: "8px",
-                  border: selectedDeliveryMethods.includes("email") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
-                  background: "#FFFFFF",
-                  cursor: "pointer",
-                  outline: "none",
-                }}
-              >
-                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "400", fontFamily: "Poppins, sans-serif" }}>
-                  דואר אלקטרוני
-                </span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#4C7EFB" stroke="none">
-                  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-              </button>
-              
-              {/* Mobile Button */}
-              <button
-                type="button"
-                onClick={() => toggleDeliveryMethod("mobile")}
-                style={{
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: "10px 16px",
-                  borderRadius: "8px",
-                  border: selectedDeliveryMethods.includes("mobile") ? "2px solid #4C7EFB" : "1px solid #DBE3F3",
-                  background: "#FFFFFF",
-                  cursor: "pointer",
-                  outline: "none",
-                }}
-              >
-                <span style={{ color: "#4C7EFB", fontSize: "14px", fontWeight: "400", fontFamily: "Poppins, sans-serif" }}>
-                  הודעה לנייד
-                </span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
-                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-                  <line x1="12" y1="18" x2="12.01" y2="18" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Upload Image - LEFT (last in RTL) */}
-          <div
-            className="flex flex-col items-center gap-5 w-full md:flex-1 md:max-w-[320px]"
-          >
-            <h3
-              style={{
-                color: "#1B1919",
-                textAlign: "center",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                fontWeight: "400",
-                margin: "0",
-              }}
-            >
-              העלאת תמונה/לוגו
-            </h3>
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                display: "flex",
-                width: "100%",
-                height: "120px",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "10px",
-                borderRadius: "10px",
-                border: "2px dashed #4C7EFB",
-                background: "rgba(245, 247, 252, 1)",
-                cursor: "pointer",
-              }}
-            >
-              {uploadedImage ? (
-                <img 
-                  src={uploadedImage} 
-                  alt="Uploaded" 
-                  style={{ 
-                    width: "80px", 
-                    height: "80px", 
-                    objectFit: "cover", 
-                    borderRadius: "8px" 
-                  }} 
-                />
-              ) : (
-                <>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#4C7EFB" strokeWidth="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7,10 12,5 17,10" />
-                    <line x1="12" y1="5" x2="12" y2="15" />
-                  </svg>
-                  <div style={{ color: "#4C7EFB", fontSize: "16px" }}>העלאה</div>
-                </>
-              )}
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
+              <Users className="w-4 h-4" />
+              מתנה לקבוצה / חברה
+            </button>
           </div>
         </div>
 
-        {/* When to Send Section */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "30px",
-            width: "100%",
-          }}
-        >
-          <h3
-            style={{
-              color: "#1B1919",
-              fontSize: "20px",
-              textAlign: "center",
-              fontFamily: "Poppins",
-              margin: "0",
-            }}
-          >
-            מתי לשלוח את המתנה?
+        {/* Section A: Sender Details */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+            <User className="w-5 h-5 text-primary" />
+            ממי המתנה?
           </h3>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                gap: "30px",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {/* Send Later Option */}
-              <div
-                onClick={() => {
-                  setSendingMethod("later");
-                  setDateTimeError("");
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    border: "2px solid #4C7EFB",
-                    background: sendingMethod === "later" ? "#4C7EFB" : "transparent",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {sendingMethod === "later" && (
-                    <div
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#FFF",
-                      }}
-                    />
-                  )}
-                </div>
-                <span style={{ color: "#1B1919", fontSize: "16px" }}>
-                  שליחה במועד אחר
-                </span>
-              </div>
-              
-              {/* Send Now Option */}
-              <div
-                onClick={() => {
-                  setSendingMethod("immediately");
-                  setDateTimeError("");
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    border: "2px solid #4C7EFB",
-                    background: sendingMethod === "immediately" ? "#4C7EFB" : "transparent",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {sendingMethod === "immediately" && (
-                    <div
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#FFF",
-                      }}
-                    />
-                  )}
-                </div>
-                <span style={{ color: "#1B1919", fontSize: "16px" }}>
-                  עכשיו
-                </span>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">השם שלכם</label>
+              <Input
+                value={senderName}
+                onChange={(e) => setSenderName(e.target.value)}
+                placeholder="הזינו את שמכם"
+                className="h-12 bg-muted/50 border-border"
+              />
             </div>
-
-            {/* Inline Date/Time Picker - shown when "Send Later" is selected */}
-            {sendingMethod === "later" && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "20px",
-                  padding: "20px",
-                  background: "rgba(245, 247, 252, 1)",
-                  borderRadius: "12px",
-                  border: "1px solid #E0E7FF",
-                  marginTop: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "15px",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {/* Day */}
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#1B1919",
-                        fontSize: "14px",
-                        marginBottom: "8px",
-                        textAlign: "center",
-                      }}
-                    >
-                      יום
-                    </label>
-                    <select
-                      value={selectedDate.day}
-                      onChange={(e) =>
-                        setSelectedDate({ ...selectedDate, day: e.target.value })
-                      }
-                      style={{
-                        width: "70px",
-                        height: "44px",
-                        padding: "5px",
-                        color: "#1B1919",
-                        fontSize: "16px",
-                        fontFamily: "Poppins",
-                        background: "#FFF",
-                        border: "1px solid #E0E7FF",
-                        borderRadius: "10px",
-                        outline: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="">--</option>
-                      {days.map((day) => (
-                        <option key={day} value={day}>
-                          {day}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Month */}
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#1B1919",
-                        fontSize: "14px",
-                        marginBottom: "8px",
-                        textAlign: "center",
-                      }}
-                    >
-                      חודש
-                    </label>
-                    <select
-                      value={selectedDate.month}
-                      onChange={(e) =>
-                        setSelectedDate({ ...selectedDate, month: e.target.value })
-                      }
-                      style={{
-                        width: "100px",
-                        height: "44px",
-                        padding: "5px",
-                        color: "#1B1919",
-                        fontSize: "16px",
-                        fontFamily: "Poppins",
-                        background: "#FFF",
-                        border: "1px solid #E0E7FF",
-                        borderRadius: "10px",
-                        outline: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="">--</option>
-                      {months.map((month, index) => (
-                        <option key={month} value={index + 1}>
-                          {month}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Year */}
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#1B1919",
-                        fontSize: "14px",
-                        marginBottom: "8px",
-                        textAlign: "center",
-                      }}
-                    >
-                      שנה
-                    </label>
-                    <select
-                      value={selectedDate.year}
-                      onChange={(e) =>
-                        setSelectedDate({ ...selectedDate, year: e.target.value })
-                      }
-                      style={{
-                        width: "85px",
-                        height: "44px",
-                        padding: "5px",
-                        color: "#1B1919",
-                        fontSize: "16px",
-                        fontFamily: "Poppins",
-                        background: "#FFF",
-                        border: "1px solid #E0E7FF",
-                        borderRadius: "10px",
-                        outline: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="">--</option>
-                      {years.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ width: "1px", height: "30px", background: "#E0E7FF", margin: "0 5px" }} />
-
-                  {/* Hour */}
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#1B1919",
-                        fontSize: "14px",
-                        marginBottom: "8px",
-                        textAlign: "center",
-                      }}
-                    >
-                      שעה
-                    </label>
-                    <select
-                      value={selectedTime.hour}
-                      onChange={(e) =>
-                        setSelectedTime({ ...selectedTime, hour: e.target.value })
-                      }
-                      style={{
-                        width: "70px",
-                        height: "44px",
-                        padding: "5px",
-                        color: "#1B1919",
-                        fontSize: "16px",
-                        fontFamily: "Poppins",
-                        background: "#FFF",
-                        border: "1px solid #E0E7FF",
-                        borderRadius: "10px",
-                        outline: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="">--</option>
-                      {hours.map((hour) => (
-                        <option key={hour} value={hour}>
-                          {hour}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Minute */}
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#1B1919",
-                        fontSize: "14px",
-                        marginBottom: "8px",
-                        textAlign: "center",
-                      }}
-                    >
-                      דקה
-                    </label>
-                    <select
-                      value={selectedTime.minute}
-                      onChange={(e) =>
-                        setSelectedTime({ ...selectedTime, minute: e.target.value })
-                      }
-                      style={{
-                        width: "70px",
-                        height: "44px",
-                        padding: "5px",
-                        color: "#1B1919",
-                        fontSize: "16px",
-                        fontFamily: "Poppins",
-                        background: "#FFF",
-                        border: "1px solid #E0E7FF",
-                        borderRadius: "10px",
-                        outline: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="">--</option>
-                      {minutes.map((minute) => (
-                        <option key={minute} value={minute}>
-                          {minute}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Error message */}
-                {dateTimeError && (
-                  <div
-                    style={{
-                      color: "#DC2626",
-                      fontSize: "14px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {dateTimeError}
-                  </div>
-                )}
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">כתובת מייל</label>
+              <Input
+                type="email"
+                value={senderEmail}
+                onChange={(e) => setSenderEmail(e.target.value)}
+                placeholder="example@mail.com"
+                className="h-12 bg-muted/50 border-border"
+              />
+            </div>
+            {mode === "business" && (
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
+                  <Building2 className="w-4 h-4" />
+                  שם החברה
+                </label>
+                <Input
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="שם החברה או הארגון"
+                  className="h-12 bg-muted/50 border-border"
+                />
               </div>
             )}
           </div>
         </div>
 
-        {/* Recipient Details Section */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "30px",
-            width: "100%",
-          }}
-        >
-          {recipients.map((recipient, index) => (
-            <div
-              key={recipient.id}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "30px",
-                width: "100%",
-                maxWidth: "1000px",
-                position: "relative",
-              }}
+        {/* Section B: Branding & Greeting */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-foreground mb-4">מיתוג והודעה</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Greeting Text */}
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">ברכה אישית</label>
+              <Textarea
+                value={greetingText}
+                onChange={(e) => setGreetingText(e.target.value)}
+                placeholder="כתבו הודעה אישית למקבל המתנה... (עד 200 תווים)"
+                maxLength={200}
+                className="h-32 bg-muted/50 border-border resize-none"
+              />
+              <p className="text-xs text-muted-foreground mt-1 text-left">{greetingText.length}/200</p>
+            </div>
+            {/* Logo Upload */}
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">העלאת לוגו / תמונה</label>
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className={`h-32 rounded-xl border-2 border-dashed cursor-pointer transition-all flex flex-col items-center justify-center gap-2 ${
+                  uploadedImage
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-muted/30 hover:border-primary hover:bg-primary/5"
+                }`}
+              >
+                {uploadedImage ? (
+                  <div className="relative">
+                    <img
+                      src={uploadedImage}
+                      alt="Logo"
+                      className="w-16 h-16 object-contain rounded-lg"
+                    />
+                    <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground rounded-full p-1">
+                      <Upload className="w-3 h-3" />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">לחצו להעלאה</span>
+                  </>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section C: Delivery Method */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-foreground mb-4">אמצעי משלוח</h3>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => toggleDeliveryMethod("email")}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 transition-all ${
+                selectedDeliveryMethods.includes("email")
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-muted/30 text-muted-foreground hover:border-primary/50"
+              }`}
             >
-              {/* Remove button - only show for additional recipients */}
-              {index > 0 && (
-                <button
-                  onClick={() => removeRecipient(recipient.id)}
-                  style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                    width: "24px",
-                    height: "24px",
-                    borderRadius: "50%",
-                    background: "#FF4444",
-                    color: "#FFF",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    zIndex: 10,
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#FF6666";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#FF4444";
-                  }}
-                >
-                  ×
-                </button>
-              )}
+              <Mail className="w-5 h-5" />
+              <span className="font-medium">דואר אלקטרוני</span>
+            </button>
+            <button
+              onClick={() => toggleDeliveryMethod("mobile")}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 transition-all ${
+                selectedDeliveryMethods.includes("mobile")
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-muted/30 text-muted-foreground hover:border-primary/50"
+              }`}
+            >
+              <Smartphone className="w-5 h-5" />
+              <span className="font-medium">הודעה לנייד</span>
+            </button>
+          </div>
+        </div>
 
-              {/* Phone Number */}
-              <div style={{ flex: "1", maxWidth: "300px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  מספר נייד של מקבל המתנה
-                </label>
-                <input
-                  type="text"
-                  value={recipient.phone}
-                  onChange={(e) => updateRecipient(recipient.id, "phone", e.target.value)}
-                  placeholder="052-1234567"
-                  style={{
-                    width: "100%",
-                    height: "50px",
-                    padding: "15px 20px",
-                    color: "#1B1919",
-                    textAlign: "center",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                />
+        {/* Section D: Recipients */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+            <Users className="w-5 h-5 text-primary" />
+            פרטי מקבלי המתנה
+          </h3>
+
+          {mode === "business" && (
+            <div className="mb-4 bg-primary/10 text-primary p-3 rounded-xl text-sm flex items-center gap-2">
+              <Info className="w-4 h-4 shrink-0" />
+              <span>המתנה שבחרת (סל המניות) תישלח לכל אחד מהנמענים ברשימה.</span>
+            </div>
+          )}
+
+          {/* Input Row */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">שם מלא</label>
+              <Input
+                value={mode === "business" ? currentRecipient.name : recipients[0]?.name || ""}
+                onChange={(e) =>
+                  mode === "business"
+                    ? setCurrentRecipient({ ...currentRecipient, name: e.target.value })
+                    : updateRecipient("1", "name", e.target.value)
+                }
+                placeholder="שם המקבל"
+                className="h-11 bg-muted/50 border-border"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">נייד</label>
+              <Input
+                value={mode === "business" ? currentRecipient.phone : recipients[0]?.phone || ""}
+                onChange={(e) =>
+                  mode === "business"
+                    ? setCurrentRecipient({ ...currentRecipient, phone: e.target.value })
+                    : updateRecipient("1", "phone", e.target.value)
+                }
+                placeholder="052-1234567"
+                className="h-11 bg-muted/50 border-border"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">מייל</label>
+              <Input
+                type="email"
+                value={mode === "business" ? currentRecipient.email : recipients[0]?.email || ""}
+                onChange={(e) =>
+                  mode === "business"
+                    ? setCurrentRecipient({ ...currentRecipient, email: e.target.value })
+                    : updateRecipient("1", "email", e.target.value)
+                }
+                placeholder="email@example.com"
+                className="h-11 bg-muted/50 border-border"
+              />
+            </div>
+            {mode === "business" && (
+              <Button
+                onClick={addRecipientToList}
+                disabled={!currentRecipient.name.trim()}
+                className="h-11 bg-primary hover:bg-primary/90"
+              >
+                <Plus className="w-4 h-4 ml-1" />
+                הוסף
+              </Button>
+            )}
+          </div>
+
+          {/* Recipients List (Business Mode) */}
+          {mode === "business" && recipients.length > 0 && (
+            <div className="mt-6 border-t border-border pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-sm font-bold text-muted-foreground">רשימת נמענים ({recipients.length})</h4>
+                <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                  סה״כ: ₪{grandTotal.toLocaleString()}
+                </span>
               </div>
-
-              {/* Email */}
-              <div style={{ flex: "1", maxWidth: "300px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  דואר אלקטרוני של מקבל המתנה
-                </label>
-                <input
-                  type="email"
-                  value={recipient.email}
-                  onChange={(e) => updateRecipient(recipient.id, "email", e.target.value)}
-                  placeholder="example@mail.com"
-                  style={{
-                    width: "100%",
-                    height: "50px",
-                    padding: "15px 20px",
-                    color: "#1B1919",
-                    textAlign: "center",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                />
-              </div>
-
-              {/* Name */}
-              <div style={{ flex: "1", maxWidth: "300px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    color: "#1B1919",
-                    fontSize: "16px",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  שם המקבל
-                </label>
-                <input
-                  type="text"
-                  value={recipient.name}
-                  onChange={(e) => updateRecipient(recipient.id, "name", e.target.value)}
-                  placeholder="שם המקבל"
-                  style={{
-                    width: "100%",
-                    height: "50px",
-                    padding: "15px 20px",
-                    color: "#1B1919",
-                    textAlign: "center",
-                    fontSize: "16px",
-                    fontFamily: "Poppins",
-                    background: "rgba(245, 247, 252, 1)",
-                    border: "1px solid #E0E7FF",
-                    borderRadius: "10px",
-                    outline: "none",
-                  }}
-                />
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {recipients.map((r) => (
+                  <div
+                    key={r.id}
+                    className="flex items-center justify-between bg-muted/30 rounded-xl p-3 border border-border"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                        {r.name.charAt(0) || "?"}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground text-sm">{r.name || "ללא שם"}</p>
+                        <p className="text-xs text-muted-foreground">{r.email || r.phone || "אין פרטי קשר"}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => removeRecipient(r.id)}
+                      className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 p-2 rounded-full transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-
-          {/* Add Recipient Button */}
-          <button
-            onClick={addRecipient}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              width: "300px",
-              height: "50px",
-              background: "#4C7EFB",
-              color: "#FFF",
-              border: "none",
-              borderRadius: "10px",
-              fontSize: "16px",
-              fontFamily: "Poppins",
-              cursor: "pointer",
-            }}
-          >
-            + הוסף עוד נמען (שמקבל המתנה)
-          </button>
+          )}
         </div>
 
+        {/* Section E: Scheduling */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-foreground mb-4">מתי לשלוח?</h3>
+          <div className="flex flex-wrap gap-3">
+            {/* Send Now */}
+            <button
+              onClick={() => {
+                setSendingMethod("immediately");
+                setDateTimeError("");
+              }}
+              className={`flex-1 min-w-[140px] flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                sendingMethod === "immediately"
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-muted/30 hover:border-primary/50"
+              }`}
+            >
+              <Send className={`w-6 h-6 ${sendingMethod === "immediately" ? "text-primary" : "text-muted-foreground"}`} />
+              <span className={`font-medium ${sendingMethod === "immediately" ? "text-primary" : "text-muted-foreground"}`}>
+                עכשיו
+              </span>
+            </button>
+            {/* Send Later */}
+            <button
+              onClick={() => {
+                setSendingMethod("later");
+                setDateTimeError("");
+              }}
+              className={`flex-1 min-w-[140px] flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                sendingMethod === "later"
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-muted/30 hover:border-primary/50"
+              }`}
+            >
+              <Clock className={`w-6 h-6 ${sendingMethod === "later" ? "text-primary" : "text-muted-foreground"}`} />
+              <span className={`font-medium ${sendingMethod === "later" ? "text-primary" : "text-muted-foreground"}`}>
+                שליחה במועד אחר
+              </span>
+            </button>
+          </div>
 
-        {/* Greeting Text Section */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "30px",
-            width: "100%",
-          }}
-        >
-          <h3
-            style={{
-              color: "#1B1919",
-              fontSize: "20px",
-              textAlign: "center",
-              fontFamily: "Poppins",
-              margin: "0",
-            }}
-          >
-            הוספת ברכה אישית
-          </h3>
-          <textarea
-            value={greetingText}
-            onChange={(e) => setGreetingText(e.target.value)}
-            placeholder="הודעה אישית (עד 200 תווים)"
-            maxLength={200}
-            style={{
-              width: "100%",
-              height: "120px",
-              padding: "15px 20px",
-              color: "#1B1919",
-              fontSize: "16px",
-              fontFamily: "Poppins",
-              background: "rgba(245, 247, 252, 1)",
-              border: "1px solid #E0E7FF",
-              borderRadius: "10px",
-              outline: "none",
-              textAlign: "right",
-              resize: "none",
-            }}
-          />
+          {/* Date/Time Picker */}
+          {sendingMethod === "later" && (
+            <div className="mt-4 p-4 bg-muted/30 rounded-xl border border-border">
+              <div className="flex flex-wrap gap-3 justify-center items-end">
+                {/* Day */}
+                <div>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 text-center">יום</label>
+                  <select
+                    value={selectedDate.day}
+                    onChange={(e) => setSelectedDate({ ...selectedDate, day: e.target.value })}
+                    className="w-16 h-10 px-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  >
+                    <option value="">--</option>
+                    {days.map((day) => (
+                      <option key={day} value={day}>{day}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Month */}
+                <div>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 text-center">חודש</label>
+                  <select
+                    value={selectedDate.month}
+                    onChange={(e) => setSelectedDate({ ...selectedDate, month: e.target.value })}
+                    className="w-24 h-10 px-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  >
+                    <option value="">--</option>
+                    {months.map((month, index) => (
+                      <option key={month} value={index + 1}>{month}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Year */}
+                <div>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 text-center">שנה</label>
+                  <select
+                    value={selectedDate.year}
+                    onChange={(e) => setSelectedDate({ ...selectedDate, year: e.target.value })}
+                    className="w-20 h-10 px-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  >
+                    <option value="">--</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-px h-8 bg-border mx-1" />
+                {/* Hour */}
+                <div>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 text-center">שעה</label>
+                  <select
+                    value={selectedTime.hour}
+                    onChange={(e) => setSelectedTime({ ...selectedTime, hour: e.target.value })}
+                    className="w-16 h-10 px-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  >
+                    <option value="">--</option>
+                    {hours.map((hour) => (
+                      <option key={hour} value={hour}>{hour}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Minute */}
+                <div>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 text-center">דקה</label>
+                  <select
+                    value={selectedTime.minute}
+                    onChange={(e) => setSelectedTime({ ...selectedTime, minute: e.target.value })}
+                    className="w-16 h-10 px-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  >
+                    <option value="">--</option>
+                    {minutes.map((minute) => (
+                      <option key={minute} value={minute}>{minute}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {dateTimeError && (
+                <p className="text-destructive text-sm text-center mt-3">{dateTimeError}</p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Navigation Buttons */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "500px",
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              width: "200px",
-              height: "50px",
-              background: "#E0E7FF",
-              color: "#4C7EFB",
-              border: "none",
-              borderRadius: "10px",
-              fontSize: "16px",
-              fontFamily: "Poppins",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-          >
-            חזרה לעמוד הראשי
-          </Link>
-
-          <button
-            onClick={() => {
-              // Validate date/time if "Send Later" is selected
-              if (sendingMethod === "later") {
-                if (!selectedDate.day || !selectedDate.month || !selectedDate.year || !selectedTime.hour || !selectedTime.minute) {
-                  setDateTimeError("יש לבחור תאריך ושעה");
-                  return;
-                }
-                
-                // Check if selected datetime is in the past
-                const scheduledDate = new Date(
-                  parseInt(selectedDate.year),
-                  parseInt(selectedDate.month) - 1,
-                  parseInt(selectedDate.day),
-                  parseInt(selectedTime.hour),
-                  parseInt(selectedTime.minute)
-                );
-                
-                if (scheduledDate <= new Date()) {
-                  setDateTimeError("יש לבחור תאריך ושעה עתידיים");
-                  return;
-                }
-              }
-              
-              updateGiftData({
-                senderName,
-                senderEmail,
-                recipientDetails: {
-                  name: recipients[0].name,
-                  email: recipients[0].email,
-                  deliveryDate: selectedDate.day && selectedDate.month && selectedDate.year 
-                    ? `${selectedDate.day}/${selectedDate.month}/${selectedDate.year}` 
-                    : null,
-                },
-                deliveryMethods: selectedDeliveryMethods,
-                sendingMethod,
-                selectedDate,
-                selectedTime,
-                greetingMessage: greetingText,
-                uploadedImage,
-                selectedCard: "lightblue",
-              });
-              navigate("/checkout");
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              width: "200px",
-              height: "50px",
-              background: "#4C7EFB",
-              color: "#FFF",
-              border: "none",
-              borderRadius: "10px",
-              fontSize: "16px",
-              fontFamily: "Poppins",
-              cursor: "pointer",
-            }}
-          >
-            המשך לתשלום
-          </button>
+        {/* Summary Bar */}
+        <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-5">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-right">
+              <p className="text-sm text-muted-foreground">סה״כ לתשלום</p>
+              <p className="text-3xl font-black text-foreground">₪{grandTotal.toLocaleString()}</p>
+              {mode === "business" && recipients.length > 1 && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  ₪{cartTotal.toLocaleString()} × {recipients.length} נמענים
+                </p>
+              )}
+            </div>
+            <div className="flex gap-3 w-full md:w-auto">
+              <Link
+                to="/stock-selection"
+                className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border bg-background text-muted-foreground hover:bg-muted transition-colors"
+              >
+                חזרה
+              </Link>
+              <Button
+                onClick={handleSubmit}
+                className="flex-1 md:flex-initial h-auto px-8 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-lg"
+              >
+                המשך לתשלום
+                <ChevronLeft className="w-5 h-5 mr-2" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
