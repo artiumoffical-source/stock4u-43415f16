@@ -32,6 +32,7 @@ export function CompactStockCard({
 }: CompactStockCardProps) {
   const [amount, setAmount] = useState(investmentAmount);
   const [justAdded, setJustAdded] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   const { addToCart } = useCart();
 
   const handleAmountChange = (value: string) => {
@@ -43,7 +44,6 @@ export function CompactStockCard({
 
   const handleAddToCart = () => {
     if (amount > 0) {
-      // Add to cart context
       addToCart({
         symbol: stock.symbol,
         name: stock.company,
@@ -51,16 +51,13 @@ export function CompactStockCard({
         logo: stock.logoUrl,
       });
       
-      // Also update parent state
       onInvestmentAmountChange(stock.symbol, amount);
       
-      // Show toast notification
       toast.success(`${stock.symbol} נוסף לעגלה!`, {
         description: `₪${amount.toLocaleString()}`,
         duration: 2000,
       });
       
-      // Show "Added" state temporarily
       setJustAdded(true);
       setTimeout(() => setJustAdded(false), 1500);
     }
@@ -68,114 +65,91 @@ export function CompactStockCard({
 
   const isInCart = investmentAmount > 0;
 
-  const [logoError, setLogoError] = useState(false);
-
   return (
     <TooltipProvider delayDuration={0}>
       <div
-        className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${
-          isInCart 
-            ? "border-[#4F86F9] shadow-md" 
-            : "border-gray-100 shadow-sm hover:shadow-md"
+        className={`group relative bg-white border rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden ${
+          isInCart ? "border-blue-400 ring-2 ring-blue-100" : "border-gray-200"
         }`}
         dir="rtl"
       >
-        <div className="p-3">
-          {/* Top Row: Ticker + Logo */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold text-[#486284]">
-                {stock.symbol}
+        {/* 1. Decorative Header */}
+        <div className="h-16 md:h-20 bg-gradient-to-b from-blue-50 to-white w-full relative" />
+
+        {/* 2. Centered Overlapping Logo */}
+        <div className="absolute top-8 md:top-10 left-1/2 transform -translate-x-1/2">
+          <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full p-2 shadow-sm border border-gray-100 flex items-center justify-center">
+            {stock.logoUrl && !logoError ? (
+              <img
+                src={stock.logoUrl}
+                alt={stock.company}
+                className="w-full h-full object-contain p-1"
+                onError={() => setLogoError(true)}
+              />
+            ) : (
+              <span className="text-blue-600 font-bold text-lg md:text-xl">
+                {stock.symbol[0]}
               </span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button 
-                    className="text-gray-400 hover:text-[#4F86F9] transition-colors"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <Info className="h-3.5 w-3.5" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="bottom"
-                  align="start"
-                  className="max-w-[220px] text-right bg-white shadow-xl border border-gray-200 p-3 z-50"
-                >
-                  <p className="text-xs text-gray-700 leading-relaxed font-medium">
-                    {stock.description}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-
-            {/* Company Logo */}
-            <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center overflow-hidden shrink-0">
-              {stock.logoUrl && !logoError ? (
-                <img
-                  src={stock.logoUrl}
-                  alt={stock.company}
-                  className="w-full h-full object-contain p-2"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <div className="w-full h-full rounded-full bg-blue-100 flex items-center justify-center">
-                  <span className="text-blue-600 font-bold text-lg">
-                    {stock.symbol[0]}
-                  </span>
-                </div>
-              )}
-            </div>
+            )}
           </div>
+        </div>
 
-          {/* Company Name */}
-          <p className="text-xs text-gray-500 mb-2 line-clamp-1">
+        {/* Info Tooltip - Top Right */}
+        <div className="absolute top-3 right-3">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="text-gray-400 hover:text-blue-500 transition-colors">
+                <Info className="w-4 h-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              align="end"
+              className="max-w-[220px] text-right bg-white shadow-xl border border-gray-200 p-3 z-50"
+            >
+              <p className="text-xs text-gray-700 leading-relaxed font-medium">
+                {stock.description}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        {/* 3. Main Content */}
+        <div className="pt-8 md:pt-10 pb-3 px-3 flex flex-col items-center flex-grow">
+          <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+            {stock.symbol}
+          </h3>
+          <p className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wider line-clamp-1 text-center">
             {stock.company}
           </p>
+        </div>
 
-          {/* Category Badge */}
-          {stock.category && (
-            <div className="mb-3">
-              <span className="inline-block bg-gray-100 text-gray-600 text-[10px] font-medium px-2 py-0.5 rounded-full">
-                {stock.category}
-              </span>
-            </div>
-          )}
-          {/* Action Area */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-                ₪
-              </span>
-              <Input
-                type="number"
-                placeholder="סכום"
-                value={amount || ""}
-                onChange={(e) => handleAmountChange(e.target.value)}
-                min="0"
-                step="1"
-                className="h-8 pr-6 pl-2 rounded-lg border-gray-200 bg-gray-50 text-xs w-full"
-                dir="rtl"
-              />
-            </div>
+        {/* 4. Footer Action */}
+        <div className="p-3 pt-0 mt-auto w-full">
+          <div className="flex gap-2">
+            <Input
+              type="number"
+              placeholder="סכום ₪"
+              value={amount || ""}
+              onChange={(e) => handleAmountChange(e.target.value)}
+              min="0"
+              step="1"
+              className="h-10 text-center bg-gray-50 focus:bg-white border-gray-200 rounded-lg text-sm flex-1"
+              dir="rtl"
+            />
             <button
               onClick={handleAddToCart}
               disabled={amount <= 0}
-              className={`h-8 px-3 rounded-lg text-xs font-medium flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                justAdded 
-                  ? "bg-emerald-500 text-white" 
-                  : "bg-[#4F86F9] hover:bg-[#3d6fd9] text-white"
+              className={`h-10 w-10 rounded-lg flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 ${
+                justAdded
+                  ? "bg-emerald-500 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
               {justAdded ? (
-                <>
-                  <Check className="h-3.5 w-3.5" />
-                  נוסף!
-                </>
+                <Check className="w-5 h-5" />
               ) : (
-                <>
-                  <Plus className="h-3.5 w-3.5" />
-                  הוסף
-                </>
+                <Plus className="w-5 h-5" />
               )}
             </button>
           </div>
@@ -183,8 +157,8 @@ export function CompactStockCard({
 
         {/* Selected indicator */}
         {isInCart && (
-          <div className="bg-emerald-50 border-t border-emerald-100 py-1.5 px-2 text-center">
-            <span className="text-[10px] font-semibold text-emerald-700">
+          <div className="bg-emerald-50 border-t border-emerald-100 py-2 px-3 text-center">
+            <span className="text-xs font-semibold text-emerald-700">
               ✓ בעגלה: ₪{investmentAmount.toLocaleString()}
             </span>
           </div>
