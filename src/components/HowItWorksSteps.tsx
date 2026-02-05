@@ -5,51 +5,29 @@ import euroImg from "@/assets/how-it-works/euro.png";
 import yenImg from "@/assets/how-it-works/yen.png";
 import dollarImg from "@/assets/how-it-works/dollar.png";
 import coinImg from "@/assets/how-it-works/coin.png";
-
-const CurvedArrow: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    width="40"
-    height="32"
-    viewBox="0 0 40 32"
-    fill="none"
-    className={className}
-  >
-    <path
-      d="M38 8C30 8 25 8 20 16C15 24 10 24 2 24"
-      stroke="#4F86F9"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      fill="none"
-    />
-    <path
-      d="M8 18L2 24L8 30"
-      stroke="#4F86F9"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-  </svg>
-);
+import number1Img from "@/assets/how-it-works/number-1.png";
+import number2Img from "@/assets/how-it-works/number-2.png";
+import number3Img from "@/assets/how-it-works/number-3.png";
+import arrow1Img from "@/assets/how-it-works/arrow-1.png";
+import arrow2Img from "@/assets/how-it-works/arrow-2.png";
 
 interface StepCardProps {
-  number: string;
+  numberImg: string;
   lines: string[];
 }
 
-const StepCard: React.FC<StepCardProps> = ({ number, lines }) => (
+const StepCard: React.FC<StepCardProps> = ({ numberImg, lines }) => (
   <div
     className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md w-[140px] h-[130px] md:w-[180px] md:h-[150px]"
     style={{
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
     }}
   >
-    <span
-      className="text-4xl md:text-5xl font-bold leading-none"
-      style={{ color: "#FFC845", fontFamily: "Poppins, sans-serif" }}
-    >
-      {number}
-    </span>
+    <img
+      src={numberImg}
+      alt=""
+      className="w-12 h-12 md:w-14 md:h-14 object-contain"
+    />
     <div className="mt-2 text-center">
       {lines.map((line, idx) => (
         <p
@@ -66,9 +44,9 @@ const StepCard: React.FC<StepCardProps> = ({ number, lines }) => (
 
 export const HowItWorksSteps: React.FC = () => {
   const steps = [
-    { number: "1", lines: ["בוחרים חבילה", "או חברה"] },
-    { number: "2", lines: ["מוסיפים ברכה", "(נעזור לך!)"] },
-    { number: "3", lines: ["מעניקים מניות", "במתנה!"] },
+    { numberImg: number1Img, lines: ["בוחרים חבילה", "או חברה"] },
+    { numberImg: number2Img, lines: ["מוסיפים ברכה", "(נעזור לך!)"] },
+    { numberImg: number3Img, lines: ["מעניקים מניות", "במתנה!"] },
   ];
 
   return (
@@ -128,23 +106,31 @@ export const HowItWorksSteps: React.FC = () => {
       {/* Steps Cards with Arrows - RTL order */}
       <div className="flex flex-col md:flex-row-reverse items-center justify-center gap-4 md:gap-2">
         {/* Step 1 (Rightmost in RTL) */}
-        <StepCard number={steps[0].number} lines={steps[0].lines} />
+        <StepCard numberImg={steps[0].numberImg} lines={steps[0].lines} />
 
         {/* Arrow 1→2 */}
-        <div className="rotate-90 md:rotate-0 my-2 md:my-0 md:mx-1">
-          <CurvedArrow />
+        <div className="hidden md:block md:mx-1">
+          <img
+            src={arrow1Img}
+            alt=""
+            className="w-16 h-10 object-contain"
+          />
         </div>
 
         {/* Step 2 (Center) */}
-        <StepCard number={steps[1].number} lines={steps[1].lines} />
+        <StepCard numberImg={steps[1].numberImg} lines={steps[1].lines} />
 
         {/* Arrow 2→3 */}
-        <div className="rotate-90 md:rotate-0 my-2 md:my-0 md:mx-1">
-          <CurvedArrow />
+        <div className="hidden md:block md:mx-1">
+          <img
+            src={arrow2Img}
+            alt=""
+            className="w-16 h-12 object-contain"
+          />
         </div>
 
         {/* Step 3 (Leftmost in RTL) */}
-        <StepCard number={steps[2].number} lines={steps[2].lines} />
+        <StepCard numberImg={steps[2].numberImg} lines={steps[2].lines} />
       </div>
     </div>
   );
