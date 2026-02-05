@@ -74,10 +74,10 @@ export function CompactStockCard({
         dir="rtl"
       >
         {/* 1. Decorative Header */}
-        <div className="h-16 md:h-20 bg-gradient-to-b from-blue-50 to-white w-full relative" />
+        <div className="h-20 md:h-24 bg-gradient-to-b from-blue-50 to-white w-full relative" />
 
         {/* 2. Centered Overlapping Logo */}
-        <div className="absolute top-8 md:top-10 left-1/2 transform -translate-x-1/2">
+        <div className="absolute top-10 md:top-12 left-1/2 transform -translate-x-1/2">
           <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full p-2 shadow-sm border border-gray-100 flex items-center justify-center">
             {stock.logoUrl && !logoError ? (
               <img
@@ -98,16 +98,17 @@ export function CompactStockCard({
         <div className="absolute top-3 right-3">
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="text-gray-400 hover:text-blue-500 transition-colors">
-                <Info className="w-4 h-4" />
+              <button className="w-6 h-6 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-400 hover:text-blue-600 transition-all flex items-center justify-center">
+                <Info className="w-3.5 h-3.5" />
               </button>
             </TooltipTrigger>
             <TooltipContent
               side="bottom"
               align="end"
-              className="max-w-[220px] text-right bg-white shadow-xl border border-gray-200 p-3 z-50"
+              className="w-64 text-right bg-white shadow-2xl border border-gray-100 p-4 rounded-xl z-50"
             >
-              <p className="text-xs text-gray-700 leading-relaxed font-medium">
+              <p className="text-xs font-bold text-gray-800 mb-2">אודות החברה</p>
+              <p className="text-xs text-gray-600 leading-relaxed">
                 {stock.description}
               </p>
             </TooltipContent>
@@ -115,35 +116,38 @@ export function CompactStockCard({
         </div>
 
         {/* 3. Main Content */}
-        <div className="pt-8 md:pt-10 pb-3 px-3 flex flex-col items-center flex-grow">
-          <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
+        <div className="pt-10 md:pt-12 pb-4 px-4 flex flex-col items-center flex-grow">
+          <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">
             {stock.symbol}
           </h3>
-          <p className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wider line-clamp-1 text-center">
+          <p className="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-wider line-clamp-1 text-center mt-1">
             {stock.company}
           </p>
         </div>
 
         {/* 4. Footer Action */}
-        <div className="p-3 pt-0 mt-auto w-full">
+        <div className="p-4 pt-0 mt-auto w-full">
           <div className="flex gap-2">
-            <Input
-              type="number"
-              placeholder="סכום ₪"
-              value={amount || ""}
-              onChange={(e) => handleAmountChange(e.target.value)}
-              min="0"
-              step="1"
-              className="h-10 text-center bg-gray-50 focus:bg-white border-gray-200 rounded-lg text-sm flex-1"
-              dir="rtl"
-            />
+            <div className="relative flex-1">
+              <Input
+                type="number"
+                placeholder="הזן סכום"
+                value={amount || ""}
+                onChange={(e) => handleAmountChange(e.target.value)}
+                min="0"
+                step="1"
+                className="h-11 pr-3 pl-8 text-right bg-gray-50 focus:bg-white border-gray-200 focus:border-blue-500 rounded-xl text-sm font-bold text-gray-700"
+                dir="rtl"
+              />
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₪</span>
+            </div>
             <button
               onClick={handleAddToCart}
               disabled={amount <= 0}
-              className={`h-10 w-10 rounded-lg flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 ${
+              className={`h-11 w-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 ${
                 justAdded
                   ? "bg-emerald-500 text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-md"
               }`}
             >
               {justAdded ? (
