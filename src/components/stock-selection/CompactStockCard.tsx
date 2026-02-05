@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Info, Plus } from "lucide-react";
+import { Info, Plus, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
@@ -7,6 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 export interface Stock {
   symbol: string;
@@ -28,6 +30,8 @@ export function CompactStockCard({
   onInvestmentAmountChange,
 }: CompactStockCardProps) {
   const [amount, setAmount] = useState(investmentAmount);
+  const [justAdded, setJustAdded] = useState(false);
+  const { addToCart } = useCart();
 
   const handleAmountChange = (value: string) => {
     const numValue = parseFloat(value) || 0;
@@ -38,15 +42,36 @@ export function CompactStockCard({
 
   const handleAddToCart = () => {
     if (amount > 0) {
+      // Add to cart context
+      addToCart({
+        symbol: stock.symbol,
+        name: stock.company,
+        amount: amount,
+        logo: stock.logoUrl,
+      });
+      
+      // Also update parent state
       onInvestmentAmountChange(stock.symbol, amount);
+      
+      // Show toast notification
+      toast.success(`${stock.symbol} נוסף לעגלה!`, {
+        description: `₪${amount.toLocaleString()}`,
+        duration: 2000,
+      });
+      
+      // Show "Added" state temporarily
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), 1500);
     }
   };
+
+  const isInCart = investmentAmount > 0;
 
   return (
     <TooltipProvider>
       <div
         className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${
-          investmentAmount > 0 
+          isInCart 
             ? "border-[#4F86F9] shadow-md" 
             : "border-gray-100 shadow-sm hover:shadow-md"
         }`}
@@ -81,15 +106,18 @@ export function CompactStockCard({
                 <img
                   src={stock.logoUrl}
                   alt={stock.company}
-                  className="w-8 h-8 rounded-full object-contain bg-gray-50"
+                  className="w-8 h-8 rounded-full object-contain bg-gray-50 p-0.5"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
                 />
-              ) : (
-                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-gray-400">
-                    {stock.symbol.slice(0, 2)}
-                  </span>
-                </div>
-              )}
+              ) : null}
+              <div className={`w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center ${stock.logoUrl ? 'hidden' : ''}`}>
+                <span className="text-[10px] font-bold text-gray-400">
+                  {stock.symbol.slice(0, 2)}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -118,19 +146,32 @@ export function CompactStockCard({
             <button
               onClick={handleAddToCart}
               disabled={amount <= 0}
-              className="h-8 px-3 bg-[#4F86F9] hover:bg-[#3d6fd9] text-white rounded-lg text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className={`h-8 px-3 rounded-lg text-xs font-medium flex items-center gap-1 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                justAdded 
+                  ? "bg-emerald-500 text-white" 
+                  : "bg-[#4F86F9] hover:bg-[#3d6fd9] text-white"
+              }`}
             >
-              <Plus className="h-3.5 w-3.5" />
-              הוסף
+              {justAdded ? (
+                <>
+                  <Check className="h-3.5 w-3.5" />
+                  נוסף!
+                </>
+              ) : (
+                <>
+                  <Plus className="h-3.5 w-3.5" />
+                  הוסף
+                </>
+              )}
             </button>
           </div>
         </div>
 
         {/* Selected indicator */}
-        {investmentAmount > 0 && (
+        {isInCart && (
           <div className="bg-emerald-50 border-t border-emerald-100 py-1.5 px-2 text-center">
             <span className="text-[10px] font-semibold text-emerald-700">
-              ✓ ₪{investmentAmount.toLocaleString()}
+              ✓ בעגלה: ₪{investmentAmount.toLocaleString()}
             </span>
           </div>
         )}
