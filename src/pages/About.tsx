@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
-import CompanyTicker from "@/components/CompanyTicker";
+import LogoMarquee from "@/components/LogoMarquee";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Shield, Users, Award } from "lucide-react";
 
@@ -140,7 +140,7 @@ const About = () => {
       </div>
       
       {/* Company Logos Ticker */}
-      <CompanyTicker />
+      <LogoMarquee />
       
       <Footer />
     </Layout>

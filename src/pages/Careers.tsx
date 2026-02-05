@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
-import CompanyTicker from "@/components/CompanyTicker";
+import LogoMarquee from "@/components/LogoMarquee";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -198,7 +198,7 @@ const Careers = () => {
       </div>
       
       {/* Company Logos Ticker */}
-      <CompanyTicker />
+      <LogoMarquee />
       
       <Footer />
     </Layout>
