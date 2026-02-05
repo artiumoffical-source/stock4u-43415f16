@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { Info, ShoppingCart, TrendingUp } from "lucide-react";
+import { Info, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { StockChartModal } from "@/components/StockChartModal";
 
 export interface Stock {
   symbol: string;
@@ -30,7 +28,6 @@ export function CompactStockCard({
   onInvestmentAmountChange,
 }: CompactStockCardProps) {
   const [amount, setAmount] = useState(investmentAmount);
-  const [showChart, setShowChart] = useState(false);
 
   const handleAmountChange = (value: string) => {
     const numValue = parseFloat(value) || 0;
@@ -45,54 +42,50 @@ export function CompactStockCard({
     }
   };
 
-  const handleAmountBlur = () => {
-    onInvestmentAmountChange(stock.symbol, amount);
-  };
-
   return (
     <TooltipProvider>
       <div
-        className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100"
+        className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${
+          investmentAmount > 0 
+            ? "border-[#4F86F9] shadow-md" 
+            : "border-gray-100 shadow-sm hover:shadow-md"
+        }`}
         dir="rtl"
       >
-        <div className="p-4">
-          {/* Header: Logo + Ticker */}
-          <div className="flex items-center justify-between mb-3">
-            {/* Right: Ticker Symbol */}
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-[#486284]">
+        <div className="p-3">
+          {/* Top Row: Ticker + Logo */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-[#486284]">
                 {stock.symbol}
               </span>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="text-gray-400 hover:text-[#4F86F9] transition-colors">
-                    <Info className="h-4 w-4" />
+                  <button className="text-gray-300 hover:text-[#4F86F9] transition-colors">
+                    <Info className="h-3.5 w-3.5" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
                   side="bottom"
-                  className="max-w-[280px] text-right bg-white shadow-lg border border-gray-100 p-3"
+                  className="max-w-[240px] text-right bg-white shadow-lg border border-gray-100 p-2"
                 >
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-xs text-gray-600 leading-relaxed">
                     {stock.description}
                   </p>
                 </TooltipContent>
               </Tooltip>
             </div>
 
-            {/* Left: Logo */}
             <div className="flex-shrink-0">
               {stock.logoUrl ? (
                 <img
                   src={stock.logoUrl}
                   alt={stock.company}
-                  className="w-10 h-10 rounded-lg object-contain"
+                  className="w-8 h-8 rounded-full object-contain bg-gray-50"
                 />
-              ) : stock.logo ? (
-                <div className="w-10 h-10">{stock.logo}</div>
               ) : (
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-xs font-bold text-gray-400">
+                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-gray-400">
                     {stock.symbol.slice(0, 2)}
                   </span>
                 </div>
@@ -101,68 +94,47 @@ export function CompactStockCard({
           </div>
 
           {/* Company Name */}
-          <h3 className="text-sm font-semibold text-gray-700 text-center mb-4 line-clamp-1">
+          <p className="text-xs text-gray-500 mb-3 line-clamp-1">
             {stock.company}
-          </h3>
+          </p>
 
           {/* Action Area */}
-          <div className="space-y-3">
-            {/* Investment Input */}
-            <div className="relative">
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
                 ₪
               </span>
               <Input
                 type="number"
-                placeholder="סכום להשקעה"
+                placeholder="סכום"
                 value={amount || ""}
                 onChange={(e) => handleAmountChange(e.target.value)}
-                onBlur={handleAmountBlur}
                 min="0"
                 step="1"
-                className="h-10 pr-8 pl-3 rounded-lg border-gray-200 bg-gray-50 text-sm w-full"
+                className="h-8 pr-6 pl-2 rounded-lg border-gray-200 bg-gray-50 text-xs w-full"
                 dir="rtl"
               />
             </div>
-
-            {/* Add to Cart Button */}
-            <Button
+            <button
               onClick={handleAddToCart}
               disabled={amount <= 0}
-              className="w-full h-10 bg-[#4F86F9] hover:bg-[#3d6fd9] text-white rounded-lg font-medium text-sm gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-8 px-3 bg-[#4F86F9] hover:bg-[#3d6fd9] text-white rounded-lg text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <ShoppingCart className="h-4 w-4" />
-              הוסף לעגלה
-            </Button>
-
-            {/* Chart Link */}
-            <button
-              onClick={() => setShowChart(true)}
-              className="w-full text-center text-sm text-[#4F86F9] hover:text-[#3d6fd9] font-medium flex items-center justify-center gap-1"
-            >
-              <TrendingUp className="h-3.5 w-3.5" />
-              הצג גרף
+              <Plus className="h-3.5 w-3.5" />
+              הוסף
             </button>
           </div>
         </div>
 
-        {/* Amount indicator when selected */}
+        {/* Selected indicator */}
         {investmentAmount > 0 && (
-          <div className="bg-emerald-50 border-t border-emerald-100 py-2 px-3 text-center">
-            <span className="text-xs font-semibold text-emerald-700">
-              ✓ נבחר: ₪{investmentAmount.toLocaleString()}
+          <div className="bg-emerald-50 border-t border-emerald-100 py-1.5 px-2 text-center">
+            <span className="text-[10px] font-semibold text-emerald-700">
+              ✓ ₪{investmentAmount.toLocaleString()}
             </span>
           </div>
         )}
       </div>
-
-      {/* Chart Modal */}
-      <StockChartModal
-        open={showChart}
-        onClose={() => setShowChart(false)}
-        symbol={stock.symbol}
-        companyName={stock.company}
-      />
     </TooltipProvider>
   );
 }
