@@ -108,16 +108,16 @@ export function CompactStockCard({
             </div>
 
             {/* Company Logo */}
-            <div className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden">
+            <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center overflow-hidden shrink-0">
               {stock.logoUrl && !logoError ? (
                 <img
                   src={stock.logoUrl}
                   alt={stock.company}
-                  className="w-10 h-10 object-cover bg-white"
+                  className="w-full h-full object-contain p-2"
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                <div className="w-full h-full rounded-full bg-blue-100 flex items-center justify-center">
                   <span className="text-blue-600 font-bold text-lg">
                     {stock.symbol[0]}
                   </span>
