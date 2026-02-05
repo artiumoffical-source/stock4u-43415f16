@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
 import LogoMarquee from "@/components/LogoMarquee";
@@ -144,8 +145,8 @@ export default function StockSelection() {
         onSearchChange={setSearchQuery}
       />
 
-      {/* Main Content */}
-      <div className="px-4 md:px-6 py-6 bg-gray-50 min-h-[600px]">
+      {/* Main Content - Added pb-32 to prevent content hiding behind sticky bar */}
+      <div className={`px-4 md:px-6 py-6 bg-gray-50 min-h-[600px] ${getTotalSelectedStocks() > 0 ? 'pb-32' : ''}`}>
         <div className="max-w-[1400px] mx-auto">
           {/* Section Header */}
           <div className="flex items-center justify-between mb-4">
@@ -177,51 +178,30 @@ export default function StockSelection() {
               />
             ))}
           </div>
-
-          {/* Continue Button - Desktop */}
-          <div className="hidden md:block text-center mb-12">
-            {getTotalSelectedStocks() > 0 && (
-              <div className="mb-4">
-                <p className="text-lg font-bold text-[#486284] mb-2">
-                  סך הכל: ₪{getTotalGiftAmount().toLocaleString()}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {getTotalSelectedStocks()} מניות נבחרו
-                </p>
-              </div>
-            )}
-            <button
-              onClick={continueToGiftDesign}
-              disabled={getTotalSelectedStocks() === 0}
-              className={`w-[250px] h-[50px] rounded-full font-bold text-base transition-all duration-200 ${
-                getTotalSelectedStocks() > 0
-                  ? "bg-[#4F86F9] hover:bg-[#3d6fd9] text-white cursor-pointer shadow-lg"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
-              }`}
-            >
-              המשך לפרטים וברכה
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Mobile Floating CTA */}
+      {/* Sticky Bottom Action Bar - Appears when cart has items */}
       {getTotalSelectedStocks() > 0 && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-right flex-1">
-              <p className="text-sm font-bold text-[#486284]">
-                סך הכל: ₪{getTotalGiftAmount().toLocaleString()}
-              </p>
-              <p className="text-xs text-gray-500">
-                {getTotalSelectedStocks()} מניות נבחרו
-              </p>
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-bottom-full duration-300">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex flex-row items-center justify-between">
+            {/* Summary */}
+            <div className="flex flex-col text-right">
+              <span className="text-xs md:text-sm text-gray-500">
+                סה״כ בעגלה ({getTotalSelectedStocks()} פריטים)
+              </span>
+              <span className="text-xl md:text-2xl font-black text-slate-800 tracking-wide">
+                ₪{getTotalGiftAmount().toLocaleString()}
+              </span>
             </div>
+            
+            {/* Action Button */}
             <button
               onClick={continueToGiftDesign}
-              className="bg-[#4F86F9] hover:bg-[#3d6fd9] text-white px-6 py-3 rounded-full font-bold text-sm transition-all duration-200 whitespace-nowrap"
+              className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-700 text-white px-6 md:px-8 py-3 rounded-xl font-bold text-sm md:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center gap-2"
             >
-              המשך לפרטים וברכה
+              המשך לפרטים
+              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
