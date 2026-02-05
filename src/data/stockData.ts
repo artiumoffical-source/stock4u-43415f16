@@ -67,7 +67,7 @@ export const usStocks: Stock[] = [
   },
 ];
 
-// Israel Stocks
+// Israel Stocks - Using NASDAQ-listed Israeli companies with valid Yahoo Finance symbols
 export const israelStocks: Stock[] = [
   {
     symbol: "TEVA",
@@ -75,13 +75,6 @@ export const israelStocks: Stock[] = [
     description:
       "טבע היא חברת התרופות הגדולה בישראל ואחת המובילות בעולם בתחום התרופות הגנריות. החברה מפתחת ומייצרת תרופות מגוונות.",
     logoUrl: "https://logo.clearbit.com/tevapharm.com",
-  },
-  {
-    symbol: "LUMI",
-    company: "Bank Leumi",
-    description:
-      "בנק לאומי הוא אחד הבנקים הגדולים בישראל. מספק שירותי בנקאות מלאים לפרטיים ועסקים, כולל הלוואות, חסכונות והשקעות.",
-    logoUrl: "https://logo.clearbit.com/leumi.co.il",
   },
   {
     symbol: "ESLT",
@@ -105,11 +98,18 @@ export const israelStocks: Stock[] = [
     logoUrl: "https://logo.clearbit.com/checkpoint.com",
   },
   {
-    symbol: "POLI",
-    company: "Bank Hapoalim",
+    symbol: "WIX",
+    company: "Wix.com Ltd.",
     description:
-      "בנק הפועלים הוא הבנק הגדול בישראל. מספק שירותי בנקאות מקיפים לפרטיים, עסקים ותאגידים.",
-    logoUrl: "https://logo.clearbit.com/bankhapoalim.co.il",
+      "וויקס היא חברת טכנולוגיה ישראלית המפתחת פלטפורמה לבניית אתרי אינטרנט. משרתת מיליוני משתמשים ועסקים ברחבי העולם.",
+    logoUrl: "https://logo.clearbit.com/wix.com",
+  },
+  {
+    symbol: "MNDY",
+    company: "monday.com Ltd.",
+    description:
+      "מאנדיי היא חברת תוכנה ישראלית המפתחת פלטפורמת ניהול עבודה ופרויקטים בענן. אחת החברות הצומחות ביותר בתחום.",
+    logoUrl: "https://logo.clearbit.com/monday.com",
   },
 ];
 
@@ -145,20 +145,21 @@ export const usETFs: Stock[] = [
   },
 ];
 
+// Israel ETFs - Using US-listed Israel-focused ETFs with valid Yahoo Finance symbols
 export const israelETFs: Stock[] = [
   {
-    symbol: "TA35",
-    company: "Tel Aviv 35 Index",
+    symbol: "EIS",
+    company: "iShares MSCI Israel ETF",
     description:
-      "תעודת סל העוקבת אחרי מדד ת\"א 35, הכולל את 35 החברות הגדולות והסחירות ביותר בבורסה בתל אביב.",
-    logoUrl: "https://logo.clearbit.com/tase.co.il",
+      "תעודת סל של iShares העוקבת אחרי מדד MSCI Israel, המספקת חשיפה רחבה לשוק המניות הישראלי.",
+    logoUrl: "https://logo.clearbit.com/ishares.com",
   },
   {
-    symbol: "TA125",
-    company: "Tel Aviv 125 Index",
+    symbol: "ISRA",
+    company: "VanEck Israel ETF",
     description:
-      "תעודת סל העוקבת אחרי מדד ת\"א 125, המספקת חשיפה רחבה ל-125 החברות הגדולות בבורסה הישראלית.",
-    logoUrl: "https://logo.clearbit.com/tase.co.il",
+      "תעודת סל של VanEck המתמקדת בחברות ישראליות. מספקת חשיפה למגוון סקטורים בכלכלה הישראלית.",
+    logoUrl: "https://logo.clearbit.com/vaneck.com",
   },
 ];
 
@@ -176,4 +177,6 @@ export const usTechStocks: Stock[] = [
 export const israelTechStocks: Stock[] = [
   israelStocks.find((s) => s.symbol === "NICE")!,
   israelStocks.find((s) => s.symbol === "CHKP")!,
+  israelStocks.find((s) => s.symbol === "WIX")!,
+  israelStocks.find((s) => s.symbol === "MNDY")!,
 ];
