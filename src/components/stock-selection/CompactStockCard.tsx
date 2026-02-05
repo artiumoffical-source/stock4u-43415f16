@@ -67,8 +67,10 @@ export function CompactStockCard({
 
   const isInCart = investmentAmount > 0;
 
+  const [logoError, setLogoError] = useState(false);
+
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <div
         className={`bg-white rounded-xl border transition-all duration-200 overflow-hidden ${
           isInCart 
@@ -86,38 +88,39 @@ export function CompactStockCard({
               </span>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="text-gray-300 hover:text-[#4F86F9] transition-colors">
+                  <button 
+                    className="text-gray-400 hover:text-[#4F86F9] transition-colors"
+                    onClick={(e) => e.preventDefault()}
+                  >
                     <Info className="h-3.5 w-3.5" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
                   side="bottom"
-                  className="max-w-[240px] text-right bg-white shadow-lg border border-gray-100 p-2"
+                  align="start"
+                  className="max-w-[220px] text-right bg-white shadow-xl border border-gray-200 p-3 z-50"
                 >
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className="text-xs text-gray-700 leading-relaxed font-medium">
                     {stock.description}
                   </p>
                 </TooltipContent>
               </Tooltip>
             </div>
 
-            <div className="flex-shrink-0">
-              {stock.logoUrl ? (
+            {/* Company Logo */}
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden">
+              {stock.logoUrl && !logoError ? (
                 <img
                   src={stock.logoUrl}
                   alt={stock.company}
-                  className="w-8 h-8 rounded-full object-contain bg-gray-50 p-0.5"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                  }}
+                  className="w-8 h-8 object-contain"
+                  onError={() => setLogoError(true)}
                 />
-              ) : null}
-              <div className={`w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center ${stock.logoUrl ? 'hidden' : ''}`}>
-                <span className="text-[10px] font-bold text-gray-400">
+              ) : (
+                <span className="text-xs font-bold text-gray-400">
                   {stock.symbol.slice(0, 2)}
                 </span>
-              </div>
+              )}
             </div>
           </div>
 
