@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
-import CompanyTicker from "@/components/CompanyTicker";
+import LogoMarquee from "@/components/LogoMarquee";
 import { useGift } from "@/contexts/GiftContext";
 import { StockFilterBar, Region, StockType } from "@/components/stock-selection/StockFilterBar";
 import { CompactStockCard, Stock } from "@/components/stock-selection/CompactStockCard";
@@ -254,7 +254,7 @@ export default function StockSelection() {
       </div>
 
       {/* Company Ticker */}
-      <CompanyTicker />
+      <LogoMarquee />
 
       <Footer />
     </Layout>
