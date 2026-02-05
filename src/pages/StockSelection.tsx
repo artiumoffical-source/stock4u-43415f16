@@ -188,28 +188,28 @@ export default function StockSelection() {
         </div>
       </div>
 
-      {/* Sticky Bottom Action Bar - Appears when cart has items */}
+      {/* THE STICKY BAR - Large & Luxurious Version */}
       {getTotalSelectedStocks() > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-blue-100 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] z-50 animate-in slide-in-from-bottom-full duration-300">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-blue-100 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-bottom duration-300">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5 flex items-center justify-between">
             
-            {/* LEFT SIDE: Action Button */}
+            {/* LEFT SIDE: The Action Button */}
             <button
               onClick={continueToGiftDesign}
-              className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-700 text-white px-5 md:px-6 py-2.5 rounded-xl font-bold text-sm md:text-lg shadow-lg shadow-blue-200/50 hover:-translate-y-0.5 transition-all flex items-center gap-2 shrink-0"
+              className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-700 text-white h-12 md:h-14 px-6 md:px-10 rounded-2xl font-bold text-base md:text-xl shadow-lg shadow-blue-200/50 hover:-translate-y-1 transition-all flex items-center gap-2 md:gap-3 shrink-0"
             >
-              <span>המשך</span>
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+              <span>המשך לפרטים</span>
+              <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
             </button>
 
-            {/* RIGHT SIDE: Logos & Total */}
-            <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+            {/* RIGHT SIDE: Info & Visuals */}
+            <div className="flex items-center gap-4 md:gap-8">
               
-              {/* The Logo Stack - Hidden on very small phones */}
+              {/* 1. The Logo Stack (Larger & Spaced) */}
               <div className="hidden sm:flex flex-row-reverse items-center">
-                {/* If more than 5, show counter first (leftmost in RTL) */}
+                {/* Overflow Badge */}
                 {giftData.selectedStocks.length > 5 && (
-                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500 shadow-sm -mr-3 z-0">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-100 border-[3px] border-white flex items-center justify-center text-sm font-bold text-gray-500 shadow-sm z-0 -mr-4 md:-mr-5">
                     +{giftData.selectedStocks.length - 5}
                   </div>
                 )}
@@ -218,26 +218,30 @@ export default function StockSelection() {
                 {giftData.selectedStocks.slice(0, 5).map((item, index) => (
                   <div 
                     key={item.symbol} 
-                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white border-2 border-white shadow-sm flex items-center justify-center overflow-hidden -mr-3 first:mr-0"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-[3px] border-white shadow-md flex items-center justify-center overflow-hidden -mr-4 md:-mr-5 first:mr-0 hover:z-20 hover:scale-110 transition-transform"
                     style={{ zIndex: 10 - index }}
                   >
                     <img 
                       src={getStockLogo(item.symbol)} 
                       alt={item.symbol} 
-                      className="w-full h-full object-contain p-1.5" 
+                      className="w-full h-full object-contain p-2" 
                     />
                   </div>
                 ))}
               </div>
 
-              {/* Text Summary */}
-              <div className="flex flex-col items-end text-right shrink-0">
-                <span className="text-xs text-gray-400 font-medium">
-                  סה״כ ({getTotalSelectedStocks()})
-                </span>
-                <span className="text-xl md:text-2xl font-black text-slate-800 leading-none">
+              {/* 2. Text Summary - Desktop */}
+              <div className="hidden md:flex flex-col items-end text-right border-r-2 border-gray-100 pr-6 md:pr-8">
+                <span className="text-sm text-gray-400 font-medium mb-1">סה״כ לתשלום</span>
+                <span className="text-2xl md:text-3xl font-black text-slate-800 leading-none tracking-tight">
                   ₪{getTotalGiftAmount().toLocaleString()}
                 </span>
+              </div>
+
+              {/* Mobile Only Summary (Simple) */}
+              <div className="flex flex-col items-end text-right md:hidden">
+                <span className="text-xl font-black text-slate-800">₪{getTotalGiftAmount().toLocaleString()}</span>
+                <span className="text-xs text-gray-500">{getTotalSelectedStocks()} פריטים</span>
               </div>
             </div>
           </div>
