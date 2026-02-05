@@ -107,11 +107,11 @@ export function CompactStockCard({
               </Tooltip>
             </div>
 
-            {/* Company Logo with unavatar.io */}
+            {/* Company Logo */}
             <div className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden">
-              {!logoError ? (
+              {stock.logoUrl && !logoError ? (
                 <img
-                  src={`https://unavatar.io/${stock.logoUrl?.replace('https://logo.clearbit.com/', '')}?fallback=false`}
+                  src={stock.logoUrl}
                   alt={stock.company}
                   className="w-10 h-10 object-cover bg-white"
                   onError={() => setLogoError(true)}
