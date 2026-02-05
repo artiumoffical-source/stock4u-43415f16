@@ -35,6 +35,10 @@ const companyLogos = [
     name: "Bitcoin",
     logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
   },
+  {
+    name: "Ethereum",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg",
+  },
 ];
 
 interface LogoMarqueeProps {
@@ -43,67 +47,51 @@ interface LogoMarqueeProps {
 }
 
 export default function LogoMarquee({ showTitle = true, className = "" }: LogoMarqueeProps) {
+  // Quadruple the logos to ensure seamless loop on all screen sizes
+  const allLogos = [...companyLogos, ...companyLogos, ...companyLogos, ...companyLogos];
+
   return (
-    <div className={`py-8 md:py-12 bg-[#F9FAFC] overflow-hidden ${className}`}>
+    <div className={`py-8 md:py-10 bg-blue-50/50 overflow-hidden ${className}`}>
       {/* Header */}
       {showTitle && (
-        <h3 className="text-lg md:text-xl text-[#486284] text-center mb-6 md:mb-8 font-medium">
+        <h3 className="text-lg md:text-xl text-[#486284] text-center mb-6 font-medium">
           חברות פופולאריות להשקעה
         </h3>
       )}
 
       {/* Marquee Container */}
-      <div className="relative w-full overflow-hidden">
+      <div className="w-full overflow-hidden relative">
         {/* Gradient Fade Left */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-[#F9FAFC] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-blue-50/80 to-transparent z-10 pointer-events-none" />
         
         {/* Gradient Fade Right */}
-        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-[#F9FAFC] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-blue-50/80 to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling Track */}
-        <div className="flex logo-marquee-track">
-          {/* First Set */}
-          <div className="flex items-center gap-10 md:gap-16 shrink-0 px-5 md:px-8">
-            {companyLogos.map((company, index) => (
+        {/* Scrolling Track - w-max allows infinite stretch */}
+        <div className="flex w-max animate-[marquee-scroll_15s_linear_infinite] hover:[animation-play-state:paused]">
+          {allLogos.map((company, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-center mx-6 md:mx-10 shrink-0"
+            >
               <img
-                key={`logo-1-${index}`}
                 src={company.logoUrl}
                 alt={company.name}
-                className="h-8 md:h-11 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
+                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
               />
-            ))}
-          </div>
-          
-          {/* Second Set (Duplicate for seamless loop) */}
-          <div className="flex items-center gap-10 md:gap-16 shrink-0 px-5 md:px-8">
-            {companyLogos.map((company, index) => (
-              <img
-                key={`logo-2-${index}`}
-                src={company.logoUrl}
-                alt={company.name}
-                className="h-8 md:h-11 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
-              />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
       <style>{`
-        @keyframes logo-scroll {
+        @keyframes marquee-scroll {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-25%);
           }
-        }
-        
-        .logo-marquee-track {
-          animation: logo-scroll 22s linear infinite;
-        }
-        
-        .logo-marquee-track:hover {
-          animation-play-state: paused;
         }
       `}</style>
     </div>
