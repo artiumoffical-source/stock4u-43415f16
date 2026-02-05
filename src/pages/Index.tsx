@@ -24,38 +24,15 @@ export default function Index() {
             />
           </div>
           
-          {/* Centered CTA Section */}
-          <div className="relative z-20 max-w-4xl mx-auto px-4 pb-16 text-center">
-            {/* Badge / Tagline */}
-            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-blue-100 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-sm font-bold text-[hsl(var(--stock4u-dark-grey))]">הדרך החדשה לתת מתנות</span>
-            </div>
-
-            {/* Subtext */}
-            <p className="text-lg md:text-xl text-[hsl(var(--stock4u-grey))] mb-8 max-w-2xl mx-auto leading-relaxed">
-              במקום עוד צעצוע או בגד, העניקו מניות של החברות הגדולות בעולם.
-              <br className="hidden md:block" />
-              מתנה עם ערך אמיתי לעתיד.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* Centered CTA Button Only */}
+          <div className="relative z-20 max-w-4xl mx-auto px-4 pb-12 text-center">
+            <div className="flex justify-center">
               <Link 
                 to="/stock-selection?continue=true"
                 className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-600 text-white text-lg md:text-xl font-bold py-4 px-10 rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1"
               >
                 בחירת מתנה ➜
               </Link>
-              <button 
-                className="text-[hsl(var(--stock4u-dark-grey))] font-bold py-4 px-8 hover:bg-white/50 rounded-2xl transition-all"
-                onClick={() => {
-                  const howItWorks = document.querySelector('section:nth-of-type(3)');
-                  howItWorks?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                איך זה עובד?
-              </button>
             </div>
           </div>
         </section>
