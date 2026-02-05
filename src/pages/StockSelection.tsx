@@ -18,6 +18,7 @@ import {
 export default function StockSelection() {
   const [selectedRegion, setSelectedRegion] = useState<Region>("us");
   const [selectedType, setSelectedType] = useState<StockType>("single_stocks");
+  const [searchQuery, setSearchQuery] = useState("");
   const { giftData, addStock, removeStock, resetGiftData } = useGift();
   const navigate = useNavigate();
 
@@ -35,29 +36,48 @@ export default function StockSelection() {
 
   // Get current stocks based on filters
   const getCurrentStocks = (): Stock[] => {
+    let stocks: Stock[];
     if (selectedRegion === "us") {
       switch (selectedType) {
         case "single_stocks":
-          return usStocks;
+          stocks = usStocks;
+          break;
         case "etfs":
-          return usETFs;
+          stocks = usETFs;
+          break;
         case "tech_sector":
-          return usTechStocks;
+          stocks = usTechStocks;
+          break;
         default:
-          return usStocks;
+          stocks = usStocks;
       }
     } else {
       switch (selectedType) {
         case "single_stocks":
-          return israelStocks;
+          stocks = israelStocks;
+          break;
         case "etfs":
-          return israelETFs;
+          stocks = israelETFs;
+          break;
         case "tech_sector":
-          return israelTechStocks;
+          stocks = israelTechStocks;
+          break;
         default:
-          return israelStocks;
+          stocks = israelStocks;
       }
     }
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      stocks = stocks.filter(
+        (s) =>
+          s.symbol.toLowerCase().includes(query) ||
+          s.company.toLowerCase().includes(query)
+      );
+    }
+
+    return stocks;
   };
 
   const currentStocks = getCurrentStocks();
@@ -103,29 +123,31 @@ export default function StockSelection() {
       <StockFilterBar
         selectedRegion={selectedRegion}
         selectedType={selectedType}
+        searchQuery={searchQuery}
         onRegionChange={setSelectedRegion}
         onTypeChange={setSelectedType}
+        onSearchChange={setSearchQuery}
       />
 
       {/* Main Content */}
-      <div className="px-4 md:px-6 py-8 md:py-12 bg-gray-50 min-h-[600px]">
+      <div className="px-4 md:px-6 py-6 bg-gray-50 min-h-[600px]">
         <div className="max-w-[1400px] mx-auto">
-          {/* Section Title */}
-          <div className="text-center mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-[#486284] mb-2">
+          {/* Section Header */}
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs text-gray-500">
+              {currentStocks.length} תוצאות
+            </p>
+            <h2 className="text-sm font-semibold text-[#486284]">
               {selectedType === "single_stocks" && "מניות בודדות"}
               {selectedType === "etfs" && "תעודות סל"}
-              {selectedType === "tech_sector" && "מגזר הטכנולוגיה"}
-              {" - "}
+              {selectedType === "tech_sector" && "טכנולוגיה"}
+              {" • "}
               {selectedRegion === "us" ? 'ארה"ב' : "ישראל"}
             </h2>
-            <p className="text-sm text-gray-500">
-              {currentStocks.length} מניות זמינות
-            </p>
           </div>
 
-          {/* Stock Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {/* Stock Grid - More compact */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mb-12">
             {currentStocks.map((stock) => (
               <CompactStockCard
                 key={stock.symbol}
