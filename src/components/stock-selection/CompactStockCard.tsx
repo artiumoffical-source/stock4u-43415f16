@@ -107,19 +107,21 @@ export function CompactStockCard({
               </Tooltip>
             </div>
 
-            {/* Company Logo */}
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden">
-              {stock.logoUrl && !logoError ? (
+            {/* Company Logo with unavatar.io */}
+            <div className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden">
+              {!logoError ? (
                 <img
-                  src={stock.logoUrl}
+                  src={`https://unavatar.io/${stock.logoUrl?.replace('https://logo.clearbit.com/', '')}?fallback=false`}
                   alt={stock.company}
-                  className="w-8 h-8 object-contain"
+                  className="w-10 h-10 object-cover bg-white"
                   onError={() => setLogoError(true)}
                 />
               ) : (
-                <span className="text-xs font-bold text-gray-400">
-                  {stock.symbol.slice(0, 2)}
-                </span>
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <span className="text-blue-600 font-bold text-lg">
+                    {stock.symbol[0]}
+                  </span>
+                </div>
               )}
             </div>
           </div>
