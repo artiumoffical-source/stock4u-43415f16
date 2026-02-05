@@ -10,122 +10,127 @@ import arrow2Img from "@/assets/how-it-works/arrow-2.png";
 
 interface StepCardProps {
   number: string;
-  lines: string[];
+  title: string;
+  subtitle: string;
 }
 
-const StepCard: React.FC<StepCardProps> = ({ number, lines }) => (
+const StepCard: React.FC<StepCardProps> = ({ number, title, subtitle }) => (
   <div
-    className="flex flex-col items-center justify-center bg-white rounded-2xl w-[130px] h-[120px] md:w-[160px] md:h-[140px]"
+    className="flex flex-col items-center justify-center bg-white rounded-[20px] w-[150px] h-[140px] md:w-[180px] md:h-[160px]"
     style={{
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
     }}
   >
-    {/* Sticker-style number with Fredoka font */}
+    {/* Big sticker number with Fredoka One font */}
     <span
-      className="text-5xl md:text-6xl leading-none"
+      className="leading-none"
       style={{
-        fontFamily: "'Fredoka', sans-serif",
-        fontWeight: 700,
-        color: "#FFCA42",
-        WebkitTextStroke: "5px white",
+        fontFamily: "'Fredoka One', cursive",
+        fontSize: "70px",
+        color: "#FFC845",
+        WebkitTextStroke: "7px white",
         paintOrder: "stroke fill",
-        filter: "drop-shadow(0px 2px 3px rgba(0,0,0,0.15))",
+        filter: "drop-shadow(0px 3px 0px rgba(0,0,0,0.08))",
       }}
     >
       {number}
     </span>
-    <div className="mt-1 text-center">
-      {lines.map((line, idx) => (
-        <p
-          key={idx}
-          className="text-sm md:text-base font-semibold leading-tight hebrew-font"
-          style={{ color: "#2B5FAE" }}
-        >
-          {line}
-        </p>
-      ))}
-    </div>
+    <h3
+      className="font-bold text-base md:text-lg mt-1 hebrew-font text-center"
+      style={{ color: "#4F86F9" }}
+    >
+      {title}
+    </h3>
+    <p
+      className="text-sm text-center hebrew-font"
+      style={{ color: "#4F86F9", opacity: 0.7 }}
+    >
+      {subtitle}
+    </p>
   </div>
 );
 
 export const HowItWorksSteps: React.FC = () => {
-  const steps = [
-    { number: "1", lines: ["בוחרים חבילה", "או חברה"] },
-    { number: "2", lines: ["מוסיפים ברכה", "(נעזור לך!)"] },
-    { number: "3", lines: ["מעניקים מניות", "במתנה!"] },
-  ];
-
   return (
-    <div className="relative w-full min-h-[320px] md:min-h-[380px] flex flex-col items-center justify-center py-6 px-4">
+    <div className="relative w-full min-h-[340px] md:min-h-[400px] flex flex-col items-center justify-center py-8 px-4">
       {/* Floating Currency Stickers */}
       <img
         src={dollarImg}
         alt="$"
-        className="absolute top-2 right-4 md:top-4 md:right-16 w-14 h-14 md:w-20 md:h-20 object-contain"
+        className="absolute top-4 right-6 md:top-6 md:right-20 w-16 h-16 md:w-24 md:h-24 object-contain"
       />
       <img
         src={coinImg}
         alt="coin"
-        className="absolute top-1/3 right-2 md:right-8 w-12 h-12 md:w-16 md:h-16 object-contain"
+        className="absolute top-[35%] right-2 md:right-10 w-14 h-14 md:w-18 md:h-18 object-contain"
       />
       <img
         src={shekelImg}
         alt="₪"
-        className="absolute top-4 left-8 md:top-6 md:left-24 w-12 h-12 md:w-16 md:h-16 object-contain"
+        className="absolute top-6 left-10 md:top-8 md:left-28 w-14 h-14 md:w-20 md:h-20 object-contain"
       />
       <img
         src={euroImg}
         alt="€"
-        className="absolute top-16 left-16 md:top-12 md:left-48 w-10 h-10 md:w-14 md:h-14 object-contain"
+        className="absolute top-20 left-20 md:top-14 md:left-52 w-12 h-12 md:w-16 md:h-16 object-contain"
       />
       <img
         src={poundImg}
         alt="£"
-        className="absolute bottom-24 left-4 md:bottom-20 md:left-16 w-10 h-10 md:w-14 md:h-14 object-contain"
+        className="absolute bottom-20 left-6 md:bottom-16 md:left-20 w-12 h-12 md:w-16 md:h-16 object-contain"
       />
       <img
         src={coinImg}
         alt="coin"
-        className="absolute bottom-8 left-8 md:bottom-12 md:left-32 w-12 h-12 md:w-16 md:h-16 object-contain"
+        className="absolute bottom-6 left-12 md:bottom-10 md:left-36 w-14 h-14 md:w-18 md:h-18 object-contain"
       />
       <img
         src={yenImg}
         alt="¥"
-        className="absolute bottom-6 right-4 md:bottom-10 md:right-20 w-12 h-12 md:w-16 md:h-16 object-contain"
+        className="absolute bottom-4 right-6 md:bottom-8 md:right-24 w-14 h-14 md:w-20 md:h-20 object-contain"
       />
 
       {/* Title */}
       <h2
-        className="text-2xl md:text-4xl font-bold mb-6 md:mb-8 hebrew-font"
+        className="text-2xl md:text-4xl font-bold mb-8 md:mb-10 hebrew-font"
         style={{ color: "#2B5FAE" }}
       >
         זה כלכך פשוט!
       </h2>
 
-      {/* Steps Cards with Arrows - RTL: flex-row-reverse puts Step 1 on RIGHT */}
-      <div className="flex flex-col md:flex-row-reverse items-center justify-center gap-3 md:gap-1">
-        {/* Step 1 - appears on FAR RIGHT due to flex-row-reverse */}
-        <StepCard number={steps[0].number} lines={steps[0].lines} />
+      {/* Steps with Arrows - RTL Layout: Step 1 on RIGHT */}
+      <div className="flex flex-row-reverse items-center justify-center gap-0">
+        {/* STEP 1 - FAR RIGHT */}
+        <StepCard number="1" title="בוחרים חבילה" subtitle="או חברה" />
 
-        {/* Arrow 1→2 (pointing left) */}
-        <img
-          src={arrow1Img}
-          alt=""
-          className="hidden md:block w-14 h-10 object-contain -mx-1"
-        />
+        {/* ARROW 1→2 (curved, pointing left) */}
+        <div className="hidden md:flex items-center justify-center w-12 h-16 -mx-2 mt-8">
+          <img
+            src={arrow1Img}
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        </div>
 
-        {/* Step 2 - Center */}
-        <StepCard number={steps[1].number} lines={steps[1].lines} />
+        {/* STEP 2 - CENTER */}
+        <StepCard number="2" title="מוסיפים ברכה" subtitle="(נעזור לך!)" />
 
-        {/* Arrow 2→3 (pointing left with curl) */}
-        <img
-          src={arrow2Img}
-          alt=""
-          className="hidden md:block w-14 h-12 object-contain -mx-1"
-        />
+        {/* ARROW 2→3 (curved with loop, pointing left) */}
+        <div className="hidden md:flex items-center justify-center w-14 h-16 -mx-2 mt-16">
+          <img
+            src={arrow2Img}
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        </div>
 
-        {/* Step 3 - appears on FAR LEFT due to flex-row-reverse */}
-        <StepCard number={steps[2].number} lines={steps[2].lines} />
+        {/* STEP 3 - FAR LEFT */}
+        <StepCard number="3" title="מעניקים מניות" subtitle="במתנה!" />
+      </div>
+
+      {/* Mobile: vertical arrows between cards */}
+      <div className="flex md:hidden flex-col items-center mt-4 gap-2">
+        {/* Mobile layout handled by responsive classes above */}
       </div>
     </div>
   );
