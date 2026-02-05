@@ -18,9 +18,9 @@ export const usStocks: Stock[] = [
   },
   {
     symbol: "GOOGL",
-    company: "Alphabet (Google)",
+    company: "Alphabet Inc.",
     description: "שולטת בחיפוש, פרסום דיגיטלי, יוטיוב ואנדרואיד.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
     category: "טכנולוגיה 🔍",
   },
   {
@@ -154,6 +154,24 @@ export const israelETFs: Stock[] = [
     company: "VanEck Israel ETF",
     description: "תעודת סל המתמקדת בחברות ישראליות.",
     category: "מדדים 📈",
+  },
+];
+
+// Crypto ETFs
+export const cryptoETFs: Stock[] = [
+  {
+    symbol: "IBIT",
+    company: "BlackRock Bitcoin ETF",
+    description: "תעודת סל העוקבת אחר מחיר הביטקוין (Bitcoin), המטבע הדיגיטלי הגדול בעולם.",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
+    category: "קריפטו ₿",
+  },
+  {
+    symbol: "ETHE",
+    company: "Grayscale Ethereum ETF",
+    description: "תעודת סל העוקבת אחר מחיר האתריום (Ethereum), הפלטפורמה המובילה לחוזים חכמים.",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg",
+    category: "קריפטו Ξ",
   },
 ];
 

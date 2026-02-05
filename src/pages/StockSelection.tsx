@@ -13,6 +13,7 @@ import {
   israelETFs,
   usTechStocks,
   israelTechStocks,
+  cryptoETFs,
 } from "@/data/stockData";
 
 export default function StockSelection() {
@@ -36,6 +37,20 @@ export default function StockSelection() {
 
   // Get current stocks based on filters
   const getCurrentStocks = (): Stock[] => {
+    // Crypto is region-agnostic
+    if (selectedType === "crypto") {
+      let stocks = cryptoETFs;
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        stocks = stocks.filter(
+          (s) =>
+            s.symbol.toLowerCase().includes(query) ||
+            s.company.toLowerCase().includes(query)
+        );
+      }
+      return stocks;
+    }
+
     let stocks: Stock[];
     if (selectedRegion === "us") {
       switch (selectedType) {
@@ -84,7 +99,7 @@ export default function StockSelection() {
 
   // Update stock amount
   const updateStockAmount = (symbol: string, amount: number) => {
-    const stockInfo = [...usStocks, ...israelStocks, ...usETFs, ...israelETFs].find(
+    const stockInfo = [...usStocks, ...israelStocks, ...usETFs, ...israelETFs, ...cryptoETFs].find(
       (s) => s.symbol === symbol
     );
 
@@ -141,13 +156,18 @@ export default function StockSelection() {
               {selectedType === "single_stocks" && "מניות בודדות"}
               {selectedType === "etfs" && "תעודות סל"}
               {selectedType === "tech_sector" && "טכנולוגיה"}
-              {" • "}
-              {selectedRegion === "us" ? 'ארה"ב' : "ישראל"}
+              {selectedType === "crypto" && "קריפטו"}
+              {selectedType !== "crypto" && (
+                <>
+                  {" • "}
+                  {selectedRegion === "us" ? 'ארה"ב' : "ישראל"}
+                </>
+              )}
             </h2>
           </div>
 
           {/* Stock Grid - More compact */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5 mb-12">
             {currentStocks.map((stock) => (
               <CompactStockCard
                 key={stock.symbol}

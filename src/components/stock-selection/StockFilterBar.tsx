@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type Region = "us" | "israel";
-export type StockType = "single_stocks" | "etfs" | "tech_sector";
+export type StockType = "single_stocks" | "etfs" | "tech_sector" | "crypto";
 
 interface StockFilterBarProps {
   selectedRegion: Region;
@@ -30,6 +30,7 @@ export function StockFilterBar({
     { id: "single_stocks", label: "מניות בודדות" },
     { id: "etfs", label: "תעודות סל" },
     { id: "tech_sector", label: "מגזר הטכנולוגיה" },
+    { id: "crypto", label: "קריפטו 🪙" },
   ];
 
   return (
