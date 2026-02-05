@@ -16,6 +16,7 @@ export interface Stock {
   description: string;
   logoUrl?: string;
   logo?: React.ReactNode;
+  category?: string;
 }
 
 interface CompactStockCardProps {
@@ -127,10 +128,18 @@ export function CompactStockCard({
           </div>
 
           {/* Company Name */}
-          <p className="text-xs text-gray-500 mb-3 line-clamp-1">
+          <p className="text-xs text-gray-500 mb-2 line-clamp-1">
             {stock.company}
           </p>
 
+          {/* Category Badge */}
+          {stock.category && (
+            <div className="mb-3">
+              <span className="inline-block bg-gray-100 text-gray-600 text-[10px] font-medium px-2 py-0.5 rounded-full">
+                {stock.category}
+              </span>
+            </div>
+          )}
           {/* Action Area */}
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
