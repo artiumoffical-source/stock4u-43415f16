@@ -5,50 +5,6 @@ import euroImg from "@/assets/how-it-works/euro.png";
 import yenImg from "@/assets/how-it-works/yen.png";
 import dollarImg from "@/assets/how-it-works/dollar.png";
 import coinImg from "@/assets/how-it-works/coin.png";
-import arrow1Img from "@/assets/how-it-works/arrow-1.png";
-import arrow2Img from "@/assets/how-it-works/arrow-2.png";
-
-interface StepCardProps {
-  number: string;
-  title: string;
-  subtitle: string;
-}
-
-const StepCard: React.FC<StepCardProps> = ({ number, title, subtitle }) => (
-  <div
-    className="flex flex-col items-center justify-center bg-white rounded-[20px] w-[150px] h-[140px] md:w-[180px] md:h-[160px]"
-    style={{
-      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
-    }}
-  >
-    {/* Big sticker number with Fredoka One font */}
-    <span
-      className="leading-none"
-      style={{
-        fontFamily: "'Fredoka One', cursive",
-        fontSize: "70px",
-        color: "#FFC845",
-        WebkitTextStroke: "7px white",
-        paintOrder: "stroke fill",
-        filter: "drop-shadow(0px 3px 0px rgba(0,0,0,0.08))",
-      }}
-    >
-      {number}
-    </span>
-    <h3
-      className="font-bold text-base md:text-lg mt-1 hebrew-font text-center"
-      style={{ color: "#4F86F9" }}
-    >
-      {title}
-    </h3>
-    <p
-      className="text-sm text-center hebrew-font"
-      style={{ color: "#4F86F9", opacity: 0.7 }}
-    >
-      {subtitle}
-    </p>
-  </div>
-);
 
 export const HowItWorksSteps: React.FC = () => {
   return (
@@ -98,39 +54,145 @@ export const HowItWorksSteps: React.FC = () => {
         זה כלכך פשוט!
       </h2>
 
-      {/* Steps with Arrows - RTL Layout: Step 1 on RIGHT */}
-      <div className="flex flex-row-reverse items-center justify-center gap-0">
-        {/* STEP 1 - FAR RIGHT */}
-        <StepCard number="1" title="בוחרים חבילה" subtitle="או חברה" />
-
-        {/* ARROW 1→2 (curved, pointing left) */}
-        <div className="hidden md:flex items-center justify-center w-12 h-16 -mx-2 mt-8">
-          <img
-            src={arrow1Img}
-            alt=""
-            className="w-full h-full object-contain"
-          />
+      {/* Steps Container - LOCKED RTL with flex-row-reverse */}
+      <div className="flex flex-row-reverse items-center justify-center gap-0 w-full max-w-3xl">
+        {/* STEP 1 (Rightmost due to row-reverse) */}
+        <div className="flex flex-col items-center z-10">
+          <div className="bg-white rounded-2xl shadow-lg w-[140px] h-[130px] md:w-[160px] md:h-[150px] flex flex-col items-center justify-center p-4">
+            <span
+              className="leading-none"
+              style={{
+                fontFamily: "'Titan One', cursive",
+                fontSize: "70px",
+                color: "#FFC845",
+                WebkitTextStroke: "7px white",
+                paintOrder: "stroke fill",
+                filter: "drop-shadow(0px 4px 0px rgba(0,0,0,0.1))",
+              }}
+            >
+              1
+            </span>
+          </div>
+          <h3
+            className="font-semibold text-base md:text-lg mt-2 hebrew-font text-center"
+            style={{ color: "#4F86F9" }}
+          >
+            בוחרים חבילה
+          </h3>
+          <p className="text-sm text-gray-400 hebrew-font text-center">
+            או חברה
+          </p>
         </div>
 
-        {/* STEP 2 - CENTER */}
-        <StepCard number="2" title="מוסיפים ברכה" subtitle="(נעזור לך!)" />
-
-        {/* ARROW 2→3 (curved with loop, pointing left) */}
-        <div className="hidden md:flex items-center justify-center w-14 h-16 -mx-2 mt-16">
-          <img
-            src={arrow2Img}
-            alt=""
-            className="w-full h-full object-contain"
-          />
+        {/* ARROW 1 (Curved Down-Left) */}
+        <div className="hidden md:flex items-center justify-center w-16 h-12 mx-[-8px] mt-10">
+          <svg
+            width="60"
+            height="40"
+            viewBox="0 0 60 40"
+            fill="none"
+            className="transform rotate-[-10deg]"
+          >
+            <path
+              d="M 0 5 C 20 15, 40 25, 55 30"
+              stroke="#4F86F9"
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <path
+              d="M 50 25 L 55 30 L 48 32"
+              stroke="#4F86F9"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </svg>
         </div>
 
-        {/* STEP 3 - FAR LEFT */}
-        <StepCard number="3" title="מעניקים מניות" subtitle="במתנה!" />
-      </div>
+        {/* STEP 2 (Center) */}
+        <div className="flex flex-col items-center z-10">
+          <div className="bg-white rounded-2xl shadow-lg w-[140px] h-[130px] md:w-[160px] md:h-[150px] flex flex-col items-center justify-center p-4">
+            <span
+              className="leading-none"
+              style={{
+                fontFamily: "'Titan One', cursive",
+                fontSize: "70px",
+                color: "#FFC845",
+                WebkitTextStroke: "7px white",
+                paintOrder: "stroke fill",
+                filter: "drop-shadow(0px 4px 0px rgba(0,0,0,0.1))",
+              }}
+            >
+              2
+            </span>
+          </div>
+          <h3
+            className="font-semibold text-base md:text-lg mt-2 hebrew-font text-center"
+            style={{ color: "#4F86F9" }}
+          >
+            מוסיפים ברכה
+          </h3>
+          <p className="text-sm text-gray-400 hebrew-font text-center">
+            (נעזור לך!)
+          </p>
+        </div>
 
-      {/* Mobile: vertical arrows between cards */}
-      <div className="flex md:hidden flex-col items-center mt-4 gap-2">
-        {/* Mobile layout handled by responsive classes above */}
+        {/* ARROW 2 (Curved Up-Left) */}
+        <div className="hidden md:flex items-center justify-center w-16 h-12 mx-[-8px] mt-12">
+          <svg
+            width="60"
+            height="40"
+            viewBox="0 0 60 40"
+            fill="none"
+            className="transform rotate-[10deg]"
+          >
+            <path
+              d="M 0 35 C 20 25, 40 15, 55 10"
+              stroke="#4F86F9"
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <path
+              d="M 50 15 L 55 10 L 52 5"
+              stroke="#4F86F9"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </svg>
+        </div>
+
+        {/* STEP 3 (Leftmost due to row-reverse) */}
+        <div className="flex flex-col items-center z-10">
+          <div className="bg-white rounded-2xl shadow-lg w-[140px] h-[130px] md:w-[160px] md:h-[150px] flex flex-col items-center justify-center p-4">
+            <span
+              className="leading-none"
+              style={{
+                fontFamily: "'Titan One', cursive",
+                fontSize: "70px",
+                color: "#FFC845",
+                WebkitTextStroke: "7px white",
+                paintOrder: "stroke fill",
+                filter: "drop-shadow(0px 4px 0px rgba(0,0,0,0.1))",
+              }}
+            >
+              3
+            </span>
+          </div>
+          <h3
+            className="font-semibold text-base md:text-lg mt-2 hebrew-font text-center"
+            style={{ color: "#4F86F9" }}
+          >
+            מעניקים מניות
+          </h3>
+          <p className="text-sm text-gray-400 hebrew-font text-center">
+            במתנה!
+          </p>
+        </div>
       </div>
     </div>
   );
