@@ -48,6 +48,22 @@ const companyLogos = [
     logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg",
   },
   {
+    name: "Mastercard",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg",
+  },
+  {
+    name: "Spotify",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg",
+  },
+  {
+    name: "Uber",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg",
+  },
+  {
+    name: "Airbnb",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg",
+  },
+  {
     name: "Bitcoin",
     logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
   },
@@ -64,10 +80,10 @@ interface LogoMarqueeProps {
 
 export default function LogoMarquee({ showTitle = true, className = "" }: LogoMarqueeProps) {
   return (
-    <div className={`py-8 md:py-10 bg-blue-50/50 overflow-hidden ${className}`}>
+    <div className={`py-6 md:py-8 bg-blue-50/50 overflow-hidden ${className}`}>
       {/* Header */}
       {showTitle && (
-        <h3 className="text-lg md:text-xl text-[#486284] text-center mb-6 font-medium">
+        <h3 className="text-lg md:text-xl text-[#486284] text-center mb-5 font-medium">
           חברות פופולאריות להשקעה
         </h3>
       )}
@@ -75,49 +91,57 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
       {/* Marquee Container */}
       <div className="w-full overflow-hidden relative">
         {/* Gradient Fade Left */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-blue-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-blue-50 to-transparent z-10 pointer-events-none" />
         
         {/* Gradient Fade Right */}
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-blue-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-blue-50 to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling Track - Two identical sets for seamless loop */}
-        <div className="flex animate-[marquee-scroll_20s_linear_infinite] hover:[animation-play-state:paused]">
+        {/* Scrolling Track */}
+        <div className="marquee-track">
           {/* First Set */}
-          <div className="flex shrink-0">
+          <div className="marquee-content">
             {companyLogos.map((company, index) => (
-              <div
+              <img
                 key={`set1-${index}`}
-                className="flex items-center justify-center mx-6 md:mx-8 shrink-0"
-              >
-                <img
-                  src={company.logoUrl}
-                  alt={company.name}
-                  className="h-7 md:h-9 w-auto object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
-                />
-              </div>
+                src={company.logoUrl}
+                alt={company.name}
+                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 mx-5 md:mx-7 flex-shrink-0"
+              />
             ))}
           </div>
           
-          {/* Second Set (Duplicate) */}
-          <div className="flex shrink-0">
+          {/* Second Set (Duplicate for seamless loop) */}
+          <div className="marquee-content">
             {companyLogos.map((company, index) => (
-              <div
+              <img
                 key={`set2-${index}`}
-                className="flex items-center justify-center mx-6 md:mx-8 shrink-0"
-              >
-                <img
-                  src={company.logoUrl}
-                  alt={company.name}
-                  className="h-7 md:h-9 w-auto object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
-                />
-              </div>
+                src={company.logoUrl}
+                alt={company.name}
+                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 mx-5 md:mx-7 flex-shrink-0"
+              />
             ))}
           </div>
         </div>
       </div>
 
       <style>{`
-        @keyframes marquee-scroll {
+        .marquee-track {
+          display: flex;
+          width: fit-content;
+          animation: marquee 12s linear infinite;
+        }
+        
+        .marquee-track:hover {
+          animation-play-state: paused;
+        }
+        
+        .marquee-content {
+          display: flex;
+          align-items: center;
+          flex-shrink: 0;
+        }
+        
+        @keyframes marquee {
           0% {
             transform: translateX(0);
           }
