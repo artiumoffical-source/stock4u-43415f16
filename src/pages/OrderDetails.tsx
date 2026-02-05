@@ -138,45 +138,49 @@ export default function OrderDetails() {
   const selectClass = "h-10 px-2 rounded-lg bg-[#F0F5FF] border-2 border-transparent focus:border-[#4F86F9] focus:bg-white text-[#3B5B96] text-sm font-medium cursor-pointer";
 
   return (
-    <div className="min-h-screen bg-[#E0E7F5] relative overflow-hidden" dir="rtl">
+    <div className="min-h-screen bg-[#E0E7F5]" dir="rtl">
       <Header />
       <StepHero currentStep={1} />
 
-      {/* ===== DECORATIVE BACKGROUND VECTORS ===== */}
-      
-      {/* Top Left: Sparkle Vector */}
-      <img 
-        src={sparkleVector} 
-        alt="" 
-        className="absolute top-32 -left-6 md:left-12 w-24 md:w-36 opacity-20 pointer-events-none select-none rotate-12 z-0"
-        aria-hidden="true"
-      />
-      
-      {/* Bottom Right: Gift Mascot */}
-      <img 
-        src={giftMascot} 
-        alt="" 
-        className="absolute bottom-48 -right-8 md:right-8 w-32 md:w-48 opacity-[0.12] pointer-events-none select-none -rotate-6 z-0"
-        aria-hidden="true"
-      />
-      
-      {/* Additional Sparkles for balance */}
-      <img 
-        src={sparkleVector} 
-        alt="" 
-        className="absolute bottom-80 left-4 md:left-24 w-16 md:w-24 opacity-15 pointer-events-none select-none -rotate-45 z-0"
-        aria-hidden="true"
-      />
-      <img 
-        src={sparkleVector} 
-        alt="" 
-        className="absolute top-[60%] right-2 md:right-16 w-12 md:w-20 opacity-10 pointer-events-none select-none rotate-[30deg] z-0 hidden md:block"
-        aria-hidden="true"
-      />
+      {/* Main Container - Form Section with Decorations */}
+      <div className="relative overflow-x-hidden px-4 md:px-6 pb-36 -mt-4">
+        
+        {/* ===== DECORATIVE VECTORS (Only visible on XL screens, positioned beside the form) ===== */}
+        
+        {/* Right Decoration: Growth Gift Mascot */}
+        <img 
+          src={giftMascot} 
+          alt="" 
+          className="hidden xl:block absolute top-16 -right-4 2xl:right-8 w-40 2xl:w-52 opacity-90 pointer-events-none select-none rotate-6 z-0 drop-shadow-lg"
+          aria-hidden="true"
+        />
+        
+        {/* Left Decoration: Primary Sparkle */}
+        <img 
+          src={sparkleVector} 
+          alt="" 
+          className="hidden xl:block absolute top-8 -left-2 2xl:left-12 w-28 2xl:w-36 opacity-80 pointer-events-none select-none -rotate-12 z-0"
+          aria-hidden="true"
+        />
+        
+        {/* Left Decoration: Secondary Sparkle (lower) */}
+        <img 
+          src={sparkleVector} 
+          alt="" 
+          className="hidden xl:block absolute top-[50%] -left-4 2xl:left-4 w-20 2xl:w-28 opacity-60 pointer-events-none select-none rotate-[30deg] z-0"
+          aria-hidden="true"
+        />
+        
+        {/* Right Decoration: Small Sparkle (lower) */}
+        <img 
+          src={sparkleVector} 
+          alt="" 
+          className="hidden xl:block absolute bottom-40 -right-2 2xl:right-16 w-16 2xl:w-24 opacity-50 pointer-events-none select-none -rotate-45 z-0"
+          aria-hidden="true"
+        />
 
-      {/* Main Container - Continuous Background */}
-      <div className="px-4 md:px-6 pb-36 -mt-4 relative z-10">
-        <div className="max-w-4xl mx-auto">
+        {/* Form Card Container */}
+        <div className="max-w-4xl mx-auto relative z-10">
           
           {/* Floating White Form Card */}
           <div className="bg-white rounded-[2rem] shadow-[0_10px_50px_rgba(79,134,249,0.12)] overflow-hidden">
