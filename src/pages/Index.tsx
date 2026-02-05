@@ -2,31 +2,38 @@ import { Link } from "react-router-dom";
 
 import Footer from "../components/Footer";
 import Layout from "../components/Layout";
-import HeroCarousel from "../components/HeroCarousel";
+import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
   return (
     <Layout>
       {/* ========== DESKTOP VERSION - Always shown ========== */}
       <div>
-        {/* Hero Carousel with 3 slides */}
-        <HeroCarousel />
-
-        {/* Video Container - sits BELOW carousel, overlaps white section */}
-        <section
-          className="relative overflow-visible"
-          style={{ backgroundColor: "#E0E7F5" }}
+        {/* Hero Section with floating characters */}
+        <section 
+          className="relative overflow-visible flex flex-col"
+          style={{ backgroundColor: '#E0E7F5' }}
         >
-          <div
-            className="relative z-20 mx-auto w-full max-w-5xl px-4 -mb-32 pb-4"
-            style={{ background: "transparent" }}
+          {/* Hero Background with Characters - fully visible */}
+          <div className="relative w-full z-10 pt-8">
+            <img
+              src={heroCharacters}
+              alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+          
+          {/* Video Container - sits BELOW title, overlaps white section */}
+          <div 
+            className="relative z-20 mx-auto w-full max-w-5xl px-4 -mb-32"
+            style={{ background: 'transparent' }}
           >
             <div className="w-full aspect-video bg-gray-900 rounded-3xl shadow-2xl flex items-center justify-center">
               <button
                 onClick={() =>
                   window.open(
                     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                    "_blank"
+                    "_blank",
                   )
                 }
                 className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
