@@ -5,64 +5,55 @@ export const usStocks: Stock[] = [
   {
     symbol: "AAPL",
     company: "Apple Inc.",
-    description:
-      "אפל היא חברת הטכנולוגיה הגדולה והמוכרת בעולם. מייצרת iPhone, iPad, Mac, Apple Watch ושירותים דיגיטליים. החברה מפורסמת בחדשנות ואיכות בנייה.",
+    description: "ענקית הטכנולוגיה, יצרנית האייפון, המק והשעון החכם.",
     logoUrl: "https://logo.clearbit.com/apple.com",
   },
   {
     symbol: "NVDA",
-    company: "NVIDIA Corporation",
-    description:
-      "NVIDIA מובילה עולמית בתחום עיבוד גרפי ובינה מלאכותית. החברה מייצרת כרטיסי גרפיקה מתקדמים, מעבדי AI וחומרה לרכב אוטונומי.",
+    company: "Nvidia",
+    description: "החברה המובילה בעולם לייצור שבבים לבינה מלאכותית וגיימינג.",
     logoUrl: "https://logo.clearbit.com/nvidia.com",
   },
   {
     symbol: "MSFT",
-    company: "Microsoft Corporation",
-    description:
-      "מיקרוסופט היא ענקית תוכנה וטכנולוגיה עם התמחות במחשוב בענן, פרודוקטיביות עסקית ובינה מלאכותית. החברה מפעילה את Azure, Office 365, Windows.",
+    company: "Microsoft",
+    description: "מובילה עולמית בתוכנה, ענן (Azure) ובינה מלאכותית.",
     logoUrl: "https://logo.clearbit.com/microsoft.com",
   },
   {
     symbol: "TSLA",
-    company: "Tesla Inc.",
-    description:
-      "טסלה היא יצרנית רכבים חשמליים ואנרגיה נקייה מובילה בעולם. החברה מייצרת רכבים חשמליים, סוללות ופתרונות אנרגיה סולארית.",
+    company: "Tesla",
+    description: "חלוצת הרכב החשמלי והאנרגיה הירוקה בהובלת אילון מאסק.",
     logoUrl: "https://logo.clearbit.com/tesla.com",
   },
   {
     symbol: "GOOGL",
-    company: "Alphabet Inc. (Google)",
-    description:
-      "אלפבית היא החברה האם של גוגל, המובילה בתחום החיפוש, פרסום דיגיטלי וטכנולוגיות חדשניות. החברה מפתחת Android, YouTube, Google Cloud.",
+    company: "Alphabet (Google)",
+    description: "שולטת בחיפוש, פרסום דיגיטלי, יוטיוב ואנדרואיד.",
     logoUrl: "https://logo.clearbit.com/google.com",
   },
   {
     symbol: "AMZN",
-    company: "Amazon.com Inc.",
-    description:
-      "אמזון היא ענקית המסחר האלקטרוני והענן החישובי בעולם. החברה מפעילה את פלטפורמת הקניות הגדולה ביותר ושירותי AWS.",
+    company: "Amazon",
+    description: "ענקית המסחר האלקטרוני ושירותי הענן (AWS).",
     logoUrl: "https://logo.clearbit.com/amazon.com",
   },
   {
     symbol: "META",
-    company: "Meta Platforms Inc.",
-    description:
-      "מטא (פייסבוק לשעבר) היא ענקית הרשתות החברתיות. החברה מפעילה את Facebook, Instagram, WhatsApp ומשקיעה במטאוורס.",
+    company: "Meta Platforms",
+    description: "הבעלים של פייסבוק, אינסטגרם, וואטסאפ ועולמות המטאוורס.",
     logoUrl: "https://logo.clearbit.com/meta.com",
   },
   {
     symbol: "AMD",
     company: "Advanced Micro Devices",
-    description:
-      "AMD מייצרת מעבדים וכרטיסי גרפיקה מתקדמים למחשבים, שרתים וקונסולות משחקים. מתחרה ישירה של Intel ו-NVIDIA.",
+    description: "מייצרת מעבדים וכרטיסי גרפיקה מתקדמים למחשבים ושרתים.",
     logoUrl: "https://logo.clearbit.com/amd.com",
   },
   {
     symbol: "NFLX",
-    company: "Netflix Inc.",
-    description:
-      "נטפליקס היא פלטפורמת הסטרימינג הגדולה בעולם. החברה מייצרת ומפיצה תכנים מקוריים וסדרות טלוויזיה לעשרות מיליוני מנויים.",
+    company: "Netflix",
+    description: "חלוצת שירותי הסטרימינג והתוכן המקורי.",
     logoUrl: "https://logo.clearbit.com/netflix.com",
   },
 ];
@@ -71,44 +62,38 @@ export const usStocks: Stock[] = [
 export const israelStocks: Stock[] = [
   {
     symbol: "TEVA",
-    company: "Teva Pharmaceutical",
-    description:
-      "טבע היא חברת התרופות הגדולה בישראל ואחת המובילות בעולם בתחום התרופות הגנריות. החברה מפתחת ומייצרת תרופות מגוונות.",
-    logoUrl: "https://logo.clearbit.com/tevapharm.com",
+    company: "Teva Pharma",
+    description: "חברת התרופות הגדולה בישראל ומובילה עולמית בתרופות גנריות.",
+    logoUrl: "https://logo.clearbit.com/teva.co.il",
   },
   {
     symbol: "ESLT",
     company: "Elbit Systems",
-    description:
-      "אלביט מערכות היא חברת הביטחון הגדולה בישראל. מפתחת מערכות אלקטרוניות צבאיות, מל\"טים, ומערכות תקשורת מתקדמות.",
+    description: "ענקית הטכנולוגיה הביטחונית, מל''טים ומערכות לחימה מתקדמות.",
     logoUrl: "https://logo.clearbit.com/elbitsystems.com",
   },
   {
     symbol: "NICE",
     company: "NICE Ltd.",
-    description:
-      "נייס היא חברת תוכנה ישראלית המתמחה בפתרונות ענן לניהול חווית לקוח, מניעת הונאות ואנליטיקה עסקית.",
+    description: "חברת תוכנה ישראלית מובילה בפתרונות ענן לניהול חווית לקוח.",
     logoUrl: "https://logo.clearbit.com/nice.com",
   },
   {
     symbol: "CHKP",
     company: "Check Point Software",
-    description:
-      "צ'ק פוינט היא חברת אבטחת מידע ישראלית מובילה. מפתחת פתרונות אבטחה לרשתות, ענן ומכשירים ניידים.",
+    description: "חברת אבטחת מידע ישראלית מובילה עולמית.",
     logoUrl: "https://logo.clearbit.com/checkpoint.com",
   },
   {
     symbol: "WIX",
     company: "Wix.com Ltd.",
-    description:
-      "וויקס היא חברת טכנולוגיה ישראלית המפתחת פלטפורמה לבניית אתרי אינטרנט. משרתת מיליוני משתמשים ועסקים ברחבי העולם.",
+    description: "פלטפורמה לבניית אתרי אינטרנט עם מיליוני משתמשים בעולם.",
     logoUrl: "https://logo.clearbit.com/wix.com",
   },
   {
     symbol: "MNDY",
-    company: "monday.com Ltd.",
-    description:
-      "מאנדיי היא חברת תוכנה ישראלית המפתחת פלטפורמת ניהול עבודה ופרויקטים בענן. אחת החברות הצומחות ביותר בתחום.",
+    company: "monday.com",
+    description: "פלטפורמת ניהול עבודה ופרויקטים בענן, אחת הצומחות בעולם.",
     logoUrl: "https://logo.clearbit.com/monday.com",
   },
 ];
