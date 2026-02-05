@@ -10,20 +10,13 @@ export default function Index() {
     <Layout>
       {/* ========== DESKTOP VERSION - Always shown ========== */}
       <div>
-        {/* Hero Section - Centered Layout */}
-        <section 
-          className="relative overflow-visible"
-          style={{ backgroundColor: '#E0E7F5' }}
-        >
-          {/* Hero Characters Image */}
-          <div className="relative w-full z-10 pt-8">
-            <img
-              src={heroCharacters}
-              alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
-              className="w-full h-auto object-contain"
-            />
-          </div>
-          
+        {/* Hero Section - Clean, no padding filler */}
+        <section className="bg-[#E0E7F5]">
+          <img
+            src={heroCharacters}
+            alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
+            className="w-full h-auto object-contain block"
+          />
         </section>
 
         {/* Gift Packages Carousel */}
