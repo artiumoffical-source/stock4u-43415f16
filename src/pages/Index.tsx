@@ -10,12 +10,12 @@ export default function Index() {
     <Layout>
       {/* ========== DESKTOP VERSION - Always shown ========== */}
       <div>
-        {/* Hero Section with floating characters */}
+        {/* Hero Section - Centered Layout */}
         <section 
-          className="relative overflow-visible flex flex-col"
+          className="relative overflow-visible"
           style={{ backgroundColor: '#E0E7F5' }}
         >
-          {/* Hero Background with Characters - fully visible */}
+          {/* Hero Characters Image */}
           <div className="relative w-full z-10 pt-8">
             <img
               src={heroCharacters}
@@ -24,35 +24,41 @@ export default function Index() {
             />
           </div>
           
-          {/* Video Container - sits BELOW title, overlaps white section */}
-          <div 
-            className="relative z-20 mx-auto w-full max-w-5xl px-4 -mb-32"
-            style={{ background: 'transparent' }}
-          >
-            <div className="w-full aspect-video bg-gray-900 rounded-3xl shadow-2xl flex items-center justify-center">
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                    "_blank",
-                  )
-                }
-                className="w-24 h-24 bg-[hsl(var(--stock4u-happy-blue))] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform border-4 border-white"
+          {/* Centered CTA Section */}
+          <div className="relative z-20 max-w-4xl mx-auto px-4 pb-16 text-center">
+            {/* Badge / Tagline */}
+            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-blue-100 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="text-sm font-bold text-[hsl(var(--stock4u-dark-grey))]">הדרך החדשה לתת מתנות</span>
+            </div>
+
+            {/* Subtext */}
+            <p className="text-lg md:text-xl text-[hsl(var(--stock4u-grey))] mb-8 max-w-2xl mx-auto leading-relaxed">
+              במקום עוד צעצוע או בגד, העניקו מניות של החברות הגדולות בעולם.
+              <br className="hidden md:block" />
+              מתנה עם ערך אמיתי לעתיד.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                to="/stock-selection?continue=true"
+                className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-600 text-white text-lg md:text-xl font-bold py-4 px-10 rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1"
               >
-                <svg
-                  className="w-10 h-10 text-white ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                בחירת מתנה ➜
+              </Link>
+              <button 
+                className="text-[hsl(var(--stock4u-dark-grey))] font-bold py-4 px-8 hover:bg-white/50 rounded-2xl transition-all"
+                onClick={() => {
+                  const howItWorks = document.querySelector('section:nth-of-type(3)');
+                  howItWorks?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                איך זה עובד?
               </button>
             </div>
           </div>
         </section>
-
-        {/* White section that video overlaps onto */}
-        <div className="pt-40 bg-white"></div>
 
         {/* Gift Packages Carousel */}
         <section className="w-full py-6 mb-6">
