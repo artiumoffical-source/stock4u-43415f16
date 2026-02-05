@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Layout from "../components/Layout";
 import LogoMarquee from "../components/LogoMarquee";
+import PackagesCarousel from "../components/PackagesCarousel";
 import heroCharacters from "@/assets/hero-characters.png";
 
 export default function Index() {
@@ -19,20 +20,8 @@ export default function Index() {
           />
         </section>
 
-        {/* Gift Packages Carousel - Pull up to close gap */}
-        <section className="w-full py-6 mb-6 bg-white -mt-1">
-          <div className="max-w-[1639px] mx-auto relative">
-            <div className="flex justify-center items-center">
-              <Link to="/stock-selection?continue=true" className="block w-full">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fbd35a0518e78474da4e3ec381caabfa5%2Fdd35d8126d3046409354f589f2bbc58e?format=webp&width=1600&quality=90"
-                  alt="Gift Package Cards"
-                  className="w-full max-w-[1472px] h-auto object-contain hover:opacity-90 transition-opacity cursor-pointer"
-                />
-              </Link>
-            </div>
-          </div>
-        </section>
+        {/* Stock Packages Carousel */}
+        <PackagesCarousel />
 
         {/* How It Works Section - Same image for all screens */}
         <section className="relative overflow-hidden">
