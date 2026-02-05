@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Info, Plus, Check } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Info, Plus, Check, Minus } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -36,10 +35,18 @@ export function CompactStockCard({
   const { addToCart } = useCart();
 
   const handleAmountChange = (value: string) => {
-    const numValue = parseFloat(value) || 0;
+    const numValue = parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
     if (numValue >= 0) {
       setAmount(numValue);
     }
+  };
+
+  const handleIncrement = () => {
+    setAmount((prev) => prev + 100);
+  };
+
+  const handleDecrement = () => {
+    setAmount((prev) => (prev >= 100 ? prev - 100 : 0));
   };
 
   const handleAddToCart = () => {
@@ -126,37 +133,65 @@ export function CompactStockCard({
         </div>
 
         {/* 4. Footer Action */}
-        <div className="p-4 pt-0 mt-auto w-full">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Input
-                type="number"
-                placeholder="הזן סכום"
+        <div className="p-4 pt-0 mt-auto w-full space-y-2">
+          {/* Stepper Control */}
+          <div className="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-200 w-full">
+            {/* Minus Button */}
+            <button
+              onClick={handleDecrement}
+              disabled={amount <= 0}
+              className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-white hover:shadow-sm rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <Minus size={16} />
+            </button>
+
+            {/* The Input */}
+            <div className="flex-1 text-center relative">
+              <input
+                type="text"
+                inputMode="numeric"
                 value={amount || ""}
                 onChange={(e) => handleAmountChange(e.target.value)}
-                min="0"
-                step="1"
-                className="h-11 pr-3 pl-8 text-right bg-gray-50 focus:bg-white border-gray-200 focus:border-blue-500 rounded-xl text-sm font-bold text-gray-700"
-                dir="rtl"
+                placeholder="0"
+                className="w-full bg-transparent text-center font-bold text-gray-800 text-lg focus:outline-none"
+                dir="ltr"
               />
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₪</span>
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">
+                ₪
+              </span>
             </div>
+
+            {/* Plus Button */}
             <button
-              onClick={handleAddToCart}
-              disabled={amount <= 0}
-              className={`h-11 w-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0 ${
-                justAdded
-                  ? "bg-emerald-500 text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-md"
-              }`}
+              onClick={handleIncrement}
+              className="w-9 h-9 flex items-center justify-center text-blue-600 bg-white shadow-sm hover:shadow hover:bg-blue-50 rounded-lg transition-all"
             >
-              {justAdded ? (
-                <Check className="w-5 h-5" />
-              ) : (
-                <Plus className="w-5 h-5" />
-              )}
+              <Plus size={16} />
             </button>
           </div>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            disabled={amount <= 0}
+            className={`w-full h-11 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+              justAdded
+                ? "bg-emerald-500 text-white"
+                : "bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+            }`}
+          >
+            {justAdded ? (
+              <>
+                <Check className="w-4 h-4" />
+                נוסף!
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4" />
+                הוסף לעגלה
+              </>
+            )}
+          </button>
         </div>
 
         {/* Selected indicator */}
