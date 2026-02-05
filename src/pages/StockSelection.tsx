@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
 import LogoMarquee from "@/components/LogoMarquee";
@@ -16,17 +16,24 @@ import {
   israelTechStocks,
   cryptoETFs,
 } from "@/data/stockData";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function StockSelection() {
   const [selectedRegion, setSelectedRegion] = useState<Region>("us");
   const [selectedType, setSelectedType] = useState<StockType>("single_stocks");
   const [searchQuery, setSearchQuery] = useState("");
-  const { giftData, addStock, removeStock, resetGiftData } = useGift();
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const { giftData, addStock, removeStock } = useGift();
   const navigate = useNavigate();
 
-  // Clean up and scroll to top on mount
+  // Scroll to top on mount (don't reset gift data - preserve cart!)
   useEffect(() => {
-    resetGiftData();
     window.scrollTo(0, 0);
   }, []);
 
@@ -205,11 +212,15 @@ export default function StockSelection() {
             {/* RIGHT SIDE: Info & Visuals */}
             <div className="flex items-center gap-4 md:gap-8">
               
-              {/* 1. The Logo Stack (Larger & Spaced) */}
-              <div className="hidden sm:flex flex-row-reverse items-center">
+              {/* 1. The Logo Stack (Larger & Spaced) - Clickable for Quick Edit */}
+              <div 
+                className="hidden sm:flex flex-row-reverse items-center cursor-pointer group"
+                onClick={() => setIsCartModalOpen(true)}
+                title="לחץ לעריכת העגלה"
+              >
                 {/* Overflow Badge */}
                 {giftData.selectedStocks.length > 5 && (
-                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-100 border-[3px] border-white flex items-center justify-center text-sm font-bold text-gray-500 shadow-sm z-0 -mr-4 md:-mr-5">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-100 border-[3px] border-white flex items-center justify-center text-sm font-bold text-gray-500 shadow-sm z-0 -mr-4 md:-mr-5 group-hover:ring-2 group-hover:ring-blue-300 transition-all">
                     +{giftData.selectedStocks.length - 5}
                   </div>
                 )}
@@ -218,7 +229,7 @@ export default function StockSelection() {
                 {giftData.selectedStocks.slice(0, 5).map((item, index) => (
                   <div 
                     key={item.symbol} 
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-[3px] border-white shadow-md flex items-center justify-center overflow-hidden -mr-4 md:-mr-5 first:mr-0 hover:z-20 hover:scale-110 transition-transform"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-[3px] border-white shadow-md flex items-center justify-center overflow-hidden -mr-4 md:-mr-5 first:mr-0 hover:z-20 hover:scale-110 transition-transform group-hover:ring-2 group-hover:ring-blue-300"
                     style={{ zIndex: 10 - index }}
                   >
                     <img 
@@ -247,6 +258,68 @@ export default function StockSelection() {
           </div>
         </div>
       )}
+
+      {/* Quick Edit Cart Modal */}
+      <Dialog open={isCartModalOpen} onOpenChange={setIsCartModalOpen}>
+        <DialogContent className="max-w-md p-0 gap-0 overflow-hidden">
+          <DialogHeader className="p-4 border-b bg-muted/50">
+            <DialogTitle className="text-right">העגלה שלך ({getTotalSelectedStocks()})</DialogTitle>
+          </DialogHeader>
+          
+          <ScrollArea className="max-h-[60vh]">
+            <div className="p-4 flex flex-col gap-3">
+              {giftData.selectedStocks.map((item) => (
+                <div 
+                  key={item.symbol} 
+                  className="flex items-center justify-between bg-background border rounded-xl p-3 shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white border flex items-center justify-center overflow-hidden">
+                      <img 
+                        src={getStockLogo(item.symbol)} 
+                        alt={item.symbol} 
+                        className="w-full h-full object-contain p-1" 
+                      />
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-foreground">{item.symbol}</div>
+                      <div className="text-xs text-muted-foreground">{item.name}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="font-bold text-primary">₪{item.amount.toLocaleString()}</span>
+                    <button 
+                      onClick={() => {
+                        removeStock(item.symbol);
+                        // Close modal if cart becomes empty
+                        if (giftData.selectedStocks.length <= 1) {
+                          setIsCartModalOpen(false);
+                        }
+                      }}
+                      className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 p-2 rounded-full transition-colors"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+
+          <div className="p-4 border-t bg-muted/50 flex justify-between items-center">
+            <button 
+              onClick={() => setIsCartModalOpen(false)}
+              className="text-primary font-bold text-sm"
+            >
+              סגור חלון
+            </button>
+            <div className="text-right">
+              <span className="text-sm text-muted-foreground">סה״כ: </span>
+              <span className="font-bold text-foreground">₪{getTotalGiftAmount().toLocaleString()}</span>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Statistics Section */}
       <div className="bg-gray-50 py-8 md:py-12">
