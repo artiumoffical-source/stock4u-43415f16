@@ -98,11 +98,18 @@ export default function StockSelection() {
 
   const currentStocks = getCurrentStocks();
 
+  // All stocks combined for logo lookup
+  const allStocks = [...usStocks, ...israelStocks, ...usETFs, ...israelETFs, ...usTechStocks, ...israelTechStocks, ...cryptoETFs];
+
+  // Get logo URL for a stock symbol
+  const getStockLogo = (symbol: string) => {
+    const stock = allStocks.find((s) => s.symbol === symbol);
+    return stock?.logoUrl || "";
+  };
+
   // Update stock amount
   const updateStockAmount = (symbol: string, amount: number) => {
-    const stockInfo = [...usStocks, ...israelStocks, ...usETFs, ...israelETFs, ...cryptoETFs].find(
-      (s) => s.symbol === symbol
-    );
+    const stockInfo = allStocks.find((s) => s.symbol === symbol);
 
     if (stockInfo && amount > 0) {
       addStock({
@@ -183,26 +190,56 @@ export default function StockSelection() {
 
       {/* Sticky Bottom Action Bar - Appears when cart has items */}
       {getTotalSelectedStocks() > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-bottom-full duration-300">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex flex-row items-center justify-between">
-            {/* Summary */}
-            <div className="flex flex-col text-right">
-              <span className="text-xs md:text-sm text-gray-500">
-                סה״כ בעגלה ({getTotalSelectedStocks()} פריטים)
-              </span>
-              <span className="text-xl md:text-2xl font-black text-slate-800 tracking-wide">
-                ₪{getTotalGiftAmount().toLocaleString()}
-              </span>
-            </div>
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-blue-100 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] z-50 animate-in slide-in-from-bottom-full duration-300">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
             
-            {/* Action Button */}
+            {/* LEFT SIDE: Action Button */}
             <button
               onClick={continueToGiftDesign}
-              className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-700 text-white px-6 md:px-8 py-3 rounded-xl font-bold text-sm md:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center gap-2"
+              className="bg-[hsl(var(--stock4u-happy-blue))] hover:bg-blue-700 text-white px-5 md:px-6 py-2.5 rounded-xl font-bold text-sm md:text-lg shadow-lg shadow-blue-200/50 hover:-translate-y-0.5 transition-all flex items-center gap-2 shrink-0"
             >
-              המשך לפרטים
+              <span>המשך</span>
               <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
             </button>
+
+            {/* RIGHT SIDE: Logos & Total */}
+            <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+              
+              {/* The Logo Stack - Hidden on very small phones */}
+              <div className="hidden sm:flex flex-row-reverse items-center">
+                {/* If more than 5, show counter first (leftmost in RTL) */}
+                {giftData.selectedStocks.length > 5 && (
+                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500 shadow-sm -mr-3 z-0">
+                    +{giftData.selectedStocks.length - 5}
+                  </div>
+                )}
+                
+                {/* The Logos - Max 5 */}
+                {giftData.selectedStocks.slice(0, 5).map((item, index) => (
+                  <div 
+                    key={item.symbol} 
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white border-2 border-white shadow-sm flex items-center justify-center overflow-hidden -mr-3 first:mr-0"
+                    style={{ zIndex: 10 - index }}
+                  >
+                    <img 
+                      src={getStockLogo(item.symbol)} 
+                      alt={item.symbol} 
+                      className="w-full h-full object-contain p-1.5" 
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Text Summary */}
+              <div className="flex flex-col items-end text-right shrink-0">
+                <span className="text-xs text-gray-400 font-medium">
+                  סה״כ ({getTotalSelectedStocks()})
+                </span>
+                <span className="text-xl md:text-2xl font-black text-slate-800 leading-none">
+                  ₪{getTotalGiftAmount().toLocaleString()}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}
