@@ -6,8 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCart } from "@/contexts/CartContext";
-import { toast } from "sonner";
+import { useGift } from "@/contexts/GiftContext";
 
 export interface Stock {
   symbol: string;
@@ -36,7 +35,7 @@ export function CompactStockCard({
   const [amount, setAmount] = useState(investmentAmount);
   const [justAdded, setJustAdded] = useState(false);
   const [logoError, setLogoError] = useState(false);
-  const { addToCart } = useCart();
+  const { addStock } = useGift();
 
   // Validation: Only accept positive integers
   const handleAmountChange = (value: string) => {
@@ -79,24 +78,18 @@ export function CompactStockCard({
     const numAmount = Number(amount);
     
     if (numAmount >= MIN_INVESTMENT) {
-      addToCart({
+      // Add to GiftContext (the single source of truth)
+      addStock({
         symbol: stock.symbol,
         name: stock.company,
         amount: numAmount,
-        logo: stock.logoUrl,
       });
       
       onInvestmentAmountChange(stock.symbol, numAmount);
       
-      toast.success(`${stock.symbol} נוסף לעגלה!`, {
-        description: `₪${numAmount.toLocaleString()}`,
-        duration: 2000,
-      });
-      
+      // Visual feedback only (no toast - sticky bar update is enough)
       setJustAdded(true);
       setTimeout(() => setJustAdded(false), 1500);
-    } else {
-      toast.error(`סכום מינימלי להשקעה: ₪${MIN_INVESTMENT}`);
     }
   };
 
