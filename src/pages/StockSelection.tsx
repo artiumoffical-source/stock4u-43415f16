@@ -271,7 +271,7 @@ export default function StockSelection() {
             <div className="p-4 flex flex-col gap-3">
               {selectedStocks.map((item) => (
                 <div 
-                  key={item.symbol} 
+                  key={item.id} 
                   className="flex items-center justify-between bg-background border rounded-xl p-3 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
@@ -291,7 +291,7 @@ export default function StockSelection() {
                     <span className="font-bold text-primary">₪{item.amount.toLocaleString()}</span>
                     <button 
                       onClick={() => {
-                        removeStock(item.symbol);
+                        removeStock(item.id);
                         // Close modal if cart becomes empty
                         if (selectedStocks.length <= 1) {
                           setIsCartModalOpen(false);

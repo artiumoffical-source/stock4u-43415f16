@@ -24,6 +24,10 @@ interface CompactStockCardProps {
   onInvestmentAmountChange: (symbol: string, amount: number) => void;
 }
 
+// Minimum investment amount in NIS
+const MIN_INVESTMENT = 50;
+const STEP_AMOUNT = 100;
+
 export function CompactStockCard({
   stock,
   investmentAmount,
@@ -34,39 +38,65 @@ export function CompactStockCard({
   const [logoError, setLogoError] = useState(false);
   const { addToCart } = useCart();
 
+  // Validation: Only accept positive integers
   const handleAmountChange = (value: string) => {
-    const numValue = parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
-    if (numValue >= 0) {
-      setAmount(numValue);
+    // Strip all non-numeric characters
+    const cleanValue = value.replace(/[^0-9]/g, '');
+    const numValue = parseInt(cleanValue, 10);
+    
+    // Only allow positive integers or empty (0)
+    if (cleanValue === '' || isNaN(numValue)) {
+      setAmount(0);
+    } else {
+      setAmount(Math.max(0, numValue));
     }
   };
 
   const handleIncrement = () => {
-    setAmount((prev) => prev + 100);
+    setAmount((prev) => {
+      const current = Number(prev) || 0;
+      // If below minimum, jump to minimum; otherwise add step
+      if (current < MIN_INVESTMENT) {
+        return MIN_INVESTMENT;
+      }
+      return current + STEP_AMOUNT;
+    });
   };
 
   const handleDecrement = () => {
-    setAmount((prev) => (prev >= 100 ? prev - 100 : 0));
+    setAmount((prev) => {
+      const current = Number(prev) || 0;
+      const newValue = current - STEP_AMOUNT;
+      // Don't go below 0
+      return Math.max(0, newValue);
+    });
   };
 
+  // Validation: Amount must be >= MIN_INVESTMENT to add
+  const isValidAmount = Number(amount) >= MIN_INVESTMENT;
+
   const handleAddToCart = () => {
-    if (amount > 0) {
+    const numAmount = Number(amount);
+    
+    if (numAmount >= MIN_INVESTMENT) {
       addToCart({
         symbol: stock.symbol,
         name: stock.company,
-        amount: amount,
+        amount: numAmount,
         logo: stock.logoUrl,
       });
       
-      onInvestmentAmountChange(stock.symbol, amount);
+      onInvestmentAmountChange(stock.symbol, numAmount);
       
       toast.success(`${stock.symbol} נוסף לעגלה!`, {
-        description: `₪${amount.toLocaleString()}`,
+        description: `₪${numAmount.toLocaleString()}`,
         duration: 2000,
       });
       
       setJustAdded(true);
       setTimeout(() => setJustAdded(false), 1500);
+    } else {
+      toast.error(`סכום מינימלי להשקעה: ₪${MIN_INVESTMENT}`);
     }
   };
 
@@ -139,7 +169,7 @@ export function CompactStockCard({
             {/* Minus Button */}
             <button
               onClick={handleDecrement}
-              disabled={amount <= 0}
+              disabled={Number(amount) <= 0}
               className="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-white hover:shadow-sm rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <Minus size={16} />
@@ -173,12 +203,13 @@ export function CompactStockCard({
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            disabled={amount <= 0}
+            disabled={!isValidAmount}
             className={`w-full h-11 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
               justAdded
                 ? "bg-emerald-500 text-white"
                 : "bg-blue-600 hover:bg-blue-700 text-white shadow-md"
             }`}
+            title={!isValidAmount ? `סכום מינימלי: ₪${MIN_INVESTMENT}` : undefined}
           >
             {justAdded ? (
               <>
