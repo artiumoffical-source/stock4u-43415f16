@@ -5,34 +5,40 @@ import euroImg from "@/assets/how-it-works/euro.png";
 import yenImg from "@/assets/how-it-works/yen.png";
 import dollarImg from "@/assets/how-it-works/dollar.png";
 import coinImg from "@/assets/how-it-works/coin.png";
-import number1Img from "@/assets/how-it-works/number-1.png";
-import number2Img from "@/assets/how-it-works/number-2.png";
-import number3Img from "@/assets/how-it-works/number-3.png";
 import arrow1Img from "@/assets/how-it-works/arrow-1.png";
 import arrow2Img from "@/assets/how-it-works/arrow-2.png";
 
 interface StepCardProps {
-  numberImg: string;
+  number: string;
   lines: string[];
 }
 
-const StepCard: React.FC<StepCardProps> = ({ numberImg, lines }) => (
+const StepCard: React.FC<StepCardProps> = ({ number, lines }) => (
   <div
-    className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md w-[140px] h-[130px] md:w-[180px] md:h-[150px]"
+    className="flex flex-col items-center justify-center bg-white rounded-2xl w-[130px] h-[120px] md:w-[160px] md:h-[140px]"
     style={{
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
     }}
   >
-    <img
-      src={numberImg}
-      alt=""
-      className="w-12 h-12 md:w-14 md:h-14 object-contain"
-    />
-    <div className="mt-2 text-center">
+    {/* Sticker-style number with Fredoka font */}
+    <span
+      className="text-5xl md:text-6xl leading-none"
+      style={{
+        fontFamily: "'Fredoka', sans-serif",
+        fontWeight: 700,
+        color: "#FFCA42",
+        WebkitTextStroke: "5px white",
+        paintOrder: "stroke fill",
+        filter: "drop-shadow(0px 2px 3px rgba(0,0,0,0.15))",
+      }}
+    >
+      {number}
+    </span>
+    <div className="mt-1 text-center">
       {lines.map((line, idx) => (
         <p
           key={idx}
-          className="text-sm md:text-base font-medium leading-tight hebrew-font"
+          className="text-sm md:text-base font-semibold leading-tight hebrew-font"
           style={{ color: "#2B5FAE" }}
         >
           {line}
@@ -44,51 +50,44 @@ const StepCard: React.FC<StepCardProps> = ({ numberImg, lines }) => (
 
 export const HowItWorksSteps: React.FC = () => {
   const steps = [
-    { numberImg: number1Img, lines: ["בוחרים חבילה", "או חברה"] },
-    { numberImg: number2Img, lines: ["מוסיפים ברכה", "(נעזור לך!)"] },
-    { numberImg: number3Img, lines: ["מעניקים מניות", "במתנה!"] },
+    { number: "1", lines: ["בוחרים חבילה", "או חברה"] },
+    { number: "2", lines: ["מוסיפים ברכה", "(נעזור לך!)"] },
+    { number: "3", lines: ["מעניקים מניות", "במתנה!"] },
   ];
 
   return (
     <div className="relative w-full min-h-[320px] md:min-h-[380px] flex flex-col items-center justify-center py-6 px-4">
       {/* Floating Currency Stickers */}
-      {/* Dollar - Top Right */}
       <img
         src={dollarImg}
         alt="$"
         className="absolute top-2 right-4 md:top-4 md:right-16 w-14 h-14 md:w-20 md:h-20 object-contain"
       />
-      {/* Coin - Right side */}
       <img
         src={coinImg}
         alt="coin"
         className="absolute top-1/3 right-2 md:right-8 w-12 h-12 md:w-16 md:h-16 object-contain"
       />
-      {/* Shekel - Top Left */}
       <img
         src={shekelImg}
         alt="₪"
         className="absolute top-4 left-8 md:top-6 md:left-24 w-12 h-12 md:w-16 md:h-16 object-contain"
       />
-      {/* Euro - Top Left area */}
       <img
         src={euroImg}
         alt="€"
         className="absolute top-16 left-16 md:top-12 md:left-48 w-10 h-10 md:w-14 md:h-14 object-contain"
       />
-      {/* Pound - Left side */}
       <img
         src={poundImg}
         alt="£"
         className="absolute bottom-24 left-4 md:bottom-20 md:left-16 w-10 h-10 md:w-14 md:h-14 object-contain"
       />
-      {/* Coin - Bottom Left */}
       <img
         src={coinImg}
         alt="coin"
         className="absolute bottom-8 left-8 md:bottom-12 md:left-32 w-12 h-12 md:w-16 md:h-16 object-contain"
       />
-      {/* Yen - Bottom Right */}
       <img
         src={yenImg}
         alt="¥"
@@ -103,34 +102,30 @@ export const HowItWorksSteps: React.FC = () => {
         זה כלכך פשוט!
       </h2>
 
-      {/* Steps Cards with Arrows - RTL order */}
-      <div className="flex flex-col md:flex-row-reverse items-center justify-center gap-4 md:gap-2">
-        {/* Step 1 (Rightmost in RTL) */}
-        <StepCard numberImg={steps[0].numberImg} lines={steps[0].lines} />
+      {/* Steps Cards with Arrows - RTL: flex-row-reverse puts Step 1 on RIGHT */}
+      <div className="flex flex-col md:flex-row-reverse items-center justify-center gap-3 md:gap-1">
+        {/* Step 1 - appears on FAR RIGHT due to flex-row-reverse */}
+        <StepCard number={steps[0].number} lines={steps[0].lines} />
 
-        {/* Arrow 1→2 */}
-        <div className="hidden md:block md:mx-1">
-          <img
-            src={arrow1Img}
-            alt=""
-            className="w-16 h-10 object-contain"
-          />
-        </div>
+        {/* Arrow 1→2 (pointing left) */}
+        <img
+          src={arrow1Img}
+          alt=""
+          className="hidden md:block w-14 h-10 object-contain -mx-1"
+        />
 
-        {/* Step 2 (Center) */}
-        <StepCard numberImg={steps[1].numberImg} lines={steps[1].lines} />
+        {/* Step 2 - Center */}
+        <StepCard number={steps[1].number} lines={steps[1].lines} />
 
-        {/* Arrow 2→3 */}
-        <div className="hidden md:block md:mx-1">
-          <img
-            src={arrow2Img}
-            alt=""
-            className="w-16 h-12 object-contain"
-          />
-        </div>
+        {/* Arrow 2→3 (pointing left with curl) */}
+        <img
+          src={arrow2Img}
+          alt=""
+          className="hidden md:block w-14 h-12 object-contain -mx-1"
+        />
 
-        {/* Step 3 (Leftmost in RTL) */}
-        <StepCard numberImg={steps[2].numberImg} lines={steps[2].lines} />
+        {/* Step 3 - appears on FAR LEFT due to flex-row-reverse */}
+        <StepCard number={steps[2].number} lines={steps[2].lines} />
       </div>
     </div>
   );
