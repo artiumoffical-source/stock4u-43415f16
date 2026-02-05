@@ -134,9 +134,10 @@ export default function StockSelection() {
     navigate("/order-details");
   };
 
-  const getTotalSelectedStocks = () => giftData.selectedStocks.length;
-  const getTotalGiftAmount = () =>
-    giftData.selectedStocks.reduce((sum, stock) => sum + stock.amount, 0);
+  // DERIVED STATE - calculated on every render for guaranteed sync
+  const selectedStocks = giftData.selectedStocks;
+  const totalSelectedStocks = selectedStocks.length;
+  const totalGiftAmount = selectedStocks.reduce((sum, stock) => sum + (stock.amount || 0), 0);
 
   return (
     <Layout>
@@ -160,7 +161,7 @@ export default function StockSelection() {
       />
 
       {/* Main Content - Added pb-32 to prevent content hiding behind sticky bar */}
-      <div className={`px-4 md:px-6 py-6 bg-gray-50 min-h-[600px] ${getTotalSelectedStocks() > 0 ? 'pb-32' : ''}`}>
+      <div className={`px-4 md:px-6 py-6 bg-gray-50 min-h-[600px] ${totalSelectedStocks > 0 ? 'pb-32' : ''}`}>
         <div className="max-w-[1400px] mx-auto">
           {/* Section Header */}
           <div className="flex items-center justify-between mb-4">
@@ -196,7 +197,7 @@ export default function StockSelection() {
       </div>
 
       {/* THE STICKY BAR - Large & Luxurious Version */}
-      {getTotalSelectedStocks() > 0 && (
+      {totalSelectedStocks > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-blue-100 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-bottom duration-300">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5 flex items-center justify-between">
             
@@ -219,14 +220,14 @@ export default function StockSelection() {
                 title="לחץ לעריכת העגלה"
               >
                 {/* Overflow Badge */}
-                {giftData.selectedStocks.length > 5 && (
+                {selectedStocks.length > 5 && (
                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-100 border-[3px] border-white flex items-center justify-center text-sm font-bold text-gray-500 shadow-sm z-0 -mr-4 md:-mr-5 group-hover:ring-2 group-hover:ring-blue-300 transition-all">
-                    +{giftData.selectedStocks.length - 5}
+                    +{selectedStocks.length - 5}
                   </div>
                 )}
                 
                 {/* The Logos - Max 5 */}
-                {giftData.selectedStocks.slice(0, 5).map((item, index) => (
+                {selectedStocks.slice(0, 5).map((item, index) => (
                   <div 
                     key={item.symbol} 
                     className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-[3px] border-white shadow-md flex items-center justify-center overflow-hidden -mr-4 md:-mr-5 first:mr-0 hover:z-20 hover:scale-110 transition-transform group-hover:ring-2 group-hover:ring-blue-300"
@@ -245,14 +246,14 @@ export default function StockSelection() {
               <div className="hidden md:flex flex-col items-end text-right border-r-2 border-gray-100 pr-6 md:pr-8">
                 <span className="text-sm text-gray-400 font-medium mb-1">סה״כ לתשלום</span>
                 <span className="text-2xl md:text-3xl font-black text-slate-800 leading-none tracking-tight">
-                  ₪{getTotalGiftAmount().toLocaleString()}
+                  ₪{totalGiftAmount.toLocaleString()}
                 </span>
               </div>
 
               {/* Mobile Only Summary (Simple) */}
               <div className="flex flex-col items-end text-right md:hidden">
-                <span className="text-xl font-black text-slate-800">₪{getTotalGiftAmount().toLocaleString()}</span>
-                <span className="text-xs text-gray-500">{getTotalSelectedStocks()} פריטים</span>
+                <span className="text-xl font-black text-slate-800">₪{totalGiftAmount.toLocaleString()}</span>
+                <span className="text-xs text-gray-500">{totalSelectedStocks} פריטים</span>
               </div>
             </div>
           </div>
@@ -263,12 +264,12 @@ export default function StockSelection() {
       <Dialog open={isCartModalOpen} onOpenChange={setIsCartModalOpen}>
         <DialogContent className="max-w-md p-0 gap-0 overflow-hidden">
           <DialogHeader className="p-4 border-b bg-muted/50">
-            <DialogTitle className="text-right">העגלה שלך ({getTotalSelectedStocks()})</DialogTitle>
+            <DialogTitle className="text-right">העגלה שלך ({totalSelectedStocks})</DialogTitle>
           </DialogHeader>
           
           <ScrollArea className="max-h-[60vh]">
             <div className="p-4 flex flex-col gap-3">
-              {giftData.selectedStocks.map((item) => (
+              {selectedStocks.map((item) => (
                 <div 
                   key={item.symbol} 
                   className="flex items-center justify-between bg-background border rounded-xl p-3 shadow-sm"
@@ -292,7 +293,7 @@ export default function StockSelection() {
                       onClick={() => {
                         removeStock(item.symbol);
                         // Close modal if cart becomes empty
-                        if (giftData.selectedStocks.length <= 1) {
+                        if (selectedStocks.length <= 1) {
                           setIsCartModalOpen(false);
                         }
                       }}
@@ -315,7 +316,7 @@ export default function StockSelection() {
             </button>
             <div className="text-right">
               <span className="text-sm text-muted-foreground">סה״כ: </span>
-              <span className="font-bold text-foreground">₪{getTotalGiftAmount().toLocaleString()}</span>
+              <span className="font-bold text-foreground">₪{totalGiftAmount.toLocaleString()}</span>
             </div>
           </div>
         </DialogContent>
