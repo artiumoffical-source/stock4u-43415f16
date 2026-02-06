@@ -74,11 +74,15 @@ export function CompactStockCard({
   // Validation: Amount must be >= MIN_INVESTMENT to add
   const isValidAmount = Number(amount) >= MIN_INVESTMENT;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    // Prevent double-firing events
+    e.preventDefault();
+    e.stopPropagation();
+    
     const numAmount = Number(amount);
     
     if (numAmount >= MIN_INVESTMENT) {
-      // Add to GiftContext (the single source of truth)
+      // Add to GiftContext with UPSERT logic (updates if exists, adds if new)
       addStock({
         symbol: stock.symbol,
         name: stock.company,
