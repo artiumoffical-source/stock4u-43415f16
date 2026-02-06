@@ -58,20 +58,20 @@ export default function PackagesCarousel() {
     <section className="relative bg-[#E0E7F5] py-8">
       <div className="max-w-7xl mx-auto px-4 relative">
         
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Ghost Style */}
         <button 
           onClick={() => scroll('left')} 
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-white p-3 rounded-full shadow-lg text-[hsl(var(--stock4u-happy-blue))] hover:scale-110 transition hidden md:flex items-center justify-center"
+          className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full text-[hsl(var(--stock4u-dark-grey))] transition-all duration-300 opacity-40 hover:opacity-100 hover:bg-white/40 hover:backdrop-blur-sm hidden md:flex items-center justify-center"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-8 h-8" />
         </button>
         <button 
           onClick={() => scroll('right')} 
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-white p-3 rounded-full shadow-lg text-[hsl(var(--stock4u-happy-blue))] hover:scale-110 transition hidden md:flex items-center justify-center"
+          className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full text-[hsl(var(--stock4u-dark-grey))] transition-all duration-300 opacity-40 hover:opacity-100 hover:bg-white/40 hover:backdrop-blur-sm hidden md:flex items-center justify-center"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-8 h-8" />
         </button>
 
         {/* The Scroll Container */}
