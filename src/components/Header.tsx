@@ -86,16 +86,6 @@ export default function Header() {
             </div>
             <div className="flex items-center justify-center p-[10px]">
               <Link
-                to="/careers"
-                className={`text-[#4C7EFB] text-[16px] hover:text-blue-600 transition-colors ${
-                  location.pathname === "/careers" ? "font-bold" : ""
-                }`}
-              >
-                קריירה
-              </Link>
-            </div>
-            <div className="flex items-center justify-center p-[10px]">
-              <Link
                 to="/stock-selection"
                 className={`text-[#4C7EFB] text-[16px] hover:text-blue-600 transition-colors ${
                   location.pathname === "/stock-selection" ? "font-bold" : ""
@@ -112,16 +102,6 @@ export default function Header() {
                 }`}
               >
                 אודות
-              </Link>
-            </div>
-            <div className="flex items-center justify-center p-[10px]">
-              <Link
-                to="/"
-                className={`text-[#4C7EFB] text-[16px] hover:text-blue-600 transition-colors ${
-                  location.pathname === "/" ? "font-bold" : ""
-                }`}
-              >
-                בית
               </Link>
             </div>
           </div>
