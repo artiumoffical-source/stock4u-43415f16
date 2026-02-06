@@ -123,7 +123,7 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
     setGiftData((prev) => ({ ...prev, ...updates }));
   };
 
-  // Add stock with unique ID (allows duplicates)
+  // Add stock with UPSERT logic - updates existing or adds new
   const addStock = (stock: {
     symbol: string;
     name: string;
@@ -132,16 +132,30 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({
     const numAmount = Number(stock.amount) || 0;
     if (numAmount <= 0) return;
 
-    const newStock = {
-      ...stock,
-      id: generateUniqueId(),
-      amount: numAmount,
-    };
+    setGiftData((prev) => {
+      // Check if stock with same symbol already exists
+      const existingIndex = prev.selectedStocks.findIndex(
+        (s) => s.symbol === stock.symbol
+      );
 
-    setGiftData((prev) => ({
-      ...prev,
-      selectedStocks: [...prev.selectedStocks, newStock],
-    }));
+      if (existingIndex !== -1) {
+        // UPSERT: Update existing stock's amount
+        const updatedStocks = [...prev.selectedStocks];
+        updatedStocks[existingIndex] = {
+          ...updatedStocks[existingIndex],
+          amount: numAmount,
+        };
+        return { ...prev, selectedStocks: updatedStocks };
+      } else {
+        // ADD: New stock entry
+        const newStock = {
+          ...stock,
+          id: generateUniqueId(),
+          amount: numAmount,
+        };
+        return { ...prev, selectedStocks: [...prev.selectedStocks, newStock] };
+      }
+    });
   };
 
   // Remove by unique ID
