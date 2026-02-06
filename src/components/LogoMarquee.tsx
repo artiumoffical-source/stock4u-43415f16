@@ -23,7 +23,7 @@ interface LogoMarqueeProps {
 
 export default function LogoMarquee({ showTitle = true, className = "" }: LogoMarqueeProps) {
   return (
-    <div className={`py-6 md:py-8 bg-blue-50/50 overflow-hidden ${className}`}>
+    <div className={`py-6 md:py-8 overflow-hidden ${className}`}>
       {/* Header */}
       {showTitle && (
         <h3 className="text-lg md:text-xl text-[#486284] text-center mb-5 font-medium">
@@ -34,10 +34,10 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
       {/* Marquee Container */}
       <div className="w-full overflow-hidden relative">
         {/* Gradient Fade Left */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-blue-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-[#E0E7F5] to-transparent z-10 pointer-events-none" />
         
         {/* Gradient Fade Right */}
-        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-blue-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-[#E0E7F5] to-transparent z-10 pointer-events-none" />
 
         {/* Scrolling Track - Two sets for seamless loop */}
         <div className="logo-scroll-track">

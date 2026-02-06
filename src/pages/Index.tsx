@@ -12,7 +12,7 @@ export default function Index() {
       {/* ========== Main wrapper with brand background to hide gaps ========== */}
       <div className="bg-[#E0E7F5]">
         {/* Hero Section - Clean, no padding filler */}
-        <section className="bg-[#E0E7F5]">
+        <section>
           <img
             src={heroCharacters}
             alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
