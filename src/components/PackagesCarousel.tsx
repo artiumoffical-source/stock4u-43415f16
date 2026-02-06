@@ -55,7 +55,7 @@ export default function PackagesCarousel() {
   };
 
   return (
-    <section className="relative bg-[#E0E7F5] py-8">
+    <section className="relative py-8">
       <div className="max-w-7xl mx-auto px-4 relative">
         
         {/* Navigation Arrows - Ghost Style */}
