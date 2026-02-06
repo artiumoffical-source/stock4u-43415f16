@@ -85,13 +85,6 @@ export default function MobileHeader() {
 
           <nav className="flex flex-col p-6 gap-4">
             <Link
-              to="/"
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
-            >
-              בית
-            </Link>
-            <Link
               to="/stock-selection?continue=true"
               onClick={() => setIsMenuOpen(false)}
               className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
@@ -104,13 +97,6 @@ export default function MobileHeader() {
               className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
             >
               אודות
-            </Link>
-            <Link
-              to="/careers"
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xl font-bold text-gray-800 py-3 border-b border-gray-200 min-h-[48px] flex items-center"
-            >
-              קריירה
             </Link>
             <Link
               to="/login"
