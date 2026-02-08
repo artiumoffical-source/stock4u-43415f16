@@ -22,8 +22,8 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Stock Packages Carousel - Pulled up on mobile */}
-        <div className="-mt-4 md:mt-0">
+        {/* Stock Packages Carousel - Scaled up and pulled up on mobile */}
+        <div className="-mt-8 md:mt-0 transform scale-110 md:scale-100 origin-top">
           <PackagesCarousel />
         </div>
 
