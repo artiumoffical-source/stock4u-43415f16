@@ -34,7 +34,7 @@ function isRateLimited(ip: string): boolean {
 }
 
 const requestSchema = z.object({
-  token: z.string().uuid()
+  giftId: z.string().uuid()
 });
 
 const handler = async (req: Request): Promise<Response> => {
@@ -67,48 +67,25 @@ const handler = async (req: Request): Promise<Response> => {
     if (!validationResult.success) {
       return new Response(JSON.stringify({
         success: false,
-        message: "פורמט הקישור לא תקין"
+        message: "פורמט הבקשה לא תקין"
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    const { token } = validationResult.data;
-    console.log(`[GET_GIFT] Looking up token: ${token}`);
+    const { giftId } = validationResult.data;
+    console.log(`[GET_GIFT] Looking up gift: ${giftId}`);
 
-    // Find the gift registration
-    const { data: giftRegistration, error: regError } = await supabase
-      .from('gift_registrations')
-      .select(`
-        *,
-        orders:order_id (
-          id,
-          order_number,
-          sender_name,
-          recipient_name,
-          recipient_email,
-          personal_message,
-          selected_stocks,
-          total_amount,
-          delivery_date
-        )
-      `)
-      .eq('token', token)
+    // Find the gift in the new gifts table
+    const { data: gift, error: giftError } = await supabase
+      .from('gifts')
+      .select('*')
+      .eq('id', giftId)
       .single();
 
-    if (regError) {
-      console.log(`[GET_GIFT] Database error for token ${token}:`, regError.message);
-      return new Response(JSON.stringify({
-        success: false,
-        message: "מתנה לא נמצאה או שהקישור לא תקין"
-      }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
-
-    if (!giftRegistration) {
+    if (giftError) {
+      console.log(`[GET_GIFT] Database error for gift ${giftId}:`, giftError.message);
       return new Response(JSON.stringify({
         success: false,
         message: "מתנה לא נמצאה"
@@ -118,39 +95,44 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // Check if already registered (but allow viewing for submitted/under_review)
-    if (giftRegistration.registration_status === 'completed' || 
-        giftRegistration.registration_status === 'approved') {
-      console.log(`[GET_GIFT] Gift already completed: ${token}`);
+    if (!gift) {
       return new Response(JSON.stringify({
         success: false,
-        message: "המתנה כבר נרשמה בעבר"
+        message: "מתנה לא נמצאה"
       }), {
-        status: 400,
+        status: 404,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    console.log(`[GET_GIFT] Successfully found gift for token: ${token}, status: ${giftRegistration.registration_status}`);
+    console.log(`[GET_GIFT] Successfully found gift: ${giftId}, status: ${gift.status}`);
 
-    // Return both giftDetails (for RedeemGift page) and gift (for GiftRegistration page)
+    // Return gift details (excluding sensitive payment info)
     return new Response(JSON.stringify({
       success: true,
-      giftDetails: {
-        id: giftRegistration.id,
-        order_id: giftRegistration.order_id,
-        recipient_name: giftRegistration.recipient_name,
-        recipient_email: giftRegistration.recipient_email,
-        registration_status: giftRegistration.registration_status,
-        created_at: giftRegistration.created_at
-      },
-      gift: giftRegistration.orders
+      gift: {
+        id: gift.id,
+        sender_name: gift.sender_name,
+        sender_email: gift.sender_email,
+        recipient_name: gift.recipient_name,
+        recipient_email: gift.recipient_email,
+        recipient_phone: gift.recipient_phone,
+        gift_items: gift.gift_items,
+        total_amount: gift.total_amount,
+        status: gift.status,
+        delivery_method: gift.delivery_method,
+        delivery_timing: gift.delivery_timing,
+        scheduled_at: gift.scheduled_at,
+        created_at: gift.created_at
+      }
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[GET_GIFT] Server error: ${errorMessage}`);
     return new Response(JSON.stringify({
       success: false,
       message: "שגיאת שרת. אנא נסה שוב מאוחר יותר"

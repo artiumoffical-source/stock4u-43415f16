@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  Package, 
   Gift, 
   Users, 
   Shield, 
@@ -20,7 +19,6 @@ interface AdminSidebarProps {
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
-  { icon: Package, label: 'הזמנות', path: '/admin/orders' },
   { icon: Gift, label: 'מתנות', path: '/admin/gifts' },
   { icon: Users, label: 'לקוחות', path: '/admin/customers' },
   { icon: Shield, label: 'מנהלים', path: '/admin/users' },
