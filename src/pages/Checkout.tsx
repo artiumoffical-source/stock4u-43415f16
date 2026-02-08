@@ -33,41 +33,60 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Extract order creation logic to reduce duplication
-  const createOrderData = (paymentStatus: 'paid' | 'pending' = 'paid') => {
+  // Build gift data for the new simplified schema
+  const buildGiftData = (cardLastFour: string, cardholderId: string, paymentStatus: 'pending' | 'completed' | 'failed' = 'completed') => {
+    // Determine delivery method and timing
+    const deliveryMethod = giftData.deliveryMethods?.includes('whatsapp') ? 'whatsapp' : 'email';
+    const deliveryTiming = giftData.sendingMethod === 'later' ? 'scheduled' : 'now';
+    
+    // Build scheduled_at timestamp if scheduled
+    let scheduledAt = null;
+    if (deliveryTiming === 'scheduled' && giftData.selectedDate && giftData.selectedTime) {
+      const { year, month, day } = giftData.selectedDate;
+      const { hour, minute } = giftData.selectedTime;
+      if (year && month && day && hour && minute) {
+        scheduledAt = new Date(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day),
+          parseInt(hour),
+          parseInt(minute)
+        ).toISOString();
+      }
+    }
+
     return {
-      buyer_name: formData.cardHolderName || giftData.senderName || 'Guest',
-      buyer_email: giftData.senderEmail || 'noemail@example.com',
-      buyer_phone: '',
-      buyer_id: formData.idNumber,
-      recipient_name: giftData.recipientDetails?.name || null,
-      recipient_email: giftData.recipientDetails?.email || null,
-      recipient_phone: '',
-      delivery_method: 'email',
-      delivery_date: (giftData.recipientDetails?.deliveryDate && giftData.recipientDetails.deliveryDate !== '//' && giftData.recipientDetails.deliveryDate.trim() !== '') 
-        ? giftData.recipientDetails.deliveryDate 
-        : null,
-      selected_stocks: giftData.selectedStocks,
+      gift_items: giftData.selectedStocks.map(s => ({
+        symbol: s.symbol,
+        name: s.name,
+        amount: s.amount
+      })),
       total_amount: giftData.selectedStocks.reduce((total, stock) => total + stock.amount, 0),
-      currency: 'ILS',
-      selected_card: giftData.selectedCard || '',
-      personal_message: giftData.greetingMessage || '',
-      sender_name: giftData.senderName || '',
-      status: 'new',
-      payment_status: paymentStatus
+      sender_name: giftData.senderName || formData.cardHolderName || 'Guest',
+      sender_email: giftData.senderEmail || 'noemail@example.com',
+      recipient_name: giftData.recipientDetails?.name || 'Unknown',
+      recipient_phone: giftData.recipients?.[0]?.phone || null,
+      recipient_email: giftData.recipientDetails?.email || 'noemail@example.com',
+      delivery_method: deliveryMethod,
+      delivery_timing: deliveryTiming,
+      scheduled_at: scheduledAt,
+      card_last_four: cardLastFour,
+      cardholder_id: cardholderId,
+      payment_status: paymentStatus,
+      status: paymentStatus === 'completed' ? 'paid' : 'pending_payment'
     };
   };
 
-  const saveOrder = async (orderData: any) => {
-    const { data: orderResult, error: orderError } = await supabase.functions.invoke('create-order', {
-      body: orderData
+  const saveGift = async (giftPayload: ReturnType<typeof buildGiftData>) => {
+    const { data: result, error } = await supabase.functions.invoke('create-gift', {
+      body: giftPayload
     });
 
-    if (orderError || !orderResult.success) {
-      throw new Error(orderError?.message || orderResult.error || 'Failed to create order');
+    if (error || !result.success) {
+      throw new Error(error?.message || result.error || 'Failed to create gift');
     }
 
-    return orderResult;
+    return result;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,12 +106,14 @@ export default function Checkout() {
       const paymentSuccess = true;
 
       if (paymentSuccess) {
-        const orderData = createOrderData('paid');
-        const orderResult = await saveOrder(orderData);
+        // Extract last 4 digits of card number
+        const cardLastFour = formData.cardNumber.slice(-4);
+        const giftPayload = buildGiftData(cardLastFour, formData.idNumber, 'completed');
+        const giftResult = await saveGift(giftPayload);
         
         // Send gift notification emails (non-blocking)
         try {
-          await sendGiftNotificationEmails(giftData, orderResult.orderId);
+          await sendGiftNotificationEmails(giftData, giftResult.giftId);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: "מיילים נשלחו לשולח ולמקבל המתנה",
@@ -135,21 +156,22 @@ export default function Checkout() {
       const paymentSuccess = true;
 
       if (paymentSuccess) {
-        const orderData = createOrderData('paid');
-        const orderResult = await saveOrder(orderData);
+        // For alternative payments, card info may not be available
+        const giftPayload = buildGiftData('', formData.idNumber, 'completed');
+        const giftResult = await saveGift(giftPayload);
 
         // Send gift notification emails (non-blocking)
         try {
-          await sendGiftNotificationEmails(giftData, orderResult.orderId);
+          await sendGiftNotificationEmails(giftData, giftResult.giftId);
           toast({
             title: "המתנה נשלחה בהצלחה!",
             description: `מיילים נשלחו לשולח ולמקבל המתנה (תשלום דרך ${method})`,
           });
         } catch (error: any) {
           toast({
-            title: error.message.includes('order') ? "שגיאה בשמירת ההזמנה" : "המתנה נשלחה בהצלחה",
-            description: error.message.includes('order') ? error.message : "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
-            variant: error.message.includes('order') ? "destructive" : "default",
+            title: error.message?.includes('gift') ? "שגיאה בשמירת המתנה" : "המתנה נשלחה בהצלחה",
+            description: error.message?.includes('gift') ? error.message : "אבל הייתה בעיה בשליחת המיילים. אנא צרו קשר עם השירות",
+            variant: error.message?.includes('gift') ? "destructive" : "default",
           });
         }
         

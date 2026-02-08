@@ -158,7 +158,7 @@ export default function OrderDetails() {
       greetingMessage: greetingText, uploadedImage, selectedCard: "lightblue",
       recipients: mode === "business" ? recipients : [recipients[0]],
     });
-    navigate("/checkout");
+    navigate("/order-summary");
   };
 
   // Compact input style
