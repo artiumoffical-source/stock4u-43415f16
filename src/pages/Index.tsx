@@ -11,13 +11,13 @@ export default function Index() {
     <Layout>
       {/* ========== Main wrapper with brand background to hide gaps ========== */}
       <div className="bg-[#E0E7F5]">
-        {/* Hero Section - Full visible on mobile */}
+        {/* Hero Section - Zoomed in on mobile to make text larger */}
         <section className="relative w-full overflow-hidden">
           <div className="w-full flex items-center justify-center">
             <img
               src={heroCharacters}
               alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
-              className="w-full h-auto max-h-[50vh] md:max-h-none object-contain mx-auto"
+              className="w-[130%] max-w-none -ml-[15%] md:w-full md:ml-0 md:max-w-full h-auto object-contain"
             />
           </div>
         </section>
