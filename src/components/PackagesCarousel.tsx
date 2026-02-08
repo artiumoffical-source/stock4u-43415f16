@@ -89,7 +89,7 @@ export default function PackagesCarousel() {
               <img 
                 src={pkg.img} 
                 alt={pkg.alt}
-                className="h-36 md:h-48 w-auto rounded-[1.5rem] shadow-xl shadow-gray-300/50"
+                className="h-32 md:h-52 w-auto rounded-[1.5rem] shadow-xl shadow-gray-300/50"
                 draggable={false}
               />
             </div>
