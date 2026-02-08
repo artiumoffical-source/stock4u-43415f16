@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { StepHero } from "@/components/StepHero";
+import { OrderSummaryHero } from "@/components/OrderSummaryHero";
 import { useGift } from "@/contexts/GiftContext";
 import { ChevronLeft, Package, User, Users, Mail, Phone, Clock, Send, Gift, CheckCircle2 } from "lucide-react";
 import {
@@ -78,7 +78,7 @@ export default function OrderSummary() {
   return (
     <div className="min-h-screen bg-[#E0E7F5]" dir="rtl">
       <Header />
-      <StepHero currentStep={2} />
+      <OrderSummaryHero />
 
       <div className="max-w-4xl mx-auto px-4 md:px-6 pb-40 -mt-4">
         {/* Main Summary Card */}
