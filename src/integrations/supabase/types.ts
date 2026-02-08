@@ -187,6 +187,66 @@ export type Database = {
           },
         ]
       }
+      gifts: {
+        Row: {
+          card_last_four: string | null
+          cardholder_id: string | null
+          created_at: string
+          delivery_method: string
+          delivery_timing: string
+          gift_items: Json
+          id: string
+          payment_status: string
+          recipient_email: string
+          recipient_name: string
+          recipient_phone: string | null
+          scheduled_at: string | null
+          sender_email: string
+          sender_name: string
+          status: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          card_last_four?: string | null
+          cardholder_id?: string | null
+          created_at?: string
+          delivery_method?: string
+          delivery_timing?: string
+          gift_items?: Json
+          id?: string
+          payment_status?: string
+          recipient_email: string
+          recipient_name: string
+          recipient_phone?: string | null
+          scheduled_at?: string | null
+          sender_email: string
+          sender_name: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          card_last_four?: string | null
+          cardholder_id?: string | null
+          created_at?: string
+          delivery_method?: string
+          delivery_timing?: string
+          gift_items?: Json
+          id?: string
+          payment_status?: string
+          recipient_email?: string
+          recipient_name?: string
+          recipient_phone?: string | null
+          scheduled_at?: string | null
+          sender_email?: string
+          sender_name?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           buyer_email: string
