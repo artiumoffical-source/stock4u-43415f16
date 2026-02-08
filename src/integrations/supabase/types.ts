@@ -204,6 +204,7 @@ export type Database = {
           sender_email: string
           sender_name: string
           status: string
+          token: string | null
           total_amount: number
           updated_at: string
         }
@@ -223,6 +224,7 @@ export type Database = {
           sender_email: string
           sender_name: string
           status?: string
+          token?: string | null
           total_amount: number
           updated_at?: string
         }
@@ -242,6 +244,7 @@ export type Database = {
           sender_email?: string
           sender_name?: string
           status?: string
+          token?: string | null
           total_amount?: number
           updated_at?: string
         }

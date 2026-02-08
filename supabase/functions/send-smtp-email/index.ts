@@ -366,30 +366,27 @@ const handler = async (req: Request): Promise<Response> => {
     emailData.senderName = emailData.senderName?.slice(0, 100) || '';
     emailData.recipientName = emailData.recipientName?.slice(0, 100) || '';
 
-    // Create gift registration token
+    // Update gift with redemption token
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Generate unique token for gift registration
+    // Generate unique token for gift redemption
     const token = crypto.randomUUID();
     
-    // Create gift registration record
-    const { error: regError } = await supabase
-      .from('gift_registrations')
-      .insert({
-        order_id: emailData.orderId,
-        token: token,
-        recipient_name: emailData.recipientName,
-        recipient_email: emailData.to,
-        registration_status: 'pending'
-      });
+    // Update gift record with token (orderId is the giftId in the new schema)
+    const { error: updateError } = await supabase
+      .from('gifts')
+      .update({ token: token })
+      .eq('id', emailData.orderId);
 
-    if (regError) {
-      console.error('[GIFT_REG_ERROR] Failed to create gift registration:', regError);
-      throw new Error('Failed to create gift registration');
+    if (updateError) {
+      console.error('[GIFT_UPDATE_ERROR] Failed to update gift with token:', updateError);
+      throw new Error('Failed to update gift with token');
     }
+    
+    console.log(`[GIFT_TOKEN] Successfully added token to gift ${emailData.orderId}`);
 
     // Determine if this email is for the recipient or sender
     const isForRecipient = emailData.isForRecipient ?? emailData.subject.includes('קיבלת מתנת');

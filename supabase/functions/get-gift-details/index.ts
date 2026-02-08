@@ -34,7 +34,10 @@ function isRateLimited(ip: string): boolean {
 }
 
 const requestSchema = z.object({
-  giftId: z.string().uuid()
+  giftId: z.string().uuid().optional(),
+  token: z.string().uuid().optional()
+}).refine(data => data.giftId || data.token, {
+  message: "Either giftId or token is required"
 });
 
 const handler = async (req: Request): Promise<Response> => {
@@ -74,18 +77,20 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    const { giftId } = validationResult.data;
-    console.log(`[GET_GIFT] Looking up gift: ${giftId}`);
+    const { giftId, token } = validationResult.data;
+    const lookupKey = giftId || token;
+    const lookupType = giftId ? 'id' : 'token';
+    console.log(`[GET_GIFT] Looking up gift by ${lookupType}: ${lookupKey}`);
 
-    // Find the gift in the new gifts table
+    // Find the gift by id or token
     const { data: gift, error: giftError } = await supabase
       .from('gifts')
       .select('*')
-      .eq('id', giftId)
-      .single();
+      .eq(lookupType, lookupKey)
+      .maybeSingle();
 
     if (giftError) {
-      console.log(`[GET_GIFT] Database error for gift ${giftId}:`, giftError.message);
+      console.log(`[GET_GIFT] Database error for ${lookupType} ${lookupKey}:`, giftError.message);
       return new Response(JSON.stringify({
         success: false,
         message: "מתנה לא נמצאה"
@@ -105,7 +110,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    console.log(`[GET_GIFT] Successfully found gift: ${giftId}, status: ${gift.status}`);
+    console.log(`[GET_GIFT] Successfully found gift: ${gift.id}, status: ${gift.status}`);
 
     // Return gift details (excluding sensitive payment info)
     return new Response(JSON.stringify({
