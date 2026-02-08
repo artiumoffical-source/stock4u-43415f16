@@ -47,7 +47,7 @@ const giftSchema = z.object({
   
   // Recipient info
   recipient_name: z.string().min(1).max(100),
-  recipient_phone: z.string().max(20).optional(),
+  recipient_phone: z.string().max(20).optional().nullable(),
   recipient_email: z.string().email().max(255),
   
   // Delivery settings
