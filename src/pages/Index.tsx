@@ -11,19 +11,19 @@ export default function Index() {
     <Layout>
       {/* ========== Main wrapper with brand background to hide gaps ========== */}
       <div className="bg-[#E0E7F5]">
-        {/* Hero Section - Zoomed in for mobile to fill space */}
+        {/* Hero Section - Full visible on mobile */}
         <section className="relative w-full overflow-hidden">
-          <div className="relative flex justify-center">
+          <div className="w-full flex items-center justify-center">
             <img
               src={heroCharacters}
               alt="Stock4U Characters with Main Title - מתנות שעושות כסף!"
-              className="w-[130%] max-w-none -ml-[15%] md:w-full md:max-w-full md:ml-0 h-auto object-contain block"
+              className="w-full h-auto max-h-[50vh] md:max-h-none object-contain mx-auto"
             />
           </div>
         </section>
 
-        {/* Stock Packages Carousel - Scaled up and pulled up on mobile */}
-        <div className="-mt-8 md:mt-0 transform scale-110 md:scale-100 origin-top">
+        {/* Stock Packages Carousel - Standard size on mobile */}
+        <div className="-mt-2 md:mt-0">
           <PackagesCarousel />
         </div>
 
