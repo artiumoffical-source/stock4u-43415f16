@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { OrderSummaryHero } from "@/components/OrderSummaryHero";
 import { useGift } from "@/contexts/GiftContext";
-import { ChevronLeft, Package, User, Users, Mail, Phone, Clock, Send, Gift, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, Package, User, Users, Mail, Phone, Clock, Send, Gift } from "lucide-react";
 import {
   usStocks,
   israelStocks,
@@ -82,17 +82,7 @@ export default function OrderSummary() {
 
       <div className="max-w-4xl mx-auto px-4 md:px-6 pb-40 -mt-4">
         {/* Main Summary Card */}
-        <div className="bg-white rounded-[2rem] shadow-[0_10px_50px_rgba(79,134,249,0.12)] overflow-hidden">
-          
-          {/* Header */}
-          <div className="bg-gradient-to-r from-[#4F86F9] to-[#6B9AFF] p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
-              <CheckCircle2 className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-black text-white">סיכום ההזמנה</h1>
-            <p className="text-white/80 text-sm mt-1">בדקו את הפרטים לפני המשך לתשלום</p>
-          </div>
-
+        <div className="bg-white rounded-[2rem] shadow-[0_10px_50px_rgba(79,134,249,0.12)]">
           <div className="p-6 md:p-8 space-y-6">
             
             {/* Gift Items Section */}
