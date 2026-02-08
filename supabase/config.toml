@@ -6,18 +6,6 @@ verify_jwt = false
 [functions.admin-auth]
 verify_jwt = false
 
-[functions.create-order]
-verify_jwt = false
-
-[functions.upload-kyc-document]
-verify_jwt = false
-
-[functions.get-kyc-document-url]
-verify_jwt = false
-
-[functions.register-gift-recipient]
-verify_jwt = false
-
 [functions.get-gift-details]
 verify_jwt = false
 
@@ -25,4 +13,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.create-gift]
+verify_jwt = false
+
+[functions.fetch-stock-chart]
 verify_jwt = false
