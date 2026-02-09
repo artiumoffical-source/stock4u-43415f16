@@ -39,11 +39,11 @@ export default function InvestorPitch() {
         .mascot-float { animation: mascot-float 3s ease-in-out infinite; }
         .mascot-float-slow { animation: mascot-float 4.5s ease-in-out infinite; }
         .glass-card {
-          background: rgba(255,255,255,0.6);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(255,255,255,0.7);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+          background: rgba(255,255,255,0.95);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.9);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
         .mascot-bg {
           position: absolute;
@@ -80,7 +80,7 @@ export default function InvestorPitch() {
                 Stock4U: Wealth Gifting{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400">Reimagined</span>
               </h1>
-              <p className="text-slate-300 text-[11px] leading-relaxed max-w-[480px] font-medium text-left">
+              <p className="text-white/90 text-[11px] leading-relaxed max-w-[480px] font-medium text-left">
                 Transforming the ₪4 Billion gift card market into long-term investment portfolios.
               </p>
             </div>
@@ -110,7 +110,7 @@ export default function InvestorPitch() {
                 <div className="space-y-1.5 mt-2">
                   <MoatItem icon={<Scale className="w-3.5 h-3.5 text-emerald-500" />} title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay), Israel's leading fintech regulatory practice." />
                   <MoatItem icon={<Shield className="w-3.5 h-3.5 text-emerald-500" />} title="Regulatory Path" text="Payment Services Act exemption, up to ₪5M/month turnover." />
-                  <MoatItem icon={<Cpu className="w-3.5 h-3.5 text-emerald-500" />} title="Financial Backend" text="Advanced integration with Meitav Trade API for institutional-grade execution." />
+                  <MoatItem icon={<Cpu className="w-3.5 h-3.5 text-emerald-500" />} title="Financial Backend" text="Advanced integration with institutional-grade brokerage APIs for seamless execution." />
                 </div>
               </div>
             </div>
@@ -126,8 +126,8 @@ export default function InvestorPitch() {
                   {fundingItems.map((item) => (
                     <div key={item.label}>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold text-slate-700">{item.label}</span>
-                        <span className="text-slate-400 font-semibold">{item.pct}% · {item.amount}</span>
+                        <span className="font-bold text-slate-800">{item.label}</span>
+                        <span className="text-slate-500 font-semibold">{item.pct}% · {item.amount}</span>
                       </div>
                       <div className="h-2.5 bg-white/60 rounded-full overflow-hidden">
                         <div
@@ -154,13 +154,13 @@ export default function InvestorPitch() {
                   <div className="flex-1">
                     <h3 className="font-extrabold text-slate-900 text-[13px]">Artium Mandebura</h3>
                     <p className="text-emerald-600 text-[10px] font-bold">Founder & CEO</p>
-                    <p className="text-slate-400 text-[10px] leading-relaxed mt-0.5 font-medium">
+                    <p className="text-slate-600 text-[10px] leading-relaxed mt-0.5 font-medium">
                       5+ years brokerage operations at Interactive Israel. Capital markets infrastructure, compliance and fintech operations expertise.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 mt-2.5 text-[10px] text-slate-400 font-medium">
+                <div className="flex items-center gap-4 mt-2.5 text-[10px] text-slate-600 font-medium">
                   <a href="mailto:artiumoffical@gmail.com" className="flex items-center gap-1 hover:text-emerald-500 transition-colors">
                     <Mail className="w-3 h-3" /> artiumoffical@gmail.com
                   </a>
@@ -200,7 +200,7 @@ function GlassStatBox({ value, sub, accent }: { value: string; sub: string; acce
   return (
     <div className="glass-card rounded-xl px-4 py-2.5 text-left">
       <p className={`text-lg font-extrabold ${text}`}>{value}</p>
-      <p className="text-slate-500 text-[10px] leading-snug mt-0.5 font-medium">{sub}</p>
+      <p className="text-slate-600 text-[10px] leading-snug mt-0.5 font-medium">{sub}</p>
     </div>
   );
 }
@@ -210,8 +210,8 @@ function MoatItem({ icon, title, text }: { icon: React.ReactNode; title: string;
     <div className="glass-card rounded-lg px-3 py-2 flex gap-2 items-start text-left">
       <div className="mt-0.5 shrink-0">{icon}</div>
       <div>
-        <p className="font-extrabold text-slate-800 text-[11px]">{title}</p>
-        <p className="text-slate-500 text-[10px] leading-snug font-medium">{text}</p>
+        <p className="font-extrabold text-slate-900 text-[11px]">{title}</p>
+        <p className="text-slate-600 text-[10px] leading-snug font-medium">{text}</p>
       </div>
     </div>
   );
