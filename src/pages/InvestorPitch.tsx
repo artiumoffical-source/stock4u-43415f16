@@ -1,21 +1,23 @@
 import { useEffect } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { Mail, Phone, Globe, TrendingUp, Shield, Users, DollarSign, Briefcase } from "lucide-react";
+import { Download, Mail, Phone, Globe } from "lucide-react";
 
-import dollarMascot from "@/assets/step-hero/dollar.png";
-import giftMascot from "@/assets/decorations/gift-mascot.png";
-import cartMascot from "@/assets/order-summary/cart-mascot.png";
+import dollarMascot from "@/assets/investor/dollar-mascot.png";
+import giftMascot from "@/assets/investor/gift-mascot.png";
+import shekelMascot from "@/assets/investor/shekel-mascot.png";
+import percentMascot from "@/assets/investor/percent-mascot.png";
+import sparkIcon from "@/assets/investor/spark-icon.png";
+import starIcon from "@/assets/investor/star-icon.png";
 
-const fundingData = [
-  { name: "Legal & Regulation", value: 20, color: "#10B981" },
-  { name: "R&D & Security Audit", value: 30, color: "#059669" },
-  { name: "Viral Marketing & GTM", value: 30, color: "#34D399" },
-  { name: "Operations & Salary", value: 20, color: "#6EE7B7" },
+const fundingItems = [
+  { label: "Legal & Regulation", pct: 20, amount: "₪170K" },
+  { label: "R&D & Security Audit", pct: 30, amount: "₪255K" },
+  { label: "Viral Marketing & GTM", pct: 30, amount: "₪255K" },
+  { label: "Operations & Salary", pct: 20, amount: "₪170K" },
 ];
 
 export default function InvestorPitch() {
   useEffect(() => {
-    document.title = "Stock4U - Investor Deck (Confidential)";
+    document.title = "Stock4U — Investor One-Pager (Confidential)";
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex, nofollow";
@@ -26,193 +28,175 @@ export default function InvestorPitch() {
     };
   }, []);
 
+  const handleDownload = () => window.print();
+
   return (
-    <div className="min-h-screen bg-white" dir="ltr" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      {/* ═══ HERO ═══ */}
-      <section className="relative overflow-hidden bg-[#0F172A] text-white min-h-[90vh] flex items-center">
-        <img src={dollarMascot} alt="" className="absolute bottom-[10%] right-[6%] w-32 md:w-52 opacity-30 animate-[float_6s_ease-in-out_infinite]" aria-hidden="true" />
-        <img src={dollarMascot} alt="" className="absolute top-[15%] left-[4%] w-20 md:w-32 opacity-20 animate-[float_8s_ease-in-out_infinite_1s]" aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A]" />
+    <>
+      {/* Print-only styles */}
+      <style>{`
+        @media print {
+          body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          .no-print { display: none !important; }
+          .a4-page { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; width: 210mm !important; min-height: 297mm !important; max-height: 297mm !important; overflow: hidden !important; }
+          @page { size: A4 portrait; margin: 0; }
+        }
+      `}</style>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-20 text-center">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-4 py-1.5 mb-8">
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-emerald-400 text-sm font-medium tracking-wide">PRE-SEED · CONFIDENTIAL</span>
-          </div>
+      {/* Screen wrapper — centres the A4 card */}
+      <div className="min-h-screen bg-slate-100 flex items-start justify-center py-8 print:py-0 print:bg-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight mb-6">
-            Stock4U: Wealth Gifting
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-              Reimagined
-            </span>
-          </h1>
+        {/* ── Floating download button ── */}
+        <button
+          onClick={handleDownload}
+          className="no-print fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-5 py-3 rounded-xl shadow-lg shadow-emerald-500/30 transition-all hover:scale-105"
+        >
+          <Download className="w-5 h-5" />
+          Download PDF
+        </button>
 
-          <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10">
-            Bridging the ₪4 Billion Israeli gift market with the capital markets.
-            <br className="hidden md:block" />
-            Transforming temporary gifts into long-term financial assets.
-          </p>
+        {/* ═══════════════ A4 PAGE ═══════════════ */}
+        <div className="a4-page bg-white shadow-2xl rounded-lg overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw" }}>
 
-          <a
-            href="#the-ask"
-            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25"
-          >
-            <TrendingUp className="w-5 h-5" />
-            View Investment Opportunity
-          </a>
-        </div>
-      </section>
+          {/* ── HERO BANNER ── */}
+          <div className="relative bg-[#0F172A] text-white px-8 pt-7 pb-6 overflow-hidden">
+            {/* Decorative mascots */}
+            <img src={dollarMascot} alt="" className="absolute -right-2 -bottom-2 w-24 opacity-25" aria-hidden="true" />
+            <img src={sparkIcon} alt="" className="absolute top-3 right-20 w-8 opacity-30" aria-hidden="true" />
+            <img src={starIcon} alt="" className="absolute top-2 left-[40%] w-6 opacity-25" aria-hidden="true" />
 
-      {/* ═══ MARKET OPPORTUNITY ═══ */}
-      <section className="relative py-20 md:py-28 bg-white overflow-hidden">
-        <img src={giftMascot} alt="" className="absolute top-[10%] right-[3%] w-28 md:w-44 opacity-15 animate-[float_7s_ease-in-out_infinite_0.5s]" aria-hidden="true" />
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
-          <p className="text-emerald-600 font-semibold text-sm tracking-widest uppercase mb-3">Market Opportunity</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-14">A Massive, Untapped Market</h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <MarketCard
-              icon={<DollarSign className="w-7 h-7" />}
-              value="₪4 Billion"
-              label="Annual Market"
-              description="Total Israeli gift card & digital gift turnover per year — a market growing steadily with digital adoption."
-              accent="emerald"
-            />
-            <MarketCard
-              icon={<TrendingUp className="w-7 h-7" />}
-              value="₪600M (15%)"
-              label="Dead Money"
-              description="Annual unredeemed digital gifts — money that expires unused. Stock4U captures this value and puts it to work."
-              accent="blue"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ STRATEGIC MOAT ═══ */}
-      <section className="py-20 md:py-28 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-6 md:px-12">
-          <p className="text-emerald-600 font-semibold text-sm tracking-widest uppercase mb-3">Competitive Advantage</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-14">Strategic Moat: Trust & Regulation</h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <MoatCard icon={<Shield className="w-6 h-6" />} title="Legal Advisory" description="Fully advised by Barnea Law Firm (Dr. Zvi Gabbay) — Israel's leading fintech regulatory practice." />
-            <MoatCard icon={<Briefcase className="w-6 h-6" />} title="Regulatory Path" description="Operating under the Payment Services Act exemption (up to ₪5M/month turnover) — clear path to scale." />
-            <MoatCard icon={<TrendingUp className="w-6 h-6" />} title="Financial Backend" description="Advanced integration stages with Meitav Trade API — institutional-grade execution infrastructure." />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ THE ASK ═══ */}
-      <section id="the-ask" className="relative py-20 md:py-28 bg-white overflow-hidden">
-        <img src={cartMascot} alt="" className="absolute bottom-[5%] left-[3%] w-28 md:w-40 opacity-15 animate-[float_8s_ease-in-out_infinite_2s]" aria-hidden="true" />
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
-          <p className="text-emerald-600 font-semibold text-sm tracking-widest uppercase mb-3">The Ask</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">₪850,000 Pre-Seed Round</h2>
-          <p className="text-slate-500 text-lg mb-14 max-w-2xl">
-            Strategic allocation designed to achieve regulatory approval, product launch, and initial market traction.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="w-full max-w-sm mx-auto">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie data={fundingData} cx="50%" cy="50%" innerRadius={70} outerRadius={120} paddingAngle={3} dataKey="value" stroke="none">
-                    {fundingData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value: number) => [`${value}%`, ""]}
-                    contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", fontSize: "14px", fontFamily: "'Montserrat', sans-serif" }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/30 rounded-full px-3 py-1 mb-3">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                <span className="text-emerald-400 text-[10px] font-semibold tracking-widest">PRE-SEED · CONFIDENTIAL</span>
+              </div>
+              <h1 className="text-2xl font-extrabold leading-tight mb-1.5">
+                Stock4U: Wealth Gifting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Reimagined</span>
+              </h1>
+              <p className="text-slate-300 text-xs leading-relaxed max-w-[520px]">
+                Bridging the ₪4B Israeli gift market with the capital markets — transforming temporary gifts into long-term financial assets.
+              </p>
             </div>
+          </div>
 
-            <div className="space-y-5">
-              {fundingData.map((item) => (
-                <div key={item.name} className="flex items-center gap-4">
-                  <div className="w-4 h-4 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                  <div className="flex-1">
-                    <div className="flex justify-between items-baseline">
-                      <span className="font-semibold text-slate-800">{item.name}</span>
-                      <span className="text-slate-500 font-medium">{item.value}%</span>
-                    </div>
-                    <span className="text-sm text-slate-400">₪{((item.value / 100) * 850000).toLocaleString()}</span>
-                  </div>
+          {/* ── BODY CONTENT ── */}
+          <div className="px-8 py-5 space-y-5">
+
+            {/* ▸ MARKET + MOAT — 2 columns */}
+            <div className="grid grid-cols-2 gap-5">
+
+              {/* Market Opportunity */}
+              <div>
+                <SectionLabel>Market Opportunity</SectionLabel>
+                <div className="space-y-2.5 mt-2">
+                  <StatBox value="₪4 Billion" sub="Annual gift market in Israel" color="emerald" />
+                  <StatBox value="₪600M (15%)" sub="Unredeemed 'dead money' we capture" color="blue" />
                 </div>
-              ))}
+              </div>
+
+              {/* Strategic Moat */}
+              <div>
+                <SectionLabel>Strategic Moat</SectionLabel>
+                <div className="space-y-2 mt-2">
+                  <MoatItem title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay) — Israel's leading fintech regulatory practice." />
+                  <MoatItem title="Regulatory Path" text="Payment Services Act exemption — up to ₪5M/month turnover." />
+                  <MoatItem title="Financial Backend" text="Advanced integration with Meitav Trade API — institutional-grade execution." />
+                </div>
+              </div>
+            </div>
+
+            {/* ▸ THE ASK — progress bars */}
+            <div className="relative">
+              <img src={giftMascot} alt="" className="absolute -right-1 -top-2 w-16 opacity-15" aria-hidden="true" />
+              <img src={percentMascot} alt="" className="absolute right-16 bottom-0 w-10 opacity-10" aria-hidden="true" />
+
+              <SectionLabel>The Ask — ₪850,000 Pre-Seed</SectionLabel>
+              <div className="grid grid-cols-2 gap-x-5 gap-y-2 mt-2.5">
+                {fundingItems.map((item) => (
+                  <div key={item.label}>
+                    <div className="flex justify-between text-[11px] mb-0.5">
+                      <span className="font-semibold text-slate-700">{item.label}</span>
+                      <span className="text-slate-400 font-medium">{item.pct}% · {item.amount}</span>
+                    </div>
+                    <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400"
+                        style={{ width: `${item.pct}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ▸ TEAM + CONTACT — compact */}
+            <div className="relative border-t border-slate-100 pt-4">
+              <img src={shekelMascot} alt="" className="absolute right-0 top-2 w-12 opacity-10" aria-hidden="true" />
+
+              <SectionLabel>Founder</SectionLabel>
+              <div className="flex items-start gap-4 mt-2">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shrink-0">
+                  <span className="text-white font-bold text-lg">AM</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-slate-900 text-sm">Artium Mandebura</h3>
+                  <p className="text-emerald-600 text-[11px] font-semibold">Founder & CEO</p>
+                  <p className="text-slate-400 text-[10px] leading-relaxed mt-0.5">
+                    5+ years brokerage operations at Interactive Israel — capital markets infrastructure, compliance & fintech operations expertise.
+                  </p>
+                </div>
+              </div>
+
+              {/* Contact row */}
+              <div className="flex items-center gap-4 mt-3 text-[10px] text-slate-400">
+                <a href="mailto:artiumoffical@gmail.com" className="flex items-center gap-1 hover:text-emerald-500 transition-colors">
+                  <Mail className="w-3 h-3" /> artiumoffical@gmail.com
+                </a>
+                <a href="tel:+972545344138" className="flex items-center gap-1 hover:text-emerald-500 transition-colors">
+                  <Phone className="w-3 h-3" /> 054-5344138
+                </a>
+                <a href="https://www.stock4u.co.il" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-emerald-500 transition-colors">
+                  <Globe className="w-3 h-3" /> stock4u.co.il
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ TEAM & CONTACT ═══ */}
-      <section className="py-20 md:py-28 bg-[#0F172A] text-white">
-        <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
-          <p className="text-emerald-400 font-semibold text-sm tracking-widest uppercase mb-3">Team</p>
-          <h2 className="text-3xl md:text-4xl font-bold mb-14">Leadership</h2>
-
-          <div className="max-w-md mx-auto bg-white/5 border border-white/10 rounded-2xl p-8 mb-16 backdrop-blur-sm">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-5">
-              <Users className="w-9 h-9 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Artium Mandebura</h3>
-            <p className="text-emerald-400 font-medium mb-4">Founder & CEO</p>
-            <p className="text-slate-400 leading-relaxed">
-              5+ years of brokerage operations expertise at Interactive Israel — deep domain knowledge in capital markets infrastructure, compliance, and fintech operations.
+          {/* ── FOOTER BAR ── */}
+          <div className="bg-[#0F172A] px-8 py-2.5 text-center">
+            <p className="text-slate-500 text-[9px]">
+              Confidential — intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
           </div>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-slate-300">
-            <a href="mailto:artiumoffical@gmail.com" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
-              <Mail className="w-5 h-5" /> artiumoffical@gmail.com
-            </a>
-            <span className="hidden md:block text-slate-600">|</span>
-            <a href="tel:+972545344138" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
-              <Phone className="w-5 h-5" /> 054-5344138
-            </a>
-            <span className="hidden md:block text-slate-600">|</span>
-            <a href="https://www.stock4u.co.il" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-emerald-400 transition-colors">
-              <Globe className="w-5 h-5" /> www.stock4u.co.il
-            </a>
-          </div>
-
-          <p className="text-slate-600 text-xs mt-16">
-            This document is confidential and intended solely for the recipient. © {new Date().getFullYear()} Stock4U
-          </p>
         </div>
-      </section>
+      </div>
+    </>
+  );
+}
+
+/* ─── Tiny sub-components ─── */
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-emerald-600 font-bold text-[10px] tracking-widest uppercase">{children}</p>
+  );
+}
+
+function StatBox({ value, sub, color }: { value: string; sub: string; color: "emerald" | "blue" }) {
+  const bg = color === "emerald" ? "bg-emerald-50 border-emerald-100" : "bg-blue-50 border-blue-100";
+  const text = color === "emerald" ? "text-emerald-700" : "text-blue-700";
+  return (
+    <div className={`${bg} border rounded-xl px-4 py-3`}>
+      <p className={`text-xl font-extrabold ${text}`}>{value}</p>
+      <p className="text-slate-400 text-[10px] leading-snug mt-0.5">{sub}</p>
     </div>
   );
 }
 
-/* ─── Sub-components ─── */
-
-function MarketCard({ icon, value, label, description, accent }: { icon: React.ReactNode; value: string; label: string; description: string; accent: "emerald" | "blue" }) {
-  const colors = accent === "emerald"
-    ? { bg: "bg-emerald-50", icon: "text-emerald-600", border: "border-emerald-100" }
-    : { bg: "bg-blue-50", icon: "text-blue-600", border: "border-blue-100" };
-
+function MoatItem({ title, text }: { title: string; text: string }) {
   return (
-    <div className={`${colors.bg} border ${colors.border} rounded-2xl p-8 hover:shadow-lg transition-shadow`}>
-      <div className={`w-14 h-14 ${colors.bg} ${colors.icon} rounded-xl flex items-center justify-center mb-5`}>{icon}</div>
-      <p className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-1">{value}</p>
-      <p className={`font-semibold ${colors.icon} mb-3`}>{label}</p>
-      <p className="text-slate-500 leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-function MoatCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-7 hover:shadow-lg hover:border-emerald-200 transition-all group">
-      <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-100 transition-colors">{icon}</div>
-      <h3 className="text-lg font-bold text-slate-900 mb-2">{title}</h3>
-      <p className="text-slate-500 leading-relaxed text-sm">{description}</p>
+    <div className="bg-slate-50 rounded-lg px-3 py-2">
+      <p className="font-bold text-slate-800 text-[11px]">{title}</p>
+      <p className="text-slate-400 text-[10px] leading-snug">{text}</p>
     </div>
   );
 }
