@@ -45,10 +45,9 @@ export default function InvestorPitch() {
         style={{ fontFamily: "'Montserrat', sans-serif", background: "#CBD5E1" }}
       >
         <div
-          className="a4-page overflow-hidden"
+          className="a4-page overflow-hidden w-full"
           style={{
-            width: "210mm",
-            maxWidth: "100vw",
+            maxWidth: "210mm",
             borderRadius: "12px",
             boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
             position: "relative",
@@ -58,21 +57,21 @@ export default function InvestorPitch() {
         >
           {/* ━━━━━━━━━━ HERO (Navy) ━━━━━━━━━━ */}
           <div
-            className="relative overflow-hidden"
-            style={{ background: "#0B192E", padding: "28px 32px 24px" }}
+            className="relative overflow-hidden px-4 sm:px-8"
+            style={{ background: "#0B192E", paddingTop: "28px", paddingBottom: "24px" }}
           >
             {/* Dollar mascot: top-right corner, 100% opaque, margin only */}
             <img
               src={dollarMascot}
               alt=""
               aria-hidden="true"
-              className="absolute right-3 bottom-0 w-[90px] select-none"
+              className="absolute right-3 bottom-0 w-[90px] select-none hidden sm:block"
               style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.4))" }}
             />
             <img src={sparkIcon} alt="" aria-hidden="true" className="absolute top-4 right-28 w-5 opacity-30 select-none" />
             <img src={starIcon} alt="" aria-hidden="true" className="absolute bottom-3 left-[38%] w-4 opacity-20 select-none" />
 
-            <div className="relative z-[1]" style={{ maxWidth: "75%" }}>
+            <div className="relative z-[1] max-w-full sm:max-w-[75%]">
               <div
                 className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-3"
                 style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)" }}
@@ -83,7 +82,7 @@ export default function InvestorPitch() {
                 </span>
               </div>
 
-              <h1 style={{ fontSize: "22px", fontWeight: 800, lineHeight: 1.2, color: "#fff", marginBottom: "6px" }}>
+              <h1 className="text-lg sm:text-[22px]" style={{ fontWeight: 800, lineHeight: 1.2, color: "#fff", marginBottom: "6px" }}>
                 Stock4U: Wealth Gifting{" "}
                 <span style={{ color: "#34D399" }}>Reimagined</span>
               </h1>
@@ -95,10 +94,10 @@ export default function InvestorPitch() {
           </div>
 
           {/* ━━━━━━━━━━ BODY (White) ━━━━━━━━━━ */}
-          <div style={{ background: "#FFFFFF", padding: "20px 32px 16px", flex: 1 }}>
+          <div className="px-4 sm:px-8" style={{ background: "#FFFFFF", paddingTop: "20px", paddingBottom: "16px", flex: 1 }}>
 
             {/* Row 1: Market + Moat */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 
               {/* Market Opportunity */}
               <div>
@@ -148,12 +147,12 @@ export default function InvestorPitch() {
                 src={percentMascot}
                 alt=""
                 aria-hidden="true"
-                className="absolute select-none"
+                className="absolute select-none hidden sm:block"
                 style={{ right: "8px", top: "-12px", width: "44px", filter: "drop-shadow(0 3px 8px rgba(0,0,0,0.2))" }}
               />
 
               <SectionLabel>The Ask: ₪850,000 Pre-Seed</SectionLabel>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 20px", marginTop: "10px" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-5 mt-2.5">
                 {fundingItems.map((item) => (
                   <div key={item.label}>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", marginBottom: "3px" }}>
@@ -210,7 +209,7 @@ export default function InvestorPitch() {
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "16px", marginTop: "10px", fontSize: "10px", color: "#475569", fontWeight: 500 }}>
+              <div className="flex flex-wrap gap-x-4 gap-y-2" style={{ marginTop: "10px", fontSize: "10px", color: "#475569", fontWeight: 500 }}>
                 <a href="mailto:artiumoffical@gmail.com" style={{ display: "flex", alignItems: "center", gap: "4px", color: "inherit", textDecoration: "none" }}>
                   <Mail size={12} /> artiumoffical@gmail.com
                 </a>
@@ -225,7 +224,7 @@ export default function InvestorPitch() {
           </div>
 
           {/* ━━━━━━━━━━ FOOTER ━━━━━━━━━━ */}
-          <div style={{ background: "#0B192E", padding: "8px 32px", textAlign: "center", position: "relative" }}>
+          <div className="px-4 sm:px-8" style={{ background: "#0B192E", paddingTop: "8px", paddingBottom: "8px", textAlign: "center", position: "relative" }}>
             <p style={{ color: "#64748B", fontSize: "9px", fontWeight: 500 }}>
               Confidential. Intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
