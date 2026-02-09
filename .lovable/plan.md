@@ -1,59 +1,19 @@
 
-# הסרת כותרת כפולה מעמוד סיכום הזמנה
+## Fix: Remove Empty Gray Square at Bottom of Investor Page
 
-## הבעיה
+### Problem
+At the bottom of the page, after the footer, there is an empty `<div style={{ position: "relative" }}>` wrapper around the gift mascot image. This div creates a visible gray rectangle that takes up space and breaks the PDF export.
 
-כרגע בעמוד `/order-summary` יש שתי כותרות:
-1. **OrderSummaryHero** - ההירו החדש עם המסקוט והכותרת "סיכום הזמנה שלכם!"
-2. **Header בתוך הכרטיס** - כותרת כחולה נוספת עם עיגול V ו"סיכום ההזמנה"
+### Solution
+Remove the wrapper `<div>` entirely and move the gift mascot's absolute positioning to be relative to the `.a4-page` container instead. This eliminates the empty block while keeping the mascot in place.
 
-זה מיותר ויוצר כפילות ויזואלית.
+### Technical Details
 
----
+**File:** `src/pages/InvestorPitch.tsx`
 
-## הפתרון
+- Remove the `<div style={{ position: "relative" }}>` wrapper (lines ~233-247)
+- Move the gift mascot `<img>` inside the `.a4-page` container as a direct child with absolute positioning relative to the page
+- Add `position: "relative"` to the `.a4-page` container (if not already present) so the mascot anchors correctly
+- Position the mascot at `bottom: 8px`, `right: 8px` within the page frame
 
-מחיקת ה-Header הכחול מתוך הכרטיס הלבן בקובץ `OrderSummary.tsx`.
-
----
-
-## שינוי בקובץ
-
-**קובץ:** `src/pages/OrderSummary.tsx`
-
-**למחוק (שורות 69-77):**
-```tsx
-{/* Header */}
-<div className="bg-gradient-to-r from-[#4F86F9] to-[#6B9AFF] p-6 text-center">
-  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
-    <CheckCircle2 className="w-8 h-8 text-white" />
-  </div>
-  <h1 className="text-2xl font-black text-white">סיכום ההזמנה</h1>
-  <p className="text-white/80 text-sm mt-1">בדקו את הפרטים לפני המשך לתשלום</p>
-</div>
-```
-
-**להוסיף:** פינות מעוגלות לכרטיס הלבן גם למעלה (כי כבר אין את ה-Header הכחול שהיה מעגל את הפינות)
-
----
-
-## תוצאה
-
-```text
-┌─────────────────────────────────────┐
-│  🛒 מסקוט + "סיכום הזמנה שלכם!"    │  ← OrderSummaryHero
-├─────────────────────────────────────┤
-│                                     │
-│  📦 מניות במתנה (1)                │  ← הכרטיס מתחיל ישר מהתוכן
-│     AAPL - ₪500                     │
-│                                     │
-│  👤 שולח המתנה                      │
-│  ...                                │
-└─────────────────────────────────────┘
-```
-
----
-
-## ניקוי נוסף
-
-גם ה-import של `CheckCircle2` יכול להימחק מכיוון שהוא לא ישמש יותר.
+This ensures zero extra space after the footer, clean PDF export, and the mascot stays in the bottom-right corner.
