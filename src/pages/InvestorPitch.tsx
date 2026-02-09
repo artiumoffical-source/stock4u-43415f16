@@ -7,6 +7,7 @@ import shekelMascot from "@/assets/investor/shekel-mascot.png";
 import percentMascot from "@/assets/investor/percent-mascot.png";
 import sparkIcon from "@/assets/investor/spark-icon.png";
 import starIcon from "@/assets/investor/star-icon.png";
+import artiumHeadshot from "@/assets/investor/artium-headshot.png";
 
 const fundingItems = [
   { label: "Legal & Regulation", pct: 20, amount: "₪170K" },
@@ -186,21 +187,19 @@ export default function InvestorPitch() {
 
               <SectionLabel>Founder</SectionLabel>
               <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginTop: "8px" }}>
-                <div
+                <img
+                  src={artiumHeadshot}
+                  alt="Artium Mandebura"
                   style={{
                     width: "40px",
                     height: "40px",
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, #10B981, #14B8A6)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    objectFit: "cover",
                     flexShrink: 0,
+                    border: "2px solid #10B981",
                     boxShadow: "0 4px 12px rgba(16,185,129,0.3)",
                   }}
-                >
-                  <span style={{ color: "#fff", fontWeight: 800, fontSize: "14px" }}>AM</span>
-                </div>
+                />
                 <div>
                   <p style={{ fontWeight: 800, color: "#0F172A", fontSize: "12px" }}>Artium Mandebura</p>
                   <p style={{ fontWeight: 700, color: "#10B981", fontSize: "10px" }}>Founder & CEO</p>
@@ -231,7 +230,7 @@ export default function InvestorPitch() {
             </p>
           </div>
 
-          {/* Gift mascot: bottom-left of page, 100% opaque, margin area */}
+          {/* Gift mascot: bottom-right of page, 100% opaque, margin area */}
           <div style={{ position: "relative" }}>
             <img
               src={giftMascot}
@@ -240,7 +239,7 @@ export default function InvestorPitch() {
               className="select-none"
               style={{
                 position: "absolute",
-                left: "8px",
+                right: "8px",
                 bottom: "4px",
                 width: "56px",
                 filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.25))",
