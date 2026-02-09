@@ -225,13 +225,11 @@ export default function InvestorPitch() {
           </div>
 
           {/* ━━━━━━━━━━ FOOTER ━━━━━━━━━━ */}
-          <div style={{ background: "#0B192E", padding: "8px 32px", textAlign: "center" }}>
+          <div style={{ background: "#0B192E", padding: "8px 32px", textAlign: "center", position: "relative" }}>
             <p style={{ color: "#64748B", fontSize: "9px", fontWeight: 500 }}>
               Confidential. Intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
-          </div>
-
-          <img
+            <img
               src={giftMascot}
               alt=""
               aria-hidden="true"
@@ -239,11 +237,12 @@ export default function InvestorPitch() {
               style={{
                 position: "absolute",
                 right: "8px",
-                bottom: "8px",
+                bottom: "0",
                 width: "56px",
                 filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.25))",
               }}
             />
+          </div>
         </div>
       </div>
     </>
