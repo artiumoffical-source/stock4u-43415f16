@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { Download, Mail, Phone, Globe } from "lucide-react";
+import { Download, Mail, Phone, Globe, Shield, Scale, Cpu } from "lucide-react";
 
 import dollarMascot from "@/assets/investor/dollar-mascot.png";
 import giftMascot from "@/assets/investor/gift-mascot.png";
+import cakeMascot from "@/assets/investor/cake-mascot.png";
 import shekelMascot from "@/assets/investor/shekel-mascot.png";
 import percentMascot from "@/assets/investor/percent-mascot.png";
 import sparkIcon from "@/assets/investor/spark-icon.png";
@@ -32,94 +33,103 @@ export default function InvestorPitch() {
 
   return (
     <>
-      {/* Print-only styles */}
       <style>{`
+        @keyframes mascot-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        .mascot-float { animation: mascot-float 3s ease-in-out infinite; }
+        .mascot-float-slow { animation: mascot-float 4.5s ease-in-out infinite; }
         @media print {
           body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .no-print { display: none !important; }
+          .mascot-float, .mascot-float-slow { animation: none !important; }
           .a4-page { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; width: 210mm !important; min-height: 297mm !important; max-height: 297mm !important; overflow: hidden !important; }
           @page { size: A4 portrait; margin: 0; }
         }
       `}</style>
 
-      {/* Screen wrapper — centres the A4 card */}
-      <div className="min-h-screen bg-slate-100 flex items-start justify-center py-8 print:py-0 print:bg-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200 flex items-start justify-center py-10 print:py-0 print:bg-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
 
-        {/* ── Floating download button ── */}
+        {/* ── Export button ── */}
         <button
           onClick={handleDownload}
-          className="no-print fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-5 py-3 rounded-xl shadow-lg shadow-emerald-500/30 transition-all hover:scale-105"
+          className="no-print fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold px-6 py-3.5 rounded-2xl shadow-xl shadow-emerald-500/25 transition-all hover:scale-105 hover:shadow-emerald-500/40"
         >
           <Download className="w-5 h-5" />
-          Download PDF
+          Export to PDF
         </button>
 
-        {/* ═══════════════ A4 PAGE ═══════════════ */}
-        <div className="a4-page bg-white shadow-2xl rounded-lg overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw" }}>
+        {/* ═══════════ A4 PAGE ═══════════ */}
+        <div className="a4-page bg-white rounded-2xl overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw", boxShadow: "0 25px 60px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)" }}>
 
-          {/* ── HERO BANNER ── */}
-          <div className="relative bg-[#0F172A] text-white px-8 pt-7 pb-6 overflow-hidden">
-            {/* Decorative mascots */}
-            <img src={dollarMascot} alt="" className="absolute -right-2 -bottom-2 w-24 opacity-25" aria-hidden="true" />
-            <img src={sparkIcon} alt="" className="absolute top-3 right-20 w-8 opacity-30" aria-hidden="true" />
-            <img src={starIcon} alt="" className="absolute top-2 left-[40%] w-6 opacity-25" aria-hidden="true" />
+          {/* ── HERO ── */}
+          <div className="relative overflow-hidden px-8 pt-7 pb-6" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)" }}>
+            {/* Decorative floating mascots */}
+            <img src={dollarMascot} alt="" className="mascot-float absolute -right-1 -bottom-3 w-28 opacity-30 drop-shadow-2xl" aria-hidden="true" />
+            <img src={sparkIcon} alt="" className="mascot-float-slow absolute top-4 right-24 w-7 opacity-40" aria-hidden="true" />
+            <img src={starIcon} alt="" className="mascot-float absolute top-3 left-[42%] w-5 opacity-30" aria-hidden="true" />
+            {/* Subtle radial glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" aria-hidden="true" />
 
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/30 rounded-full px-3 py-1 mb-3">
-                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
-                <span className="text-emerald-400 text-[10px] font-semibold tracking-widest">PRE-SEED · CONFIDENTIAL</span>
+              <div className="inline-flex items-center gap-1.5 bg-emerald-400/10 border border-emerald-400/20 backdrop-blur-sm rounded-full px-3 py-1 mb-3">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                <span className="text-emerald-400 text-[10px] font-bold tracking-[0.15em]">PRE-SEED · CONFIDENTIAL</span>
               </div>
-              <h1 className="text-2xl font-extrabold leading-tight mb-1.5">
-                Stock4U: Wealth Gifting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Reimagined</span>
+              <h1 className="text-[22px] font-extrabold leading-tight text-white mb-1.5 tracking-tight">
+                Stock4U: Wealth Gifting{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400">Reimagined</span>
               </h1>
-              <p className="text-slate-300 text-xs leading-relaxed max-w-[520px]">
+              <p className="text-slate-400 text-[11px] leading-relaxed max-w-[520px] font-medium">
                 Bridging the ₪4B Israeli gift market with the capital markets — transforming temporary gifts into long-term financial assets.
               </p>
             </div>
           </div>
 
-          {/* ── BODY CONTENT ── */}
-          <div className="px-8 py-5 space-y-5">
+          {/* ── BODY ── */}
+          <div className="px-8 py-4 space-y-4">
 
-            {/* ▸ MARKET + MOAT — 2 columns */}
-            <div className="grid grid-cols-2 gap-5">
+            {/* ▸ MARKET + MOAT */}
+            <div className="grid grid-cols-2 gap-4">
 
-              {/* Market Opportunity */}
-              <div>
+              {/* Market */}
+              <div className="relative">
+                <img src={cakeMascot} alt="" className="mascot-float-slow absolute -right-2 -top-1 w-14 opacity-20" aria-hidden="true" />
                 <SectionLabel>Market Opportunity</SectionLabel>
-                <div className="space-y-2.5 mt-2">
-                  <StatBox value="₪4 Billion" sub="Annual gift market in Israel" color="emerald" />
-                  <StatBox value="₪600M (15%)" sub="Unredeemed 'dead money' we capture" color="blue" />
+                <div className="space-y-2 mt-2">
+                  <GlassStatBox value="₪4 Billion" sub="Total Addressable Market — Israeli gift card industry" accent="emerald" />
+                  <GlassStatBox value="₪600M (15%)" sub="Annual unredeemed 'breakage' — dead money we capture" accent="blue" />
                 </div>
               </div>
 
-              {/* Strategic Moat */}
+              {/* Moat */}
               <div>
                 <SectionLabel>Strategic Moat</SectionLabel>
-                <div className="space-y-2 mt-2">
-                  <MoatItem title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay) — Israel's leading fintech regulatory practice." />
-                  <MoatItem title="Regulatory Path" text="Payment Services Act exemption — up to ₪5M/month turnover." />
-                  <MoatItem title="Financial Backend" text="Advanced integration with Meitav Trade API — institutional-grade execution." />
+                <div className="space-y-1.5 mt-2">
+                  <MoatItem icon={<Scale className="w-3.5 h-3.5 text-emerald-500" />} title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay) — Israel's leading fintech regulatory practice." />
+                  <MoatItem icon={<Shield className="w-3.5 h-3.5 text-emerald-500" />} title="Regulatory Path" text="Payment Services Act exemption — up to ₪5M/month turnover." />
+                  <MoatItem icon={<Cpu className="w-3.5 h-3.5 text-emerald-500" />} title="Financial Backend" text="Advanced integration with Meitav Trade API — institutional-grade execution." />
                 </div>
               </div>
             </div>
 
-            {/* ▸ THE ASK — progress bars */}
+            {/* ▸ THE ASK */}
             <div className="relative">
-              <img src={giftMascot} alt="" className="absolute -right-1 -top-2 w-16 opacity-15" aria-hidden="true" />
-              <img src={percentMascot} alt="" className="absolute right-16 bottom-0 w-10 opacity-10" aria-hidden="true" />
+              <img src={giftMascot} alt="" className="mascot-float absolute -right-1 -top-3 w-16 opacity-20" aria-hidden="true" />
+              <img src={percentMascot} alt="" className="mascot-float-slow absolute right-14 bottom-0 w-10 opacity-10" aria-hidden="true" />
 
               <SectionLabel>The Ask — ₪850,000 Pre-Seed</SectionLabel>
-              <div className="grid grid-cols-2 gap-x-5 gap-y-2 mt-2.5">
+              <div className="grid grid-cols-2 gap-x-5 gap-y-2 mt-2">
                 {fundingItems.map((item) => (
                   <div key={item.label}>
-                    <div className="flex justify-between text-[11px] mb-0.5">
-                      <span className="font-semibold text-slate-700">{item.label}</span>
-                      <span className="text-slate-400 font-medium">{item.pct}% · {item.amount}</span>
+                    <div className="flex justify-between text-[10px] mb-0.5">
+                      <span className="font-bold text-slate-700">{item.label}</span>
+                      <span className="text-slate-400 font-semibold">{item.pct}% · {item.amount}</span>
                     </div>
-                    <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400"
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all"
                         style={{ width: `${item.pct}%` }}
                       />
                     </div>
@@ -128,26 +138,25 @@ export default function InvestorPitch() {
               </div>
             </div>
 
-            {/* ▸ TEAM + CONTACT — compact */}
-            <div className="relative border-t border-slate-100 pt-4">
-              <img src={shekelMascot} alt="" className="absolute right-0 top-2 w-12 opacity-10" aria-hidden="true" />
+            {/* ▸ FOUNDER */}
+            <div className="relative border-t border-slate-100 pt-3">
+              <img src={shekelMascot} alt="" className="mascot-float absolute right-0 top-1 w-12 opacity-10" aria-hidden="true" />
 
               <SectionLabel>Founder</SectionLabel>
-              <div className="flex items-start gap-4 mt-2">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-lg">AM</span>
+              <div className="flex items-start gap-3 mt-2">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
+                  <span className="text-white font-extrabold text-base">AM</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-slate-900 text-sm">Artium Mandebura</h3>
-                  <p className="text-emerald-600 text-[11px] font-semibold">Founder & CEO</p>
-                  <p className="text-slate-400 text-[10px] leading-relaxed mt-0.5">
+                  <h3 className="font-extrabold text-slate-900 text-[13px]">Artium Mandebura</h3>
+                  <p className="text-emerald-600 text-[10px] font-bold">Founder & CEO</p>
+                  <p className="text-slate-400 text-[10px] leading-relaxed mt-0.5 font-medium">
                     5+ years brokerage operations at Interactive Israel — capital markets infrastructure, compliance & fintech operations expertise.
                   </p>
                 </div>
               </div>
 
-              {/* Contact row */}
-              <div className="flex items-center gap-4 mt-3 text-[10px] text-slate-400">
+              <div className="flex items-center gap-4 mt-2.5 text-[10px] text-slate-400 font-medium">
                 <a href="mailto:artiumoffical@gmail.com" className="flex items-center gap-1 hover:text-emerald-500 transition-colors">
                   <Mail className="w-3 h-3" /> artiumoffical@gmail.com
                 </a>
@@ -161,9 +170,9 @@ export default function InvestorPitch() {
             </div>
           </div>
 
-          {/* ── FOOTER BAR ── */}
-          <div className="bg-[#0F172A] px-8 py-2.5 text-center">
-            <p className="text-slate-500 text-[9px]">
+          {/* ── FOOTER ── */}
+          <div className="px-8 py-2 text-center" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)" }}>
+            <p className="text-slate-500 text-[9px] font-medium">
               Confidential — intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
           </div>
@@ -173,30 +182,34 @@ export default function InvestorPitch() {
   );
 }
 
-/* ─── Tiny sub-components ─── */
+/* ─── Sub-components ─── */
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-emerald-600 font-bold text-[10px] tracking-widest uppercase">{children}</p>
+    <p className="text-emerald-600 font-extrabold text-[10px] tracking-[0.15em] uppercase">{children}</p>
   );
 }
 
-function StatBox({ value, sub, color }: { value: string; sub: string; color: "emerald" | "blue" }) {
-  const bg = color === "emerald" ? "bg-emerald-50 border-emerald-100" : "bg-blue-50 border-blue-100";
-  const text = color === "emerald" ? "text-emerald-700" : "text-blue-700";
+function GlassStatBox({ value, sub, accent }: { value: string; sub: string; accent: "emerald" | "blue" }) {
+  const border = accent === "emerald" ? "border-emerald-200/60" : "border-blue-200/60";
+  const bg = accent === "emerald" ? "bg-emerald-50/70" : "bg-blue-50/70";
+  const text = accent === "emerald" ? "text-emerald-700" : "text-blue-700";
   return (
-    <div className={`${bg} border rounded-xl px-4 py-3`}>
-      <p className={`text-xl font-extrabold ${text}`}>{value}</p>
-      <p className="text-slate-400 text-[10px] leading-snug mt-0.5">{sub}</p>
+    <div className={`${bg} ${border} border rounded-xl px-4 py-2.5 backdrop-blur-sm`}>
+      <p className={`text-lg font-extrabold ${text}`}>{value}</p>
+      <p className="text-slate-400 text-[10px] leading-snug mt-0.5 font-medium">{sub}</p>
     </div>
   );
 }
 
-function MoatItem({ title, text }: { title: string; text: string }) {
+function MoatItem({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
-    <div className="bg-slate-50 rounded-lg px-3 py-2">
-      <p className="font-bold text-slate-800 text-[11px]">{title}</p>
-      <p className="text-slate-400 text-[10px] leading-snug">{text}</p>
+    <div className="bg-slate-50/80 backdrop-blur-sm border border-slate-100 rounded-lg px-3 py-2 flex gap-2 items-start">
+      <div className="mt-0.5 shrink-0">{icon}</div>
+      <div>
+        <p className="font-extrabold text-slate-800 text-[11px]">{title}</p>
+        <p className="text-slate-400 text-[10px] leading-snug font-medium">{text}</p>
+      </div>
     </div>
   );
 }
