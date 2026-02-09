@@ -62,7 +62,7 @@ export default function InvestorPitch() {
       <div dir="ltr" className="min-h-screen bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200 flex items-start justify-center py-10 print:py-0 print:bg-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
 
         {/* ═══════════ A4 PAGE ═══════════ */}
-        <div className="a4-page bg-white rounded-2xl overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw", boxShadow: "0 25px 60px -12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05)" }}>
+        <div className="a4-page rounded-2xl overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxHeight: "297mm", maxWidth: "100vw", background: "linear-gradient(180deg, #0F172A 0%, #0F172A 30%, #F8FAFC 30%, #F8FAFC 100%)", boxShadow: "0 25px 60px -12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05)" }}>
 
           {/* ── HERO ── */}
           <div className="relative overflow-hidden px-8 pt-7 pb-7" style={{ background: "#0F172A" }}>
@@ -81,7 +81,7 @@ export default function InvestorPitch() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400">Reimagined</span>
               </h1>
               <p className="text-slate-300 text-[11px] leading-relaxed max-w-[480px] font-medium text-left">
-                We convert ₪600M in unredeemed gift cards into long-term stock portfolios.
+                Transforming the ₪4 Billion gift card market into long-term investment portfolios.
               </p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function InvestorPitch() {
               <img src={percentMascot} alt="" className="mascot-bg mascot-float-slow right-20 bottom-1 w-10 opacity-[0.15]" aria-hidden="true" />
 
               <div className="relative z-[1]">
-                <SectionLabel>The Ask — ₪850,000 Pre-Seed</SectionLabel>
+                <SectionLabel>The Ask: ₪850,000 Pre-Seed</SectionLabel>
                 <div className="grid grid-cols-2 gap-x-5 gap-y-2.5 mt-2.5">
                   {fundingItems.map((item) => (
                     <div key={item.label}>
@@ -178,7 +178,7 @@ export default function InvestorPitch() {
           {/* ── FOOTER ── */}
           <div className="px-8 py-2 text-center" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)" }}>
             <p className="text-slate-500 text-[9px] font-medium">
-              Confidential — intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
+              Confidential. Intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
           </div>
         </div>
