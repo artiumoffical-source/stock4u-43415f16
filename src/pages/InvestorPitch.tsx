@@ -54,6 +54,8 @@ export default function InvestorPitch() {
             borderRadius: "12px",
             boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
             position: "relative",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           {/* ━━━━━━━━━━ HERO (Navy) ━━━━━━━━━━ */}
@@ -95,7 +97,7 @@ export default function InvestorPitch() {
           </div>
 
           {/* ━━━━━━━━━━ BODY (White) ━━━━━━━━━━ */}
-          <div style={{ background: "#FFFFFF", padding: "20px 32px 16px" }}>
+          <div style={{ background: "#FFFFFF", padding: "20px 32px 16px", flex: 1 }}>
 
             {/* Row 1: Market + Moat */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
