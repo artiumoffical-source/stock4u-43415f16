@@ -62,14 +62,14 @@ export default function InvestorPitch() {
       <div dir="ltr" className="min-h-screen bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200 flex items-start justify-center py-10 print:py-0 print:bg-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
 
         {/* ═══════════ A4 PAGE ═══════════ */}
-        <div className="a4-page bg-[#F0F4FA] rounded-2xl overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw", boxShadow: "0 25px 60px -12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05)" }}>
+        <div className="a4-page bg-white rounded-2xl overflow-hidden" style={{ width: "210mm", minHeight: "297mm", maxWidth: "100vw", boxShadow: "0 25px 60px -12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05)" }}>
 
           {/* ── HERO ── */}
-          <div className="relative overflow-hidden px-8 pt-7 pb-7" style={{ background: "radial-gradient(ellipse at 50% 30%, #1E3A5F 0%, #0F172A 75%)" }}>
+          <div className="relative overflow-hidden px-8 pt-7 pb-7" style={{ background: "#0F172A" }}>
             {/* Mascot — anchored to far-right margin, behind text */}
-            <img src={dollarMascot} alt="" className="mascot-bg mascot-float right-4 bottom-1 w-24 opacity-90" aria-hidden="true" />
-            <img src={sparkIcon} alt="" className="mascot-bg mascot-float-slow right-32 top-3 w-6 opacity-40" aria-hidden="true" />
-            <img src={starIcon} alt="" className="mascot-bg mascot-float top-2 left-[45%] w-5 opacity-30" aria-hidden="true" />
+            <img src={dollarMascot} alt="" className="mascot-bg mascot-float right-4 bottom-1 w-24 opacity-[0.15]" aria-hidden="true" />
+            <img src={sparkIcon} alt="" className="mascot-bg mascot-float-slow right-32 top-3 w-6 opacity-[0.15]" aria-hidden="true" />
+            <img src={starIcon} alt="" className="mascot-bg mascot-float top-2 left-[45%] w-5 opacity-[0.15]" aria-hidden="true" />
 
             <div className="relative z-[1] text-left">
               <div className="inline-flex items-center gap-1.5 bg-emerald-400/10 border border-emerald-400/20 backdrop-blur-sm rounded-full px-3 py-1 mb-3">
@@ -81,7 +81,7 @@ export default function InvestorPitch() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400">Reimagined</span>
               </h1>
               <p className="text-slate-300 text-[11px] leading-relaxed max-w-[480px] font-medium text-left">
-                Bridging the ₪4B Israeli gift market with the capital markets — transforming temporary gifts into long-term financial assets.
+                We convert ₪600M in unredeemed gift cards into long-term stock portfolios.
               </p>
             </div>
           </div>
@@ -94,31 +94,31 @@ export default function InvestorPitch() {
 
               {/* Market */}
               <div className="relative">
-                <img src={cakeMascot} alt="" className="mascot-bg mascot-float-slow right-0 top-0 w-14 opacity-80" aria-hidden="true" />
+                <img src={cakeMascot} alt="" className="mascot-bg mascot-float-slow right-0 top-0 w-14 opacity-[0.15]" aria-hidden="true" />
                 <div className="relative z-[1]">
                   <SectionLabel>Market Opportunity</SectionLabel>
                   <div className="space-y-2 mt-2">
-                    <GlassStatBox value="₪4 Billion" sub="Total Addressable Market — Israeli gift card industry" accent="emerald" />
-                    <GlassStatBox value="₪600M (15%)" sub="Annual unredeemed 'breakage' — dead money we capture" accent="blue" />
+                    <GlassStatBox value="₪4 Billion" sub="Total addressable market (Israeli gift cards)" accent="emerald" />
+                    <GlassStatBox value="₪600M (15%)" sub="Annual unredeemed breakage we capture" accent="blue" />
                   </div>
                 </div>
               </div>
 
               {/* Moat */}
               <div className="relative z-[1]">
-                <SectionLabel>Strategic Moat</SectionLabel>
+                <SectionLabel>Institutional Grade Infrastructure</SectionLabel>
                 <div className="space-y-1.5 mt-2">
-                  <MoatItem icon={<Scale className="w-3.5 h-3.5 text-emerald-500" />} title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay) — Israel's leading fintech regulatory practice." />
-                  <MoatItem icon={<Shield className="w-3.5 h-3.5 text-emerald-500" />} title="Regulatory Path" text="Payment Services Act exemption — up to ₪5M/month turnover." />
-                  <MoatItem icon={<Cpu className="w-3.5 h-3.5 text-emerald-500" />} title="Financial Backend" text="Advanced integration with Meitav Trade API — institutional-grade execution." />
+                  <MoatItem icon={<Scale className="w-3.5 h-3.5 text-emerald-500" />} title="Legal Advisory" text="Barnea Law Firm (Dr. Zvi Gabbay), Israel's leading fintech regulatory practice." />
+                  <MoatItem icon={<Shield className="w-3.5 h-3.5 text-emerald-500" />} title="Regulatory Path" text="Payment Services Act exemption, up to ₪5M/month turnover." />
+                  <MoatItem icon={<Cpu className="w-3.5 h-3.5 text-emerald-500" />} title="Financial Backend" text="Advanced integration with Meitav Trade API for institutional-grade execution." />
                 </div>
               </div>
             </div>
 
             {/* ▸ THE ASK */}
             <div className="relative glass-card rounded-xl px-5 py-4">
-              <img src={giftMascot} alt="" className="mascot-bg mascot-float right-2 top-1 w-14 opacity-80" aria-hidden="true" />
-              <img src={percentMascot} alt="" className="mascot-bg mascot-float-slow right-20 bottom-1 w-10 opacity-60" aria-hidden="true" />
+              <img src={giftMascot} alt="" className="mascot-bg mascot-float right-2 top-1 w-14 opacity-[0.15]" aria-hidden="true" />
+              <img src={percentMascot} alt="" className="mascot-bg mascot-float-slow right-20 bottom-1 w-10 opacity-[0.15]" aria-hidden="true" />
 
               <div className="relative z-[1]">
                 <SectionLabel>The Ask — ₪850,000 Pre-Seed</SectionLabel>
@@ -143,7 +143,7 @@ export default function InvestorPitch() {
 
             {/* ▸ FOUNDER */}
             <div className="relative border-t border-slate-200/60 pt-3">
-              <img src={shekelMascot} alt="" className="mascot-bg mascot-float right-1 top-3 w-12 opacity-70" aria-hidden="true" />
+              <img src={shekelMascot} alt="" className="mascot-bg mascot-float right-1 top-3 w-12 opacity-[0.15]" aria-hidden="true" />
 
               <div className="relative z-[1]">
                 <SectionLabel>Founder</SectionLabel>
@@ -155,7 +155,7 @@ export default function InvestorPitch() {
                     <h3 className="font-extrabold text-slate-900 text-[13px]">Artium Mandebura</h3>
                     <p className="text-emerald-600 text-[10px] font-bold">Founder & CEO</p>
                     <p className="text-slate-400 text-[10px] leading-relaxed mt-0.5 font-medium">
-                      5+ years brokerage operations at Interactive Israel — capital markets infrastructure, compliance & fintech operations expertise.
+                      5+ years brokerage operations at Interactive Israel. Capital markets infrastructure, compliance and fintech operations expertise.
                     </p>
                   </div>
                 </div>
