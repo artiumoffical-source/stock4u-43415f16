@@ -48,8 +48,6 @@ export default function InvestorPitch() {
           className="a4-page overflow-hidden"
           style={{
             width: "210mm",
-            minHeight: "297mm",
-            maxHeight: "297mm",
             maxWidth: "100vw",
             borderRadius: "12px",
             boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
