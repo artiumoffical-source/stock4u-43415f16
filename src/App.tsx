@@ -32,6 +32,7 @@ import SettingsPage from "./pages/admin/SettingsPage";
 import GiftRegistration from "./pages/GiftRegistration";
 import RedeemGift from "./pages/RedeemGift";
 import NotFound from "./pages/NotFound";
+import InvestorPitch from "./pages/InvestorPitch";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ const App = () => (
                 
                 <Route path="/gift-registration" element={<GiftRegistration />} />
                 <Route path="/redeem" element={<RedeemGift />} />
+                <Route path="/investor-deck-private-access" element={<InvestorPitch />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
