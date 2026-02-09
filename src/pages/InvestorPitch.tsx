@@ -53,6 +53,7 @@ export default function InvestorPitch() {
             maxWidth: "100vw",
             borderRadius: "12px",
             boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
+            position: "relative",
           }}
         >
           {/* ━━━━━━━━━━ HERO (Navy) ━━━━━━━━━━ */}
@@ -230,9 +231,7 @@ export default function InvestorPitch() {
             </p>
           </div>
 
-          {/* Gift mascot: bottom-right of page, 100% opaque, margin area */}
-          <div style={{ position: "relative" }}>
-            <img
+          <img
               src={giftMascot}
               alt=""
               aria-hidden="true"
@@ -240,12 +239,11 @@ export default function InvestorPitch() {
               style={{
                 position: "absolute",
                 right: "8px",
-                bottom: "4px",
+                bottom: "8px",
                 width: "56px",
                 filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.25))",
               }}
             />
-          </div>
         </div>
       </div>
     </>
