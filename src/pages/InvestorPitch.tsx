@@ -216,7 +216,7 @@ export default function InvestorPitch() {
                 <a href="tel:+972545344138" style={{ display: "flex", alignItems: "center", gap: "4px", color: "inherit", textDecoration: "none" }}>
                   <Phone size={12} /> 054-5344138
                 </a>
-                <a href="https://www.stock4u.co.il" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "4px", color: "inherit", textDecoration: "none" }}>
+                <a href="https://stock4u.co.il/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "4px", color: "inherit", textDecoration: "none" }}>
                   <Globe size={12} /> stock4u.co.il
                 </a>
               </div>
