@@ -232,13 +232,6 @@ export default function Landing() {
         <p className="text-white/50 text-sm md:text-base mt-1 max-w-sm mx-auto leading-relaxed">
           תנו נכס אמיתי שגדל עם הזמן. פשוט, חכם, ובוואטסאפ.
         </p>
-        <motion.div
-          className="mt-2 flex justify-center"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-        </motion.div>
       </motion.div>
 
       {/* ── Main Stage ── */}
@@ -269,7 +262,14 @@ export default function Landing() {
                     className="w-[72px] h-[72px] md:w-[88px] md:h-[88px] rounded-full flex items-center justify-center p-3.5 md:p-4 border-[4px] border-white shadow-[0_6px_20px_rgba(0,27,121,0.18)] transition-shadow hover:shadow-[0_8px_30px_rgba(38,193,201,0.35)]"
                     style={{ backgroundColor: brand.bg }}
                   >
-                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" style={{ imageRendering: "auto" }} />
+                    <motion.img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="w-full h-full object-contain"
+                      style={{ imageRendering: "auto" }}
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, delay: i * 0.2, ease: "easeInOut" }}
+                    />
                   </div>
                   <span className="text-[11px] md:text-xs font-bold text-white/80">{brand.name}</span>
                 </motion.button>
