@@ -47,15 +47,15 @@ export default function Header() {
               )}
             </div>
 
-            {/* Login Button */}
-            <Link
+            {/* Login Button - temporarily disabled */}
+            {/* <Link
               to="/login"
               className="w-[100px] h-[38px] bg-[#DBE3F3] rounded-[40px] flex items-center justify-center hover:bg-gray-200 transition-colors"
             >
               <span className="text-[#4C7EFB] font-bold text-[15px]">
                 כניסה
               </span>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Center - Logo */}
