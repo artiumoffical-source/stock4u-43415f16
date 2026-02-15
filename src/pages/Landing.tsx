@@ -1,12 +1,43 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Gift, TrendingUp, Send, ShieldCheck, ArrowLeft } from "lucide-react";
+import {
+  Gift,
+  TrendingUp,
+  Send,
+  ShieldCheck,
+  Cake,
+  GraduationCap,
+  Baby,
+  Heart,
+  ArrowDownUp,
+  Zap,
+  Clock,
+} from "lucide-react";
 
 const BRANDS = [
-  { name: "Apple", symbol: "AAPL", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-  { name: "Disney", symbol: "DIS", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg" },
-  { name: "Tesla", symbol: "TSLA", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg" },
+  {
+    name: "Apple",
+    symbol: "AAPL",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+  },
+  {
+    name: "Disney",
+    symbol: "DIS",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
+  },
+  {
+    name: "Tesla",
+    symbol: "TSLA",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg",
+  },
+];
+
+const OCCASIONS = [
+  { icon: Cake, label: "ימי הולדת", emoji: "🎂" },
+  { icon: GraduationCap, label: "סיום לימודים", emoji: "🎓" },
+  { icon: Baby, label: "לידה", emoji: "👶" },
+  { icon: Heart, label: "סתם כדי להגיד תודה", emoji: "💛" },
 ];
 
 export default function Landing() {
@@ -58,48 +89,62 @@ export default function Landing() {
       dir="rtl"
       style={{ fontFamily: "'Heebo', 'Assistant', sans-serif" }}
     >
+      {/* ===== Header ===== */}
+      <header className="bg-[#001B79] px-5 py-4 flex items-center justify-between">
+        <img
+          src="/images/stock4u-preloader.png"
+          alt="Stock4U"
+          className="h-9 brightness-0 invert"
+        />
+        <span className="text-[#26C1C9] text-xs font-medium tracking-wide">
+          מתנות שעושות כסף
+        </span>
+      </header>
+
       {/* ===== Hero ===== */}
-      <section className="px-5 pt-14 pb-10 max-w-lg mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-cyan-50 text-cyan-700 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
-          <Gift size={16} />
-          <span>מתנות שעושות כסף</span>
+      <section className="px-5 pt-12 pb-10 max-w-2xl mx-auto text-center">
+        <div className="inline-flex items-center gap-2 bg-[#26C1C9]/10 text-[#26C1C9] rounded-full px-4 py-1.5 text-sm font-semibold mb-7">
+          <TrendingUp size={15} />
+          <span>נכס אמיתי. לא שובר.</span>
         </div>
 
-        <h1 className="text-[2rem] leading-[1.25] font-extrabold text-gray-900 mb-5 tracking-tight">
-          המתנה היחידה
+        <h1 className="text-[1.85rem] md:text-4xl leading-[1.3] font-extrabold text-[#001B79] mb-5">
+          המתנה הכי חכמה
           <br />
-          <span className="text-cyan-600">שצומחת</span> יחד איתם
+          <span className="text-[#26C1C9]">למי שחשוב לכם</span>
         </h1>
 
-        <p className="text-gray-500 text-lg leading-relaxed max-w-sm mx-auto">
-          שלחו מניות של אפל, דיסני או טסלה ישירות לוואטסאפ של הנכדים
+        <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-md mx-auto">
+          תפסיקו לשלוח שוברים שנשכחים.
+          <br className="hidden md:block" />{" "}
+          תנו נכס אמיתי שגדל עם הזמן – בוואטסאפ, ב-3 קליקים.
         </p>
       </section>
 
-      {/* ===== Interactive Widget ===== */}
-      <section className="px-5 pb-12 max-w-lg mx-auto">
-        <div className="bg-gray-50 rounded-3xl p-6 shadow-sm border border-gray-100">
-          <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-5 text-center">
-            בחרו מתנה
+      {/* ===== Interactive Gift Widget ===== */}
+      <section className="px-5 pb-12 max-w-2xl mx-auto">
+        <div className="bg-[#F8FAFF] rounded-3xl p-6 md:p-8 border border-[#001B79]/5 shadow-[0_4px_24px_rgba(0,27,121,0.06)]">
+          <p className="text-xs font-bold text-[#001B79]/40 uppercase tracking-[0.15em] mb-6 text-center">
+            בחרו מתנה לדוגמה
           </p>
 
-          <div className="flex justify-center gap-4 mb-6">
+          <div className="flex justify-center gap-3 md:gap-5 mb-6">
             {BRANDS.map((brand) => (
               <button
                 key={brand.symbol}
                 onClick={() => setSelectedBrand(brand.symbol)}
-                className={`w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border-2 ${
+                className={`w-24 h-24 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all duration-200 border-2 ${
                   selectedBrand === brand.symbol
-                    ? "border-cyan-500 bg-white shadow-md scale-105"
-                    : "border-transparent bg-white hover:border-gray-200"
+                    ? "border-[#26C1C9] bg-white shadow-lg shadow-[#26C1C9]/10 scale-[1.04]"
+                    : "border-transparent bg-white hover:border-[#001B79]/10 shadow-sm"
                 }`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="w-8 h-8 object-contain"
+                  className="w-9 h-9 md:w-10 md:h-10 object-contain"
                 />
-                <span className="text-[11px] font-medium text-gray-600">
+                <span className="text-xs font-semibold text-[#001B79]/70">
                   {brand.name}
                 </span>
               </button>
@@ -109,25 +154,21 @@ export default function Landing() {
           {/* WhatsApp Preview */}
           <div
             className={`transition-all duration-300 overflow-hidden ${
-              selected ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+              selected ? "max-h-44 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             {selected && (
-              <div className="bg-[#DCF8C6] rounded-2xl rounded-br-md p-4 mx-2 relative shadow-sm">
-                <ArrowLeft
-                  size={14}
-                  className="absolute top-3 left-3 text-green-600 opacity-50"
-                />
+              <div className="bg-[#DCF8C6] rounded-2xl rounded-br-md p-4 mx-1 md:mx-8 relative shadow-sm">
                 <p className="text-sm text-gray-800 leading-relaxed">
-                  סבתא שלחה לך מתנה ששווה{" "}
+                  קיבלת מתנה ששווה{" "}
                   <span className="font-bold">200 ש״ח</span> במניית{" "}
-                  <span className="font-bold text-cyan-700">
+                  <span className="font-bold text-[#001B79]">
                     {selected.name}
                   </span>{" "}
                   🎁
                 </p>
                 <span className="text-[10px] text-gray-400 mt-1 block text-left">
-                  12:34
+                  WhatsApp · 12:34
                 </span>
               </div>
             )}
@@ -135,69 +176,139 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ===== How It Works ===== */}
-      <section className="px-5 pb-14 max-w-lg mx-auto">
-        <h2 className="text-xl font-bold text-gray-900 text-center mb-8">
-          איך זה עובד?
+      {/* ===== Gift for Every Occasion ===== */}
+      <section className="px-5 pb-14 max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-bold text-[#001B79] text-center mb-8">
+          מתנה לכל אירוע
         </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {OCCASIONS.map((occ, i) => (
+            <div
+              key={i}
+              className="bg-[#F8FAFF] rounded-2xl p-5 text-center border border-[#001B79]/5 hover:border-[#26C1C9]/30 transition-colors"
+            >
+              <div className="text-2xl mb-2">{occ.emoji}</div>
+              <p className="text-sm font-semibold text-[#001B79]/80">
+                {occ.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        <div className="flex flex-col gap-6">
+      {/* ===== How It Works ===== */}
+      <section className="bg-[#F8FAFF] px-5 py-14">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-xl md:text-2xl font-bold text-[#001B79] text-center mb-10">
+            איך זה עובד?
+          </h2>
+
+          <div className="flex flex-col gap-6">
+            {[
+              {
+                icon: <Gift size={22} className="text-[#26C1C9]" />,
+                num: "1",
+                title: "בוחרים מניה",
+                desc: "אפל, דיסני, טסלה או כל מניה מובילה",
+              },
+              {
+                icon: <Send size={22} className="text-[#26C1C9]" />,
+                num: "2",
+                title: "שולחים בוואטסאפ",
+                desc: "המתנה מגיעה ישירות בהודעה אישית",
+              },
+              {
+                icon: <TrendingUp size={22} className="text-[#26C1C9]" />,
+                num: "3",
+                title: "הם הופכים למשקיעים",
+                desc: "המתנה צומחת עם הזמן – בדיוק כמוהם",
+              },
+            ].map((step, i) => (
+              <div key={i} className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-[#001B79] rounded-xl flex items-center justify-center text-white font-bold text-sm">
+                  {step.num}
+                </div>
+                <div>
+                  <h3 className="font-bold text-[#001B79] text-base mb-0.5">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Why Stock4U – Flipped Funnel ===== */}
+      <section className="px-5 py-14 max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-bold text-[#001B79] text-center mb-3">
+          למה Stock4U?
+        </h2>
+        <p className="text-gray-400 text-sm text-center mb-10 max-w-sm mx-auto">
+          הפכנו את התהליך: קודם המתנה, אחר כך ההרשמה
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-4">
           {[
             {
-              icon: <Gift size={22} className="text-cyan-600" />,
-              title: "בוחרים מניה",
-              desc: "אפל, דיסני, טסלה או כל מניה אחרת",
+              icon: <ArrowDownUp size={24} className="text-[#26C1C9]" />,
+              title: "Flipped Funnel",
+              desc: "המתנה מגיעה מיד. מקבל המתנה נרשם רק כשהוא מוכן.",
             },
             {
-              icon: <Send size={22} className="text-cyan-600" />,
-              title: "שולחים בוואטסאפ",
-              desc: "המתנה מגיעה ישירות בהודעה אישית",
+              icon: <Zap size={24} className="text-[#26C1C9]" />,
+              title: "3 קליקים",
+              desc: "בחירה, ברכה, שליחה. בלי טפסים ארוכים, בלי בירוקרטיה.",
             },
             {
-              icon: <TrendingUp size={22} className="text-cyan-600" />,
-              title: "הם הופכים למשקיעים",
-              desc: "המתנה צומחת עם הזמן – בדיוק כמוהם",
+              icon: <Clock size={24} className="text-[#26C1C9]" />,
+              title: "נכס שגדל",
+              desc: "לא שובר שנשכח. מניה אמיתית שצוברת ערך לאורך זמן.",
             },
-          ].map((step, i) => (
-            <div key={i} className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-11 h-11 bg-cyan-50 rounded-xl flex items-center justify-center">
-                {step.icon}
+          ].map((card, i) => (
+            <div
+              key={i}
+              className="bg-[#F8FAFF] rounded-2xl p-6 border border-[#001B79]/5 text-center"
+            >
+              <div className="w-12 h-12 bg-[#001B79]/5 rounded-xl flex items-center justify-center mx-auto mb-4">
+                {card.icon}
               </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base mb-0.5">
-                  {step.title}
-                </h3>
-                <p className="text-gray-400 text-sm">{step.desc}</p>
-              </div>
+              <h3 className="font-bold text-[#001B79] mb-2 text-sm">
+                {card.title}
+              </h3>
+              <p className="text-gray-400 text-xs leading-relaxed">
+                {card.desc}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ===== Waitlist ===== */}
-      <section className="px-5 pb-14 max-w-lg mx-auto">
-        <div className="bg-gradient-to-b from-cyan-50 to-white rounded-3xl p-8 text-center border border-cyan-100">
+      <section className="px-5 pb-14 max-w-2xl mx-auto">
+        <div className="bg-gradient-to-br from-[#001B79] to-[#001050] rounded-3xl p-8 md:p-10 text-center">
           {submitted ? (
             <>
               <div className="text-4xl mb-3">🎉</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">
+              <h3 className="text-lg font-bold text-white mb-1">
                 תודה שנרשמת!
               </h3>
-              <p className="text-gray-400 text-sm">
+              <p className="text-white/50 text-sm">
                 נעדכן אותך ברגע שנפתח לכולם
               </p>
             </>
           ) : (
             <>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                 רוצים לשלוח מניה כמתנה?
               </h3>
-              <p className="text-gray-400 text-sm mb-6">
+              <p className="text-white/50 text-sm mb-7">
                 השאירו מייל ונעדכן אתכם ראשונים
               </p>
               <form
                 onSubmit={handleWaitlist}
-                className="flex flex-col sm:flex-row gap-3"
+                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
               >
                 <input
                   type="email"
@@ -206,17 +317,15 @@ export default function Landing() {
                   placeholder="yourname@email.com"
                   required
                   maxLength={255}
-                  className="flex-1 h-12 rounded-xl border border-gray-200 px-4 text-base bg-white text-left placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
+                  className="flex-1 h-12 rounded-xl border border-white/10 bg-white/10 px-4 text-base text-white text-left placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent backdrop-blur"
                   dir="ltr"
                 />
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="h-12 px-6 rounded-xl bg-cyan-600 text-white font-bold text-sm hover:bg-cyan-700 transition-colors disabled:opacity-50 whitespace-nowrap"
+                  className="h-12 px-6 rounded-xl bg-[#26C1C9] text-[#001B79] font-bold text-sm hover:bg-[#26C1C9]/90 transition-colors disabled:opacity-50 whitespace-nowrap"
                 >
-                  {submitting
-                    ? "שולח..."
-                    : "אני רוצה לשלוח מניה כמתנה"}
+                  {submitting ? "שולח..." : "אני רוצה לשלוח מניה כמתנה"}
                 </button>
               </form>
             </>
@@ -224,15 +333,26 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ===== Trust Bar ===== */}
-      <footer className="px-5 pb-10 max-w-lg mx-auto text-center">
-        <div className="flex items-center justify-center gap-2 text-gray-300 text-xs mb-1">
-          <ShieldCheck size={14} />
-          <span>תשתית מוסדית מאובטחת</span>
+      {/* ===== Footer ===== */}
+      <footer className="bg-[#001B79] px-5 py-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <img
+            src="/images/stock4u-preloader.png"
+            alt="Stock4U"
+            className="h-7 brightness-0 invert mx-auto mb-4"
+          />
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-white/40 text-xs">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck size={13} />
+              <span>Powered by institutional-grade trading infrastructure</span>
+            </div>
+            <span className="hidden md:inline text-white/20">|</span>
+            <span>Legal Advisory by Barnea Law</span>
+          </div>
+          <p className="text-white/20 text-[10px] mt-4">
+            © {new Date().getFullYear()} Stock4U. All rights reserved.
+          </p>
         </div>
-        <p className="text-gray-300 text-xs">
-          ליווי משפטי: משרד ברנע ושות׳
-        </p>
       </footer>
     </div>
   );
