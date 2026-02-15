@@ -273,7 +273,7 @@ export default function Footer() {
                 <div style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Greycliff Hebrew CF, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "24px", fontWeight: "700", lineHeight: "normal" }}>
                   עמודים נוספים
                 </div>
-                <div style={{ display: "flex", height: "105px", flexDirection: "column", justifyContent: "space-between", alignItems: "flex-end", alignSelf: "stretch" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-end", alignSelf: "stretch" }}>
                   <Link to="/about" style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "18px", fontWeight: "400", lineHeight: "normal", textDecoration: "none" }}>אודות</Link>
                   <Link to="/" style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "18px", fontWeight: "400", lineHeight: "normal", textDecoration: "none" }}>שאלות תשובות</Link>
                 </div>
