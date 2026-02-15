@@ -12,6 +12,7 @@ import shekelSign from "@/assets/decorations/shekel-sign.png";
 import dollarMascot from "@/assets/decorations/dollar-mascot.png";
 import giftBoxMascot from "@/assets/decorations/gift-box-mascot.png";
 import dreamBig from "@/assets/decorations/dream-big.png";
+import giftBoxAvatar from "@/assets/decorations/gift-box-avatar.png";
 
 /* ─── Data ─── */
 const BRANDS = [
@@ -60,7 +61,7 @@ function PhoneFrame({ children }: { children: React.ReactNode }) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#1a1a2e] rounded-b-xl z-10" />
         <div className="absolute inset-[3px] top-6 rounded-b-[28px] bg-gradient-to-b from-[#075E54] to-[#128C7E] overflow-hidden flex flex-col">
           <div className="bg-[#075E54] px-3 py-2 flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-white/20" />
+            <img src={giftBoxAvatar} alt="" className="w-7 h-7 rounded-full object-cover bg-white" />
             <span className="text-white text-xs font-bold">Stock4U</span>
           </div>
           <div className="flex-1 bg-[#ECE5DD] p-3 flex flex-col justify-end">
@@ -178,15 +179,16 @@ export default function Landing() {
       {/* ── Dream Big popup ── */}
       <AnimatePresence>
         {showDreamBig && (
-          <motion.img
-            src={dreamBig}
-            alt="Dream Big"
-            className="absolute top-[30%] left-1/2 -translate-x-1/2 w-48 md:w-64 z-50 pointer-events-none"
-            initial={{ scale: 0, opacity: 0, rotate: -10 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            exit={{ scale: 0.5, opacity: 0, y: -40 }}
+          <motion.div
+            className="absolute z-50 pointer-events-none"
+            style={{ top: "35%", left: "8%", transform: "translateY(-50%)" }}
+            initial={{ scale: 0, opacity: 0, rotate: -15 }}
+            animate={{ scale: 1, opacity: 1, rotate: 5 }}
+            exit={{ scale: 0.4, opacity: 0, y: -30 }}
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          />
+          >
+            <img src={dreamBig} alt="Dream Big" className="w-36 md:w-52" />
+          </motion.div>
         )}
       </AnimatePresence>
 
