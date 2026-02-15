@@ -46,7 +46,7 @@ function FloatingEl({ children, className, delay = 0, duration = 4 }: { children
 /* ─── Sticker wrapper ─── */
 function Sticker({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white rounded-2xl border-[3.5px] border-white shadow-[0_6px_24px_rgba(0,27,121,0.12)] ${className}`}>
+    <div className={`bg-white rounded-2xl border-[4px] border-white shadow-[0_8px_28px_rgba(0,27,121,0.15)] ${className}`}>
       {children}
     </div>
   );
@@ -136,30 +136,30 @@ export default function Landing() {
       }}
     >
       {/* ── Floating background assets ── */}
-      <FloatingEl className="top-[10%] left-[8%] opacity-20" delay={0} duration={6}>
-        <img src={starVector} alt="" className="w-10 md:w-14" />
+      <FloatingEl className="top-[8%] left-[6%] opacity-25" delay={0} duration={6}>
+        <img src={starVector} alt="" className="w-12 md:w-20" />
       </FloatingEl>
-      <FloatingEl className="top-[6%] right-[10%] opacity-25" delay={1.2} duration={5}>
-        <img src={lightningVector} alt="" className="w-8 md:w-12" />
+      <FloatingEl className="top-[5%] right-[8%] opacity-30" delay={1.2} duration={5}>
+        <img src={lightningVector} alt="" className="w-10 md:w-16" />
       </FloatingEl>
-      <FloatingEl className="bottom-[22%] left-[5%] opacity-20" delay={0.5} duration={7}>
-        <img src={dollarSign} alt="" className="w-10 md:w-14" />
+      <FloatingEl className="bottom-[18%] left-[3%] opacity-25" delay={0.5} duration={7}>
+        <img src={dollarSign} alt="" className="w-12 md:w-20" />
       </FloatingEl>
-      <FloatingEl className="bottom-[30%] right-[6%] opacity-20" delay={2} duration={5.5}>
-        <img src={shekelSign} alt="" className="w-9 md:w-12" />
+      <FloatingEl className="bottom-[25%] right-[4%] opacity-25" delay={2} duration={5.5}>
+        <img src={shekelSign} alt="" className="w-11 md:w-16" />
       </FloatingEl>
-      <FloatingEl className="top-[40%] right-[3%] opacity-15" delay={3} duration={8}>
-        <img src={starVector} alt="" className="w-6" />
+      <FloatingEl className="top-[38%] right-[2%] opacity-20" delay={3} duration={8}>
+        <img src={starVector} alt="" className="w-8 md:w-12" />
       </FloatingEl>
-      <FloatingEl className="top-[50%] left-[4%] opacity-15" delay={1.8} duration={6.5}>
-        <img src={lightningVector} alt="" className="w-7" />
+      <FloatingEl className="top-[48%] left-[3%] opacity-20" delay={1.8} duration={6.5}>
+        <img src={lightningVector} alt="" className="w-9 md:w-14" />
       </FloatingEl>
 
       {/* ── Corner mascots ── */}
       <motion.img
         src={dollarMascot}
         alt=""
-        className="absolute bottom-0 left-0 w-24 md:w-36 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-0 left-0 w-28 md:w-44 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 0.8, duration: 0.6 }}
@@ -168,7 +168,7 @@ export default function Landing() {
       <motion.img
         src={giftBoxMascot}
         alt=""
-        className="absolute bottom-0 right-0 w-20 md:w-32 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-0 right-0 w-24 md:w-40 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: 40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 1, duration: 0.6 }}
@@ -225,27 +225,27 @@ export default function Landing() {
 
       {/* ── Title ── */}
       <motion.div
-        className="relative z-20 text-center px-5 mb-3"
+        className="relative z-20 text-center px-5 mb-4"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <h1 className="text-[1.5rem] md:text-3xl font-extrabold text-white leading-tight">
+        <h1 className="text-[2rem] md:text-5xl font-extrabold text-white leading-tight">
           המתנה הכי טובה <span className="text-[#26C1C9]">שיש לתת!</span>
         </h1>
-        <p className="text-white/45 text-xs mt-1 max-w-xs mx-auto leading-relaxed">
+        <p className="text-white/50 text-sm md:text-base mt-2 max-w-sm mx-auto leading-relaxed">
           תנו נכס אמיתי שגדל עם הזמן. פשוט, חכם, ובוואטסאפ.
         </p>
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-start justify-center px-4 pt-2 md:pt-6">
+      <div className="relative z-20 flex-1 flex items-center justify-center px-4">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
             <motion.div
               key="choose"
-              className="grid grid-cols-5 gap-2 md:gap-3 max-w-md md:max-w-lg"
+              className="grid grid-cols-2 gap-3 w-full max-w-[340px] md:grid-cols-5 md:gap-4 md:max-w-3xl"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -258,15 +258,15 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.3 }}
-                  whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(38,193,201,0.4)" }}
+                  whileHover={{ scale: 1.08, boxShadow: "0 0 35px rgba(38,193,201,0.4)" }}
                   whileTap={{ scale: 0.93 }}
                   className="focus:outline-none"
                 >
-                  <Sticker className="w-16 h-[72px] md:w-[72px] md:h-20 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#26C1C9] transition-colors">
-                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white flex items-center justify-center">
-                      <img src={brand.logo} alt={brand.name} className="w-5 h-5 md:w-6 md:h-6 object-contain" />
+                  <Sticker className="h-20 md:h-28 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-[#26C1C9] transition-colors">
+                    <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center p-1.5">
+                      <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
                     </div>
-                    <span className="text-[9px] md:text-[10px] font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
+                    <span className="text-[10px] md:text-xs font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
                   </Sticker>
                 </motion.button>
               ))}
