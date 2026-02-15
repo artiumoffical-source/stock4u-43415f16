@@ -160,7 +160,7 @@ export default function Landing() {
       <motion.img
         src={dollarMascot}
         alt=""
-        className="absolute bottom-0 left-0 w-28 md:w-44 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-[8%] left-0 w-28 md:w-44 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 0.8, duration: 0.6 }}
@@ -169,7 +169,7 @@ export default function Landing() {
       <motion.img
         src={giftBoxMascot}
         alt=""
-        className="absolute bottom-0 right-0 w-24 md:w-40 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-[8%] right-0 w-24 md:w-40 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: 40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 1, duration: 0.6 }}
@@ -360,7 +360,7 @@ export default function Landing() {
       </div>
 
       {/* ── Footer ── */}
-      <footer className="relative z-20 py-2 text-center">
+      <footer className="relative z-20 py-1 text-center">
         <p className="text-white/15 text-[9px]">
           Secure Infrastructure · © {new Date().getFullYear()} Stock4U
         </p>
