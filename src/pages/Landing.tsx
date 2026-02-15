@@ -192,7 +192,7 @@ export default function Landing() {
           transition={{ duration: 0.5 }}
         >
           <div className="absolute inset-0 blur-2xl bg-[#26C1C9]/20 rounded-full scale-150" />
-          <img src={stock4uLogo} alt="Stock4U" className="relative h-10 md:h-12 brightness-0 invert" />
+          <img src={stock4uLogo} alt="Stock4U" className="relative h-10 md:h-12" />
         </motion.div>
       </header>
 
