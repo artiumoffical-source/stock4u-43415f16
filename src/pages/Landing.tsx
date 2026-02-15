@@ -232,6 +232,13 @@ export default function Landing() {
         <p className="text-white/50 text-sm md:text-base mt-1 max-w-sm mx-auto leading-relaxed">
           תנו נכס אמיתי שגדל עם הזמן. פשוט, חכם, ובוואטסאפ.
         </p>
+        <motion.div
+          className="mt-2 flex justify-center"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        </motion.div>
       </motion.div>
 
       {/* ── Main Stage ── */}
