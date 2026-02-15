@@ -241,12 +241,16 @@ export default function Landing() {
           {step === 0 && (
             <motion.div
               key="choose"
-              className="flex flex-wrap justify-center gap-4 md:gap-6 w-full max-w-[90vw] md:max-w-3xl"
+              className="flex flex-col items-center w-full max-w-[90vw] md:max-w-3xl"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.35 }}
             >
+              <p className="text-white/70 text-sm md:text-base font-semibold mb-3 text-center">
+                בחרו את המניה שתרצו להעניק כדי להתחיל:
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 md:gap-6 w-full">
               {BRANDS.map((brand, i) => (
                 <motion.button
                   key={brand.symbol}
@@ -274,6 +278,7 @@ export default function Landing() {
                   <span className="text-[11px] md:text-xs font-bold text-white/80">{brand.name}</span>
                 </motion.button>
               ))}
+              </div>
             </motion.div>
           )}
 
