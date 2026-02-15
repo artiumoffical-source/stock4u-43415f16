@@ -17,9 +17,6 @@ export default function MobileFooter() {
           <Link to="/about" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
             אודות
           </Link>
-          <Link to="/careers" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
-            קריירה
-          </Link>
           <Link to="/stock-selection?continue=true" className="text-[hsl(var(--stock4u-grey))] text-sm hover:underline">
             בחירת מתנה
           </Link>
