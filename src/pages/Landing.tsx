@@ -160,7 +160,7 @@ export default function Landing() {
       <motion.img
         src={dollarMascot}
         alt=""
-        className="absolute bottom-[8%] left-0 w-28 md:w-44 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-[2%] left-0 w-28 md:w-44 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 0.8, duration: 0.6 }}
@@ -169,7 +169,7 @@ export default function Landing() {
       <motion.img
         src={giftBoxMascot}
         alt=""
-        className="absolute bottom-[8%] right-0 w-24 md:w-40 opacity-60 pointer-events-none select-none z-10"
+        className="absolute bottom-[2%] right-0 w-24 md:w-40 opacity-60 pointer-events-none select-none z-10"
         initial={{ x: 40, opacity: 0 }}
         animate={{ x: 0, opacity: 0.6 }}
         transition={{ delay: 1, duration: 0.6 }}
@@ -227,7 +227,7 @@ export default function Landing() {
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-start justify-center px-2 md:px-4 pt-4 md:pt-6">
+      <div className="relative z-20 flex-1 flex items-center justify-center px-2 md:px-4 -mt-2">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
