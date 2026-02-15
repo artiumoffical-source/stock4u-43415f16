@@ -115,11 +115,17 @@ export default function Landing() {
         if (error.code === "23505") {
           setSubmitted(true);
           fireConfetti();
+          if (typeof window !== 'undefined' && (window as any).fbq) {
+            (window as any).fbq('track', 'Lead');
+          }
         }
         else throw error;
       } else {
         setSubmitted(true);
         fireConfetti();
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'Lead');
+        }
       }
       setEmail("");
     } catch {
