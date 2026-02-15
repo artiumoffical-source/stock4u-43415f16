@@ -179,7 +179,7 @@ export default function Landing() {
       {/* Dream Big is rendered inside the phone preview step instead */}
 
       {/* ── Logo with glow ── */}
-      <header className="relative z-20 pt-4 pb-1 flex justify-center">
+      <header className="relative z-20 pt-3 pb-0 flex justify-center">
         <motion.div
           className="relative"
           initial={{ opacity: 0, y: -20 }}
@@ -192,7 +192,7 @@ export default function Landing() {
       </header>
 
       {/* ── Progress bar ── */}
-      <div className="relative z-20 flex justify-center items-center gap-1.5 mb-2 px-6">
+      <div className="relative z-20 flex justify-center items-center gap-1.5 mb-1 px-6">
         {STEPS.map((s, i) => (
           <div key={i} className="flex items-center gap-1.5">
             <motion.div
@@ -213,7 +213,7 @@ export default function Landing() {
 
       {/* ── Title ── */}
       <motion.div
-        className="relative z-20 text-center px-5 mb-4"
+        className="relative z-20 text-center px-5 mb-2"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -221,13 +221,13 @@ export default function Landing() {
         <h1 className="text-[2rem] md:text-5xl font-extrabold text-white leading-tight">
           המתנה הכי טובה <span className="text-[#26C1C9]">שיש לתת!</span>
         </h1>
-        <p className="text-white/50 text-sm md:text-base mt-2 max-w-sm mx-auto leading-relaxed">
+        <p className="text-white/50 text-sm md:text-base mt-1 max-w-sm mx-auto leading-relaxed">
           תנו נכס אמיתי שגדל עם הזמן. פשוט, חכם, ובוואטסאפ.
         </p>
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-end md:items-center justify-center px-2 md:px-4 pb-6 md:pb-0">
+      <div className="relative z-20 flex-1 flex items-start justify-center px-2 md:px-4 pt-4 md:pt-6">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
