@@ -111,13 +111,6 @@ const MobileMenu = () => {
                   >
                     רשימת מתנות
                   </Link>
-                  <Link
-                    to="/careers"
-                    onClick={closeMenu}
-                    className="block py-3 px-4 text-[#4C7EFB] hebrew-font text-lg font-medium rounded-lg hover:bg-[#DBE3F3] transition-colors"
-                  >
-                    קריירה
-                  </Link>
                 </div>
               </nav>
 

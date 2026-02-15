@@ -275,7 +275,7 @@ export default function Footer() {
                 </div>
                 <div style={{ display: "flex", height: "105px", flexDirection: "column", justifyContent: "space-between", alignItems: "flex-end", alignSelf: "stretch" }}>
                   <Link to="/about" style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "18px", fontWeight: "400", lineHeight: "normal", textDecoration: "none" }}>אודות</Link>
-                  <Link to="/careers" style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "18px", fontWeight: "400", lineHeight: "normal", textDecoration: "none" }}>קריירה</Link>
+                  
                   <Link to="/" style={{ alignSelf: "stretch", color: "#4C7EFB", textAlign: "right", fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif", fontSize: "18px", fontWeight: "400", lineHeight: "normal", textDecoration: "none" }}>שאלות תשובות</Link>
                 </div>
               </div>
@@ -316,7 +316,7 @@ export default function Footer() {
               <h3 className="text-[#4C7EFB] font-bold text-lg mb-3 hebrew-font">עמודים נוספים</h3>
               <div className="flex flex-col gap-2">
                 <Link to="/about" className="text-[#4C7EFB] text-sm no-underline">אודות</Link>
-                <Link to="/careers" className="text-[#4C7EFB] text-sm no-underline">קריירה</Link>
+                
                 <Link to="/" className="text-[#4C7EFB] text-sm no-underline">שאלות תשובות</Link>
               </div>
             </div>

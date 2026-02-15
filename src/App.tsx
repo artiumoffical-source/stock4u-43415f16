@@ -17,7 +17,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PurchaseSuccess from "./pages/PurchaseSuccess";
 import PurchaseError from "./pages/PurchaseError";
 import About from "./pages/About";
-import Careers from "./pages/Careers";
+
 import AdminLogin from "./pages/AdminLogin";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -58,7 +58,7 @@ const App = () => (
                 <Route path="/purchase-success" element={<PurchaseSuccess />} />
                 <Route path="/purchase-error" element={<PurchaseError />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/careers" element={<Careers />} />
+                
                 {/* <Route path="/login" element={<Login />} /> */}
                 <Route path="/admin-portal-s4u" element={<AdminLogin />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
