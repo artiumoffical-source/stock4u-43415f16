@@ -227,7 +227,7 @@ export default function Landing() {
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-center justify-center px-2 md:px-4 -mt-2">
+      <div className="relative z-20 flex-1 flex items-start justify-center px-2 md:px-4 pt-2">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
