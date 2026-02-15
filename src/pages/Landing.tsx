@@ -16,8 +16,15 @@ import dreamBig from "@/assets/decorations/dream-big.png";
 /* ─── Data ─── */
 const BRANDS = [
   { name: "Apple", symbol: "AAPL", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", ticker: "$AAPL" },
-  { name: "Disney", symbol: "DIS", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg", ticker: "$DIS" },
   { name: "Tesla", symbol: "TSLA", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg", ticker: "$TSLA" },
+  { name: "Disney", symbol: "DIS", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg", ticker: "$DIS" },
+  { name: "NVIDIA", symbol: "NVDA", logo: "https://upload.wikimedia.org/wikipedia/sco/2/21/Nvidia_logo.svg", ticker: "$NVDA" },
+  { name: "Amazon", symbol: "AMZN", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", ticker: "$AMZN" },
+  { name: "Google", symbol: "GOOGL", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", ticker: "$GOOGL" },
+  { name: "Meta", symbol: "META", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg", ticker: "$META" },
+  { name: "Microsoft", symbol: "MSFT", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg", ticker: "$MSFT" },
+  { name: "Bitcoin", symbol: "BTC", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg", ticker: "$BTC" },
+  { name: "Ethereum", symbol: "ETH", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg", ticker: "$ETH" },
 ];
 
 const STEPS = ["בחר מתנה", "שלח בוואטסאפ", "הם משקיעים"];
@@ -238,7 +245,7 @@ export default function Landing() {
           {step === 0 && (
             <motion.div
               key="choose"
-              className="flex gap-3 md:gap-5"
+              className="grid grid-cols-5 gap-2 md:gap-3 max-w-md md:max-w-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -248,17 +255,18 @@ export default function Landing() {
                 <motion.button
                   key={brand.symbol}
                   onClick={() => handleSelect(brand)}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.12, duration: 0.4 }}
-                  whileHover={{ scale: 1.12, boxShadow: "0 0 40px rgba(38,193,201,0.4)" }}
-                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: i * 0.04, duration: 0.3 }}
+                  whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(38,193,201,0.4)" }}
+                  whileTap={{ scale: 0.93 }}
                   className="focus:outline-none"
                 >
-                  <Sticker className="w-24 h-28 md:w-28 md:h-32 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#26C1C9] transition-colors">
-                    <img src={brand.logo} alt={brand.name} className="w-10 h-10 md:w-12 md:h-12 object-contain" />
-                    <span className="text-xs font-extrabold text-[#001B79]">{brand.name}</span>
-                    <span className="text-[10px] font-mono text-[#26C1C9]">{brand.ticker}</span>
+                  <Sticker className="w-16 h-[72px] md:w-[72px] md:h-20 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-[#26C1C9] transition-colors">
+                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white flex items-center justify-center">
+                      <img src={brand.logo} alt={brand.name} className="w-5 h-5 md:w-6 md:h-6 object-contain" />
+                    </div>
+                    <span className="text-[9px] md:text-[10px] font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
                   </Sticker>
                 </motion.button>
               ))}
