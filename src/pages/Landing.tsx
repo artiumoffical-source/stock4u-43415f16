@@ -339,12 +339,16 @@ export default function Landing() {
                   </motion.div>
                 </motion.div>
               ) : (
-                <Sticker className="p-8 md:p-10 text-center !bg-white/95 backdrop-blur-sm">
-                  <h3 className="text-xl md:text-2xl font-extrabold text-[#001B79] mb-2">
-                    {selectedBrand ? `רוצים לשלוח ${selectedBrand.name} כמתנה?` : "רוצים לשלוח מניה כמתנה?"}
+                <div className="text-center px-4">
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">
+                    {selectedBrand ? (
+                      <>רוצים לשלוח <span className="text-[#26C1C9]">{selectedBrand.name}</span> כמתנה?</>
+                    ) : (
+                      <>רוצים לשלוח <span className="text-[#26C1C9]">מניה</span> כמתנה?</>
+                    )}
                   </h3>
-                  <p className="text-[#001B79]/40 text-sm mb-6">השאירו מייל ונעדכן אתכם ראשונים</p>
-                  <form onSubmit={handleWaitlist} className="flex flex-col gap-3">
+                  <p className="text-white/40 text-sm mb-6">השאירו מייל ונעדכן אתכם ראשונים</p>
+                  <form onSubmit={handleWaitlist} className="flex flex-col gap-3 max-w-sm mx-auto">
                     <input
                       type="email"
                       value={email}
@@ -352,7 +356,7 @@ export default function Landing() {
                       placeholder="yourname@email.com"
                       required
                       maxLength={255}
-                      className="w-full h-14 rounded-xl border-2 border-[#001B79]/10 bg-white px-4 text-base text-[#001B79] text-left placeholder:text-[#001B79]/20 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
+                      className="w-full h-14 rounded-2xl border-[3px] border-white/90 bg-white/10 backdrop-blur-sm px-4 text-base text-white text-left placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
                       dir="ltr"
                     />
                     <motion.button
@@ -360,15 +364,15 @@ export default function Landing() {
                       disabled={submitting}
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      className="w-full h-14 rounded-xl bg-[#FF6B35] text-white font-extrabold text-lg shadow-lg shadow-[#FF6B35]/30 hover:bg-[#E85A28] transition-colors disabled:opacity-50"
+                      className="w-full h-14 rounded-2xl border-[3px] border-white bg-[#FF6B35] text-white font-extrabold text-lg shadow-[0_8px_28px_rgba(255,107,53,0.35)] hover:bg-[#E85A28] transition-colors disabled:opacity-50"
                     >
                       {submitting ? "..." : "אני רוצה לשלוח מניה 🎁"}
                     </motion.button>
                   </form>
-                  <button onClick={handleBack} className="mt-4 text-[#26C1C9] text-sm font-semibold hover:underline">
-                    חזרה לבחירה →
+                  <button onClick={handleBack} className="mt-5 text-[#26C1C9] text-sm font-semibold hover:underline">
+                    ← חזרה לבחירה
                   </button>
-                </Sticker>
+                </div>
               )}
             </motion.div>
           )}
