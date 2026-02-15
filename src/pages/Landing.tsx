@@ -112,12 +112,14 @@ export default function Landing() {
     try {
       const { error } = await supabase.from("waitlist").insert([{ email: email.trim().toLowerCase() }]);
       if (error) {
-        if (error.code === "23505") toast({ title: "כבר נרשמת! נעדכן אותך בקרוב 💙" });
+        if (error.code === "23505") {
+          setSubmitted(true);
+          fireConfetti();
+        }
         else throw error;
       } else {
         setSubmitted(true);
         fireConfetti();
-        toast({ title: "נרשמת בהצלחה! 🎉" });
       }
       setEmail("");
     } catch {
@@ -314,46 +316,60 @@ export default function Landing() {
               exit={{ opacity: 0, y: 30 }}
               transition={{ type: "spring", stiffness: 180, damping: 20 }}
             >
-              <Sticker className="p-8 md:p-10 text-center !bg-white/95 backdrop-blur-sm">
-                {submitted ? (
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ type: "spring" }}>
-                    <div className="text-6xl mb-4">🎉</div>
-                    <h3 className="text-xl font-extrabold text-[#001B79] mb-2">!תודה שנרשמת</h3>
-                    <p className="text-[#001B79]/40 text-base">נעדכן אותך ברגע שנפתח</p>
+              {submitted ? (
+                <motion.div
+                  className="text-center py-6"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 18 }}
+                >
+                  <div className="text-7xl mb-5">🎉</div>
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
+                    תודה שנרשמת<span className="text-[#26C1C9]">!</span>
+                  </h3>
+                  <p className="text-white/50 text-base md:text-lg leading-relaxed">
+                    נעדכן אותך ברגע שנפתח 💙
+                  </p>
+                  <motion.div
+                    className="mt-6 inline-block px-6 py-2.5 rounded-full border-2 border-[#26C1C9]/30 text-[#26C1C9] text-sm font-bold"
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ repeat: Infinity, duration: 2.5 }}
+                  >
+                    Stock4U — בקרוב אצלכם
                   </motion.div>
-                ) : (
-                  <>
-                    <h3 className="text-xl md:text-2xl font-extrabold text-[#001B79] mb-2">
-                      {selectedBrand ? `רוצים לשלוח ${selectedBrand.name} כמתנה?` : "רוצים לשלוח מניה כמתנה?"}
-                    </h3>
-                    <p className="text-[#001B79]/40 text-sm mb-6">השאירו מייל ונעדכן אתכם ראשונים</p>
-                    <form onSubmit={handleWaitlist} className="flex flex-col gap-3">
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="yourname@email.com"
-                        required
-                        maxLength={255}
-                        className="w-full h-14 rounded-xl border-2 border-[#001B79]/10 bg-white px-4 text-base text-[#001B79] text-left placeholder:text-[#001B79]/20 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
-                        dir="ltr"
-                      />
-                      <motion.button
-                        type="submit"
-                        disabled={submitting}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        className="w-full h-14 rounded-xl bg-[#FF6B35] text-white font-extrabold text-lg shadow-lg shadow-[#FF6B35]/30 hover:bg-[#E85A28] transition-colors disabled:opacity-50"
-                      >
-                        {submitting ? "..." : "אני רוצה לשלוח מניה 🎁"}
-                      </motion.button>
-                    </form>
-                    <button onClick={handleBack} className="mt-4 text-[#26C1C9] text-sm font-semibold hover:underline">
-                      חזרה לבחירה →
-                    </button>
-                  </>
-                )}
-              </Sticker>
+                </motion.div>
+              ) : (
+                <Sticker className="p-8 md:p-10 text-center !bg-white/95 backdrop-blur-sm">
+                  <h3 className="text-xl md:text-2xl font-extrabold text-[#001B79] mb-2">
+                    {selectedBrand ? `רוצים לשלוח ${selectedBrand.name} כמתנה?` : "רוצים לשלוח מניה כמתנה?"}
+                  </h3>
+                  <p className="text-[#001B79]/40 text-sm mb-6">השאירו מייל ונעדכן אתכם ראשונים</p>
+                  <form onSubmit={handleWaitlist} className="flex flex-col gap-3">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="yourname@email.com"
+                      required
+                      maxLength={255}
+                      className="w-full h-14 rounded-xl border-2 border-[#001B79]/10 bg-white px-4 text-base text-[#001B79] text-left placeholder:text-[#001B79]/20 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
+                      dir="ltr"
+                    />
+                    <motion.button
+                      type="submit"
+                      disabled={submitting}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="w-full h-14 rounded-xl bg-[#FF6B35] text-white font-extrabold text-lg shadow-lg shadow-[#FF6B35]/30 hover:bg-[#E85A28] transition-colors disabled:opacity-50"
+                    >
+                      {submitting ? "..." : "אני רוצה לשלוח מניה 🎁"}
+                    </motion.button>
+                  </form>
+                  <button onClick={handleBack} className="mt-4 text-[#26C1C9] text-sm font-semibold hover:underline">
+                    חזרה לבחירה →
+                  </button>
+                </Sticker>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
