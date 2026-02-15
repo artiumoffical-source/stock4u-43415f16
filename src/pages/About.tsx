@@ -95,25 +95,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">הצוות שלנו</h2>
-            <p className="text-xl text-muted-foreground">
-              מומחים פיננסיים ואנשי טכנולוגיה מנוסים
-            </p>
-          </div>
-          
-          <div className="bg-stock4u-light-blue rounded-2xl p-8 text-center">
-            <p className="text-lg text-muted-foreground mb-6">
-              הצוות שלנו מורכב ממומחי פיננסים, יועצי השקעות ומפתחי טכנולוגיה מובילים שמביאים ניסיון של שנים רבות בתחום הפיננסים והטכנולוגיה הפיננסית.
-            </p>
-            <p className="text-lg text-muted-foreground">
-              כולנו מאמינים באותה מטרה: להפוך את עולם ההשקעות לנגיש ופשוט עבור כולם.
-            </p>
-          </div>
-        </section>
-
         {/* Contact Section */}
         <section>
           <div className="text-center">
@@ -124,11 +105,11 @@ const About = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
                 <h3 className="font-bold mb-2">אימייל</h3>
-                <p className="text-muted-foreground">info@stock4u.co.il</p>
+                <p className="text-muted-foreground">support@stock4u.co.il</p>
               </div>
               <div className="text-center">
                 <h3 className="font-bold mb-2">טלפון</h3>
-                <p className="text-muted-foreground">03-1234567</p>
+                <p className="text-muted-foreground">054-5344138</p>
               </div>
               <div className="text-center">
                 <h3 className="font-bold mb-2">כתובת</h3>
