@@ -16,16 +16,16 @@ import giftBoxAvatar from "@/assets/decorations/gift-box-avatar.png";
 
 /* ─── Data ─── */
 const BRANDS = [
-  { name: "Apple", symbol: "AAPL", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", ticker: "$AAPL" },
-  { name: "Tesla", symbol: "TSLA", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg", ticker: "$TSLA" },
-  { name: "Disney", symbol: "DIS", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg", ticker: "$DIS" },
-  { name: "NVIDIA", symbol: "NVDA", logo: "https://upload.wikimedia.org/wikipedia/sco/2/21/Nvidia_logo.svg", ticker: "$NVDA" },
-  { name: "Amazon", symbol: "AMZN", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", ticker: "$AMZN" },
-  { name: "Google", symbol: "GOOGL", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", ticker: "$GOOGL" },
-  { name: "Meta", symbol: "META", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg", ticker: "$META" },
-  { name: "Microsoft", symbol: "MSFT", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg", ticker: "$MSFT" },
-  { name: "Bitcoin", symbol: "BTC", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg", ticker: "$BTC" },
-  { name: "Ethereum", symbol: "ETH", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg", ticker: "$ETH" },
+  { name: "Apple", symbol: "AAPL", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", ticker: "$AAPL", bg: "#f5f5f7" },
+  { name: "Tesla", symbol: "TSLA", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg", ticker: "$TSLA", bg: "#e8e8e8" },
+  { name: "Disney", symbol: "DIS", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg", ticker: "$DIS", bg: "#e8f0fe" },
+  { name: "NVIDIA", symbol: "NVDA", logo: "https://upload.wikimedia.org/wikipedia/sco/2/21/Nvidia_logo.svg", ticker: "$NVDA", bg: "#e8f5e9" },
+  { name: "Amazon", symbol: "AMZN", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", ticker: "$AMZN", bg: "#fff3e0" },
+  { name: "Google", symbol: "GOOGL", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", ticker: "$GOOGL", bg: "#e3f2fd" },
+  { name: "Meta", symbol: "META", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg", ticker: "$META", bg: "#e8eaf6" },
+  { name: "Microsoft", symbol: "MSFT", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg", ticker: "$MSFT", bg: "#e0f7fa" },
+  { name: "Bitcoin", symbol: "BTC", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg", ticker: "$BTC", bg: "#fff8e1" },
+  { name: "Ethereum", symbol: "ETH", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg", ticker: "$ETH", bg: "#ede7f6" },
 ];
 
 const STEPS = ["בחר מתנה", "שלח בוואטסאפ", "הם משקיעים"];
@@ -251,7 +251,7 @@ export default function Landing() {
                   className="focus:outline-none"
                 >
                   <Sticker className="h-24 md:h-36 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#26C1C9] transition-colors">
-                    <div className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center p-1.5">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center p-2 border-2 border-gray-100 shadow-sm" style={{ backgroundColor: brand.bg }}>
                       <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
                     </div>
                     <span className="text-xs md:text-sm font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
@@ -271,14 +271,14 @@ export default function Landing() {
               exit={{ opacity: 0, scale: 0.7, y: -40 }}
               transition={{ type: "spring", stiffness: 280, damping: 18 }}
             >
-              {/* Dream Big - left of phone */}
+              {/* Dream Big - overlay on top of phone */}
               <AnimatePresence>
                 {showDreamBig && (
                   <motion.img
                     src={dreamBig}
                     alt="Dream Big"
-                    className="absolute left-[-130px] md:left-[-170px] top-1/2 -translate-y-1/2 w-28 md:w-40 z-50 pointer-events-none"
-                    initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                    className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 md:w-52 z-50 pointer-events-none"
+                    initial={{ scale: 0, opacity: 0, rotate: -10 }}
                     animate={{ scale: 1, opacity: 1, rotate: 5 }}
                     exit={{ scale: 0.4, opacity: 0, y: -20 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -307,35 +307,26 @@ export default function Landing() {
           {step === 2 && (
             <motion.div
               key="signup"
-              className="w-full max-w-sm"
+              className="w-full max-w-md"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 30 }}
               transition={{ type: "spring", stiffness: 180, damping: 20 }}
             >
-              <Sticker className="p-6 text-center !bg-white/95 backdrop-blur-sm">
+              <Sticker className="p-8 md:p-10 text-center !bg-white/95 backdrop-blur-sm">
                 {submitted ? (
                   <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ type: "spring" }}>
-                    <div className="text-5xl mb-3">🎉</div>
-                    <h3 className="text-lg font-extrabold text-[#001B79] mb-1">!תודה שנרשמת</h3>
-                    <p className="text-[#001B79]/40 text-sm">נעדכן אותך ברגע שנפתח</p>
+                    <div className="text-6xl mb-4">🎉</div>
+                    <h3 className="text-xl font-extrabold text-[#001B79] mb-2">!תודה שנרשמת</h3>
+                    <p className="text-[#001B79]/40 text-base">נעדכן אותך ברגע שנפתח</p>
                   </motion.div>
                 ) : (
                   <>
-                    <h3 className="text-base font-extrabold text-[#001B79] mb-1">
+                    <h3 className="text-xl md:text-2xl font-extrabold text-[#001B79] mb-2">
                       {selectedBrand ? `רוצים לשלוח ${selectedBrand.name} כמתנה?` : "רוצים לשלוח מניה כמתנה?"}
                     </h3>
-                    <p className="text-[#001B79]/40 text-[11px] mb-4">השאירו מייל ונעדכן אתכם ראשונים</p>
-                    <form onSubmit={handleWaitlist} className="flex gap-2">
-                      <motion.button
-                        type="submit"
-                        disabled={submitting}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        className="shrink-0 px-5 py-3 rounded-xl bg-[#FF6B35] text-white font-extrabold text-sm shadow-lg shadow-[#FF6B35]/30 hover:bg-[#E85A28] transition-colors disabled:opacity-50"
-                      >
-                        {submitting ? "..." : "שליחה 🎁"}
-                      </motion.button>
+                    <p className="text-[#001B79]/40 text-sm mb-6">השאירו מייל ונעדכן אתכם ראשונים</p>
+                    <form onSubmit={handleWaitlist} className="flex flex-col gap-3">
                       <input
                         type="email"
                         value={email}
@@ -343,12 +334,21 @@ export default function Landing() {
                         placeholder="yourname@email.com"
                         required
                         maxLength={255}
-                        className="flex-1 min-w-0 h-12 rounded-xl border-2 border-[#001B79]/10 bg-white px-3 text-sm text-[#001B79] text-left placeholder:text-[#001B79]/20 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
+                        className="w-full h-14 rounded-xl border-2 border-[#001B79]/10 bg-white px-4 text-base text-[#001B79] text-left placeholder:text-[#001B79]/20 focus:outline-none focus:ring-2 focus:ring-[#26C1C9] focus:border-transparent"
                         dir="ltr"
                       />
+                      <motion.button
+                        type="submit"
+                        disabled={submitting}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="w-full h-14 rounded-xl bg-[#FF6B35] text-white font-extrabold text-lg shadow-lg shadow-[#FF6B35]/30 hover:bg-[#E85A28] transition-colors disabled:opacity-50"
+                      >
+                        {submitting ? "..." : "אני רוצה לשלוח מניה 🎁"}
+                      </motion.button>
                     </form>
-                    <button onClick={handleBack} className="mt-3 text-[#26C1C9] text-xs font-semibold hover:underline">
-                      ← חזרה לבחירה
+                    <button onClick={handleBack} className="mt-4 text-[#26C1C9] text-sm font-semibold hover:underline">
+                      חזרה לבחירה →
                     </button>
                   </>
                 )}
