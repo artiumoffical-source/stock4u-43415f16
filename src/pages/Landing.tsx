@@ -239,13 +239,13 @@ export default function Landing() {
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-center justify-center px-4">
+      <div className="relative z-20 flex-1 flex items-center justify-center px-2 md:px-4">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
             <motion.div
               key="choose"
-              className="grid grid-cols-2 gap-3 w-full max-w-[340px] md:grid-cols-5 md:gap-4 md:max-w-3xl"
+              className="grid grid-cols-2 gap-2.5 w-full max-w-[92vw] md:grid-cols-5 md:gap-5 md:max-w-4xl"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -262,11 +262,11 @@ export default function Landing() {
                   whileTap={{ scale: 0.93 }}
                   className="focus:outline-none"
                 >
-                  <Sticker className="h-20 md:h-28 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:border-[#26C1C9] transition-colors">
-                    <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center p-1.5">
+                  <Sticker className="h-24 md:h-36 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#26C1C9] transition-colors">
+                    <div className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center p-1.5">
                       <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
                     </div>
-                    <span className="text-[10px] md:text-xs font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
+                    <span className="text-xs md:text-sm font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
                   </Sticker>
                 </motion.button>
               ))}
@@ -277,10 +277,10 @@ export default function Landing() {
           {step === 1 && selectedBrand && (
             <motion.div
               key="preview"
-              initial={{ opacity: 0, scale: 0.7, y: 40 }}
+              initial={{ opacity: 0, scale: 0.5, y: 60 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: -30 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              exit={{ opacity: 0, scale: 0.7, y: -40 }}
+              transition={{ type: "spring", stiffness: 280, damping: 18 }}
             >
               <PhoneFrame>
                 <motion.div
