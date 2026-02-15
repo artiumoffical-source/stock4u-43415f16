@@ -251,10 +251,10 @@ export default function Landing() {
                   className="focus:outline-none flex flex-col items-center gap-1.5"
                 >
                   <div
-                    className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center p-3 md:p-4 border-[4px] border-white shadow-[0_6px_20px_rgba(0,27,121,0.18)] transition-shadow hover:shadow-[0_8px_30px_rgba(38,193,201,0.35)]"
+                    className="w-[72px] h-[72px] md:w-[88px] md:h-[88px] rounded-full flex items-center justify-center p-3.5 md:p-4 border-[4px] border-white shadow-[0_6px_20px_rgba(0,27,121,0.18)] transition-shadow hover:shadow-[0_8px_30px_rgba(38,193,201,0.35)]"
                     style={{ backgroundColor: brand.bg }}
                   >
-                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" style={{ imageRendering: "auto" }} />
                   </div>
                   <span className="text-[11px] md:text-xs font-bold text-white/80">{brand.name}</span>
                 </motion.button>
