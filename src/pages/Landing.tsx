@@ -227,13 +227,13 @@ export default function Landing() {
       </motion.div>
 
       {/* ── Main Stage ── */}
-      <div className="relative z-20 flex-1 flex items-center justify-center px-2 md:px-4">
+      <div className="relative z-20 flex-1 flex items-end md:items-center justify-center px-2 md:px-4 pb-6 md:pb-0">
         <AnimatePresence mode="wait">
           {/* STEP 0: Choose stock */}
           {step === 0 && (
             <motion.div
               key="choose"
-              className="grid grid-cols-2 gap-2.5 w-full max-w-[92vw] md:grid-cols-5 md:gap-5 md:max-w-4xl"
+              className="flex flex-wrap justify-center gap-4 md:gap-6 w-full max-w-[90vw] md:max-w-3xl"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -246,16 +246,17 @@ export default function Landing() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.3 }}
-                  whileHover={{ scale: 1.08, boxShadow: "0 0 35px rgba(38,193,201,0.4)" }}
-                  whileTap={{ scale: 0.93 }}
-                  className="focus:outline-none"
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="focus:outline-none flex flex-col items-center gap-1.5"
                 >
-                  <Sticker className="h-24 md:h-36 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#26C1C9] transition-colors">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center p-2 border-2 border-gray-100 shadow-sm" style={{ backgroundColor: brand.bg }}>
-                      <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
-                    </div>
-                    <span className="text-xs md:text-sm font-extrabold text-[#001B79] leading-tight">{brand.name}</span>
-                  </Sticker>
+                  <div
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center p-3 md:p-4 border-[4px] border-white shadow-[0_6px_20px_rgba(0,27,121,0.18)] transition-shadow hover:shadow-[0_8px_30px_rgba(38,193,201,0.35)]"
+                    style={{ backgroundColor: brand.bg }}
+                  >
+                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+                  </div>
+                  <span className="text-[11px] md:text-xs font-bold text-white/80">{brand.name}</span>
                 </motion.button>
               ))}
             </motion.div>
