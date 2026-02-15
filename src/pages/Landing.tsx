@@ -61,7 +61,7 @@ function PhoneFrame({ children }: { children: React.ReactNode }) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#1a1a2e] rounded-b-xl z-10" />
         <div className="absolute inset-[3px] top-6 rounded-b-[28px] bg-gradient-to-b from-[#075E54] to-[#128C7E] overflow-hidden flex flex-col">
           <div className="bg-[#075E54] px-3 py-2 flex items-center gap-2">
-            <img src={giftBoxAvatar} alt="" className="w-7 h-7 rounded-full object-cover bg-white" />
+            <img src={giftBoxAvatar} alt="" className="w-7 h-7 rounded-full object-contain bg-white shrink-0" style={{ imageRendering: "auto" }} />
             <span className="text-white text-xs font-bold">Stock4U</span>
           </div>
           <div className="flex-1 bg-[#ECE5DD] p-3 flex flex-col justify-end">
@@ -176,21 +176,7 @@ export default function Landing() {
         aria-hidden
       />
 
-      {/* ── Dream Big popup ── */}
-      <AnimatePresence>
-        {showDreamBig && (
-          <motion.div
-            className="absolute z-50 pointer-events-none"
-            style={{ top: "35%", left: "8%", transform: "translateY(-50%)" }}
-            initial={{ scale: 0, opacity: 0, rotate: -15 }}
-            animate={{ scale: 1, opacity: 1, rotate: 5 }}
-            exit={{ scale: 0.4, opacity: 0, y: -30 }}
-            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          >
-            <img src={dreamBig} alt="Dream Big" className="w-36 md:w-52" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Dream Big is rendered inside the phone preview step instead */}
 
       {/* ── Logo with glow ── */}
       <header className="relative z-20 pt-4 pb-1 flex justify-center">
@@ -279,11 +265,26 @@ export default function Landing() {
           {step === 1 && selectedBrand && (
             <motion.div
               key="preview"
+              className="relative flex items-center justify-center gap-0"
               initial={{ opacity: 0, scale: 0.5, y: 60 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.7, y: -40 }}
               transition={{ type: "spring", stiffness: 280, damping: 18 }}
             >
+              {/* Dream Big - left of phone */}
+              <AnimatePresence>
+                {showDreamBig && (
+                  <motion.img
+                    src={dreamBig}
+                    alt="Dream Big"
+                    className="absolute left-[-130px] md:left-[-170px] top-1/2 -translate-y-1/2 w-28 md:w-40 z-50 pointer-events-none"
+                    initial={{ scale: 0, opacity: 0, rotate: -15 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 5 }}
+                    exit={{ scale: 0.4, opacity: 0, y: -20 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  />
+                )}
+              </AnimatePresence>
               <PhoneFrame>
                 <motion.div
                   className="bg-[#DCF8C6] rounded-xl rounded-br-sm p-3 shadow-sm max-w-[85%] self-start"
