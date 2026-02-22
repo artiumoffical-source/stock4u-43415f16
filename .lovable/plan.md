@@ -1,80 +1,61 @@
 
-
-# Pilot Mode Overlay on Checkout Page
+# B2B Strategic Partnership One-Pager for Meitav Trade
 
 ## Overview
-Add a "closed pilot" overlay to the `/checkout` page that disables all payment functionality while keeping the UI visible. The overlay captures emails for the waitlist and shows confetti on successful signup -- all within a single file edit to `src/pages/Checkout.tsx`.
+Create a new page at `/onepager` matching the exact visual style of the existing `/investor` page -- same A4 layout, navy hero, white body, green accents, Montserrat font, print-ready CSS, and private/noindex metadata. Content will be in Hebrew (RTL) with professional English financial terms.
 
-## What Changes
+## New File
+**`src/pages/OnePager.tsx`** -- A single self-contained page component mirroring InvestorPitch.tsx structure.
 
-### 1. Visual Overlay on Payment Section
-- Wrap the existing payment form + alternative payments + submit button in a `relative` container
-- Add a blurred overlay (`backdrop-blur-sm`, pointer-events-none on underlying content) that makes the fields visible but non-interactive
-- All existing payment components remain in the DOM, untouched -- just visually disabled
+### Page Sections
 
-### 2. Pilot Notice Banner
-- Centered card on top of the blurred payment area with:
-  - Headline: "אנחנו כרגע בשלב פיילוט סגור! (rocket emoji)"
-  - Body text explaining the exclusive invite process
-  - Styled with the brand blue (`#486284` / `#4C7EFB`) and white, matching existing checkout design
+1. **Hero (Navy `#0B192E`)**
+   - Badge: `STRATEGIC PARTNERSHIP . CONFIDENTIAL`
+   - Title (Hebrew): "שותפות אסטרטגית: Stock4U & מיטב טרייד"
+   - Subtitle: "הפיכת השקעות למתנות -- מנוע הצמיחה החדש של מיטב לדור הבא של המשקיעים."
+   - CTA button placeholder: "הורד מפרט טכני" (styled green button, no real download)
+   - Decorative mascots (reusing existing assets from `/assets/investor/`)
 
-### 3. Email Input + Join Waitlist Button
-- Clean email input field (same style as existing checkout inputs)
-- "הצטרפו לרשימת ההמתנה" button in brand blue
-- Client-side email validation before submission
+2. **Body Section - "The Opportunity" (2-column grid)**
+   - Section label: "השוק משתנה"
+   - Left card: Market validation -- mention Excellence & BuyMe move, Stock4U offers financial assets vs. simple consumption
+   - Right card: Key differentiators
 
-### 4. Supabase Waitlist Insert
-- On submit, insert email into the existing `waitlist` table using the Supabase client
-- Handle duplicate emails gracefully (unique constraint on email column -- error code `23505`)
-- Show success state for both new and duplicate signups
+3. **Omnibus Infrastructure (Highlight box, gray background)**
+   - Section label: "תשתית: פתרון ה-Omnibus"
+   - 3-step numbered flow:
+     1. Trust Pool -- funds into Meitav-hosted Omnibus account
+     2. Seamless Onboarding -- digital KYC for recipients
+     3. Execution -- automated transfer upon activation
 
-### 5. Confetti + Success State
-- On successful waitlist join, fire `canvas-confetti` (already installed)
-- Replace the email form with a success message inside the same overlay card
-- User stays on the checkout page and can still see the gift they wanted to send
+4. **Compliance & Tech (2-column grid)**
+   - Column 1: "מסגרת רגולטורית" -- Voucher Model, Active Activation
+   - Column 2: "אינטגרציה דיגיטלית" -- API-first onboarding, automated execution
 
-## Technical Details
+5. **Business Model (3-item row with icons)**
+   - Section label: "שותפות מבוססת הצלחה"
+   - Three value props: CPA per active account, Revenue Share on trading fees, Quality AUM at Zero CAC
 
-### File Modified
-- `src/pages/Checkout.tsx` -- the only file being changed
+6. **Footer (Navy)**
+   - Confidential notice, year, Stock4U Ltd.
+   - Decorative mascot
 
-### New State Variables
-- `waitlistEmail: string` -- email input value
-- `waitlistSubmitting: boolean` -- loading state
-- `waitlistSuccess: boolean` -- controls success view
+### Design Details
+- RTL direction (`dir="rtl"`)
+- Same color palette: `#0B192E` navy, `#10B981`/`#34D399` green accents, `#F8FAFC` highlight boxes
+- Same inline-style approach for print fidelity
+- Same A4 container with print CSS
+- Reuses existing mascot images and Lucide icons (Shield, Scale, Cpu, Users, TrendingUp, etc.)
+- `noindex, nofollow` meta tag
+- Font sizes compact (10-12px body, 17-22px headings) to fit A4
 
-### New Import
-- `import confetti from 'canvas-confetti'`
+## Route Registration
+**`src/App.tsx`** -- Add import and route:
+- `import OnePager from "./pages/OnePager";`
+- `<Route path="/onepager" element={<OnePager />} />`
 
-### Structure (Pseudo-JSX)
-```text
-<div className="relative">
-  {/* Existing payment form + alt payments + submit -- now with blur + pointer-events-none */}
-  <div className="filter blur-[2px] pointer-events-none select-none opacity-60">
-    ... existing form JSX unchanged ...
-  </div>
-
-  {/* Overlay card -- absolutely positioned on top */}
-  <div className="absolute inset-0 flex items-center justify-center z-10">
-    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg text-center">
-      {waitlistSuccess ? (
-        <SuccessMessage />
-      ) : (
-        <PilotNotice + EmailForm />
-      )}
-    </div>
-  </div>
-</div>
-```
-
-### Waitlist Handler Logic
-```text
-1. Validate email format
-2. Insert into supabase 'waitlist' table
-3. If duplicate (23505), still show success
-4. Fire confetti burst
-5. Set waitlistSuccess = true
-```
-
-### No Database Changes Needed
-The `waitlist` table already exists with `email (TEXT, UNIQUE)` and has an RLS policy allowing anonymous INSERT.
+## Technical Notes
+- No new dependencies needed
+- No navigation links added (private page, direct-link access only)
+- Sub-components (SectionLabel, DataCard, MoatRow-style) defined inline in the file, same pattern as InvestorPitch.tsx
+- Print CSS included for A4 output
