@@ -33,6 +33,7 @@ import GiftRegistration from "./pages/GiftRegistration";
 import RedeemGift from "./pages/RedeemGift";
 import NotFound from "./pages/NotFound";
 import InvestorPitch from "./pages/InvestorPitch";
+import OnePager from "./pages/OnePager";
 import Landing from "./pages/Landing";
 
 const queryClient = new QueryClient();
@@ -78,6 +79,7 @@ const App = () => (
                 <Route path="/gift-registration" element={<GiftRegistration />} />
                 <Route path="/redeem" element={<RedeemGift />} />
                 <Route path="/investor" element={<InvestorPitch />} />
+                <Route path="/onepager" element={<OnePager />} />
                 <Route path="/landing" element={<Landing />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
