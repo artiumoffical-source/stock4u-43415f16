@@ -10,7 +10,7 @@ import starIcon from "@/assets/investor/star-icon.png";
 
 export default function OnePager() {
   useEffect(() => {
-    document.title = "Stock4U | Strategic Partnership – Meitav Trade (Confidential)";
+    document.title = "Stock4U | שותפות אסטרטגית (חסוי)";
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex, nofollow";
@@ -69,17 +69,17 @@ export default function OnePager() {
               >
                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#34D399" }} />
                 <span style={{ color: "#34D399", fontSize: "9px", fontWeight: 700, letterSpacing: "0.15em" }}>
-                  STRATEGIC PARTNERSHIP · CONFIDENTIAL
+                  שותפות אסטרטגית · חסוי
                 </span>
               </div>
 
               <h1 className="text-lg sm:text-[22px]" style={{ fontWeight: 800, lineHeight: 1.2, color: "#fff", marginBottom: "6px" }}>
                 שותפות אסטרטגית:{" "}
-                <span style={{ color: "#34D399" }}>Stock4U & מיטב טרייד</span>
+                <span style={{ color: "#34D399" }}>Stock4U ומיטב טרייד</span>
               </h1>
 
               <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "11px", lineHeight: 1.6, fontWeight: 500, marginBottom: "12px" }}>
-                הפיכת השקעות למתנות — מנוע הצמיחה החדש של מיטב לדור הבא של המשקיעים.
+                הפיכת השקעות למתנות. מנוע הצמיחה החדש של מיטב לדור הבא של המשקיעים.
               </p>
 
               <button
@@ -112,16 +112,16 @@ export default function OnePager() {
               <InfoCard
                 icon={<TrendingUp size={14} color="#10B981" />}
                 title="ולידציית שוק"
-                text="המהלך של אקסלנס ו-BuyMe מוכיח את הביקוש. Stock4U מציעה נכס פיננסי אמיתי — לא צריכה חד-פעמית."
+                text="המהלך של אקסלנס ו-BuyMe מוכיח את הביקוש. Stock4U מציעה נכס פיננסי אמיתי ולא צריכה חד פעמית."
               />
               <InfoCard
                 icon={<Users size={14} color="#10B981" />}
                 title="יתרון מבדל"
-                text="מתנת מניות יוצרת חשבון השקעות פעיל. מיטב מקבלת לקוח חדש, המקבל מקבל חינוך פיננסי."
+                text="מתנת מניות יוצרת חשבון השקעות פעיל. מיטב מקבלת לקוח חדש והמקבל מקבל חינוך פיננסי."
               />
             </div>
 
-            {/* Row 2: Omnibus Infrastructure */}
+            {/* Row 2: חשבון מעבר Infrastructure */}
             <div
               style={{
                 background: "#F8FAFC",
@@ -140,24 +140,24 @@ export default function OnePager() {
                 style={{ left: "8px", top: "-12px", width: "44px", filter: "drop-shadow(0 3px 8px rgba(0,0,0,0.2))" }}
               />
 
-              <SectionLabel>תשתית: פתרון ה-Omnibus</SectionLabel>
+              <SectionLabel>תשתית: פתרון חשבון המעבר</SectionLabel>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2.5">
                 <StepCard
                   num={1}
                   icon={<DollarSign size={14} color="#10B981" />}
-                  title="Trust Pool"
-                  text="הפקדת כספים לחשבון Omnibus מנוהל ע״י מיטב — שקיפות מלאה ובקרה רגולטורית."
+                  title="חשבון נאמנות"
+                  text="הפקדת כספים לחשבון מעבר מנוהל על ידי מיטב עם שקיפות מלאה ובקרה רגולטורית."
                 />
                 <StepCard
                   num={2}
                   icon={<UserCheck size={14} color="#10B981" />}
-                  title="Seamless Onboarding"
-                  text="המקבל פותח חשבון מיטב דרך תהליך KYC דיגיטלי מלא — ללא ניירת."
+                  title="הצטרפות חלקה"
+                  text="המקבל פותח חשבון מיטב דרך תהליך זיהוי דיגיטלי מלא ללא ניירת."
                 />
                 <StepCard
                   num={3}
                   icon={<Zap size={14} color="#10B981" />}
-                  title="Execution"
+                  title="ביצוע"
                   text="העברה אוטומטית מחשבון הנאמנות לחשבון האישי עם הפעלת המתנה."
                 />
               </div>
@@ -170,13 +170,13 @@ export default function OnePager() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "8px" }}>
                   <MoatRow
                     icon={<Shield size={14} color="#10B981" />}
-                    title="Voucher Model"
-                    text="המתנה מוגדרת כשובר — לא כייעוץ השקעות או ניהול תיקים."
+                    title="מודל שובר"
+                    text="המתנה מוגדרת כשובר ולא כייעוץ השקעות או ניהול תיקים."
                   />
                   <MoatRow
                     icon={<Scale size={14} color="#10B981" />}
-                    title="Active Activation"
-                    text="המקבל מפעיל את המתנה באופן עצמאי — פעולה יזומה שמבדילה מהגדרת שיווק השקעות."
+                    title="הפעלה עצמאית"
+                    text="המקבל מפעיל את המתנה באופן עצמאי. פעולה יזומה שמבדילה מהגדרת שיווק השקעות."
                   />
                 </div>
               </div>
@@ -185,12 +185,12 @@ export default function OnePager() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "8px" }}>
                   <MoatRow
                     icon={<Cpu size={14} color="#10B981" />}
-                    title="API-First Onboarding"
-                    text="פתיחת חשבון ב-API ישירות למערכות מיטב — חוויית משתמש חלקה."
+                    title="הצטרפות דיגיטלית"
+                    text="פתיחת חשבון בממשק ישירות למערכות מיטב עם חוויית משתמש חלקה."
                   />
                   <MoatRow
                     icon={<ArrowLeftRight size={14} color="#10B981" />}
-                    title="Automated Execution"
+                    title="ביצוע אוטומטי"
                     text="ביצוע אוטומטי של רכישות ניירות ערך עם אישור המקבל."
                   />
                 </div>
@@ -210,20 +210,20 @@ export default function OnePager() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2.5">
                 <ValueCard
                   icon={<Users size={16} color="#065F46" />}
-                  title="CPA"
-                  subtitle="לכל חשבון פעיל"
-                  text="תשלום לפי ביצוע — רק על חשבונות שהופעלו בפועל."
+                  title="עלות לחשבון פעיל"
+                  subtitle="לכל חשבון שהופעל"
+                  text="תשלום לפי ביצוע רק על חשבונות שהופעלו בפועל."
                 />
                 <ValueCard
                   icon={<TrendingUp size={16} color="#065F46" />}
-                  title="Revenue Share"
+                  title="שיתוף הכנסות"
                   subtitle="עמלות מסחר"
                   text="שיתוף הכנסות מעמלות מסחר של לקוחות שהגיעו דרך Stock4U."
                 />
                 <ValueCard
                   icon={<DollarSign size={16} color="#065F46" />}
-                  title="Quality AUM"
-                  subtitle="Zero CAC"
+                  title="נכסים מנוהלים איכותיים"
+                  subtitle="ללא עלות גיוס"
                   text="מיטב מקבלת נכסים מנוהלים איכותיים ללא עלות גיוס לקוח."
                 />
               </div>
@@ -233,7 +233,7 @@ export default function OnePager() {
           {/* ━━━━━━━━━━ FOOTER ━━━━━━━━━━ */}
           <div className="px-4 sm:px-8" style={{ background: "#0B192E", paddingTop: "8px", paddingBottom: "8px", textAlign: "center", position: "relative" }}>
             <p style={{ color: "#64748B", fontSize: "9px", fontWeight: 500 }}>
-              Confidential. Intended solely for the recipient. © {new Date().getFullYear()} Stock4U Ltd.
+              חסוי. מיועד לנמען בלבד. © {new Date().getFullYear()} Stock4U Ltd.
             </p>
             <img
               src={giftMascot}
@@ -259,7 +259,7 @@ export default function OnePager() {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ color: "#10B981", fontWeight: 800, fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+    <p style={{ color: "#10B981", fontWeight: 800, fontSize: "10px", letterSpacing: "0.12em" }}>
       {children}
     </p>
   );
