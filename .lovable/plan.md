@@ -1,61 +1,37 @@
 
-# B2B Strategic Partnership One-Pager for Meitav Trade
 
-## Overview
-Create a new page at `/onepager` matching the exact visual style of the existing `/investor` page -- same A4 layout, navy hero, white body, green accents, Montserrat font, print-ready CSS, and private/noindex metadata. Content will be in Hebrew (RTL) with professional English financial terms.
+# Enhanced Print CSS and Print Button for One-Pager
 
-## New File
-**`src/pages/OnePager.tsx`** -- A single self-contained page component mirroring InvestorPitch.tsx structure.
+## Changes to `src/pages/OnePager.tsx`
 
-### Page Sections
+### 1. Enhanced Print CSS (`@media print`)
+Update the existing print styles (lines 27-31) to include:
+- White background for the outer container
+- Black text color as default
+- `break-inside: avoid` on all card-like elements (InfoCard, StepCard, MoatRow, ValueCard, and the Omnibus highlight box) to prevent cards from being split across pages
+- Hide the print button itself during printing
+- Hide decorative mascot images during print for cleaner output
+- Preserve colored headings and green accents with `print-color-adjust: exact`
 
-1. **Hero (Navy `#0B192E`)**
-   - Badge: `STRATEGIC PARTNERSHIP . CONFIDENTIAL`
-   - Title (Hebrew): "שותפות אסטרטגית: Stock4U & מיטב טרייד"
-   - Subtitle: "הפיכת השקעות למתנות -- מנוע הצמיחה החדש של מיטב לדור הבא של המשקיעים."
-   - CTA button placeholder: "הורד מפרט טכני" (styled green button, no real download)
-   - Decorative mascots (reusing existing assets from `/assets/investor/`)
+### 2. Print Button
+Add a floating print button (using `Printer` icon from lucide-react) positioned fixed at bottom-left of the screen:
+- Only visible on screen (hidden via `print:hidden` class)
+- Styled as a small circular green button matching the page palette
+- Calls `window.print()` on click
+- Semi-transparent until hovered for a subtle, non-intrusive look
 
-2. **Body Section - "The Opportunity" (2-column grid)**
-   - Section label: "השוק משתנה"
-   - Left card: Market validation -- mention Excellence & BuyMe move, Stock4U offers financial assets vs. simple consumption
-   - Right card: Key differentiators
+### 3. Card `break-inside: avoid`
+Add a shared CSS class `.print-card` to the inline `<style>` block with `break-inside: avoid` rule, and apply it to all card sub-components (InfoCard, StepCard, MoatRow, ValueCard) and the infrastructure highlight box.
 
-3. **Omnibus Infrastructure (Highlight box, gray background)**
-   - Section label: "תשתית: פתרון ה-Omnibus"
-   - 3-step numbered flow:
-     1. Trust Pool -- funds into Meitav-hosted Omnibus account
-     2. Seamless Onboarding -- digital KYC for recipients
-     3. Execution -- automated transfer upon activation
+## Technical Details
 
-4. **Compliance & Tech (2-column grid)**
-   - Column 1: "מסגרת רגולטורית" -- Voucher Model, Active Activation
-   - Column 2: "אינטגרציה דיגיטלית" -- API-first onboarding, automated execution
+**File**: `src/pages/OnePager.tsx`
 
-5. **Business Model (3-item row with icons)**
-   - Section label: "שותפות מבוססת הצלחה"
-   - Three value props: CPA per active account, Revenue Share on trading fees, Quality AUM at Zero CAC
+- **Line 2**: Add `Printer` to lucide-react imports
+- **Lines 26-32**: Expand the `<style>` block with enhanced print rules:
+  - `.print-card { break-inside: avoid; }` 
+  - `.print-btn { display: none !important; }`
+  - Body/page background white, text black
+- **After line 251** (before closing `</div>` of outer container): Add the floating print button
+- **Sub-components**: Add `className="print-card"` to the outer `<div>` of InfoCard, StepCard, MoatRow, and ValueCard
 
-6. **Footer (Navy)**
-   - Confidential notice, year, Stock4U Ltd.
-   - Decorative mascot
-
-### Design Details
-- RTL direction (`dir="rtl"`)
-- Same color palette: `#0B192E` navy, `#10B981`/`#34D399` green accents, `#F8FAFC` highlight boxes
-- Same inline-style approach for print fidelity
-- Same A4 container with print CSS
-- Reuses existing mascot images and Lucide icons (Shield, Scale, Cpu, Users, TrendingUp, etc.)
-- `noindex, nofollow` meta tag
-- Font sizes compact (10-12px body, 17-22px headings) to fit A4
-
-## Route Registration
-**`src/App.tsx`** -- Add import and route:
-- `import OnePager from "./pages/OnePager";`
-- `<Route path="/onepager" element={<OnePager />} />`
-
-## Technical Notes
-- No new dependencies needed
-- No navigation links added (private page, direct-link access only)
-- Sub-components (SectionLabel, DataCard, MoatRow-style) defined inline in the file, same pattern as InvestorPitch.tsx
-- Print CSS included for A4 output
