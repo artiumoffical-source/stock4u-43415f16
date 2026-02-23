@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Shield, Scale, Cpu, Users, TrendingUp, DollarSign, Download, ArrowLeftRight, UserCheck, Zap } from "lucide-react";
+import { Shield, Scale, Cpu, Users, TrendingUp, DollarSign, Download, ArrowLeftRight, UserCheck, Zap, Printer } from "lucide-react";
 
 import dollarMascot from "@/assets/investor/dollar-mascot.png";
 import giftMascot from "@/assets/investor/gift-mascot.png";
@@ -24,9 +24,12 @@ export default function OnePager() {
   return (
     <>
       <style>{`
+        .print-card { break-inside: avoid; }
         @media print {
-          body { margin:0; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+          body { margin:0; padding:0; background:#fff!important; color:#000!important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
           .a4-page { box-shadow:none!important; margin:0!important; border-radius:0!important; width:210mm!important; min-height:297mm!important; max-height:297mm!important; overflow:hidden!important; }
+          .print-btn { display:none!important; }
+          .print-mascot { opacity:0!important; }
           @page { size:A4 portrait; margin:0; }
         }
       `}</style>
@@ -56,7 +59,7 @@ export default function OnePager() {
               src={dollarMascot}
               alt=""
               aria-hidden="true"
-              className="absolute left-3 bottom-0 w-[90px] select-none hidden sm:block"
+              className="absolute left-3 bottom-0 w-[90px] select-none hidden sm:block print-mascot"
               style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.4))" }}
             />
             <img src={sparkIcon} alt="" aria-hidden="true" className="absolute top-4 left-28 w-5 opacity-30 select-none" />
@@ -239,7 +242,7 @@ export default function OnePager() {
               src={giftMascot}
               alt=""
               aria-hidden="true"
-              className="select-none"
+              className="select-none print-mascot"
               style={{
                 position: "absolute",
                 left: "8px",
@@ -250,6 +253,35 @@ export default function OnePager() {
             />
           </div>
         </div>
+
+        {/* Print Button */}
+        <button
+          className="print-btn"
+          onClick={() => window.print()}
+          style={{
+            position: "fixed",
+            bottom: "24px",
+            left: "24px",
+            width: "48px",
+            height: "48px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #10B981, #14B8A6)",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 4px 14px rgba(16,185,129,0.4)",
+            opacity: 0.7,
+            transition: "opacity 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+          title="הדפסה"
+        >
+          <Printer size={20} />
+        </button>
       </div>
     </>
   );
@@ -268,6 +300,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function InfoCard({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
     <div
+      className="print-card"
       style={{
         background: "rgba(255,255,255,0.95)",
         border: "1px solid rgba(16,185,129,0.25)",
@@ -288,6 +321,7 @@ function InfoCard({ icon, title, text }: { icon: React.ReactNode; title: string;
 function StepCard({ num, icon, title, text }: { num: number; icon: React.ReactNode; title: string; text: string }) {
   return (
     <div
+      className="print-card"
       style={{
         background: "#fff",
         border: "1px solid #E2E8F0",
@@ -327,6 +361,7 @@ function StepCard({ num, icon, title, text }: { num: number; icon: React.ReactNo
 function MoatRow({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
     <div
+      className="print-card"
       style={{
         background: "rgba(255,255,255,0.95)",
         border: "1px solid rgba(16,185,129,0.2)",
@@ -350,6 +385,7 @@ function MoatRow({ icon, title, text }: { icon: React.ReactNode; title: string; 
 function ValueCard({ icon, title, subtitle, text }: { icon: React.ReactNode; title: string; subtitle: string; text: string }) {
   return (
     <div
+      className="print-card"
       style={{
         background: "rgba(255,255,255,0.95)",
         border: "1px solid rgba(16,185,129,0.25)",
