@@ -145,7 +145,7 @@ export default function OnePager() {
                 <StepCard
                   num={1}
                   icon={<DollarSign size={14} color="#10B981" />}
-                  title="חשבון נאמנות"
+                  title="חשבון מעבר"
                   text="הפקדת כספים לחשבון מעבר מנוהל על ידי מיטב עם שקיפות מלאה ובקרה רגולטורית."
                 />
                 <StepCard
