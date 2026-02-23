@@ -26,8 +26,12 @@ export default function OnePager() {
       <style>{`
         .print-card { break-inside: avoid; }
         @media print {
-          body { margin:0; padding:0; background:#fff!important; color:#000!important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+          * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; color-adjust:exact!important; }
+          body { margin:0; padding:0; background:#fff!important; color:#000!important; }
           .a4-page { box-shadow:none!important; margin:0!important; border-radius:0!important; width:210mm!important; min-height:297mm!important; max-height:297mm!important; overflow:hidden!important; }
+          .a4-page, .a4-page * { visibility:visible!important; display:revert!important; }
+          .print-card { display:block!important; visibility:visible!important; background:#fff!important; border:1px solid #CBD5E1!important; color:#000!important; }
+          .print-card p, .print-card div { color:#000!important; }
           .print-btn { display:none!important; }
           .print-mascot { opacity:0!important; }
           @page { size:A4 portrait; margin:0; }
