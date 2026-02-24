@@ -47,9 +47,9 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
         <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-[#E0E7F5] to-transparent z-10 pointer-events-none" />
 
         {/* Double track container */}
-        <div className="flex hover:[&>div]:pause-animation">
+        <div className="marquee-container flex">
           {/* Track 1 */}
-          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 marquee-track">
+          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 animate-infinite-scroll">
             {logos.map((logo, i) => (
               <img
                 key={`a-${i}`}
@@ -60,7 +60,7 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
             ))}
           </div>
           {/* Track 2 (clone) */}
-          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 marquee-track" aria-hidden="true">
+          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 animate-infinite-scroll" aria-hidden="true">
             {logos.map((logo, i) => (
               <img
                 key={`b-${i}`}
@@ -74,15 +74,15 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
       </div>
 
       <style>{`
-        .marquee-track {
-          animation: marquee-scroll 35s linear infinite;
-        }
-        .hover\\:[\\&\\>div\\]\\:pause-animation:hover > div {
-          animation-play-state: paused;
-        }
-        @keyframes marquee-scroll {
+        @keyframes infinite-scroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-100%); }
+        }
+        .animate-infinite-scroll {
+          animation: infinite-scroll 35s linear infinite;
+        }
+        .marquee-container:hover .animate-infinite-scroll {
+          animation-play-state: paused;
         }
       `}</style>
     </div>
