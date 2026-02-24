@@ -53,13 +53,13 @@ export default function OnePager() {
         dir="rtl"
         className={
           isFullscreen
-            ? "fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto p-4 md:p-10 transition-all"
+            ? "fixed inset-0 z-[9999] bg-white w-screen h-screen overflow-hidden transition-all"
             : "min-h-screen flex items-start justify-center py-10 print:py-0 print:bg-white transition-all"
         }
-        style={{ fontFamily: "'Montserrat', sans-serif", background: isFullscreen ? "#E0E7F5" : "#CBD5E1" }}
+        style={{ fontFamily: "'Montserrat', sans-serif", ...(!isFullscreen ? { background: "#CBD5E1" } : {}) }}
       >
         {/* Action Toolbar */}
-        <div className="onepager-toolbar print:hidden fixed top-4 left-4 z-[10000] flex gap-2" dir="ltr">
+        <div className="onepager-toolbar print:hidden fixed top-6 right-6 z-[10000] flex gap-2" dir="ltr">
           <button
             onClick={() => window.print()}
             className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
@@ -74,17 +74,17 @@ export default function OnePager() {
               onClick={() => setIsFullscreen(false)}
               className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
               style={{ background: "#334155", opacity: 0.85 }}
-              title="סגור"
+              title="סגור מצגת"
             >
               <X size={14} />
-              סגור
+              סגור מצגת
             </button>
           ) : (
             <button
               onClick={() => setIsFullscreen(true)}
               className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
               style={{ background: "#334155", opacity: 0.85 }}
-              title="מצב מצגת"
+              title="הגדל למסך מלא"
             >
               <Maximize size={14} />
               מצב מצגת
@@ -92,11 +92,17 @@ export default function OnePager() {
           )}
         </div>
         <div
-          className="a4-page overflow-hidden w-full"
+          className={`a4-page overflow-hidden w-full transition-all duration-300 ${
+            isFullscreen
+              ? "w-full h-full max-w-none rounded-none overflow-y-auto"
+              : ""
+          }`}
           style={{
-            maxWidth: "210mm",
-            borderRadius: "12px",
-            boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
+            ...(!isFullscreen ? {
+              maxWidth: "210mm",
+              borderRadius: "12px",
+              boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
+            } : {}),
             position: "relative",
             display: "flex",
             flexDirection: "column",
