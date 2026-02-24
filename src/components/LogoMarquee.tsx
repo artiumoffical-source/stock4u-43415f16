@@ -2,18 +2,27 @@ import React from 'react';
 
 // Full Dataset with Crypto & Finance
 const logos = [
-  { name: "Bitcoin", src: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" },
-  { name: "Ethereum", src: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" },
+  // US & Global
   { name: "Apple", src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
   { name: "Microsoft", src: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+  { name: "בנק לאומי", src: "/images/logos/leumi.png" },
   { name: "Google", src: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" },
   { name: "Nvidia", src: "https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg" },
+  { name: "טבע", src: "/images/logos/teva.png" },
   { name: "Tesla", src: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg" },
+  { name: "נייס", src: "/images/logos/nice.png" },
   { name: "Meta", src: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+  { name: "אלביט", src: "/images/logos/elbit.png" },
   { name: "Amazon", src: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+  { name: "Bitcoin", src: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" },
+  { name: "בנק הפועלים", src: "/images/logos/hapoalim.png" },
   { name: "Netflix", src: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
-  { name: "PayPal", src: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" },
+  { name: "ICL", src: "/images/logos/icl.png" },
+  { name: "Ethereum", src: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg" },
+  { name: "עזריאלי", src: "/images/logos/azrieli.png" },
   { name: "Visa", src: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" },
+  { name: "דלק", src: "/images/logos/delek.png" },
+  { name: "PayPal", src: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" },
 ];
 
 interface LogoMarqueeProps {
@@ -71,7 +80,7 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
         .logo-scroll-track {
           display: flex;
           width: fit-content;
-          animation: scroll 20s linear infinite;
+          animation: scroll 30s linear infinite;
         }
         
         .logo-scroll-track:hover {
