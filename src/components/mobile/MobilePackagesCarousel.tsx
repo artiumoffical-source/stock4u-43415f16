@@ -76,7 +76,7 @@ export default function MobilePackagesCarousel() {
         {packages.map((pkg, index) => (
           <Link
             key={pkg.id}
-            to={`/stock-selection?package=${pkg.id}&continue=true`}
+            to={pkg.id === 'israel' ? `/stock-selection?region=israel&continue=true` : `/stock-selection?package=${pkg.id}&continue=true`}
             className="flex-shrink-0 w-full snap-center px-4"
           >
             <div
