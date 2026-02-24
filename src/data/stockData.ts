@@ -67,50 +67,43 @@ export const usStocks: Stock[] = [
   },
 ];
 
-// Israel Stocks - Direct Wikimedia SVG links
+// Israel Stocks - TASE Top 35 by Market Cap
 export const israelStocks: Stock[] = [
-  {
-    symbol: "TEVA",
-    company: "Teva Pharma",
-    description: "חברת התרופות הגדולה בישראל.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Teva_Pharmaceutical_Industries_logo.svg",
-    category: "רפואה 💊",
-  },
-  {
-    symbol: "ESLT",
-    company: "Elbit Systems",
-    description: "ענקית הטכנולוגיה הביטחונית.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Elbit_Systems_Logo.svg",
-    category: "ביטחון 🛡️",
-  },
-  {
-    symbol: "NICE",
-    company: "NICE Ltd.",
-    description: "חברת תוכנה מובילה בפתרונות ענן.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/NICE_Systems_logo.svg",
-    category: "טכנולוגיה 💻",
-  },
-  {
-    symbol: "CHKP",
-    company: "Check Point",
-    description: "חברת אבטחת מידע מובילה עולמית.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Check_Point_logo_2022.svg",
-    category: "אבטחה 🔒",
-  },
-  {
-    symbol: "WIX",
-    company: "Wix.com",
-    description: "פלטפורמה לבניית אתרי אינטרנט.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/76/Wix.com_website_logo.svg",
-    category: "טכנולוגיה 🌐",
-  },
-  {
-    symbol: "MNDY",
-    company: "monday.com",
-    description: "פלטפורמת ניהול עבודה ופרויקטים.",
-    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/90/Monday_logo.svg",
-    category: "טכנולוגיה 📊",
-  },
+  { symbol: "LUMI.TA", company: "בנק לאומי", description: "אחד הבנקים הגדולים בישראל עם פעילות בינלאומית.", logoUrl: "https://logo.clearbit.com/leumi.co.il", category: "בנקאות 🏦" },
+  { symbol: "POLI.TA", company: "בנק הפועלים", description: "הבנק הגדול בישראל עם מגוון שירותים פיננסיים.", logoUrl: "https://logo.clearbit.com/bankhapoalim.co.il", category: "בנקאות 🏦" },
+  { symbol: "NICE.TA", company: "נייס", description: "חברת תוכנה מובילה בפתרונות ענן ובינה מלאכותית.", logoUrl: "https://logo.clearbit.com/nice.com", category: "טכנולוגיה 💻" },
+  { symbol: "TEVA.TA", company: "טבע", description: "חברת התרופות הגדולה בישראל ומהגדולות בעולם.", logoUrl: "https://logo.clearbit.com/tevapharm.com", category: "רפואה 💊" },
+  { symbol: "DSCT.TA", company: "בנק דיסקונט", description: "בנק מוביל בישראל עם שירותים לפרטיים ועסקיים.", logoUrl: "https://logo.clearbit.com/discountbank.co.il", category: "בנקאות 🏦" },
+  { symbol: "MZTF.TA", company: "מזרחי טפחות", description: "בנק מוביל בתחום המשכנתאות והבנקאות הקמעונאית.", logoUrl: "https://logo.clearbit.com/mizrahi-tefahot.co.il", category: "בנקאות 🏦" },
+  { symbol: "ESLT.TA", company: "אלביט מערכות", description: "ענקית הטכנולוגיה הביטחונית הישראלית.", logoUrl: "https://logo.clearbit.com/elbitsystems.com", category: "ביטחון 🛡️" },
+  { symbol: "ICL.TA", company: "איי.סי.אל (ICL)", description: "חברה גלובלית לכימיקלים מיוחדים ודשנים.", logoUrl: "https://logo.clearbit.com/icl-group.com", category: "תעשייה ⚙️" },
+  { symbol: "NVMI.TA", company: "נובה", description: "חברת מכשור למדידה ובקרה בתעשיית השבבים.", logoUrl: "https://logo.clearbit.com/novami.com", category: "טכנולוגיה 💻" },
+  { symbol: "TSEM.TA", company: "טאואר", description: "יצרנית שבבים מובילה עם מפעלים בארץ ובעולם.", logoUrl: "https://logo.clearbit.com/towersemi.com", category: "שבבים 🧠" },
+  { symbol: "AZRG.TA", company: "קבוצת עזריאלי", description: "קבוצת נדל\"ן מובילה בישראל – קניונים, משרדים ומגורים.", logoUrl: "https://logo.clearbit.com/azrieligroup.com", category: "נדל\"ן 🏗️" },
+  { symbol: "BEZQ.TA", company: "בזק", description: "חברת התקשורת הגדולה בישראל.", logoUrl: "https://logo.clearbit.com/bezeq.co.il", category: "תקשורת 📡" },
+  { symbol: "FIBI.TA", company: "הבינלאומי", description: "הבנק הבינלאומי הראשון לישראל.", logoUrl: "https://logo.clearbit.com/fibi.co.il", category: "בנקאות 🏦" },
+  { symbol: "PHOE.TA", company: "הפניקס", description: "קבוצת ביטוח ופיננסים מהמובילות בישראל.", logoUrl: "https://logo.clearbit.com/fnx.co.il", category: "ביטוח 🛡️" },
+  { symbol: "HARL.TA", company: "הראל השקעות", description: "קבוצת ביטוח, פיננסים והשקעות מובילה.", logoUrl: "https://logo.clearbit.com/harel-group.co.il", category: "ביטוח 🛡️" },
+  { symbol: "MLSR.TA", company: "מליסרון", description: "חברת נדל\"ן מניב מובילה – קניונים ומרכזי מסחר.", logoUrl: "https://logo.clearbit.com/melisron.co.il", category: "נדל\"ן 🏗️" },
+  { symbol: "STRS.TA", company: "שטראוס גרופ", description: "קבוצת מזון ומשקאות מובילה בישראל.", logoUrl: "https://logo.clearbit.com/strauss-group.co.il", category: "מזון 🍽️" },
+  { symbol: "SPEN.TA", company: "שפיר הנדסה", description: "חברת תשתיות, בנייה והנדסה מובילה.", logoUrl: "https://logo.clearbit.com/shapir.co.il", category: "תשתיות 🏗️" },
+  { symbol: "ENRG.TA", company: "אנרג'יקס", description: "חברת אנרגיה מתחדשת – רוח, סולארי ואגירה.", logoUrl: "https://logo.clearbit.com/energix-group.com", category: "אנרגיה ⚡" },
+  { symbol: "DLEKG.TA", company: "קבוצת דלק", description: "קבוצת אנרגיה ותשתיות עם פעילות בינלאומית.", logoUrl: "https://logo.clearbit.com/delek-group.com", category: "אנרגיה ⚡" },
+  { symbol: "AMOT.TA", company: "אמות", description: "חברת נדל\"ן מניב – משרדים, מסחר ולוגיסטיקה.", logoUrl: "https://logo.clearbit.com/amot.co.il", category: "נדל\"ן 🏗️" },
+  { symbol: "ARPT.TA", company: "איירפורט סיטי", description: "חברת נדל\"ן מניב סמוך לנתב\"ג.", logoUrl: "https://logo.clearbit.com/airport-city.co.il", category: "נדל\"ן 🏗️" },
+  { symbol: "SAE.TA", company: "שופרסל", description: "רשת הסופרמרקטים הגדולה בישראל.", logoUrl: "https://logo.clearbit.com/shufersal.co.il", category: "קמעונאות 🛒" },
+  { symbol: "BIG.TA", company: "ביג", description: "חברת נדל\"ן מסחרי – מרכזי קניות ופאוור סנטרס.", logoUrl: "https://logo.clearbit.com/bigcenters.co.il", category: "נדל\"ן 🏗️" },
+  { symbol: "FTAL.TA", company: "פתאל החזקות", description: "רשת מלונות בינלאומית מובילה.", logoUrl: "https://logo.clearbit.com/fattal.co.il", category: "תיירות 🏨" },
+  { symbol: "PZOL.TA", company: "פז נפט", description: "חברת אנרגיה, דלק ושירותי תחנות.", logoUrl: "https://logo.clearbit.com/paz.co.il", category: "אנרגיה ⚡" },
+  { symbol: "SKBN.TA", company: "שיכון ובינוי", description: "קבוצת בנייה, תשתיות ונדל\"ן מובילה.", logoUrl: "https://logo.clearbit.com/shikunbinui.com", category: "תשתיות 🏗️" },
+  { symbol: "MTRX.TA", company: "מטריקס", description: "חברת IT ושירותי טכנולוגיה מובילה בישראל.", logoUrl: "https://logo.clearbit.com/matrix.co.il", category: "טכנולוגיה 💻" },
+  { symbol: "ELTR.TA", company: "אלקטרה", description: "קבוצת תשתיות, מיזוג אוויר ומעליות.", logoUrl: "https://logo.clearbit.com/electra.co.il", category: "תשתיות 🏗️" },
+  { symbol: "MTRN.TA", company: "מיטרוניקס", description: "יצרנית רובוטים לניקוי בריכות – מובילה עולמית.", logoUrl: "https://logo.clearbit.com/maytronics.com", category: "טכנולוגיה 💻" },
+  { symbol: "SPNS.TA", company: "סאפיינס", description: "חברת תוכנה לתעשיית הביטוח והפיננסים.", logoUrl: "https://logo.clearbit.com/sapiens.com", category: "טכנולוגיה 💻" },
+  { symbol: "CAMT.TA", company: "קמטק", description: "חברת מכשור אופטי לתעשיית השבבים.", logoUrl: "https://logo.clearbit.com/camtek.com", category: "טכנולוגיה 💻" },
+  { symbol: "MMHD.TA", company: "מנורה מבטחים", description: "קבוצת ביטוח ופנסיה מהגדולות בישראל.", logoUrl: "https://logo.clearbit.com/menoramivt.co.il", category: "ביטוח 🛡️" },
+  { symbol: "KEN.TA", company: "קנון הולדינגס", description: "חברת החזקות בינלאומית בתחומי אנרגיה וספנות.", logoUrl: "https://logo.clearbit.com/kenon-holdings.com", category: "אנרגיה ⚡" },
+  { symbol: "HLAN.TA", company: "חילן", description: "חברת טכנולוגיה – שכר, משאבי אנוש ומחשוב.", logoUrl: "https://logo.clearbit.com/hilan.co.il", category: "טכנולוגיה 💻" },
 ];
 
 // ETFs - Using text fallback since ETF providers don't have iconic logos
@@ -141,20 +134,15 @@ export const usETFs: Stock[] = [
   },
 ];
 
-// Israel ETFs
+// Israel ETFs - TASE local ETFs
 export const israelETFs: Stock[] = [
-  {
-    symbol: "EIS",
-    company: "iShares MSCI Israel ETF",
-    description: "תעודת סל העוקבת אחרי מדד MSCI Israel.",
-    category: "מדדים 📈",
-  },
-  {
-    symbol: "ISRA",
-    company: "VanEck Israel ETF",
-    description: "תעודת סל המתמקדת בחברות ישראליות.",
-    category: "מדדים 📈",
-  },
+  { symbol: "KSM.TA35", company: 'קסם ת"א 35', description: 'תעודת סל העוקבת אחרי מדד ת"א 35.', category: "מדדים 📈" },
+  { symbol: "TCH.TA125", company: 'תכלית ת"א 125', description: 'תעודת סל העוקבת אחרי מדד ת"א 125.', category: "מדדים 📈" },
+  { symbol: "HRL.BANKS", company: 'הראל סל ת"א בנקים', description: 'תעודת סל העוקבת אחרי מדד הבנקים.', category: "סקטור 🏦" },
+  { symbol: "MGD.NDLN", company: 'מגדל סל ת"א נדל"ן', description: 'תעודת סל העוקבת אחרי מדד הנדל"ן.', category: "סקטור 🏗️" },
+  { symbol: "TCH.DIV", company: "תכלית תל-דיב", description: "תעודת סל העוקבת אחרי מדד תל-דיב – מניות דיבידנד.", category: "מדדים 📈" },
+  { symbol: "KSM.TECH", company: 'קסם ת"א טכנולוגיה', description: "תעודת סל העוקבת אחרי מדד הטכנולוגיה.", category: "סקטור 💻" },
+  { symbol: "HRL.GOV", company: 'הראל אג"ח ממשלתי', description: 'תעודת סל העוקבת אחרי אג"ח ממשלתי.', category: "אג\"ח 📊" },
 ];
 
 // Crypto ETFs
@@ -187,8 +175,12 @@ export const usTechStocks: Stock[] = [
 ];
 
 export const israelTechStocks: Stock[] = [
-  israelStocks.find((s) => s.symbol === "NICE")!,
-  israelStocks.find((s) => s.symbol === "CHKP")!,
-  israelStocks.find((s) => s.symbol === "WIX")!,
-  israelStocks.find((s) => s.symbol === "MNDY")!,
+  israelStocks.find((s) => s.symbol === "NICE.TA")!,
+  israelStocks.find((s) => s.symbol === "NVMI.TA")!,
+  israelStocks.find((s) => s.symbol === "TSEM.TA")!,
+  israelStocks.find((s) => s.symbol === "SPNS.TA")!,
+  israelStocks.find((s) => s.symbol === "CAMT.TA")!,
+  israelStocks.find((s) => s.symbol === "MTRX.TA")!,
+  israelStocks.find((s) => s.symbol === "HLAN.TA")!,
+  israelStocks.find((s) => s.symbol === "MTRN.TA")!,
 ];
