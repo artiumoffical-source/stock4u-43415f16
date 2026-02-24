@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GiftProvider } from "./contexts/GiftContext";
 import { CartProvider } from "./contexts/CartContext";
-import { AdminAuthProvider } from "./hooks/useAdminAuth";
+
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import StockSelection from "./pages/StockSelection";
@@ -18,17 +18,7 @@ import PurchaseSuccess from "./pages/PurchaseSuccess";
 import PurchaseError from "./pages/PurchaseError";
 import About from "./pages/About";
 
-import AdminLogin from "./pages/AdminLogin";
-import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
-import { AdminLayout } from "./components/admin/AdminLayout";
-import DashboardOverview from "./pages/admin/DashboardOverview";
 
-import GiftsPage from "./pages/admin/GiftsPage";
-import CustomersPage from "./pages/admin/CustomersPage";
-import AdminUsersPage from "./pages/admin/AdminUsersPage";
-import AuditLogsPage from "./pages/admin/AuditLogsPage";
-import SettingsPage from "./pages/admin/SettingsPage";
 import GiftRegistration from "./pages/GiftRegistration";
 import RedeemGift from "./pages/RedeemGift";
 import NotFound from "./pages/NotFound";
@@ -42,7 +32,7 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AdminAuthProvider>
+        
           <CartProvider>
             <GiftProvider>
               <Toaster />
@@ -61,20 +51,6 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 
                 {/* <Route path="/login" element={<Login />} /> */}
-                <Route path="/admin-portal-s4u" element={<AdminLogin />} />
-                <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                
-                {/* New Admin Back Office Routes */}
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<DashboardOverview />} />
-                  <Route path="dashboard" element={<DashboardOverview />} />
-                  
-                  <Route path="gifts" element={<GiftsPage />} />
-                  <Route path="customers" element={<CustomersPage />} />
-                  <Route path="users" element={<AdminUsersPage />} />
-                  <Route path="logs" element={<AuditLogsPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                </Route>
                 
                 <Route path="/gift-registration" element={<GiftRegistration />} />
                 <Route path="/redeem" element={<RedeemGift />} />
@@ -87,7 +63,7 @@ const App = () => (
             </BrowserRouter>
           </GiftProvider>
           </CartProvider>
-        </AdminAuthProvider>
+        
       </TooltipProvider>
     </QueryClientProvider>
   </ErrorBoundary>
