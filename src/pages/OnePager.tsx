@@ -53,48 +53,18 @@ export default function OnePager() {
         dir="rtl"
         className={
           isFullscreen
-            ? "fixed inset-0 z-[9999] bg-white w-screen h-screen overflow-hidden transition-all"
-            : "min-h-screen flex items-start justify-center py-10 print:py-0 print:bg-white transition-all"
+            ? "fixed inset-0 z-[9999] overflow-y-auto px-4 py-10 flex items-start justify-center transition-all duration-300 backdrop-blur-sm"
+            : "min-h-screen flex items-start justify-center py-10 print:py-0 print:bg-white transition-all duration-300"
         }
-        style={{ fontFamily: "'Montserrat', sans-serif", ...(!isFullscreen ? { background: "#CBD5E1" } : {}) }}
+        style={{
+          fontFamily: "'Montserrat', sans-serif",
+          background: isFullscreen ? "rgba(15,23,42,0.95)" : "#CBD5E1",
+        }}
       >
-        {/* Action Toolbar */}
-        <div className="onepager-toolbar print:hidden fixed top-6 right-6 z-[10000] flex gap-2" dir="ltr">
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
-            style={{ background: "linear-gradient(135deg, #10B981, #14B8A6)", opacity: 0.85 }}
-            title="הדפסה"
-          >
-            <Printer size={14} />
-            הדפסה
-          </button>
-          {isFullscreen ? (
-            <button
-              onClick={() => setIsFullscreen(false)}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
-              style={{ background: "#334155", opacity: 0.85 }}
-              title="סגור מצגת"
-            >
-              <X size={14} />
-              סגור מצגת
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsFullscreen(true)}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
-              style={{ background: "#334155", opacity: 0.85 }}
-              title="הגדל למסך מלא"
-            >
-              <Maximize size={14} />
-              מצב מצגת
-            </button>
-          )}
-        </div>
         <div
-          className={`a4-page overflow-hidden w-full transition-all duration-300 ${
+          className={`a4-page relative bg-white mx-auto w-full transition-all duration-300 ${
             isFullscreen
-              ? "w-full h-full max-w-none rounded-none overflow-y-auto"
+              ? "max-w-[1400px] min-h-[85vh] rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.5)] overflow-hidden"
               : ""
           }`}
           style={{
@@ -103,11 +73,43 @@ export default function OnePager() {
               borderRadius: "12px",
               boxShadow: "0 30px 60px -15px rgba(0,0,0,0.35)",
             } : {}),
-            position: "relative",
             display: "flex",
             flexDirection: "column",
           }}
         >
+          {/* Action Toolbar */}
+          <div className="onepager-toolbar print:hidden absolute top-6 right-6 z-[100] flex gap-2" dir="ltr">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+              style={{ background: "linear-gradient(135deg, #10B981, #14B8A6)", opacity: 0.85 }}
+              title="הדפסה"
+            >
+              <Printer size={14} />
+              הדפסה
+            </button>
+            {isFullscreen ? (
+              <button
+                onClick={() => setIsFullscreen(false)}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+                style={{ background: "#334155", opacity: 0.85 }}
+                title="סגור מצגת"
+              >
+                <X size={14} />
+                סגור מצגת
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsFullscreen(true)}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+                style={{ background: "#334155", opacity: 0.85 }}
+                title="הגדל למסך מלא"
+              >
+                <Maximize size={14} />
+                מצב מצגת
+              </button>
+            )}
+          </div>
           {/* ━━━━━━━━━━ HERO ━━━━━━━━━━ */}
           <div
             className="relative overflow-hidden px-4 sm:px-8"
