@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Shield, Scale, Cpu, Users, TrendingUp, DollarSign, Download, ArrowLeftRight, UserCheck, Zap, Printer } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Shield, Scale, Cpu, Users, TrendingUp, DollarSign, Download, ArrowLeftRight, UserCheck, Zap, Printer, Maximize, X } from "lucide-react";
 
 import dollarMascot from "@/assets/investor/dollar-mascot.png";
 import giftMascot from "@/assets/investor/gift-mascot.png";
@@ -9,6 +9,8 @@ import sparkIcon from "@/assets/investor/spark-icon.png";
 import starIcon from "@/assets/investor/star-icon.png";
 
 export default function OnePager() {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   useEffect(() => {
     document.title = "Stock4U | שותפות אסטרטגית (חסוי)";
     const meta = document.createElement("meta");
@@ -21,6 +23,15 @@ export default function OnePager() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isFullscreen]);
+
   return (
     <>
       <style>{`
@@ -32,7 +43,7 @@ export default function OnePager() {
           .a4-page, .a4-page * { visibility:visible!important; display:revert!important; }
           .print-card { display:block!important; visibility:visible!important; background:#fff!important; border:1px solid #CBD5E1!important; color:#000!important; }
           .print-card p, .print-card div { color:#000!important; }
-          .print-btn { display:none!important; }
+          .print-btn, .onepager-toolbar { display:none!important; }
           .print-mascot { opacity:0!important; }
           @page { size:A4 portrait; margin:0; }
         }
@@ -40,9 +51,46 @@ export default function OnePager() {
 
       <div
         dir="rtl"
-        className="min-h-screen flex items-start justify-center py-10 print:py-0 print:bg-white"
-        style={{ fontFamily: "'Montserrat', sans-serif", background: "#CBD5E1" }}
+        className={
+          isFullscreen
+            ? "fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto p-4 md:p-10 transition-all"
+            : "min-h-screen flex items-start justify-center py-10 print:py-0 print:bg-white transition-all"
+        }
+        style={{ fontFamily: "'Montserrat', sans-serif", background: isFullscreen ? "#E0E7F5" : "#CBD5E1" }}
       >
+        {/* Action Toolbar */}
+        <div className="onepager-toolbar print:hidden fixed top-4 left-4 z-[10000] flex gap-2" dir="ltr">
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+            style={{ background: "linear-gradient(135deg, #10B981, #14B8A6)", opacity: 0.85 }}
+            title="הדפסה"
+          >
+            <Printer size={14} />
+            הדפסה
+          </button>
+          {isFullscreen ? (
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+              style={{ background: "#334155", opacity: 0.85 }}
+              title="סגור"
+            >
+              <X size={14} />
+              סגור
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-white shadow-lg transition-opacity hover:opacity-100"
+              style={{ background: "#334155", opacity: 0.85 }}
+              title="מצב מצגת"
+            >
+              <Maximize size={14} />
+              מצב מצגת
+            </button>
+          )}
+        </div>
         <div
           className="a4-page overflow-hidden w-full"
           style={{
@@ -258,34 +306,7 @@ export default function OnePager() {
           </div>
         </div>
 
-        {/* Print Button */}
-        <button
-          className="print-btn"
-          onClick={() => window.print()}
-          style={{
-            position: "fixed",
-            bottom: "24px",
-            left: "24px",
-            width: "48px",
-            height: "48px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #10B981, #14B8A6)",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 4px 14px rgba(16,185,129,0.4)",
-            opacity: 0.7,
-            transition: "opacity 0.2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
-          title="הדפסה"
-        >
-          <Printer size={20} />
-        </button>
+
       </div>
     </>
   );
