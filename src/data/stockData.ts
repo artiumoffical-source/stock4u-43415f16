@@ -70,7 +70,7 @@ export const usStocks: Stock[] = [
 // Israel Stocks - TASE Top 35 by Market Cap
 export const israelStocks: Stock[] = [
   { symbol: "LUMI.TA", company: "בנק לאומי", description: "אחד הבנקים הגדולים בישראל עם פעילות בינלאומית.", logoUrl: "/images/logos/leumi.png", category: "בנקאות 🏦" },
-  { symbol: "POLI.TA", company: "בנק הפועלים", description: "הבנק הגדול בישראל עם מגוון שירותים פיננסיים.", logoUrl: "https://img.logo.dev/bankhapoalim.co.il?token=pk_a8sHfgRFSBuRUKJOlVgp1w&format=png", category: "בנקאות 🏦" },
+  { symbol: "POLI.TA", company: "בנק הפועלים", description: "הבנק הגדול בישראל עם מגוון שירותים פיננסיים.", logoUrl: "/images/logos/hapoalim.png", category: "בנקאות 🏦" },
   { symbol: "NICE.TA", company: "נייס", description: "חברת תוכנה מובילה בפתרונות ענן ובינה מלאכותית.", logoUrl: "https://img.logo.dev/nice.com?token=pk_a8sHfgRFSBuRUKJOlVgp1w&format=png", category: "טכנולוגיה 💻" },
   { symbol: "TEVA.TA", company: "טבע", description: "חברת התרופות הגדולה בישראל ומהגדולות בעולם.", logoUrl: "https://img.logo.dev/tevapharm.com?token=pk_a8sHfgRFSBuRUKJOlVgp1w&format=png", category: "רפואה 💊" },
   { symbol: "DSCT.TA", company: "בנק דיסקונט", description: "בנק מוביל בישראל עם שירותים לפרטיים ועסקיים.", logoUrl: "https://img.logo.dev/discountbank.co.il?token=pk_a8sHfgRFSBuRUKJOlVgp1w&format=png", category: "בנקאות 🏦" },
