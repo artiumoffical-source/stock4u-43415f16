@@ -214,7 +214,7 @@ export default function OnePager() {
                 <StepCard
                   num={2}
                   icon={<UserCheck size={14} color="#10B981" />}
-                  title="הצטרפות חלקה"
+                  title="מינימום הפקדה"
                   text="המקבל פותח חשבון מיטב דרך תהליך זיהוי דיגיטלי מלא ללא ניירת."
                 />
                 <StepCard
