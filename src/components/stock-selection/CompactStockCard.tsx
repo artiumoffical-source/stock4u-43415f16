@@ -118,11 +118,11 @@ export function CompactStockCard({
               <img
                 src={fallbackSrc || stock.logoUrl}
                 alt={stock.company}
-                className="w-full h-full object-contain p-1"
-                onError={() => {
+                className="h-full w-full object-contain"
+                onError={(e) => {
                   if (!fallbackSrc) {
-                    const encoded = encodeURIComponent(stock.company);
-                    setFallbackSrc(`https://ui-avatars.com/api/?name=${encoded}&background=4F6B8A&color=ffffff&size=128&bold=true&font-size=0.45`);
+                    // Fallback: generic building icon
+                    setFallbackSrc("https://cdn-icons-png.flaticon.com/512/4091/4091968.png");
                   } else {
                     setLogoError(true);
                   }
