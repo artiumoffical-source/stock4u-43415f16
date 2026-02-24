@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Full Dataset with Crypto & Finance
 const logos = [
   // US & Global
   { name: "Apple", src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
@@ -23,6 +22,8 @@ const logos = [
   { name: "Visa", src: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" },
   { name: "דלק", src: "/images/logos/delek.png" },
   { name: "PayPal", src: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" },
+  { name: "שופרסל", src: "/images/logos/shufersal.png" },
+  { name: "בזק", src: "/images/logos/bezeq.png" },
 ];
 
 interface LogoMarqueeProps {
@@ -33,43 +34,39 @@ interface LogoMarqueeProps {
 export default function LogoMarquee({ showTitle = true, className = "" }: LogoMarqueeProps) {
   return (
     <div className={`py-6 md:py-8 overflow-hidden ${className}`}>
-      {/* Header */}
       {showTitle && (
         <h3 className="text-lg md:text-xl text-[#486284] text-center mb-5 font-medium">
           חברות פופולאריות להשקעה
         </h3>
       )}
 
-      {/* Marquee Container */}
-      <div className="w-full overflow-hidden relative">
-        {/* Gradient Fade Left */}
+      {/* Force LTR to prevent RTL animation bugs */}
+      <div className="relative w-full overflow-hidden" dir="ltr">
+        {/* Gradient fades */}
         <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-[#E0E7F5] to-transparent z-10 pointer-events-none" />
-        
-        {/* Gradient Fade Right */}
         <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-[#E0E7F5] to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling Track - Two sets for seamless loop */}
-        <div className="logo-scroll-track">
-          {/* Set 1 */}
-          <div className="logo-scroll-content">
-            {logos.map((logo, index) => (
+        {/* Double track container */}
+        <div className="flex hover:[&>div]:pause-animation">
+          {/* Track 1 */}
+          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 marquee-track">
+            {logos.map((logo, i) => (
               <img
-                key={`set1-${index}`}
+                key={`a-${i}`}
                 src={logo.src}
                 alt={logo.name}
-                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 mx-6 md:mx-8 flex-shrink-0"
+                className="h-8 md:h-10 w-auto max-w-[100px] object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 shrink-0"
               />
             ))}
           </div>
-
-          {/* Set 2 (Duplicate for Seamless Loop) */}
-          <div className="logo-scroll-content">
-            {logos.map((logo, index) => (
+          {/* Track 2 (clone) */}
+          <div className="flex shrink-0 items-center gap-12 md:gap-16 pr-12 md:pr-16 marquee-track" aria-hidden="true">
+            {logos.map((logo, i) => (
               <img
-                key={`set2-${index}`}
+                key={`b-${i}`}
                 src={logo.src}
                 alt={logo.name}
-                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 mx-6 md:mx-8 flex-shrink-0"
+                className="h-8 md:h-10 w-auto max-w-[100px] object-contain opacity-60 hover:opacity-100 transition-opacity duration-200 shrink-0"
               />
             ))}
           </div>
@@ -77,29 +74,15 @@ export default function LogoMarquee({ showTitle = true, className = "" }: LogoMa
       </div>
 
       <style>{`
-        .logo-scroll-track {
-          display: flex;
-          width: fit-content;
-          animation: scroll 30s linear infinite;
+        .marquee-track {
+          animation: marquee-scroll 35s linear infinite;
         }
-        
-        .logo-scroll-track:hover {
+        .hover\\:[\\&\\>div\\]\\:pause-animation:hover > div {
           animation-play-state: paused;
         }
-        
-        .logo-scroll-content {
-          display: flex;
-          align-items: center;
-          flex-shrink: 0;
-        }
-        
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
+        @keyframes marquee-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
         }
       `}</style>
     </div>
