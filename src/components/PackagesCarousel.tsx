@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -8,48 +8,32 @@ import packageIsrael from '@/assets/packages/package-israel.png';
 import packageRich from '@/assets/packages/package-rich.png';
 import packageCustom from '@/assets/packages/package-custom.png';
 
-// Package card data with full card images
+// All 4 package cards
 const packages = [
-  { id: 'pro', img: packagePro, alt: 'חבילת מניות מקצועית' },
-  { id: 'israel', img: packageIsrael, alt: 'חבילת מניות ישראלית' },
-  { id: 'brave', img: packageRich, alt: 'חבילת מניות עשירה' },
   { id: 'custom', img: packageCustom, alt: 'בנה את המתנה שלך' },
+  { id: 'brave', img: packageRich, alt: 'חבילת מניות עשירה' },
+  { id: 'israel', img: packageIsrael, alt: 'חבילת מניות ישראלית' },
+  { id: 'pro', img: packagePro, alt: 'חבילת מניות מקצועית' },
 ];
 
-// Triple the array for infinite illusion
-const displayPackages = [...packages, ...packages, ...packages];
+// Multiplexer: 10x duplication for virtually infinite scroll
+const displayPackages = Array(10).fill(packages).flat();
 
 export default function PackagesCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // On mount, scroll to the middle set (index = packages.length)
+  // Start in the middle on mount
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    // Wait for layout
-    requestAnimationFrame(() => {
-      const oneSetWidth = el.scrollWidth / 3;
-      el.scrollLeft = oneSetWidth;
-    });
-  }, []);
-
-  // Reset scroll position when reaching edges
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const oneSetWidth = el.scrollWidth / 3;
-
-    if (el.scrollLeft <= 0) {
-      el.scrollLeft = oneSetWidth;
-    } else if (el.scrollLeft >= oneSetWidth * 2) {
-      el.scrollLeft = oneSetWidth;
+    if (scrollRef.current) {
+      const centerPosition = (scrollRef.current.scrollWidth / 2) - (scrollRef.current.clientWidth / 2);
+      scrollRef.current.scrollTo({ left: centerPosition, behavior: 'instant' as ScrollBehavior });
     }
   }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 300;
+      const scrollAmount = 320;
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -90,8 +74,7 @@ export default function PackagesCarousel() {
         {/* The Scroll Container */}
         <div 
           ref={scrollRef}
-          onScroll={handleScroll}
-          className="flex gap-6 overflow-x-auto pb-4 pt-2 px-2 snap-x scrollbar-hide"
+          className="flex gap-6 overflow-x-auto pb-4 pt-2 px-2 snap-x scroll-smooth scrollbar-hide"
           style={{ scrollbarWidth: 'none' }}
         >
           {displayPackages.map((pkg, index) => (
