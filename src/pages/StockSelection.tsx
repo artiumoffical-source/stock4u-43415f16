@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, X, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import Footer from "@/components/Footer";
@@ -25,7 +25,9 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function StockSelection() {
-  const [selectedRegion, setSelectedRegion] = useState<Region>("us");
+  const [searchParams] = useSearchParams();
+  const regionParam = searchParams.get("region");
+  const [selectedRegion, setSelectedRegion] = useState<Region>(regionParam === "israel" ? "israel" : "us");
   const [selectedType, setSelectedType] = useState<StockType>("single_stocks");
   const [searchQuery, setSearchQuery] = useState("");
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);

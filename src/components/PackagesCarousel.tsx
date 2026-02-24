@@ -49,6 +49,8 @@ export default function PackagesCarousel() {
   const handleSelect = (pkgId: string) => {
     if (pkgId === 'custom') {
       navigate('/stock-selection?continue=true');
+    } else if (pkgId === 'israel') {
+      navigate('/stock-selection?region=israel&continue=true');
     } else {
       navigate(`/stock-selection?filter=${pkgId}`);
     }
