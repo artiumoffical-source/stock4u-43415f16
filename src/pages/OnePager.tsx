@@ -215,7 +215,7 @@ export default function OnePager() {
                   num={2}
                   icon={<UserCheck size={14} color="#10B981" />}
                   title="מינימום הפקדה"
-                  text="המקבל פותח חשבון מיטב דרך תהליך זיהוי דיגיטלי מלא ללא ניירת."
+                  text="האם אפשר להוריד את המינימום הפקדה מ-50,000 שקל לפחות מזה?"
                 />
                 <StepCard
                   num={3}
