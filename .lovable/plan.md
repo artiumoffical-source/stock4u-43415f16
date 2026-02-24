@@ -1,37 +1,34 @@
 
 
-# Enhanced Print CSS and Print Button for One-Pager
+## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
 
-## Changes to `src/pages/OnePager.tsx`
+### What Changes
 
-### 1. Enhanced Print CSS (`@media print`)
-Update the existing print styles (lines 27-31) to include:
-- White background for the outer container
-- Black text color as default
-- `break-inside: avoid` on all card-like elements (InfoCard, StepCard, MoatRow, ValueCard, and the Omnibus highlight box) to prevent cards from being split across pages
-- Hide the print button itself during printing
-- Hide decorative mascot images during print for cleaner output
-- Preserve colored headings and green accents with `print-color-adjust: exact`
+**Single file edit: `src/data/stockData.ts`**
 
-### 2. Print Button
-Add a floating print button (using `Printer` icon from lucide-react) positioned fixed at bottom-left of the screen:
-- Only visible on screen (hidden via `print:hidden` class)
-- Styled as a small circular green button matching the page palette
-- Calls `window.print()` on click
-- Semi-transparent until hovered for a subtle, non-intrusive look
+Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
 
-### 3. Card `break-inside: avoid`
-Add a shared CSS class `.print-card` to the inline `<style>` block with `break-inside: avoid` rule, and apply it to all card sub-components (InfoCard, StepCard, MoatRow, ValueCard) and the infrastructure highlight box.
+### Logo Strategy
 
-## Technical Details
+Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
 
-**File**: `src/pages/OnePager.tsx`
+### Data Mapping
 
-- **Line 2**: Add `Printer` to lucide-react imports
-- **Lines 26-32**: Expand the `<style>` block with enhanced print rules:
-  - `.print-card { break-inside: avoid; }` 
-  - `.print-btn { display: none !important; }`
-  - Body/page background white, text black
-- **After line 251** (before closing `</div>` of outer container): Add the floating print button
-- **Sub-components**: Add `className="print-card"` to the outer `<div>` of InfoCard, StepCard, MoatRow, and ValueCard
+Each entry maps to the existing `Stock` interface:
+- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
+- `company` → Hebrew name (e.g., `"בנק לאומי"`)
+- `description` → Short Hebrew description of the company
+- `logoUrl` → `https://logo.clearbit.com/{domain}`
+- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
+
+### What is NOT touched
+- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
+- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
+- All routing, contexts, and other pages — untouched
+
+### Technical Details
+
+The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+
+ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
 
