@@ -35,6 +35,7 @@ export function CompactStockCard({
   const [amount, setAmount] = useState(investmentAmount);
   const [justAdded, setJustAdded] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const [fallbackSrc, setFallbackSrc] = useState<string | null>(null);
   const { addStock } = useGift();
 
   // Validation: Only accept positive integers
@@ -113,12 +114,19 @@ export function CompactStockCard({
         {/* 2. Centered Overlapping Logo */}
         <div className="absolute top-10 md:top-12 left-1/2 transform -translate-x-1/2">
           <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full p-2 shadow-sm border border-gray-100 flex items-center justify-center">
-            {stock.logoUrl && !logoError ? (
+            {(stock.logoUrl || fallbackSrc) && !logoError ? (
               <img
-                src={stock.logoUrl}
+                src={fallbackSrc || stock.logoUrl}
                 alt={stock.company}
                 className="w-full h-full object-contain p-1"
-                onError={() => setLogoError(true)}
+                onError={() => {
+                  if (!fallbackSrc) {
+                    const encoded = encodeURIComponent(stock.company);
+                    setFallbackSrc(`https://ui-avatars.com/api/?name=${encoded}&background=4F6B8A&color=ffffff&size=128&bold=true&font-size=0.45`);
+                  } else {
+                    setLogoError(true);
+                  }
+                }}
               />
             ) : (
               <span className="text-blue-600 font-bold text-lg md:text-xl">
