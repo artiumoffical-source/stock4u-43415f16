@@ -196,14 +196,21 @@ export type Database = {
           delivery_timing: string
           gift_items: Json
           id: string
+          kyc_broker_conf_url: string | null
+          kyc_id_url: string | null
+          operational_status: string
           payment_status: string
           recipient_email: string
+          recipient_full_name: string | null
+          recipient_id: string | null
           recipient_name: string
           recipient_phone: string | null
           scheduled_at: string | null
           sender_email: string
           sender_name: string
           status: string
+          target_broker_account: string | null
+          target_broker_name: string | null
           token: string | null
           total_amount: number
           updated_at: string
@@ -216,14 +223,21 @@ export type Database = {
           delivery_timing?: string
           gift_items?: Json
           id?: string
+          kyc_broker_conf_url?: string | null
+          kyc_id_url?: string | null
+          operational_status?: string
           payment_status?: string
           recipient_email: string
+          recipient_full_name?: string | null
+          recipient_id?: string | null
           recipient_name: string
           recipient_phone?: string | null
           scheduled_at?: string | null
           sender_email: string
           sender_name: string
           status?: string
+          target_broker_account?: string | null
+          target_broker_name?: string | null
           token?: string | null
           total_amount: number
           updated_at?: string
@@ -236,14 +250,21 @@ export type Database = {
           delivery_timing?: string
           gift_items?: Json
           id?: string
+          kyc_broker_conf_url?: string | null
+          kyc_id_url?: string | null
+          operational_status?: string
           payment_status?: string
           recipient_email?: string
+          recipient_full_name?: string | null
+          recipient_id?: string | null
           recipient_name?: string
           recipient_phone?: string | null
           scheduled_at?: string | null
           sender_email?: string
           sender_name?: string
           status?: string
+          target_broker_account?: string | null
+          target_broker_name?: string | null
           token?: string | null
           total_amount?: number
           updated_at?: string
