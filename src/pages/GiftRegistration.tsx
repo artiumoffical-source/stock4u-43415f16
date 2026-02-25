@@ -8,7 +8,7 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard, Calendar, Building } from "lucide-react";
+import { Loader2, Gift, Star, User, Phone, Mail, MapPin, CreditCard, Calendar, Building, CheckCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
@@ -41,9 +41,12 @@ export default function GiftRegistration() {
   const [giftData, setGiftData] = useState<GiftData | null>(null);
   const [uploadedFileFront, setUploadedFileFront] = useState<File | null>(null);
   const [uploadedFileBack, setUploadedFileBack] = useState<File | null>(null);
+  const [uploadedBrokerConf, setUploadedBrokerConf] = useState<File | null>(null);
   const [isUploadingFront, setIsUploadingFront] = useState(false);
   const [isUploadingBack, setIsUploadingBack] = useState(false);
+  const [isUploadingBrokerConf, setIsUploadingBrokerConf] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     fullName: "",
     idNumber: "",
@@ -53,6 +56,8 @@ export default function GiftRegistration() {
     street: "",
     houseNumber: "",
     country: "ישראל",
+    targetBrokerName: "",
+    targetBrokerAccount: "",
     consentActingOwnBehalf: false,
     consentInfoTrue: false,
     consentTermsAccepted: false,
@@ -114,44 +119,28 @@ export default function GiftRegistration() {
     }
   };
 
-  const handleFileUpload = async (file: File, side: 'front' | 'back') => {
+  const handleFileUpload = async (file: File, side: 'front' | 'back' | 'broker_conf') => {
     if (!token) return;
     
-    const setIsUploading = side === 'front' ? setIsUploadingFront : setIsUploadingBack;
-    const setUploadedFile = side === 'front' ? setUploadedFileFront : setUploadedFileBack;
+    const setIsUploading = side === 'front' ? setIsUploadingFront : side === 'back' ? setIsUploadingBack : setIsUploadingBrokerConf;
+    const setUploadedFile = side === 'front' ? setUploadedFileFront : side === 'back' ? setUploadedFileBack : setUploadedBrokerConf;
+    const bucket = side === 'broker_conf' ? 'broker-documents' : 'kyc-documents';
     
     setIsUploading(true);
     try {
-      // Convert file to base64
-      const reader = new FileReader();
-      const fileData = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => {
-          const base64 = reader.result?.toString().split(',')[1];
-          if (base64) resolve(base64);
-          else reject(new Error('Failed to read file'));
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      const fileExtension = file.name.split('.').pop();
+      const fileName = `${token}/${side}_${Date.now()}.${fileExtension}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(fileName, file, { upsert: true });
 
-      // Upload via edge function for secure server-side handling
-      const { data, error } = await supabase.functions.invoke('upload-kyc-document', {
-        body: {
-          token,
-          fileName: `${side}_${file.name}`,
-          fileData,
-          fileType: file.type,
-          documentSide: side
-        }
-      });
-
-      if (error) throw error;
-      if (!data?.success) throw new Error(data?.message || 'Upload failed');
+      if (uploadError) throw uploadError;
       
       setUploadedFile(file);
       toast({
         title: "הקובץ הועלה בהצלחה",
-        description: side === 'front' ? "צד קדמי נשמר" : "צד אחורי נשמר",
+        description: side === 'front' ? "צד קדמי נשמר" : side === 'back' ? "צד אחורי נשמר" : "אישור ברוקר נשמר",
       });
     } catch (error: any) {
       toast({
@@ -164,19 +153,16 @@ export default function GiftRegistration() {
     }
   };
 
-  const handleFileRemove = async (side: 'front' | 'back') => {
-    const uploadedFile = side === 'front' ? uploadedFileFront : uploadedFileBack;
-    const setUploadedFile = side === 'front' ? setUploadedFileFront : setUploadedFileBack;
+  const handleFileRemove = async (side: 'front' | 'back' | 'broker_conf') => {
+    const uploadedFile = side === 'front' ? uploadedFileFront : side === 'back' ? uploadedFileBack : uploadedBrokerConf;
+    const setUploadedFile = side === 'front' ? setUploadedFileFront : side === 'back' ? setUploadedFileBack : setUploadedBrokerConf;
+    const bucket = side === 'broker_conf' ? 'broker-documents' : 'kyc-documents';
     
     if (uploadedFile && token) {
       try {
-        // Try to remove the file from storage
         const fileExtension = uploadedFile.name.split('.').pop();
         const fileName = `${token}/${side}_${Date.now()}.${fileExtension}`;
-        
-        await supabase.storage
-          .from('kyc-documents')
-          .remove([fileName]);
+        await supabase.storage.from(bucket).remove([fileName]);
       } catch (error) {
         console.error('Error removing file:', error);
       }
@@ -195,6 +181,24 @@ export default function GiftRegistration() {
       });
       return;
     }
+
+    if (!uploadedBrokerConf) {
+      toast({
+        variant: "destructive",
+        title: "חסר אישור ברוקר",
+        description: "אנא העלה אישור חשבון ברוקר",
+      });
+      return;
+    }
+
+    if (!formData.targetBrokerName || !formData.targetBrokerAccount) {
+      toast({
+        variant: "destructive",
+        title: "חסרים פרטי ברוקר",
+        description: "אנא מלא את שם הברוקר ומספר חשבון",
+      });
+      return;
+    }
     
     setSubmitting(true);
 
@@ -205,32 +209,43 @@ export default function GiftRegistration() {
         dateOfBirth: dateOfBirth ? format(dateOfBirth, 'yyyy-MM-dd') : '',
       });
 
-      const { data, error } = await supabase.functions.invoke('register-gift-recipient', {
-        body: {
-          token,
-          registrationData: validatedData,
-          documentFileNameFront: uploadedFileFront.name,
-          documentFileNameBack: uploadedFileBack.name,
-          documentType: uploadedFileFront.type
-        }
+      // Get storage URLs for uploaded files
+      const { data: kycUrlData } = supabase.storage
+        .from('kyc-documents')
+        .getPublicUrl(`${token}/front_${Date.now()}`);
+      
+      const { data: brokerUrlData } = supabase.storage
+        .from('broker-documents')
+        .getPublicUrl(`${token}/broker_conf_${Date.now()}`);
+
+      // Update gift record with all new fields
+      const { error: updateError } = await supabase
+        .from('gifts')
+        .update({
+          recipient_full_name: validatedData.fullName,
+          recipient_id: validatedData.idNumber,
+          recipient_phone: validatedData.phone,
+          target_broker_name: formData.targetBrokerName,
+          target_broker_account: formData.targetBrokerAccount,
+          kyc_id_url: `kyc-documents/${token}/`,
+          kyc_broker_conf_url: `broker-documents/${token}/`,
+          operational_status: 'Pending',
+        })
+        .eq('token', token);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "✅ הפרטים התקבלו בהצלחה!",
+        description: "אנו מאמתים את המסמכים ונעדכן אותך כשהכספים יועברו לחשבון הברוקר שלך.",
       });
-
-      if (error) throw error;
-
-      if (data.success) {
-        toast({
-          title: "הרשמה הושלמה!",
-          description: "פרטיך ומסמך הזהות נרשמו בהצלחה. המתנה תהיה זמינה בקרוב בחשבונך.",
-        });
-        navigate("/");
-      } else {
-        throw new Error(data.message || "שגיאה בהרשמה");
-      }
+      
+      // Show success state
+      setCurrentStep(3);
     } catch (error: any) {
       console.error("Error registering:", error);
       
       if (error.errors) {
-        // Zod validation errors
         const firstError = error.errors[0];
         toast({
           title: "שגיאה בנתונים",
@@ -327,6 +342,7 @@ export default function GiftRegistration() {
           </Card>
 
           {/* Registration Form */}
+          {currentStep !== 3 && (
           <Card>
             <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
               <CardTitle className="text-center text-primary text-lg sm:text-xl">השלמת הרשמה</CardTitle>
@@ -535,6 +551,57 @@ export default function GiftRegistration() {
                   </div>
                 </div>
 
+                {/* Broker Details Section */}
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-primary flex items-center gap-2">
+                    <Building className="h-5 w-5" />
+                    פרטי חשבון ברוקר
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    יש למלא את פרטי חשבון הברוקר אליו יועברו המניות
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="targetBrokerName" className="text-sm">שם הברוקר *</Label>
+                      <Input
+                        id="targetBrokerName"
+                        type="text"
+                        required
+                        value={formData.targetBrokerName}
+                        onChange={(e) => setFormData(prev => ({...prev, targetBrokerName: e.target.value}))}
+                        className="h-11 sm:h-10 text-base sm:text-sm"
+                        placeholder="לדוגמה: מיטב, פסגות, IBI"
+                      />
+                    </div>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="targetBrokerAccount" className="text-sm">מספר חשבון ברוקר *</Label>
+                      <Input
+                        id="targetBrokerAccount"
+                        type="text"
+                        required
+                        value={formData.targetBrokerAccount}
+                        onChange={(e) => setFormData(prev => ({...prev, targetBrokerAccount: e.target.value}))}
+                        className="h-11 sm:h-10 text-base sm:text-sm"
+                        placeholder="מספר חשבון"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Broker Confirmation Upload */}
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label className="text-right font-medium text-sm">אישור חשבון ברוקר *</Label>
+                    <p className="text-xs text-muted-foreground">העלה אישור מהברוקר על קיום החשבון (צילום מסך / מסמך PDF)</p>
+                    <FileUpload
+                      onFileSelect={(file) => handleFileUpload(file, 'broker_conf')}
+                      onFileRemove={() => handleFileRemove('broker_conf')}
+                      uploadedFile={uploadedBrokerConf}
+                      isUploading={isUploadingBrokerConf}
+                      acceptedTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
+                      maxSizeMB={5}
+                    />
+                  </div>
+                </div>
+
                 {/* Consents */}
                 <div className="space-y-3 sm:space-y-4">
                   <h3 className="text-base sm:text-lg font-semibold text-primary">הצהרות והסכמות</h3>
@@ -599,8 +666,12 @@ export default function GiftRegistration() {
                     submitting || 
                     isUploadingFront || 
                     isUploadingBack ||
+                    isUploadingBrokerConf ||
                     !uploadedFileFront ||
                     !uploadedFileBack ||
+                    !uploadedBrokerConf ||
+                    !formData.targetBrokerName ||
+                    !formData.targetBrokerAccount ||
                     !formData.consentActingOwnBehalf ||
                     !formData.consentInfoTrue ||
                     !formData.consentTermsAccepted
@@ -609,7 +680,7 @@ export default function GiftRegistration() {
                   {submitting ? (
                     <>
                       <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                      מרשם...
+                      שולח...
                     </>
                   ) : (
                     "השלמת הרשמה וקבלת המתנה"
@@ -618,6 +689,35 @@ export default function GiftRegistration() {
               </form>
             </CardContent>
           </Card>
+        )}
+
+        {/* Success Step */}
+        {currentStep === 3 && (
+          <Card className="text-center">
+            <CardContent className="py-12 space-y-6">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <CheckCircle className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold text-primary">הפרטים התקבלו בהצלחה! ✅</h2>
+              <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                פרטיך והמסמכים שהעלית התקבלו. אנו מאמתים את המסמכים ונעדכן אותך 
+                ברגע שהכספים יועברו לחשבון הברוקר שלך.
+              </p>
+              <div className="bg-muted p-4 rounded-lg max-w-md mx-auto text-right">
+                <p className="text-sm font-medium mb-2">שלבי הטיפול:</p>
+                <ul className="text-sm space-y-1 text-muted-foreground">
+                  <li>1. ✅ פרטים ומסמכים התקבלו</li>
+                  <li>2. ⏳ אימות מסמכי KYC</li>
+                  <li>3. ⏳ העברת מניות לחשבון הברוקר</li>
+                  <li>4. ⏳ אישור השלמה</li>
+                </ul>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                📧 support@stock4u.co.il | 📞 03-1234567
+              </p>
+            </CardContent>
+          </Card>
+        )}
         </div>
       </div>
     </div>
