@@ -66,6 +66,8 @@ export default function ClaimStockGift() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [onfidoToken, setOnfidoToken] = useState<string | null>(null);
+  const [onfidoLoaded, setOnfidoLoaded] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
