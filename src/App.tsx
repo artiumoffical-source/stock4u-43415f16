@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound";
 import InvestorPitch from "./pages/InvestorPitch";
 import OnePager from "./pages/OnePager";
 import Landing from "./pages/Landing";
+import ClaimStockGift from "./pages/ClaimStockGift";
 
 const queryClient = new QueryClient();
 
