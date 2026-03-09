@@ -22,15 +22,25 @@ const formSchema = z.object({
   firstName: z.string().min(2, "שם פרטי חייב להכיל לפחות 2 תווים").max(100),
   lastName: z.string().min(2, "שם משפחה חייב להכיל לפחות 2 תווים").max(100),
   email: z.string().email("כתובת אימייל לא תקינה"),
-  phone: z.string().regex(/^05\d{8}$/, "מספר טלפון ישראלי לא תקין"),
+  phone: z.string().regex(/^\d{9,10}$/, "מספר טלפון חייב להכיל 9-10 ספרות (ללא קידומת מדינה)"),
   address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים"),
   city: z.string().min(2, "עיר חייבת להכיל לפחות 2 תווים"),
-  postalCode: z.string().min(2, "מיקוד נדרש").max(10),
+  postalCode: z.string().regex(/^\d{5,}$/, "מיקוד חייב להכיל לפחות 5 ספרות"),
   dobYear: z.string().min(1, "שנה נדרשת"),
   dobMonth: z.string().min(1, "חודש נדרש"),
   dobDay: z.string().min(1, "יום נדרש"),
-  taxId: z.string().regex(/^\d{9}$/, "תעודת זהות חייבת להכיל 9 ספרות"),
-});
+  taxId: z.string().regex(/^\d{9}$/, "תעודת זהות חייבת להכיל בדיוק 9 ספרות"),
+}).refine((data) => {
+  if (data.dobYear && data.dobMonth && data.dobDay) {
+    const dob = new Date(parseInt(data.dobYear), parseInt(data.dobMonth) - 1, parseInt(data.dobDay));
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const isOldEnough = age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && today.getDate() >= dob.getDate())));
+    return isOldEnough;
+  }
+  return true;
+}, { message: "חובה להיות מעל גיל 18", path: ["dobYear"] });
 
 type FormValues = z.infer<typeof formSchema>;
 
