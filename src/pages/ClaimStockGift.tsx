@@ -92,6 +92,7 @@ export default function ClaimStockGift() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [debugInfo, setDebugInfo] = useState<any>(null);
   const [onfidoToken, setOnfidoToken] = useState<string | null>(null);
   const [onfidoLoaded, setOnfidoLoaded] = useState(false);
 
@@ -118,38 +119,49 @@ export default function ClaimStockGift() {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
+    setDebugInfo(null);
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
+    const payload = {
+      userData: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: phoneWithCode,
+        address: data.address,
+        city: data.city,
+        postalCode: data.postalCode,
+        dob,
+        taxId: data.taxId,
+      },
+    };
+
+    console.log("Sending payload:", JSON.stringify(payload, null, 2));
+
     try {
       const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
-        body: {
-          userData: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: phoneWithCode,
-            address: data.address,
-            city: data.city,
-            postalCode: data.postalCode,
-            dob,
-            taxId: data.taxId,
-          },
-        },
+        body: payload,
       });
 
+      console.log("Response:", result);
+
       if (error) throw new Error(error.message);
-      if (result && !result.success) throw new Error(result.error || "שגיאה לא ידועה");
+
+      if (result && !result.success) {
+        // Show debug info with raw Alpaca error
+        setDebugInfo(result);
+        setErrorMessage(result.error || "שגיאה לא ידועה");
+        return;
+      }
 
       if (result?.onfidoToken) {
         setOnfidoToken(result.onfidoToken);
-        // Try to load Onfido SDK
         try {
           await loadOnfidoSdk();
           setOnfidoLoaded(true);
         } catch {
-          // SDK failed to load, will show token as fallback
           setOnfidoLoaded(false);
         }
       } else {
@@ -372,7 +384,30 @@ export default function ClaimStockGift() {
                 </div>
 
                 {errorMessage && (
-                  <p className="text-sm text-destructive font-bold text-center bg-destructive/10 rounded-2xl p-3">{errorMessage}</p>
+                  <div className="space-y-3">
+                    <p className="text-sm text-destructive font-bold text-center bg-destructive/10 rounded-2xl p-3">{errorMessage}</p>
+                    {debugInfo && (
+                      <div className="bg-red-50 border-[3px] border-red-300 rounded-2xl p-4 space-y-2 text-right">
+                        <p className="text-sm font-black text-red-700">🐛 Debug Info (Alpaca Raw Response):</p>
+                        {debugInfo.alpacaStatus && (
+                          <p className="text-xs font-bold text-red-600">Status: {debugInfo.alpacaStatus}</p>
+                        )}
+                        {debugInfo.alpacaError && (
+                          <pre className="text-xs bg-red-100 rounded-xl p-3 overflow-auto max-h-60 text-left font-mono text-red-800 whitespace-pre-wrap break-all">
+                            {typeof debugInfo.alpacaError === 'string' ? debugInfo.alpacaError : JSON.stringify(debugInfo.alpacaError, null, 2)}
+                          </pre>
+                        )}
+                        {debugInfo.sentPayload && (
+                          <>
+                            <p className="text-xs font-bold text-red-600 mt-2">Sent Payload:</p>
+                            <pre className="text-xs bg-red-100 rounded-xl p-3 overflow-auto max-h-60 text-left font-mono text-red-800 whitespace-pre-wrap break-all">
+                              {JSON.stringify(debugInfo.sentPayload, null, 2)}
+                            </pre>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 <Button
