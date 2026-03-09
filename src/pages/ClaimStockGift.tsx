@@ -120,6 +120,7 @@ export default function ClaimStockGift() {
     setErrorMessage("");
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
+    const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
     try {
       const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
@@ -128,7 +129,7 @@ export default function ClaimStockGift() {
             firstName: data.firstName,
             lastName: data.lastName,
             email: data.email,
-            phone: data.phone,
+            phone: phoneWithCode,
             address: data.address,
             city: data.city,
             postalCode: data.postalCode,
