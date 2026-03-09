@@ -44,6 +44,54 @@ export type Database = {
         }
         Relationships: []
       }
+      alpaca_onboarding: {
+        Row: {
+          alpaca_account_id: string | null
+          city: string
+          created_at: string
+          date_of_birth: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          postal_code: string
+          status: string | null
+          street_address: string
+          tax_id: string
+          user_id: string | null
+        }
+        Insert: {
+          alpaca_account_id?: string | null
+          city: string
+          created_at?: string
+          date_of_birth: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          postal_code: string
+          status?: string | null
+          street_address: string
+          tax_id: string
+          user_id?: string | null
+        }
+        Update: {
+          alpaca_account_id?: string | null
+          city?: string
+          created_at?: string
+          date_of_birth?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          postal_code?: string
+          status?: string | null
+          street_address?: string
+          tax_id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
