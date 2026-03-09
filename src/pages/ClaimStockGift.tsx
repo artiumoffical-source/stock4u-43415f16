@@ -115,7 +115,19 @@ export default function ClaimStockGift() {
       if (error) throw new Error(error.message);
       if (result && !result.success) throw new Error(result.error || "שגיאה לא ידועה");
 
-      setIsSuccess(true);
+      if (result?.onfidoToken) {
+        setOnfidoToken(result.onfidoToken);
+        // Try to load Onfido SDK
+        try {
+          await loadOnfidoSdk();
+          setOnfidoLoaded(true);
+        } catch {
+          // SDK failed to load, will show token as fallback
+          setOnfidoLoaded(false);
+        }
+      } else {
+        setIsSuccess(true);
+      }
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
     } finally {
