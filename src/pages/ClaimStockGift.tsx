@@ -150,14 +150,17 @@ export default function ClaimStockGift() {
         body: payload,
       });
 
-      console.log("Response:", result);
-
       if (error) throw new Error(error.message);
 
       if (result && !result.success) {
-        // Show debug info with raw Alpaca error
-        setDebugInfo(result);
-        setErrorMessage(result.error || "שגיאה לא ידועה");
+        // Friendly error mapping
+        const rawError = JSON.stringify(result.alpacaError || result.error || "");
+        if (rawError.toLowerCase().includes("tax_id") || rawError.toLowerCase().includes("tax id")) {
+          setErrorMessage("מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון");
+        } else {
+          setErrorMessage("חלה שגיאה זמנית בחיבור, אנא נסה שוב בעוד רגע");
+        }
+        console.error("Alpaca error details:", result);
         return;
       }
 
