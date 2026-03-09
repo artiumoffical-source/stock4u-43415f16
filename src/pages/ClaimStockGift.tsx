@@ -153,13 +153,9 @@ export default function ClaimStockGift() {
       if (error) throw new Error(error.message);
 
       if (result && !result.success) {
-        // Friendly error mapping
-        const rawError = JSON.stringify(result.alpacaError || result.error || "");
-        if (rawError.toLowerCase().includes("tax_id") || rawError.toLowerCase().includes("tax id")) {
-          setErrorMessage("מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון");
-        } else {
-          setErrorMessage("חלה שגיאה זמנית בחיבור, אנא נסה שוב בעוד רגע");
-        }
+        // DEBUG MODE: Show raw error from Edge Function
+        const rawDebug = JSON.stringify(result, null, 2);
+        setErrorMessage(`RAW RESPONSE:\n${rawDebug}`);
         console.error("Alpaca error details:", result);
         return;
       }
