@@ -135,6 +135,66 @@ export default function ClaimStockGift() {
     }
   };
 
+  // Onfido SDK mount effect
+  const onfidoContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (onfidoToken && onfidoLoaded && onfidoContainerRef.current) {
+      try {
+        const Onfido = (window as any).Onfido;
+        if (Onfido) {
+          Onfido.init({
+            token: onfidoToken,
+            containerId: "onfido-mount",
+            onComplete: () => {
+              setIsSuccess(true);
+              setOnfidoToken(null);
+            },
+            steps: ["document"],
+            language: { locale: "he" },
+          });
+        }
+      } catch (err) {
+        console.error("Failed to init Onfido SDK:", err);
+        setOnfidoLoaded(false);
+      }
+    }
+  }, [onfidoToken, onfidoLoaded]);
+
+  // Show Onfido SDK or token fallback
+  if (onfidoToken) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Card className="w-full max-w-lg border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
+          <CardContent className="pt-8 pb-8 space-y-6">
+            {onfidoLoaded ? (
+              <>
+                <h2 className="text-2xl font-black text-center" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
+                  📄 אימות מסמכים
+                </h2>
+                <p className="text-sm text-muted-foreground text-center">העלה את תעודת הזהות שלך לצורך אימות</p>
+                <div id="onfido-mount" ref={onfidoContainerRef} className="min-h-[400px]" />
+              </>
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl" style={{ background: "hsl(42, 100%, 65%)" }}>
+                  ✅
+                </div>
+                <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
+                  הפרטים נשלחו בהצלחה!
+                </h2>
+                <p className="text-sm text-muted-foreground">טוקן האימות שלך:</p>
+                <div className="bg-muted rounded-2xl p-4 break-all text-xs font-mono text-foreground border-2 border-muted">
+                  {onfidoToken}
+                </div>
+                <p className="text-xs text-muted-foreground">שמור את הטוקן הזה – צוות Stock4U יצור איתך קשר להמשך התהליך.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
