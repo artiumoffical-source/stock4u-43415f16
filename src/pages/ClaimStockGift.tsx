@@ -56,13 +56,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const fields: { name: keyof FormValues; label: string; placeholder: string; type?: string }[] = [
-  { name: "firstName", label: "שם פרטי", placeholder: "ישראל" },
-  { name: "lastName", label: "שם משפחה", placeholder: "ישראלי" },
+const fields: { name: keyof FormValues; label: string; placeholder: string; type?: string; hint?: string }[] = [
+  { name: "firstName", label: "שם פרטי", placeholder: "Israel", hint: "English letters only – באנגלית בלבד" },
+  { name: "lastName", label: "שם משפחה", placeholder: "Israeli", hint: "English letters only – באנגלית בלבד" },
   { name: "email", label: "אימייל", placeholder: "email@example.com", type: "email" },
   { name: "phone", label: "מספר טלפון (ללא קידומת)", placeholder: "501234567", type: "tel" },
-  { name: "address", label: "כתובת מגורים (רחוב ומספר)", placeholder: "הרצל 1" },
-  { name: "city", label: "עיר", placeholder: "תל אביב" },
+  { name: "address", label: "כתובת מגורים (רחוב ומספר)", placeholder: "Herzl 1", hint: "English letters only – באנגלית בלבד" },
+  { name: "city", label: "עיר", placeholder: "Tel Aviv", hint: "English letters only – באנגלית בלבד" },
   { name: "postalCode", label: "מיקוד", placeholder: "6100000" },
   { name: "taxId", label: "מספר תעודת זהות", placeholder: "123456789" },
 ];
