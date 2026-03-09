@@ -153,13 +153,9 @@ export default function ClaimStockGift() {
       if (error) throw new Error(error.message);
 
       if (result && !result.success) {
-        // Friendly error mapping
-        const rawError = JSON.stringify(result.alpacaError || result.error || "");
-        if (rawError.toLowerCase().includes("tax_id") || rawError.toLowerCase().includes("tax id")) {
-          setErrorMessage("מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון");
-        } else {
-          setErrorMessage("חלה שגיאה זמנית בחיבור, אנא נסה שוב בעוד רגע");
-        }
+        // DEBUG MODE: Show raw error from Edge Function
+        const rawDebug = JSON.stringify(result, null, 2);
+        setErrorMessage(`RAW RESPONSE:\n${rawDebug}`);
         console.error("Alpaca error details:", result);
         return;
       }
@@ -392,7 +388,7 @@ export default function ClaimStockGift() {
                 </div>
 
                 {errorMessage && (
-                  <p className="text-sm text-destructive font-bold text-center bg-destructive/10 rounded-2xl p-3 border-2 border-destructive/20">{errorMessage}</p>
+                  <pre className="text-xs text-destructive font-mono text-right bg-destructive/10 rounded-2xl p-4 border-2 border-destructive/30 whitespace-pre-wrap break-all overflow-auto max-h-64" dir="ltr">{errorMessage}</pre>
                 )}
 
                 <Button
