@@ -79,7 +79,7 @@ serve(async (req) => {
         family_name: validated.lastName,
         date_of_birth: validated.dob,
         tax_id: validated.taxId,
-        tax_id_type: "NOT_SPECIFIED",
+        tax_id_type: "ISR_ID",
         country_of_citizenship: "ISR",
         country_of_birth: "ISR",
         country_of_tax_residence: "ISR",
