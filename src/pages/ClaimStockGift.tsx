@@ -119,38 +119,49 @@ export default function ClaimStockGift() {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
+    setDebugInfo(null);
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
+    const payload = {
+      userData: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: phoneWithCode,
+        address: data.address,
+        city: data.city,
+        postalCode: data.postalCode,
+        dob,
+        taxId: data.taxId,
+      },
+    };
+
+    console.log("Sending payload:", JSON.stringify(payload, null, 2));
+
     try {
       const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
-        body: {
-          userData: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: phoneWithCode,
-            address: data.address,
-            city: data.city,
-            postalCode: data.postalCode,
-            dob,
-            taxId: data.taxId,
-          },
-        },
+        body: payload,
       });
 
+      console.log("Response:", result);
+
       if (error) throw new Error(error.message);
-      if (result && !result.success) throw new Error(result.error || "שגיאה לא ידועה");
+
+      if (result && !result.success) {
+        // Show debug info with raw Alpaca error
+        setDebugInfo(result);
+        setErrorMessage(result.error || "שגיאה לא ידועה");
+        return;
+      }
 
       if (result?.onfidoToken) {
         setOnfidoToken(result.onfidoToken);
-        // Try to load Onfido SDK
         try {
           await loadOnfidoSdk();
           setOnfidoLoaded(true);
         } catch {
-          // SDK failed to load, will show token as fallback
           setOnfidoLoaded(false);
         }
       } else {
