@@ -306,11 +306,15 @@ export default function ClaimStockGift() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="font-bold text-foreground">{f.label}</FormLabel>
+                        {f.hint && (
+                          <p className="text-xs text-muted-foreground mt-0.5">🔤 {f.hint}</p>
+                        )}
                         <FormControl>
                           <Input
                             placeholder={f.placeholder}
                             type={f.type || "text"}
                             className="rounded-2xl h-12 border-2 border-muted focus:border-[hsl(220,91%,63%)] transition-colors text-base"
+                            dir="ltr"
                             {...field}
                             value={field.value as string}
                           />
