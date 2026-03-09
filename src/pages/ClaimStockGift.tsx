@@ -56,7 +56,7 @@ const fields: { name: keyof FormValues; label: string; placeholder: string; type
 ];
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 100 }, (_, i) => currentYear - 16 - i);
+const years = Array.from({ length: 100 }, (_, i) => currentYear - 18 - i);
 const months = [
   { value: "01", label: "ינואר" }, { value: "02", label: "פברואר" },
   { value: "03", label: "מרץ" }, { value: "04", label: "אפריל" },
