@@ -97,7 +97,7 @@ export default function ClaimStockGift() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  
   const [onfidoToken, setOnfidoToken] = useState<string | null>(null);
   const [onfidoLoaded, setOnfidoLoaded] = useState(false);
 
