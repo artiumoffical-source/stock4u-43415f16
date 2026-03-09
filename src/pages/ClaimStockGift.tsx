@@ -3,21 +3,20 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, PartyPopper, Shield, CheckCircle2 } from "lucide-react";
+import { CalendarIcon, Loader2, PartyPopper, Gift, CheckCircle2, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form";
 import {
-  Popover, PopoverContent, PopoverTrigger,
-} from "@/components/ui/popover";
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "שם פרטי חייב להכיל לפחות 2 תווים").max(100),
@@ -27,7 +26,9 @@ const formSchema = z.object({
   address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים"),
   city: z.string().min(2, "עיר חייבת להכיל לפחות 2 תווים"),
   postalCode: z.string().min(2, "מיקוד נדרש").max(10),
-  dob: z.date({ required_error: "תאריך לידה נדרש" }),
+  dobYear: z.string().min(1, "שנה נדרשת"),
+  dobMonth: z.string().min(1, "חודש נדרש"),
+  dobDay: z.string().min(1, "יום נדרש"),
   taxId: z.string().regex(/^\d{9}$/, "תעודת זהות חייבת להכיל 9 ספרות"),
 });
 
@@ -44,6 +45,23 @@ const fields: { name: keyof FormValues; label: string; placeholder: string; type
   { name: "taxId", label: "מספר תעודת זהות", placeholder: "123456789" },
 ];
 
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 100 }, (_, i) => currentYear - 16 - i);
+const months = [
+  { value: "01", label: "ינואר" }, { value: "02", label: "פברואר" },
+  { value: "03", label: "מרץ" }, { value: "04", label: "אפריל" },
+  { value: "05", label: "מאי" }, { value: "06", label: "יוני" },
+  { value: "07", label: "יולי" }, { value: "08", label: "אוגוסט" },
+  { value: "09", label: "ספטמבר" }, { value: "10", label: "אוקטובר" },
+  { value: "11", label: "נובמבר" }, { value: "12", label: "דצמבר" },
+];
+
+function getDaysInMonth(year: string, month: string) {
+  if (!year || !month) return Array.from({ length: 31 }, (_, i) => i + 1);
+  const d = new Date(parseInt(year), parseInt(month), 0).getDate();
+  return Array.from({ length: d }, (_, i) => i + 1);
+}
+
 export default function ClaimStockGift() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -54,19 +72,26 @@ export default function ClaimStockGift() {
     defaultValues: {
       firstName: "", lastName: "", email: "", phone: "",
       address: "", city: "", postalCode: "", taxId: "",
+      dobYear: "", dobMonth: "", dobDay: "",
     },
   });
+
+  const watchedYear = form.watch("dobYear");
+  const watchedMonth = form.watch("dobMonth");
+  const days = getDaysInMonth(watchedYear, watchedMonth);
 
   const filledCount = Object.keys(form.watch()).filter((key) => {
     const val = form.watch(key as keyof FormValues);
     return val && (typeof val === "string" ? val.length > 0 : true);
   }).length;
-  const totalFields = 9;
+  const totalFields = 11;
   const progress = Math.round((filledCount / totalFields) * 100);
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
+
+    const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
 
     try {
       const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
@@ -79,7 +104,7 @@ export default function ClaimStockGift() {
             address: data.address,
             city: data.city,
             postalCode: data.postalCode,
-            dob: format(data.dob, "yyyy-MM-dd"),
+            dob,
             taxId: data.taxId,
           },
         },
@@ -98,15 +123,21 @@ export default function ClaimStockGift() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-muted flex items-center justify-center p-4" dir="rtl">
-        <Card className="w-full max-w-md text-center border-0 shadow-xl">
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Card className="w-full max-w-md text-center border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
           <CardContent className="pt-12 pb-10 space-y-6">
-            <div className="mx-auto w-20 h-20 rounded-full bg-[hsl(142,71%,45%)]/10 flex items-center justify-center">
-              <PartyPopper className="w-10 h-10 text-[hsl(142,71%,45%)]" />
+            <div className="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-5xl" style={{ background: "hsl(142, 71%, 90%)" }}>
+              🎉
             </div>
-            <h1 className="text-2xl font-bold text-foreground">מזל טוב! 🎉</h1>
-            <p className="text-muted-foreground text-lg">חשבון ההשקעות שלך נוצר בהצלחה</p>
-            <p className="text-sm text-muted-foreground">נעדכן אותך במייל ברגע שהחשבון יהיה מוכן לשימוש.</p>
+            <h1 className="text-3xl font-black text-foreground" style={{ fontFamily: "'Rubik', sans-serif" }}>
+              מזל טוב!
+            </h1>
+            <p className="text-lg font-semibold" style={{ color: "hsl(142, 71%, 35%)" }}>
+              חשבון ההשקעות שלך נוצר בהצלחה
+            </p>
+            <p className="text-sm text-muted-foreground">
+              נעדכן אותך במייל ברגע שהחשבון יהיה מוכן לשימוש.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -114,28 +145,32 @@ export default function ClaimStockGift() {
   }
 
   return (
-    <div className="min-h-screen bg-muted py-8 px-4" dir="rtl">
+    <div className="min-h-screen py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
       <div className="max-w-lg mx-auto space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-            <Shield className="w-7 h-7 text-primary" />
+        <div className="text-center space-y-3">
+          <div className="mx-auto w-20 h-20 rounded-full border-[3px] border-white shadow-[0_6px_20px_rgba(0,0,0,0.12)] flex items-center justify-center text-4xl" style={{ background: "hsl(42, 100%, 65%)" }}>
+            🎁
           </div>
-          <h1 className="text-2xl font-bold text-foreground">מימוש מתנת מניות</h1>
-          <p className="text-muted-foreground text-sm">מלא/י את הפרטים הבאים לפתיחת חשבון השקעות</p>
+          <h1 className="text-3xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
+            מימוש מתנת מניות
+          </h1>
+          <p className="text-muted-foreground text-sm font-medium">
+            מלא/י את הפרטים הבאים כדי לפתוח חשבון השקעות 🚀
+          </p>
         </div>
 
         {/* Progress */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>התקדמות</span>
-            <span>{progress}%</span>
+        <div className="space-y-1.5 border-[3px] border-white rounded-2xl p-4 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(0, 0%, 100%)" }}>
+          <div className="flex justify-between text-xs font-bold text-muted-foreground">
+            <span>התקדמות המשימה</span>
+            <span style={{ color: "hsl(var(--stock4u-happy-blue))" }}>{progress}%</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-3 rounded-full" />
         </div>
 
         {/* Form */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-3xl">
           <CardContent className="pt-6">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -146,11 +181,12 @@ export default function ClaimStockGift() {
                     name={f.name}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{f.label}</FormLabel>
+                        <FormLabel className="font-bold text-foreground">{f.label}</FormLabel>
                         <FormControl>
                           <Input
                             placeholder={f.placeholder}
                             type={f.type || "text"}
+                            className="rounded-2xl h-12 border-2 border-muted focus:border-[hsl(220,91%,63%)] transition-colors text-base"
                             {...field}
                             value={field.value as string}
                           />
@@ -161,51 +197,91 @@ export default function ClaimStockGift() {
                   />
                 ))}
 
-                {/* Date of Birth */}
-                <FormField
-                  control={form.control}
-                  name="dob"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>תאריך לידה</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full justify-start text-right font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="ml-2 h-4 w-4" />
-                              {field.value ? format(field.value, "yyyy-MM-dd") : "בחר/י תאריך"}
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                            initialFocus
-                            className="p-3 pointer-events-auto"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* Date of Birth - Year/Month/Day Dropdowns */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-foreground">תאריך לידה</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {/* Year */}
+                    <FormField
+                      control={form.control}
+                      name="dobYear"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                                <SelectValue placeholder="שנה" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="max-h-60">
+                              {years.map((y) => (
+                                <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Month */}
+                    <FormField
+                      control={form.control}
+                      name="dobMonth"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                                <SelectValue placeholder="חודש" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {months.map((m) => (
+                                <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Day */}
+                    <FormField
+                      control={form.control}
+                      name="dobDay"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                                <SelectValue placeholder="יום" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="max-h-60">
+                              {days.map((d) => (
+                                <SelectItem key={d} value={d.toString()}>{d}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
 
                 {errorMessage && (
-                  <p className="text-sm text-destructive font-medium text-center">{errorMessage}</p>
+                  <p className="text-sm text-destructive font-bold text-center bg-destructive/10 rounded-2xl p-3">{errorMessage}</p>
                 )}
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-bold mt-2"
+                  className="w-full h-14 text-lg font-black mt-4 rounded-2xl transition-all duration-200 hover:translate-y-[-2px] active:translate-y-[1px]"
+                  style={{
+                    background: "hsl(220, 91%, 63%)",
+                    color: "white",
+                    boxShadow: "0 6px 0 hsl(220, 91%, 48%), 0 8px 20px rgba(76, 126, 251, 0.35)",
+                  }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -215,14 +291,14 @@ export default function ClaimStockGift() {
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="ml-2 h-5 w-5" />
-                      אישור ופתיחת חשבון
+                      <CheckCircle2 className="ml-2 h-6 w-6" />
+                      אישור ופתיחת חשבון 🚀
                     </>
                   )}
                 </Button>
 
-                <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  הפרטים שלך מאובטחים ומוגנים בהתאם לתקנות הרגולציה הפיננסית
+                <p className="text-xs text-muted-foreground text-center leading-relaxed font-medium">
+                  🔒 הפרטים שלך מאובטחים ומוגנים בהתאם לתקנות הרגולציה הפיננסית
                 </p>
               </form>
             </Form>
