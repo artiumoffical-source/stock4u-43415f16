@@ -29,7 +29,12 @@ const formSchema = z.object({
   dobYear: z.string().min(1, "שנה נדרשת"),
   dobMonth: z.string().min(1, "חודש נדרש"),
   dobDay: z.string().min(1, "יום נדרש"),
-  taxId: z.string().regex(/^\d{9}$/, "תעודת זהות חייבת להכיל בדיוק 9 ספרות"),
+  taxId: z.string().regex(/^\d{9}$/, "תעודת זהות חייבת להכיל בדיוק 9 ספרות").refine((val) => {
+    const sequential = "123456789";
+    const reverseSeq = "987654321";
+    const allSame = /^(\d)\1{8}$/.test(val);
+    return val !== sequential && val !== reverseSeq && !allSame;
+  }, "מספר תעודת זהות אינו תקין, אנא הזן מספר אמיתי"),
 }).refine((data) => {
   if (data.dobYear && data.dobMonth && data.dobDay) {
     const dob = new Date(parseInt(data.dobYear), parseInt(data.dobMonth) - 1, parseInt(data.dobDay));
