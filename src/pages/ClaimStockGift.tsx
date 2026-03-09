@@ -62,6 +62,22 @@ function getDaysInMonth(year: string, month: string) {
   return Array.from({ length: d }, (_, i) => i + 1);
 }
 
+function loadOnfidoSdk(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if ((window as any).Onfido) return resolve();
+    const script = document.createElement("script");
+    script.src = "https://sdk.onfido.com/v14";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load Onfido SDK"));
+    document.head.appendChild(script);
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://sdk.onfido.com/v14/style.css";
+    document.head.appendChild(link);
+  });
+}
+
 export default function ClaimStockGift() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
