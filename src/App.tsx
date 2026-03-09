@@ -58,6 +58,7 @@ const App = () => (
                 <Route path="/investor" element={<InvestorPitch />} />
                 <Route path="/onepager" element={<OnePager />} />
                 <Route path="/landing" element={<Landing />} />
+                <Route path="/claim" element={<ClaimStockGift />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

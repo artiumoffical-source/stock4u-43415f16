@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.fetch-stock-chart]
 verify_jwt = false
+
+[functions.create-alpaca-account]
+verify_jwt = false
