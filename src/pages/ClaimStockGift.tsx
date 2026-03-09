@@ -388,7 +388,7 @@ export default function ClaimStockGift() {
                 </div>
 
                 {errorMessage && (
-                  <p className="text-sm text-destructive font-bold text-center bg-destructive/10 rounded-2xl p-3 border-2 border-destructive/20">{errorMessage}</p>
+                  <pre className="text-xs text-destructive font-mono text-right bg-destructive/10 rounded-2xl p-4 border-2 border-destructive/30 whitespace-pre-wrap break-all overflow-auto max-h-64" dir="ltr">{errorMessage}</pre>
                 )}
 
                 <Button
