@@ -124,7 +124,7 @@ export default function ClaimStockGift() {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
-    setDebugInfo(null);
+    
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
