@@ -18,13 +18,20 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
+const ENGLISH_ONLY_REGEX = /^[A-Za-z\s\-'".,:;()0-9/]+$/;
+const HEBREW_REGEX = /[\u0590-\u05FF]/;
+
 const formSchema = z.object({
-  firstName: z.string().min(2, "שם פרטי חייב להכיל לפחות 2 תווים").max(100),
-  lastName: z.string().min(2, "שם משפחה חייב להכיל לפחות 2 תווים").max(100),
+  firstName: z.string().min(2, "שם פרטי חייב להכיל לפחות 2 תווים").max(100)
+    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
+  lastName: z.string().min(2, "שם משפחה חייב להכיל לפחות 2 תווים").max(100)
+    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
   email: z.string().email("כתובת אימייל לא תקינה"),
   phone: z.string().regex(/^\d{9,10}$/, "מספר טלפון חייב להכיל 9-10 ספרות (ללא קידומת מדינה)"),
-  address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים"),
-  city: z.string().min(2, "עיר חייבת להכיל לפחות 2 תווים"),
+  address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים")
+    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
+  city: z.string().min(2, "עיר חייבת להכיל לפחות 2 תווים")
+    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
   postalCode: z.string().regex(/^\d{5,}$/, "מיקוד חייב להכיל לפחות 5 ספרות"),
   dobYear: z.string().min(1, "שנה נדרשת"),
   dobMonth: z.string().min(1, "חודש נדרש"),
@@ -49,13 +56,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const fields: { name: keyof FormValues; label: string; placeholder: string; type?: string }[] = [
-  { name: "firstName", label: "שם פרטי", placeholder: "ישראל" },
-  { name: "lastName", label: "שם משפחה", placeholder: "ישראלי" },
+const fields: { name: keyof FormValues; label: string; placeholder: string; type?: string; hint?: string }[] = [
+  { name: "firstName", label: "שם פרטי", placeholder: "Israel", hint: "English letters only – באנגלית בלבד" },
+  { name: "lastName", label: "שם משפחה", placeholder: "Israeli", hint: "English letters only – באנגלית בלבד" },
   { name: "email", label: "אימייל", placeholder: "email@example.com", type: "email" },
   { name: "phone", label: "מספר טלפון (ללא קידומת)", placeholder: "501234567", type: "tel" },
-  { name: "address", label: "כתובת מגורים (רחוב ומספר)", placeholder: "הרצל 1" },
-  { name: "city", label: "עיר", placeholder: "תל אביב" },
+  { name: "address", label: "כתובת מגורים (רחוב ומספר)", placeholder: "Herzl 1", hint: "English letters only – באנגלית בלבד" },
+  { name: "city", label: "עיר", placeholder: "Tel Aviv", hint: "English letters only – באנגלית בלבד" },
   { name: "postalCode", label: "מיקוד", placeholder: "6100000" },
   { name: "taxId", label: "מספר תעודת זהות", placeholder: "123456789" },
 ];
@@ -299,11 +306,15 @@ export default function ClaimStockGift() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="font-bold text-foreground">{f.label}</FormLabel>
+                        {f.hint && (
+                          <p className="text-xs text-muted-foreground mt-0.5">🔤 {f.hint}</p>
+                        )}
                         <FormControl>
                           <Input
                             placeholder={f.placeholder}
                             type={f.type || "text"}
                             className="rounded-2xl h-12 border-2 border-muted focus:border-[hsl(220,91%,63%)] transition-colors text-base"
+                            dir="ltr"
                             {...field}
                             value={field.value as string}
                           />
