@@ -48,7 +48,7 @@ const fields: { name: keyof FormValues; label: string; placeholder: string; type
   { name: "firstName", label: "שם פרטי", placeholder: "ישראל" },
   { name: "lastName", label: "שם משפחה", placeholder: "ישראלי" },
   { name: "email", label: "אימייל", placeholder: "email@example.com", type: "email" },
-  { name: "phone", label: "מספר טלפון", placeholder: "0501234567", type: "tel" },
+  { name: "phone", label: "מספר טלפון (ללא קידומת)", placeholder: "501234567", type: "tel" },
   { name: "address", label: "כתובת מגורים (רחוב ומספר)", placeholder: "הרצל 1" },
   { name: "city", label: "עיר", placeholder: "תל אביב" },
   { name: "postalCode", label: "מיקוד", placeholder: "6100000" },
