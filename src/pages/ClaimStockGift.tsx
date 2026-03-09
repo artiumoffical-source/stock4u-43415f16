@@ -234,7 +234,7 @@ export default function ClaimStockGift() {
               מזל טוב!
             </h1>
             <p className="text-lg font-semibold" style={{ color: "hsl(142, 71%, 35%)" }}>
-              חשבון ההשקעות שלך נוצר בהצלחה
+              מזל טוב! החשבון נשלח לאישור אלפאקה
             </p>
             <p className="text-sm text-muted-foreground">
               נעדכן אותך במייל ברגע שהחשבון יהיה מוכן לשימוש.
