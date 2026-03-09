@@ -33,7 +33,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Store onboarding record
-    const { data, error: dbError } = await supabase
+    const { data: dbRecord, error: dbError } = await supabase
       .from('alpaca_onboarding')
       .insert({
         first_name: validated.firstName,
@@ -51,29 +51,138 @@ serve(async (req) => {
 
     if (dbError) {
       console.error('DB error:', dbError);
-      throw new Error('Failed to create account record');
+      throw new Error('Failed to create account record: ' + dbError.message);
     }
 
-    // TODO: Call Alpaca API here when ready
-    // For now, just store the record and return success
+    // --- Call Alpaca Broker API ---
+    const alpacaKeyId = Deno.env.get('ALPACA_KEY_ID');
+    const alpacaSecretKey = Deno.env.get('ALPACA_SECRET_KEY');
+
+    if (!alpacaKeyId || !alpacaSecretKey) {
+      throw new Error('Alpaca API credentials not configured');
+    }
+
+    const basicAuth = btoa(`${alpacaKeyId}:${alpacaSecretKey}`);
+
+    // Build the Alpaca account creation payload
+    const alpacaPayload = {
+      contact: {
+        email_address: validated.email,
+        phone_number: validated.phone,
+        street_address: [validated.address],
+        city: validated.city,
+        postal_code: validated.postalCode,
+        country: "ISR",
+      },
+      identity: {
+        given_name: validated.firstName,
+        family_name: validated.lastName,
+        date_of_birth: validated.dob,
+        tax_id: validated.taxId,
+        tax_id_type: "NOT_SPECIFIED",
+        country_of_citizenship: "ISR",
+        country_of_birth: "ISR",
+        country_of_tax_residence: "ISR",
+        funding_source: ["employment_income"],
+      },
+      disclosures: {
+        is_control_person: false,
+        is_affiliated_exchange_or_finra: false,
+        is_politically_exposed: false,
+        immediate_family_exposed: false,
+      },
+      agreements: [
+        {
+          agreement: "margin_agreement",
+          signed_at: new Date().toISOString(),
+          ip_address: "0.0.0.0",
+        },
+        {
+          agreement: "account_agreement",
+          signed_at: new Date().toISOString(),
+          ip_address: "0.0.0.0",
+        },
+        {
+          agreement: "customer_agreement",
+          signed_at: new Date().toISOString(),
+          ip_address: "0.0.0.0",
+        },
+      ],
+    };
+
+    console.log('Sending to Alpaca:', JSON.stringify(alpacaPayload, null, 2));
+
+    const alpacaResponse = await fetch(
+      'https://broker-api.sandbox.alpaca.markets/v1/accounts',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${basicAuth}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(alpacaPayload),
+      }
+    );
+
+    const alpacaResponseText = await alpacaResponse.text();
+    console.log('Alpaca response status:', alpacaResponse.status);
+    console.log('Alpaca response body:', alpacaResponseText);
+
+    let alpacaData: any;
+    try {
+      alpacaData = JSON.parse(alpacaResponseText);
+    } catch {
+      alpacaData = { raw: alpacaResponseText };
+    }
+
+    if (!alpacaResponse.ok) {
+      // Update DB record with error
+      await supabase
+        .from('alpaca_onboarding')
+        .update({ status: 'ALPACA_ERROR' })
+        .eq('id', dbRecord.id);
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Alpaca API error (${alpacaResponse.status})`,
+          alpacaStatus: alpacaResponse.status,
+          alpacaError: alpacaData,
+          sentPayload: alpacaPayload,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
+    // Success - update DB with Alpaca account ID
+    const alpacaAccountId = alpacaData.id || null;
+    await supabase
+      .from('alpaca_onboarding')
+      .update({
+        alpaca_account_id: alpacaAccountId,
+        status: alpacaData.status || 'SUBMITTED',
+      })
+      .eq('id', dbRecord.id);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: 'Account created successfully',
-        accountId: data.id 
+        accountId: dbRecord.id,
+        alpacaAccountId,
+        alpacaStatus: alpacaData.status,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error) {
     console.error('Error:', error);
-    const message = error instanceof z.ZodError 
+    const message = error instanceof z.ZodError
       ? 'Invalid input data: ' + error.errors.map(e => e.message).join(', ')
       : error.message || 'Internal server error';
-    
+
     return new Response(
       JSON.stringify({ success: false, error: message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   }
 });
