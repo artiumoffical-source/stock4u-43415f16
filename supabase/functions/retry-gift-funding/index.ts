@@ -98,8 +98,10 @@ serve(async (req) => {
         continue;
       }
 
-      const amount = Number(gift.total_amount);
-      console.log(`[retry-gift-funding] Journaling $${amount} from ${firmAccountId} to ${alpaca_account_id}`);
+      const amountNIS = Number(gift.total_amount);
+      const ILS_TO_USD_RATE = 0.274;
+      const amountUSD = Math.round(amountNIS * ILS_TO_USD_RATE * 100) / 100;
+      console.log(`[retry-gift-funding] Journaling $${amountUSD} (₪${amountNIS}) from ${firmAccountId} to ${alpaca_account_id}`);
 
       const journalRes = await fetch(`${ALPACA_URL}/journals`, {
         method: "POST",
@@ -108,7 +110,7 @@ serve(async (req) => {
           entry_type: "JNLC",
           from_account: firmAccountId,
           to_account: alpaca_account_id,
-          amount: String(amount),
+          amount: String(amountUSD),
           description: `Stock4U Gift retry for ${first_name} ${last_name} (giftId: ${gift_id})`,
         }),
       });

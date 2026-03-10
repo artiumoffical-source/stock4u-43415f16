@@ -62,8 +62,12 @@ serve(async (req) => {
       );
     }
 
-    const giftAmount = Number(giftRecord.total_amount);
-    console.log(`[create-and-fund-gift] Verified gift amount from DB: $${giftAmount} for giftId: ${validated.giftId}`);
+    const giftAmountNIS = Number(giftRecord.total_amount);
+
+    // ─── Currency conversion: NIS → USD ───
+    const ILS_TO_USD_RATE = 0.274;
+    const giftAmountUSD = Math.round(giftAmountNIS * ILS_TO_USD_RATE * 100) / 100;
+    console.log(`[create-and-fund-gift] Gift amount: ₪${giftAmountNIS} → $${giftAmountUSD} (rate: ${ILS_TO_USD_RATE}) for giftId: ${validated.giftId}`);
 
     // ─── Step 1: Create Alpaca account ───
     const alpacaPayload = {
@@ -190,7 +194,9 @@ serve(async (req) => {
           accountId: newAccountId,
           accountStatus: status,
           giftSent: false,
-          giftAmount,
+          giftAmountNIS,
+          giftAmountUSD,
+          exchangeRate: ILS_TO_USD_RATE,
           needsApproval: true,
           message: `החשבון נוצר בהצלחה אך עדיין בסטטוס ${status}. ההפקדה תתבצע לאחר אישור החשבון.`,
         }),
@@ -198,9 +204,9 @@ serve(async (req) => {
       );
     }
 
-    // Use actual gift amount from DB
-    const transferAmount = giftAmount;
-    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} from firm ${firmAccountId} to ${newAccountId}...`);
+    // Use converted USD amount for Alpaca
+    const transferAmount = giftAmountUSD;
+    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} (₪${giftAmountNIS}) from firm ${firmAccountId} to ${newAccountId}...`);
 
     const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
       method: "POST",
@@ -237,7 +243,9 @@ serve(async (req) => {
         accountId: newAccountId,
         accountStatus: status,
         giftSent,
-        giftAmount,
+        giftAmountNIS,
+        giftAmountUSD,
+        exchangeRate: ILS_TO_USD_RATE,
         needsApproval: false,
         journalError: giftSent ? null : (journalData?.message || 'Unknown journal error'),
       }),
