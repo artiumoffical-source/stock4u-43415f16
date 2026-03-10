@@ -153,29 +153,53 @@ serve(async (req) => {
       status: status || 'SUBMITTED',
     });
 
-    // ─── Step 2: Wait 5s then re-check status ───
-    console.log('[create-and-fund-gift] Waiting 5 seconds for account approval...');
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    // ─── Step 2: Poll for ACTIVE status (up to 3 attempts, 2s apart) ───
+    const MAX_POLLS = 3;
+    const POLL_INTERVAL_MS = 2000;
 
-    const statusCheckResponse = await fetch(`${ALPACA_URL}/accounts/${newAccountId}`, {
-      headers: { "Authorization": `Basic ${auth}` },
-    });
-    if (statusCheckResponse.ok) {
-      const refreshed = await statusCheckResponse.json();
-      console.log('[create-and-fund-gift] Refreshed status:', refreshed.status);
-      status = refreshed.status;
-    } else {
-      console.warn('[create-and-fund-gift] Could not refresh status, proceeding with:', status);
-      await statusCheckResponse.text();
+    for (let attempt = 1; attempt <= MAX_POLLS; attempt++) {
+      console.log(`[create-and-fund-gift] Poll attempt ${attempt}/${MAX_POLLS}, waiting ${POLL_INTERVAL_MS}ms...`);
+      await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
+
+      const statusCheckResponse = await fetch(`${ALPACA_URL}/accounts/${newAccountId}`, {
+        headers: { "Authorization": `Basic ${auth}` },
+      });
+
+      if (statusCheckResponse.ok) {
+        const refreshed = await statusCheckResponse.json();
+        status = refreshed.status;
+        console.log(`[create-and-fund-gift] Poll ${attempt}: status = ${status}`);
+        if (status === 'ACTIVE') break;
+      } else {
+        const errText = await statusCheckResponse.text();
+        console.warn(`[create-and-fund-gift] Poll ${attempt} failed (${statusCheckResponse.status}): ${errText}`);
+      }
     }
 
-    // ─── Step 3: Attempt journal transfer regardless of status ───
-    // Use $20 for sandbox testing
-    const transferAmount = 20;
-    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} (status: ${status})...`);
-
+    // ─── Step 3: Journal transfer (only if ACTIVE) ───
     let journalData = null;
     let giftSent = false;
+
+    if (status !== 'ACTIVE') {
+      console.warn(`[create-and-fund-gift] Account not ACTIVE after polling (status: ${status}). Skipping journal transfer.`);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          accountId: newAccountId,
+          accountStatus: status,
+          giftSent: false,
+          giftAmount,
+          needsApproval: true,
+          message: `החשבון נוצר בהצלחה אך עדיין בסטטוס ${status}. ההפקדה תתבצע לאחר אישור החשבון.`,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
+    // Use actual gift amount from DB
+    const transferAmount = giftAmount;
+    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} from firm ${firmAccountId} to ${newAccountId}...`);
 
     const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
       method: "POST",
@@ -185,15 +209,20 @@ serve(async (req) => {
         from_account: firmAccountId,
         to_account: newAccountId,
         amount: String(transferAmount),
-        description: `Gift for ${validated.firstName} ${validated.lastName}`,
+        description: `Stock4U Gift for ${validated.firstName} ${validated.lastName} (giftId: ${validated.giftId})`,
       }),
     });
 
     journalData = await journalResponse.json();
     giftSent = journalResponse.ok;
 
-    console.log('[create-and-fund-gift] Journal response status:', journalResponse.status);
-    console.log('[create-and-fund-gift] Journal result:', JSON.stringify(journalData));
+    console.log(`[create-and-fund-gift] Journal HTTP status: ${journalResponse.status}`);
+    console.log(`[create-and-fund-gift] Journal response: ${JSON.stringify(journalData)}`);
+    console.log(`[create-and-fund-gift] from_account (firm): ${firmAccountId}, to_account: ${newAccountId}, amount: $${transferAmount}`);
+
+    if (!giftSent) {
+      console.error(`[create-and-fund-gift] JOURNAL FAILED — Alpaca error code: ${journalData?.code}, message: ${journalData?.message}`);
+    }
 
     if (giftSent) {
       await supabase.from('alpaca_onboarding')
@@ -208,7 +237,8 @@ serve(async (req) => {
         accountStatus: status,
         giftSent,
         giftAmount,
-        needsApproval: status !== 'APPROVED' && status !== 'ACTIVE',
+        needsApproval: false,
+        journalError: giftSent ? null : (journalData?.message || 'Unknown journal error'),
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
