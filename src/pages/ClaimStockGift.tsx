@@ -18,7 +18,6 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const ENGLISH_ONLY_REGEX = /^[A-Za-z\s\-'".,:;()0-9/]+$/;
 const HEBREW_REGEX = /[\u0590-\u05FF]/;
 
 const formSchema = z.object({
