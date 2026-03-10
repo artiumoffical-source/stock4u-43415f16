@@ -132,7 +132,6 @@ export default function ClaimStockGift() {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
-    
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
@@ -151,34 +150,26 @@ export default function ClaimStockGift() {
       },
     };
 
-    console.log("Sending payload:", JSON.stringify(payload, null, 2));
-
     try {
-      const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
+      const { data: result, error } = await supabase.functions.invoke("create-and-fund-gift", {
         body: payload,
       });
 
       if (error) throw new Error(error.message);
 
       if (result && !result.success) {
-        // DEBUG MODE: Show raw error from Edge Function
-        const rawDebug = JSON.stringify(result, null, 2);
-        setErrorMessage(`RAW RESPONSE:\n${rawDebug}`);
-        console.error("Alpaca error details:", result);
+        setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
         return;
       }
 
-      if (result?.onfidoToken) {
-        setOnfidoToken(result.onfidoToken);
-        try {
-          await loadOnfidoSdk();
-          setOnfidoLoaded(true);
-        } catch {
-          setOnfidoLoaded(false);
-        }
-      } else {
-        setIsSuccess(true);
-      }
+      // Navigate to celebration page with state
+      navigate("/gift-celebration", {
+        state: {
+          giftAmount: result.giftAmount || 161,
+          accountStatus: result.accountStatus,
+          needsApproval: result.needsApproval,
+        },
+      });
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
     } finally {
