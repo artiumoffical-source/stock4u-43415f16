@@ -21,7 +21,7 @@ const userDataSchema = z.object({
   postalCode: z.string().regex(/^\d{5,}$/),
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/),
-  giftAmount: z.number().positive().max(100000).optional(),
+  giftId: z.string().uuid('Invalid gift ID'),
 });
 
 serve(async (req) => {
