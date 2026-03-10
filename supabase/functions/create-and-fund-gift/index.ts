@@ -151,11 +151,12 @@ serve(async (req) => {
       date_of_birth: validated.dob,
       alpaca_account_id: newAccountId,
       status: status || 'SUBMITTED',
+      gift_id: validated.giftId,
     });
 
-    // ─── Step 2: Poll for ACTIVE status (up to 3 attempts, 2s apart) ───
-    const MAX_POLLS = 3;
-    const POLL_INTERVAL_MS = 2000;
+    // ─── Step 2: Poll for ACTIVE status (up to 15 attempts, 4s apart = 60s) ───
+    const MAX_POLLS = 15;
+    const POLL_INTERVAL_MS = 4000;
 
     for (let attempt = 1; attempt <= MAX_POLLS; attempt++) {
       console.log(`[create-and-fund-gift] Poll attempt ${attempt}/${MAX_POLLS}, waiting ${POLL_INTERVAL_MS}ms...`);

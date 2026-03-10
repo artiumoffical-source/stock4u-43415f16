@@ -1,0 +1,1 @@
+ALTER TABLE public.alpaca_onboarding ADD COLUMN gift_id uuid;

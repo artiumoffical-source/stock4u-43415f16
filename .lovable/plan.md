@@ -1,35 +1,34 @@
 
 
-## Problem
+## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
 
-The Alpaca account takes ~60 seconds to become `ACTIVE`, but the Edge Function only polls for 6 seconds (3 × 2s). After that, it returns `giftSent: false` and **never retries the journal transfer**. When the account activates a minute later, nothing triggers the funding.
+### What Changes
 
-## Solution: Two-Phase Approach
+**Single file edit: `src/data/stockData.ts`**
 
-### Phase 1: Increase polling in the Edge Function
-- Increase to **15 polls × 4 seconds = 60 seconds** total wait time. This covers the typical activation delay.
-- Edge Functions have a ~150s timeout on Supabase, so 60s polling is safe.
+Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
 
-### Phase 2: Create a separate retry Edge Function
-- New function `retry-gift-funding` that can be called manually or via a cron/webhook.
-- It queries `alpaca_onboarding` for records with status `SUBMITTED` (not yet `FUNDED`), checks their Alpaca account status, and attempts the journal transfer for any that are now `ACTIVE`.
-- This handles edge cases where even 60s isn't enough.
+### Logo Strategy
 
-### Changes
+Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
 
-**File: `supabase/functions/create-and-fund-gift/index.ts`**
-- Change `MAX_POLLS` from `3` to `15`
-- Change `POLL_INTERVAL_MS` from `2000` to `4000`
-- Save the `giftId` in the `alpaca_onboarding` insert so the retry function knows which gift to fund
+### Data Mapping
 
-**File: `supabase/functions/retry-gift-funding/index.ts`** (new)
-- Query `alpaca_onboarding` where `status = 'SUBMITTED'`
-- For each, check Alpaca account status
-- If `ACTIVE`, execute the journal transfer using the gift amount from the `gifts` table
-- Update `alpaca_onboarding` status to `FUNDED` on success
+Each entry maps to the existing `Stock` interface:
+- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
+- `company` → Hebrew name (e.g., `"בנק לאומי"`)
+- `description` → Short Hebrew description of the company
+- `logoUrl` → `https://logo.clearbit.com/{domain}`
+- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
 
-**Database migration:**
-- Add `gift_id` column (uuid, nullable) to `alpaca_onboarding` table to link onboarding records to gifts
+### What is NOT touched
+- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
+- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
+- All routing, contexts, and other pages — untouched
 
-This ensures the money gets deposited even if activation takes longer than expected.
+### Technical Details
+
+The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+
+ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
 

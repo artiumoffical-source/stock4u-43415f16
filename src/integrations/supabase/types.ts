@@ -52,6 +52,7 @@ export type Database = {
           date_of_birth: string
           email: string
           first_name: string
+          gift_id: string | null
           id: string
           last_name: string
           postal_code: string
@@ -67,6 +68,7 @@ export type Database = {
           date_of_birth: string
           email: string
           first_name: string
+          gift_id?: string | null
           id?: string
           last_name: string
           postal_code: string
@@ -82,6 +84,7 @@ export type Database = {
           date_of_birth?: string
           email?: string
           first_name?: string
+          gift_id?: string | null
           id?: string
           last_name?: string
           postal_code?: string

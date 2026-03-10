@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.create-and-fund-gift]
 verify_jwt = false
+
+[functions.retry-gift-funding]
+verify_jwt = false
