@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2, PartyPopper, Gift, CheckCircle2, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -84,30 +84,14 @@ function getDaysInMonth(year: string, month: string) {
   return Array.from({ length: d }, (_, i) => i + 1);
 }
 
-function loadOnfidoSdk(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if ((window as any).Onfido) return resolve();
-    const script = document.createElement("script");
-    script.src = "https://sdk.onfido.com/v14";
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Onfido SDK"));
-    document.head.appendChild(script);
-
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://sdk.onfido.com/v14/style.css";
-    document.head.appendChild(link);
-  });
-}
 
 export default function ClaimStockGift() {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   
-  const [onfidoToken, setOnfidoToken] = useState<string | null>(null);
-  const [onfidoLoaded, setOnfidoLoaded] = useState(false);
-
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -131,7 +115,6 @@ export default function ClaimStockGift() {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
-    
 
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
@@ -150,34 +133,26 @@ export default function ClaimStockGift() {
       },
     };
 
-    console.log("Sending payload:", JSON.stringify(payload, null, 2));
-
     try {
-      const { data: result, error } = await supabase.functions.invoke("create-alpaca-account", {
+      const { data: result, error } = await supabase.functions.invoke("create-and-fund-gift", {
         body: payload,
       });
 
       if (error) throw new Error(error.message);
 
       if (result && !result.success) {
-        // DEBUG MODE: Show raw error from Edge Function
-        const rawDebug = JSON.stringify(result, null, 2);
-        setErrorMessage(`RAW RESPONSE:\n${rawDebug}`);
-        console.error("Alpaca error details:", result);
+        setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
         return;
       }
 
-      if (result?.onfidoToken) {
-        setOnfidoToken(result.onfidoToken);
-        try {
-          await loadOnfidoSdk();
-          setOnfidoLoaded(true);
-        } catch {
-          setOnfidoLoaded(false);
-        }
-      } else {
-        setIsSuccess(true);
-      }
+      // Navigate to celebration page with state
+      navigate("/gift-celebration", {
+        state: {
+          giftAmount: result.giftAmount || 161,
+          accountStatus: result.accountStatus,
+          needsApproval: result.needsApproval,
+        },
+      });
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
     } finally {
@@ -185,88 +160,7 @@ export default function ClaimStockGift() {
     }
   };
 
-  // Onfido SDK mount effect
-  const onfidoContainerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (onfidoToken && onfidoLoaded && onfidoContainerRef.current) {
-      try {
-        const Onfido = (window as any).Onfido;
-        if (Onfido) {
-          Onfido.init({
-            token: onfidoToken,
-            containerId: "onfido-mount",
-            onComplete: () => {
-              setIsSuccess(true);
-              setOnfidoToken(null);
-            },
-            steps: ["document"],
-            language: { locale: "he" },
-          });
-        }
-      } catch (err) {
-        console.error("Failed to init Onfido SDK:", err);
-        setOnfidoLoaded(false);
-      }
-    }
-  }, [onfidoToken, onfidoLoaded]);
 
-  // Show Onfido SDK or token fallback
-  if (onfidoToken) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
-        <Card className="w-full max-w-lg border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
-          <CardContent className="pt-8 pb-8 space-y-6">
-            {onfidoLoaded ? (
-              <>
-                <h2 className="text-2xl font-black text-center" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
-                  📄 אימות מסמכים
-                </h2>
-                <p className="text-sm text-muted-foreground text-center">העלה את תעודת הזהות שלך לצורך אימות</p>
-                <div id="onfido-mount" ref={onfidoContainerRef} className="min-h-[400px]" />
-              </>
-            ) : (
-              <div className="text-center space-y-4">
-                <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl" style={{ background: "hsl(42, 100%, 65%)" }}>
-                  ✅
-                </div>
-                <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
-                  הפרטים נשלחו בהצלחה!
-                </h2>
-                <p className="text-sm text-muted-foreground">טוקן האימות שלך:</p>
-                <div className="bg-muted rounded-2xl p-4 break-all text-xs font-mono text-foreground border-2 border-muted">
-                  {onfidoToken}
-                </div>
-                <p className="text-xs text-muted-foreground">שמור את הטוקן הזה – צוות Stock4U יצור איתך קשר להמשך התהליך.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
-        <Card className="w-full max-w-md text-center border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
-          <CardContent className="pt-12 pb-10 space-y-6">
-            <div className="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-5xl" style={{ background: "hsl(142, 71%, 90%)" }}>
-              🎉
-            </div>
-            <h1 className="text-3xl font-black text-foreground" style={{ fontFamily: "'Rubik', sans-serif" }}>
-              מזל טוב!
-            </h1>
-            <p className="text-lg font-semibold" style={{ color: "hsl(142, 71%, 35%)" }}>
-              מזל טוב! החשבון נשלח לאישור אלפאקה
-            </p>
-            <p className="text-sm text-muted-foreground">
-              נעדכן אותך במייל ברגע שהחשבון יהיה מוכן לשימוש.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
