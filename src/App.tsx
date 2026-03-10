@@ -26,6 +26,7 @@ import InvestorPitch from "./pages/InvestorPitch";
 import OnePager from "./pages/OnePager";
 import Landing from "./pages/Landing";
 import ClaimStockGift from "./pages/ClaimStockGift";
+import GiftCelebration from "./pages/GiftCelebration";
 
 const queryClient = new QueryClient();
 
