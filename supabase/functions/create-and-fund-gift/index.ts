@@ -151,6 +151,7 @@ serve(async (req) => {
       date_of_birth: validated.dob,
       alpaca_account_id: newAccountId,
       status: status || 'SUBMITTED',
+      gift_id: validated.giftId,
     });
 
     // ─── Step 2: Poll for ACTIVE status (up to 3 attempts, 2s apart) ───
