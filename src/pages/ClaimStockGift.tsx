@@ -112,6 +112,9 @@ export default function ClaimStockGift() {
   const totalFields = 11;
   const progress = Math.round((filledCount / totalFields) * 100);
 
+  // TODO: In production, fetch this from the gift record via token/giftId
+  const giftAmount = 161;
+
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
@@ -130,6 +133,7 @@ export default function ClaimStockGift() {
         postalCode: data.postalCode,
         dob,
         taxId: data.taxId,
+        giftAmount,
       },
     };
 
