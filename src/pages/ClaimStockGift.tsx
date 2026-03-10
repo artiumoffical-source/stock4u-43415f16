@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2, PartyPopper, Gift, CheckCircle2, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
