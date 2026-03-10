@@ -230,7 +230,8 @@ export default function Checkout() {
       {/* Main Content - Pilot Overlay Wrapper */}
       <div className="relative max-w-4xl mx-auto px-4 md:px-8 py-12" dir="rtl">
         {/* Blurred / disabled payment content */}
-        <div className="filter blur-[2px] pointer-events-none select-none opacity-60">
+        <div className="">
+          {/* TODO: Re-enable pilot overlay after testing - was: filter blur-[2px] pointer-events-none select-none opacity-60 */}
           {/* Credit Card Payment Section */}
           <div className="flex flex-col items-center gap-10">
             <h2 className="text-[#486284] text-2xl md:text-3xl font-bold text-center">
