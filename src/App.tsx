@@ -60,6 +60,7 @@ const App = () => (
                 <Route path="/onepager" element={<OnePager />} />
                 <Route path="/landing" element={<Landing />} />
                 <Route path="/claim" element={<ClaimStockGift />} />
+                <Route path="/gift-celebration" element={<GiftCelebration />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
