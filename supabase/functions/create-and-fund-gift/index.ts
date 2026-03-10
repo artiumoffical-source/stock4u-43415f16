@@ -62,8 +62,12 @@ serve(async (req) => {
       );
     }
 
-    const giftAmount = Number(giftRecord.total_amount);
-    console.log(`[create-and-fund-gift] Verified gift amount from DB: $${giftAmount} for giftId: ${validated.giftId}`);
+    const giftAmountNIS = Number(giftRecord.total_amount);
+
+    // ─── Currency conversion: NIS → USD ───
+    const ILS_TO_USD_RATE = 0.274;
+    const giftAmountUSD = Math.round(giftAmountNIS * ILS_TO_USD_RATE * 100) / 100;
+    console.log(`[create-and-fund-gift] Gift amount: ₪${giftAmountNIS} → $${giftAmountUSD} (rate: ${ILS_TO_USD_RATE}) for giftId: ${validated.giftId}`);
 
     // ─── Step 1: Create Alpaca account ───
     const alpacaPayload = {
