@@ -120,7 +120,7 @@ serve(async (req) => {
     }
 
     const newAccountId = account.id;
-    const status = account.status;
+    let status = account.status;
 
     console.log('[create-and-fund-gift] Account created:', newAccountId, 'status:', status);
 
@@ -138,35 +138,52 @@ serve(async (req) => {
       status: status || 'SUBMITTED',
     });
 
-    // ─── Step 2: If approved, transfer dynamic gift amount ───
+    // ─── Step 2: Wait 5s then re-check status ───
+    console.log('[create-and-fund-gift] Waiting 5 seconds for account approval...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    const statusCheckResponse = await fetch(`${ALPACA_URL}/accounts/${newAccountId}`, {
+      headers: { "Authorization": `Basic ${auth}` },
+    });
+    if (statusCheckResponse.ok) {
+      const refreshed = await statusCheckResponse.json();
+      console.log('[create-and-fund-gift] Refreshed status:', refreshed.status);
+      status = refreshed.status;
+    } else {
+      console.warn('[create-and-fund-gift] Could not refresh status, proceeding with:', status);
+      await statusCheckResponse.text();
+    }
+
+    // ─── Step 3: Attempt journal transfer regardless of status ───
+    // Use $20 for sandbox testing
+    const transferAmount = 20;
+    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} (status: ${status})...`);
+
     let journalData = null;
     let giftSent = false;
 
-    if (status === 'APPROVED' || status === 'ACTIVE') {
-      console.log(`[create-and-fund-gift] Account approved, transferring $${giftAmount}...`);
+    const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
+      body: JSON.stringify({
+        entry_type: "JNLC",
+        from_account: firmAccountId,
+        to_account: newAccountId,
+        amount: String(transferAmount),
+        description: `Gift for ${validated.firstName} ${validated.lastName}`,
+      }),
+    });
 
-      const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
-        body: JSON.stringify({
-          entry_type: "JNLC",
-          from_account: firmAccountId,
-          to_account: newAccountId,
-          amount: String(giftAmount),
-          description: `Gift for ${validated.firstName} ${validated.lastName}`,
-        }),
-      });
+    journalData = await journalResponse.json();
+    giftSent = journalResponse.ok;
 
-      journalData = await journalResponse.json();
-      giftSent = journalResponse.ok;
+    console.log('[create-and-fund-gift] Journal response status:', journalResponse.status);
+    console.log('[create-and-fund-gift] Journal result:', JSON.stringify(journalData));
 
-      console.log('[create-and-fund-gift] Journal result:', JSON.stringify(journalData));
-
-      if (giftSent) {
-        await supabase.from('alpaca_onboarding')
-          .update({ status: 'FUNDED' })
-          .eq('alpaca_account_id', newAccountId);
-      }
+    if (giftSent) {
+      await supabase.from('alpaca_onboarding')
+        .update({ status: 'FUNDED' })
+        .eq('alpaca_account_id', newAccountId);
     }
 
     return new Response(
