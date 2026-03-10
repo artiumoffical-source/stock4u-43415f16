@@ -7,9 +7,16 @@ import confetti from "canvas-confetti";
 export default function GiftCelebration() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { giftAmount?: number; accountStatus?: string; needsApproval?: boolean } | null;
+  const state = location.state as {
+    giftAmountNIS?: number;
+    giftAmountUSD?: number;
+    exchangeRate?: number;
+    accountStatus?: string;
+    needsApproval?: boolean;
+  } | null;
 
-  const giftAmount = state?.giftAmount ?? 0;
+  const giftAmountNIS = state?.giftAmountNIS ?? 0;
+  const giftAmountUSD = state?.giftAmountUSD ?? 0;
   const needsApproval = state?.needsApproval ?? false;
 
   useEffect(() => {
@@ -57,8 +64,11 @@ export default function GiftCelebration() {
 
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">ערך המתנה שלך</p>
-                  <p className="text-5xl font-black" style={{ color: "hsl(142, 71%, 35%)", fontFamily: "'Rubik', sans-serif" }}>
-                    ${giftAmount}
+                  <p className="text-3xl font-black" style={{ color: "hsl(220, 91%, 53%)", fontFamily: "'Rubik', sans-serif" }}>
+                    ₪{giftAmountNIS}
+                  </p>
+                  <p className="text-xl font-bold mt-1" style={{ color: "hsl(142, 71%, 35%)" }}>
+                    ≈ ${giftAmountUSD}
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     יועבר לחשבון שלך ברגע שהאישור יושלם
@@ -73,8 +83,11 @@ export default function GiftCelebration() {
 
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">היתרה בחשבון שלך</p>
-                  <p className="text-5xl font-black" style={{ color: "hsl(142, 71%, 35%)", fontFamily: "'Rubik', sans-serif" }}>
-                    ${giftAmount}
+                  <p className="text-3xl font-black" style={{ color: "hsl(220, 91%, 53%)", fontFamily: "'Rubik', sans-serif" }}>
+                    ₪{giftAmountNIS}
+                  </p>
+                  <p className="text-xl font-bold mt-1" style={{ color: "hsl(142, 71%, 35%)" }}>
+                    ≈ ${giftAmountUSD}
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     💰 הכסף מוכן להשקעה!

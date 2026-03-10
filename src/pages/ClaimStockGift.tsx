@@ -174,7 +174,9 @@ export default function ClaimStockGift() {
       // Navigate to celebration page with state
       navigate("/gift-celebration", {
         state: {
-          giftAmount: result.giftAmount || 161,
+          giftAmountNIS: result.giftAmountNIS,
+          giftAmountUSD: result.giftAmountUSD,
+          exchangeRate: result.exchangeRate,
           accountStatus: result.accountStatus,
           needsApproval: result.needsApproval,
         },
