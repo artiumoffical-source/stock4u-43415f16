@@ -86,33 +86,36 @@ function getDaysInMonth(year: string, month: string) {
 
 export default function ClaimStockGift() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const giftId = searchParams.get("giftId");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  
-  
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "", lastName: "", email: "", phone: "",
-      address: "", city: "", postalCode: "", taxId: "",
-      dobYear: "", dobMonth: "", dobDay: "",
-    },
-  });
+  const [giftAmount, setGiftAmount] = useState<number | null>(null);
+  const [loadingGift, setLoadingGift] = useState(true);
 
-  const watchedYear = form.watch("dobYear");
-  const watchedMonth = form.watch("dobMonth");
-  const days = getDaysInMonth(watchedYear, watchedMonth);
-
-  const filledCount = Object.keys(form.watch()).filter((key) => {
-    const val = form.watch(key as keyof FormValues);
-    return val && (typeof val === "string" ? val.length > 0 : true);
-  }).length;
-  const totalFields = 11;
-  const progress = Math.round((filledCount / totalFields) * 100);
-
-  // TODO: In production, fetch this from the gift record via token/giftId
-  const giftAmount = 161;
+  // Fetch gift amount from DB on mount
+  useEffect(() => {
+    if (!giftId) {
+      setErrorMessage("קישור לא תקין – חסר מזהה מתנה");
+      setLoadingGift(false);
+      return;
+    }
+    (async () => {
+      const { data, error } = await supabase
+        .from("gifts")
+        .select("total_amount")
+        .eq("id", giftId)
+        .single();
+      if (error || !data) {
+        setErrorMessage("מתנה לא נמצאה, אנא ודא שהקישור תקין");
+      } else {
+        setGiftAmount(Number(data.total_amount));
+      }
+      setLoadingGift(false);
+    })();
+  }, [giftId]);
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
