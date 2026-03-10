@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.create-alpaca-account]
 verify_jwt = false
+
+[functions.create-and-fund-gift]
+verify_jwt = false
