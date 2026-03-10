@@ -230,7 +230,8 @@ export default function Checkout() {
       {/* Main Content - Pilot Overlay Wrapper */}
       <div className="relative max-w-4xl mx-auto px-4 md:px-8 py-12" dir="rtl">
         {/* Blurred / disabled payment content */}
-        <div className="filter blur-[2px] pointer-events-none select-none opacity-60">
+        <div className="">
+          {/* TODO: Re-enable pilot overlay after testing - was: filter blur-[2px] pointer-events-none select-none opacity-60 */}
           {/* Credit Card Payment Section */}
           <div className="flex flex-col items-center gap-10">
             <h2 className="text-[#486284] text-2xl md:text-3xl font-bold text-center">
@@ -365,49 +366,11 @@ export default function Checkout() {
           </div>
         </div>{/* end blurred content */}
 
-        {/* Pilot Mode Overlay */}
+        {/* Pilot Mode Overlay — TEMPORARILY HIDDEN FOR TESTING
         <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-[#DBE3F3] p-8 md:p-10 max-w-lg w-full text-center">
-            {waitlistSuccess ? (
-              <div className="space-y-4">
-                <div className="text-5xl">🎉</div>
-                <h3 className="text-[#486284] text-2xl font-bold">תודה שהצטרפתם!</h3>
-                <p className="text-[#486284] text-base leading-relaxed">
-                  נשלח לכם הזמנה אישית ברגע שהחשבון שלכם יאושר.<br/>מתנת המניות שלכם שמורה 💎
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="text-4xl">🚀</div>
-                <h3 className="text-[#486284] text-2xl md:text-3xl font-bold">
-                  אנחנו כרגע בשלב פיילוט סגור!
-                </h3>
-                <p className="text-[#486284] text-base leading-relaxed">
-                  כדי להבטיח את הביטחון המקסימלי שלכם, אנחנו מאפשרים הצטרפות למערכת בשלבים.
-                  השאירו אימייל ונשלח לכם הזמנה אישית ברגע שהחשבון שלכם יאושר לשליחת מתנות
-                  <span className="font-semibold"> (כולל הטבה בלעדית)</span>.
-                </p>
-                <form onSubmit={handleWaitlistSubmit} className="flex flex-col gap-4">
-                  <input
-                    type="email"
-                    value={waitlistEmail}
-                    onChange={(e) => setWaitlistEmail(e.target.value)}
-                    placeholder="הכניסו את האימייל שלכם"
-                    className="w-full h-14 px-5 rounded-lg border border-[#4C7EFB] bg-[#F5F7FC] text-[#3C4382] text-right text-lg focus:outline-none focus:ring-2 focus:ring-[#4C7EFB]"
-                    dir="rtl"
-                  />
-                  <button
-                    type="submit"
-                    disabled={waitlistSubmitting}
-                    className="w-full h-14 rounded-full bg-[#4C7EFB] text-white text-lg font-bold shadow-[6px_6px_0_0_rgba(0,0,0,0.1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {waitlistSubmitting ? "שולח..." : "הצטרפו לרשימת ההמתנה 🎁"}
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
+          ...
         </div>
+        */}
       </div>
 
       <Footer />
