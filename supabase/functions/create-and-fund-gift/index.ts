@@ -102,12 +102,15 @@ serve(async (req) => {
 
       if (errorStr.includes('tax_id')) {
         userMessage = 'מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון';
-      } else if (errorStr.includes('given_name') || errorStr.includes('family_name') || errorStr.includes('ascii') || errorStr.includes('latin')) {
-        userMessage = 'שם פרטי ושם משפחה חייבים להיות באנגלית בלבד (אותיות לטיניות)';
-      } else if (errorStr.includes('city') || errorStr.includes('address') || errorStr.includes('street')) {
-        userMessage = 'כתובת ועיר חייבים להיות באנגלית בלבד';
+      } else if (errorStr.includes('ascii') || errorStr.includes('latin')) {
+        userMessage = 'שם, כתובת ועיר חייבים להיות באנגלית בלבד (אותיות לטיניות)';
       } else if (errorStr.includes('already exists')) {
         userMessage = 'כבר קיים חשבון עם כתובת האימייל הזו';
+      } else if (errorStr.includes('postal') || errorStr.includes('zip')) {
+        userMessage = 'מיקוד אינו תקין';
+      } else {
+        // Show actual Alpaca error for debugging unrecognized issues
+        userMessage = `שגיאה: ${account.message || JSON.stringify(account)}`;
       }
 
       return new Response(
