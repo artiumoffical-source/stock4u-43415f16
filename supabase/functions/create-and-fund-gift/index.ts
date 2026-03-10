@@ -7,6 +7,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const ALPACA_URL = "https://broker-api.sandbox.alpaca.markets/v1";
+
 const ENGLISH_ONLY_REGEX = /^[A-Za-z\s\-'".,:;()0-9/]+$/;
 
 const userDataSchema = z.object({
@@ -30,21 +32,22 @@ serve(async (req) => {
     const { userData } = await req.json();
     const validated = userDataSchema.parse(userData);
 
+    const keyId = Deno.env.get("ALPACA_KEY_ID");
+    const secretKey = Deno.env.get("ALPACA_SECRET_KEY");
+    const firmAccountId = Deno.env.get("ALPACA_FIRM_ACCOUNT_ID");
+
+    if (!keyId || !secretKey || !firmAccountId) {
+      throw new Error("Alpaca API credentials not configured");
+    }
+
+    const auth = btoa(`${keyId}:${secretKey}`);
+
+    // Store in Supabase
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    const alpacaKeyId = Deno.env.get('ALPACA_KEY_ID');
-    const alpacaSecretKey = Deno.env.get('ALPACA_SECRET_KEY');
-    const firmAccountId = Deno.env.get('ALPACA_FIRM_ACCOUNT_ID');
-
-    if (!alpacaKeyId || !alpacaSecretKey || !firmAccountId) {
-      throw new Error('Alpaca API credentials not configured');
-    }
-
-    const basicAuth = btoa(`${alpacaKeyId}:${alpacaSecretKey}`);
-
-    // ─── Step 1: Create Alpaca Brokerage Account ───
+    // ─── Step 1: Create Alpaca account ───
     const alpacaPayload = {
       contact: {
         email_address: validated.email,
@@ -79,26 +82,22 @@ serve(async (req) => {
     };
 
     console.log('[create-and-fund-gift] Creating Alpaca account...');
-    const accountResponse = await fetch(
-      'https://broker-api.sandbox.alpaca.markets/v1/accounts',
-      {
-        method: 'POST',
-        headers: { 'Authorization': `Basic ${basicAuth}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(alpacaPayload),
-      }
-    );
 
-    const accountText = await accountResponse.text();
-    console.log('[create-and-fund-gift] Alpaca account response:', accountResponse.status, accountText);
+    const accountResponse = await fetch(`${ALPACA_URL}/accounts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
+      body: JSON.stringify(alpacaPayload),
+    });
 
-    let accountData: any;
-    try { accountData = JSON.parse(accountText); } catch { accountData = { raw: accountText }; }
+    const account = await accountResponse.json();
 
     if (!accountResponse.ok) {
-      // Check for ASCII / identity issues
-      const errorStr = JSON.stringify(accountData).toLowerCase();
+      console.error('[create-and-fund-gift] Alpaca error:', JSON.stringify(account));
+
+      // Map to user-friendly Hebrew error
+      const errorStr = JSON.stringify(account).toLowerCase();
       let userMessage = 'חלה שגיאה זמנית בחיבור, אנא נסה שוב בעוד רגע';
-      
+
       if (errorStr.includes('tax_id')) {
         userMessage = 'מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון';
       } else if (errorStr.includes('given_name') || errorStr.includes('family_name') || errorStr.includes('ascii') || errorStr.includes('latin')) {
@@ -108,91 +107,69 @@ serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ success: false, error: userMessage, alpacaStatus: accountResponse.status }),
+        JSON.stringify({ success: false, error: userMessage }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
       );
     }
 
-    const alpacaAccountId = accountData.id;
-    const accountStatus = accountData.status; // SUBMITTED, APPROVED, ACTION_REQUIRED, etc.
+    const newAccountId = account.id;
+    const status = account.status;
 
-    // ─── Step 2: Store onboarding record ───
-    const { data: dbRecord, error: dbError } = await supabase
-      .from('alpaca_onboarding')
-      .insert({
-        first_name: validated.firstName,
-        last_name: validated.lastName,
-        email: validated.email,
-        tax_id: validated.taxId,
-        street_address: validated.address,
-        city: validated.city,
-        postal_code: validated.postalCode,
-        date_of_birth: validated.dob,
-        alpaca_account_id: alpacaAccountId,
-        status: accountStatus || 'SUBMITTED',
-      })
-      .select()
-      .single();
+    console.log('[create-and-fund-gift] Account created:', newAccountId, 'status:', status);
 
-    if (dbError) {
-      console.error('[create-and-fund-gift] DB error:', dbError);
-    }
+    // Save to DB
+    await supabase.from('alpaca_onboarding').insert({
+      first_name: validated.firstName,
+      last_name: validated.lastName,
+      email: validated.email,
+      tax_id: validated.taxId,
+      street_address: validated.address,
+      city: validated.city,
+      postal_code: validated.postalCode,
+      date_of_birth: validated.dob,
+      alpaca_account_id: newAccountId,
+      status: status || 'SUBMITTED',
+    });
 
-    // ─── Step 3: If account is APPROVED, initiate journal transfer ───
-    let fundingStatus = 'pending_approval';
-    let journalId: string | null = null;
-    const giftAmount = 161; // $161 gift
+    // ─── Step 2: If approved, transfer $161 gift ───
+    let journalData = null;
+    let giftSent = false;
 
-    if (accountStatus === 'APPROVED' || accountStatus === 'ACTIVE') {
-      console.log('[create-and-fund-gift] Account approved, initiating journal transfer...');
-      
-      const journalPayload = {
-        from_account: firmAccountId,
-        entry_type: "JNLC", // Journal cash
-        to_account: alpacaAccountId,
-        amount: giftAmount.toString(),
-        description: "Stock4U Gift Transfer",
-      };
+    if (status === 'APPROVED' || status === 'ACTIVE') {
+      console.log('[create-and-fund-gift] Account approved, transferring $161...');
 
-      const journalResponse = await fetch(
-        'https://broker-api.sandbox.alpaca.markets/v1/journals',
-        {
-          method: 'POST',
-          headers: { 'Authorization': `Basic ${basicAuth}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(journalPayload),
-        }
-      );
+      const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
+        body: JSON.stringify({
+          entry_type: "JNLC",
+          from_account: firmAccountId,
+          to_account: newAccountId,
+          amount: "161",
+          description: "Welcome Gift from Stock4U",
+        }),
+      });
 
-      const journalText = await journalResponse.text();
-      console.log('[create-and-fund-gift] Journal response:', journalResponse.status, journalText);
+      journalData = await journalResponse.json();
+      giftSent = journalResponse.ok;
 
-      if (journalResponse.ok) {
-        const journalData = JSON.parse(journalText);
-        journalId = journalData.id;
-        fundingStatus = journalData.status || 'executed';
+      console.log('[create-and-fund-gift] Journal result:', JSON.stringify(journalData));
 
-        // Update DB record
-        if (dbRecord) {
-          await supabase
-            .from('alpaca_onboarding')
-            .update({ status: 'FUNDED' })
-            .eq('id', dbRecord.id);
-        }
-      } else {
-        fundingStatus = 'funding_failed';
-        console.error('[create-and-fund-gift] Journal failed:', journalText);
+      if (giftSent) {
+        await supabase.from('alpaca_onboarding')
+          .update({ status: 'FUNDED' })
+          .eq('alpaca_account_id', newAccountId);
       }
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        accountId: alpacaAccountId,
-        accountStatus,
-        fundingStatus,
-        journalId,
-        giftAmount,
-        needsApproval: accountStatus !== 'APPROVED' && accountStatus !== 'ACTIVE',
+        accountId: newAccountId,
+        accountStatus: status,
+        giftSent,
+        giftAmount: 161,
+        needsApproval: status !== 'APPROVED' && status !== 'ACTIVE',
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
