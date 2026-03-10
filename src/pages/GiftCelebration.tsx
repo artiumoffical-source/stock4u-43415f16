@@ -9,11 +9,10 @@ export default function GiftCelebration() {
   const navigate = useNavigate();
   const state = location.state as { giftAmount?: number; accountStatus?: string; needsApproval?: boolean } | null;
 
-  const giftAmount = state?.giftAmount ?? 161;
+  const giftAmount = state?.giftAmount ?? 0;
   const needsApproval = state?.needsApproval ?? false;
 
   useEffect(() => {
-    // Fire confetti on mount
     const duration = 3000;
     const end = Date.now() + duration;
     const colors = ["#4C7EFB", "#FFD700", "#FF6B6B", "#22C55E", "#A855F7"];
@@ -32,7 +31,6 @@ export default function GiftCelebration() {
         {/* Main Celebration Card */}
         <Card className="border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden">
           <CardContent className="pt-10 pb-10 space-y-6 text-center">
-            {/* Big emoji sticker */}
             <div className="mx-auto w-28 h-28 rounded-full flex items-center justify-center text-6xl border-[4px] border-white shadow-[0_6px_0_hsl(142,71%,35%),0_8px_20px_rgba(0,0,0,0.15)]"
               style={{ background: "linear-gradient(135deg, hsl(142, 71%, 85%), hsl(142, 71%, 70%))" }}>
               🎉
@@ -57,7 +55,6 @@ export default function GiftCelebration() {
                   </div>
                 </div>
 
-                {/* Gift amount preview */}
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">ערך המתנה שלך</p>
                   <p className="text-5xl font-black" style={{ color: "hsl(142, 71%, 35%)", fontFamily: "'Rubik', sans-serif" }}>
@@ -74,7 +71,6 @@ export default function GiftCelebration() {
                   החשבון נפתח והמתנה הועברה! 🎁
                 </p>
 
-                {/* Balance display */}
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">היתרה בחשבון שלך</p>
                   <p className="text-5xl font-black" style={{ color: "hsl(142, 71%, 35%)", fontFamily: "'Rubik', sans-serif" }}>
@@ -87,7 +83,13 @@ export default function GiftCelebration() {
               </>
             )}
 
-            {/* Info sticker */}
+            {/* Gross amount disclaimer */}
+            <div className="rounded-2xl border-2 border-amber-100 p-3" style={{ background: "hsl(42, 100%, 97%)" }}>
+              <p className="text-[11px] text-amber-700 leading-relaxed">
+                סכום זה מוצג בערכי ברוטו. המרת המט״ח וביצוע הרכישה כפופים לעמלות מסחר ושער חליפין רציף.
+              </p>
+            </div>
+
             <div className="rounded-2xl border-2 border-blue-200 p-4 text-right" style={{ background: "hsl(220, 90%, 96%)" }}>
               <p className="text-sm font-medium text-blue-900 leading-relaxed">
                 📧 נשלח אליך אימייל עם כל הפרטים.
@@ -109,6 +111,11 @@ export default function GiftCelebration() {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Legal footer */}
+        <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed px-4">
+          השירות ניתן כפלטפורמה טכנולוגית בלבד ואינו מהווה ייעוץ השקעות או ניהול תיקים לפי חוק הייעוץ הישראלי.
+        </p>
 
         <p className="text-xs text-muted-foreground text-center font-medium">
           🔒 כל הפעולות מבוצעות בצורה מאובטחת דרך Stock4U

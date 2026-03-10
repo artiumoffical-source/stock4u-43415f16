@@ -21,6 +21,7 @@ const userDataSchema = z.object({
   postalCode: z.string().regex(/^\d{5,}$/),
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/),
+  giftAmount: z.number().positive().max(100000).optional(),
 });
 
 serve(async (req) => {
@@ -32,6 +33,9 @@ serve(async (req) => {
     const { userData } = await req.json();
     const validated = userDataSchema.parse(userData);
 
+    // Use dynamic gift amount, default to 161
+    const giftAmount = validated.giftAmount ?? 161;
+
     const keyId = Deno.env.get("ALPACA_KEY_ID");
     const secretKey = Deno.env.get("ALPACA_SECRET_KEY");
     const firmAccountId = Deno.env.get("ALPACA_FIRM_ACCOUNT_ID");
@@ -42,7 +46,6 @@ serve(async (req) => {
 
     const auth = btoa(`${keyId}:${secretKey}`);
 
-    // Store in Supabase
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -94,7 +97,6 @@ serve(async (req) => {
     if (!accountResponse.ok) {
       console.error('[create-and-fund-gift] Alpaca error:', JSON.stringify(account));
 
-      // Map to user-friendly Hebrew error
       const errorStr = JSON.stringify(account).toLowerCase();
       let userMessage = 'חלה שגיאה זמנית בחיבור, אנא נסה שוב בעוד רגע';
 
@@ -104,6 +106,8 @@ serve(async (req) => {
         userMessage = 'שם פרטי ושם משפחה חייבים להיות באנגלית בלבד (אותיות לטיניות)';
       } else if (errorStr.includes('city') || errorStr.includes('address') || errorStr.includes('street')) {
         userMessage = 'כתובת ועיר חייבים להיות באנגלית בלבד';
+      } else if (errorStr.includes('already exists')) {
+        userMessage = 'כבר קיים חשבון עם כתובת האימייל הזו';
       }
 
       return new Response(
@@ -131,12 +135,12 @@ serve(async (req) => {
       status: status || 'SUBMITTED',
     });
 
-    // ─── Step 2: If approved, transfer $161 gift ───
+    // ─── Step 2: If approved, transfer dynamic gift amount ───
     let journalData = null;
     let giftSent = false;
 
     if (status === 'APPROVED' || status === 'ACTIVE') {
-      console.log('[create-and-fund-gift] Account approved, transferring $161...');
+      console.log(`[create-and-fund-gift] Account approved, transferring $${giftAmount}...`);
 
       const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
         method: "POST",
@@ -145,8 +149,8 @@ serve(async (req) => {
           entry_type: "JNLC",
           from_account: firmAccountId,
           to_account: newAccountId,
-          amount: "161",
-          description: "Welcome Gift from Stock4U",
+          amount: String(giftAmount),
+          description: `Gift for ${validated.firstName} ${validated.lastName}`,
         }),
       });
 
@@ -168,7 +172,7 @@ serve(async (req) => {
         accountId: newAccountId,
         accountStatus: status,
         giftSent,
-        giftAmount: 161,
+        giftAmount,
         needsApproval: status !== 'APPROVED' && status !== 'ACTIVE',
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }

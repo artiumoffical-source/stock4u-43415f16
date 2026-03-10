@@ -330,6 +330,16 @@ export default function ClaimStockGift() {
             </Form>
           </CardContent>
         </Card>
+
+        {/* Legal disclaimers */}
+        <div className="space-y-3 px-2">
+          <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+            סכום זה מוצג בערכי ברוטו. המרת המט״ח וביצוע הרכישה כפופים לעמלות מסחר ושער חליפין רציף.
+          </p>
+          <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed border-t border-muted pt-3">
+            השירות ניתן כפלטפורמה טכנולוגית בלבד ואינו מהווה ייעוץ השקעות או ניהול תיקים לפי חוק הייעוץ הישראלי.
+          </p>
+        </div>
       </div>
     </div>
   );
