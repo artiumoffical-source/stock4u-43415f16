@@ -204,9 +204,9 @@ serve(async (req) => {
       );
     }
 
-    // Use actual gift amount from DB
-    const transferAmount = giftAmount;
-    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} from firm ${firmAccountId} to ${newAccountId}...`);
+    // Use converted USD amount for Alpaca
+    const transferAmount = giftAmountUSD;
+    console.log(`[create-and-fund-gift] Attempting journal transfer of $${transferAmount} (₪${giftAmountNIS}) from firm ${firmAccountId} to ${newAccountId}...`);
 
     const journalResponse = await fetch(`${ALPACA_URL}/journals`, {
       method: "POST",
