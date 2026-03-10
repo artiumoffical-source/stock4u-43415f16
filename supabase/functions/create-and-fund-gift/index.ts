@@ -21,7 +21,7 @@ const userDataSchema = z.object({
   postalCode: z.string().regex(/^\d{5,}$/),
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/),
-  giftAmount: z.number().positive().max(100000).optional(),
+  giftId: z.string().uuid('Invalid gift ID'),
 });
 
 serve(async (req) => {
@@ -32,9 +32,6 @@ serve(async (req) => {
   try {
     const { userData } = await req.json();
     const validated = userDataSchema.parse(userData);
-
-    // Use dynamic gift amount, default to 161
-    const giftAmount = validated.giftAmount ?? 161;
 
     const keyId = Deno.env.get("ALPACA_KEY_ID");
     const secretKey = Deno.env.get("ALPACA_SECRET_KEY");
@@ -49,6 +46,24 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+    // ─── Verify gift amount from DB (server-side, tamper-proof) ───
+    const { data: giftRecord, error: giftError } = await supabase
+      .from('gifts')
+      .select('total_amount')
+      .eq('id', validated.giftId)
+      .single();
+
+    if (giftError || !giftRecord) {
+      console.error('[create-and-fund-gift] Gift lookup failed:', giftError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'מתנה לא נמצאה, אנא ודא שהקישור תקין' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
+    const giftAmount = Number(giftRecord.total_amount);
+    console.log(`[create-and-fund-gift] Verified gift amount from DB: $${giftAmount} for giftId: ${validated.giftId}`);
 
     // ─── Step 1: Create Alpaca account ───
     const alpacaPayload = {

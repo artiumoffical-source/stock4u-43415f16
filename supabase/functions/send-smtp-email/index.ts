@@ -73,10 +73,10 @@ const generateGiftEmailHTML = (emailData: EmailData, isForRecipient: boolean, gi
     </div>
   `).join('');
 
-  // Action button for recipient to redeem gift
-  const actionButton = isForRecipient && giftToken ? `
+  // Action button for recipient to claim gift — links to /claim?giftId=
+  const actionButton = isForRecipient ? `
     <div style="text-align: center; margin-top: 24px;">
-      <a href="${appUrl}/redeem?token=${giftToken}" 
+      <a href="${appUrl}/claim?giftId=${emailData.orderId}" 
          style="display: inline-block; background: linear-gradient(135deg, #4C7EFB 0%, #6366f1 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(76, 126, 251, 0.3); min-width: 200px;">
         🎁 קבל את המתנה
       </a>

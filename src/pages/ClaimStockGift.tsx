@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -86,11 +86,37 @@ function getDaysInMonth(year: string, month: string) {
 
 export default function ClaimStockGift() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const giftId = searchParams.get("giftId");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  
-  
+  const [giftAmount, setGiftAmount] = useState<number | null>(null);
+  const [loadingGift, setLoadingGift] = useState(true);
+
+  // Fetch gift amount from DB on mount
+  useEffect(() => {
+    if (!giftId) {
+      setErrorMessage("קישור לא תקין – חסר מזהה מתנה");
+      setLoadingGift(false);
+      return;
+    }
+    (async () => {
+      const { data, error } = await supabase
+        .from("gifts")
+        .select("total_amount")
+        .eq("id", giftId)
+        .single();
+      if (error || !data) {
+        setErrorMessage("מתנה לא נמצאה, אנא ודא שהקישור תקין");
+      } else {
+        setGiftAmount(Number(data.total_amount));
+      }
+      setLoadingGift(false);
+    })();
+  }, [giftId]);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -111,9 +137,6 @@ export default function ClaimStockGift() {
   const totalFields = 11;
   const progress = Math.round((filledCount / totalFields) * 100);
 
-  // TODO: In production, fetch this from the gift record via token/giftId
-  const giftAmount = 161;
-
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
@@ -132,7 +155,7 @@ export default function ClaimStockGift() {
         postalCode: data.postalCode,
         dob,
         taxId: data.taxId,
-        giftAmount,
+        giftId,
       },
     };
 
@@ -165,6 +188,27 @@ export default function ClaimStockGift() {
 
 
 
+  if (loadingGift) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!giftId || (!giftAmount && errorMessage)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Card className="max-w-md border-[3px] border-white shadow-lg rounded-3xl">
+          <CardContent className="pt-6 text-center space-y-4">
+            <div className="text-4xl">⚠️</div>
+            <p className="text-lg font-bold text-destructive">{errorMessage}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
       <div className="max-w-lg mx-auto space-y-6">
@@ -176,6 +220,11 @@ export default function ClaimStockGift() {
           <h1 className="text-3xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(var(--stock4u-happy-blue))" }}>
             מימוש מתנת מניות
           </h1>
+          {giftAmount && (
+            <p className="text-2xl font-black" style={{ color: "hsl(145, 63%, 42%)" }}>
+              ₪{giftAmount.toLocaleString()}
+            </p>
+          )}
           <p className="text-muted-foreground text-sm font-medium">
             מלא/י את הפרטים הבאים כדי לפתוח חשבון השקעות 🚀
           </p>
