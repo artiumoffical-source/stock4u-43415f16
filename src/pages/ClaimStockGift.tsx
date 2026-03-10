@@ -101,6 +101,7 @@ function loadOnfidoSdk(): Promise<void> {
 }
 
 export default function ClaimStockGift() {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
