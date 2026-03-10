@@ -117,6 +117,26 @@ export default function ClaimStockGift() {
     })();
   }, [giftId]);
 
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "", lastName: "", email: "", phone: "",
+      address: "", city: "", postalCode: "", taxId: "",
+      dobYear: "", dobMonth: "", dobDay: "",
+    },
+  });
+
+  const watchedYear = form.watch("dobYear");
+  const watchedMonth = form.watch("dobMonth");
+  const days = getDaysInMonth(watchedYear, watchedMonth);
+
+  const filledCount = Object.keys(form.watch()).filter((key) => {
+    const val = form.watch(key as keyof FormValues);
+    return val && (typeof val === "string" ? val.length > 0 : true);
+  }).length;
+  const totalFields = 11;
+  const progress = Math.round((filledCount / totalFields) * 100);
+
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     setErrorMessage("");
@@ -135,7 +155,7 @@ export default function ClaimStockGift() {
         postalCode: data.postalCode,
         dob,
         taxId: data.taxId,
-        giftAmount,
+        giftId,
       },
     };
 
