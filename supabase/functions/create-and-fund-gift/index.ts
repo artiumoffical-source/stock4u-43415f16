@@ -9,15 +9,15 @@ const corsHeaders = {
 
 const ALPACA_URL = "https://broker-api.sandbox.alpaca.markets/v1";
 
-const ENGLISH_ONLY_REGEX = /^[A-Za-z\s\-'".,:;()0-9/]+$/;
+const HEBREW_REGEX = /[\u0590-\u05FF]/;
 
 const userDataSchema = z.object({
-  firstName: z.string().min(1).max(100).regex(ENGLISH_ONLY_REGEX, 'Name must contain English characters only'),
-  lastName: z.string().min(1).max(100).regex(ENGLISH_ONLY_REGEX, 'Name must contain English characters only'),
+  firstName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
+  lastName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
   email: z.string().email().max(254),
   phone: z.string().min(9).max(15),
-  address: z.string().min(2).max(300).regex(ENGLISH_ONLY_REGEX, 'Address must contain English characters only'),
-  city: z.string().min(2).max(100).regex(ENGLISH_ONLY_REGEX, 'City must contain English characters only'),
+  address: z.string().min(2).max(300).refine(val => !HEBREW_REGEX.test(val), 'Address must contain English characters only'),
+  city: z.string().min(2).max(100).refine(val => !HEBREW_REGEX.test(val), 'City must contain English characters only'),
   postalCode: z.string().regex(/^\d{5,}$/),
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/),
