@@ -22,9 +22,9 @@ const HEBREW_REGEX = /[\u0590-\u05FF]/;
 
 const formSchema = z.object({
   firstName: z.string().min(2, "שם פרטי חייב להכיל לפחות 2 תווים").max(100)
-    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
+    .refine(val => !HEBREW_REGEX.test(val), "Please use English letters only – אנא הקלד באנגלית בלבד"),
   lastName: z.string().min(2, "שם משפחה חייב להכיל לפחות 2 תווים").max(100)
-    .regex(ENGLISH_ONLY_REGEX, "Please use English letters only – אנא הקלד באנגלית בלבד"),
+    .refine(val => !HEBREW_REGEX.test(val), "Please use English letters only – אנא הקלד באנגלית בלבד"),
   email: z.string().email("כתובת אימייל לא תקינה"),
   phone: z.string().regex(/^\d{9,10}$/, "מספר טלפון חייב להכיל 9-10 ספרות (ללא קידומת מדינה)"),
   address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים")
