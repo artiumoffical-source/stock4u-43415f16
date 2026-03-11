@@ -64,10 +64,22 @@ serve(async (req) => {
 
     const giftAmountNIS = Number(giftRecord.total_amount);
 
-    // ─── Currency conversion: NIS → USD ───
-    const ILS_TO_USD_RATE = 0.274;
-    const giftAmountUSD = Math.round(giftAmountNIS * ILS_TO_USD_RATE * 100) / 100;
-    console.log(`[create-and-fund-gift] Gift amount: ₪${giftAmountNIS} → $${giftAmountUSD} (rate: ${ILS_TO_USD_RATE}) for giftId: ${validated.giftId}`);
+    // ─── Currency conversion: NIS → USD (dynamic rate with fallback) ───
+    let usdToIlsRate = 3.10; // fallback rate
+    try {
+      const rateRes = await fetch('https://open.er-api.com/v6/latest/USD');
+      if (rateRes.ok) {
+        const rateData = await rateRes.json();
+        if (rateData?.rates?.ILS) {
+          usdToIlsRate = rateData.rates.ILS;
+          console.log(`[create-and-fund-gift] Fetched live USD/ILS rate: ${usdToIlsRate}`);
+        }
+      }
+    } catch (e) {
+      console.warn('[create-and-fund-gift] Failed to fetch live rate, using fallback:', e.message);
+    }
+    const giftAmountUSD = Math.round((giftAmountNIS / usdToIlsRate) * 100) / 100;
+    console.log(`[create-and-fund-gift] Gift amount: ₪${giftAmountNIS} → $${giftAmountUSD} (USD/ILS rate: ${usdToIlsRate}) for giftId: ${validated.giftId}`);
 
     // ─── Step 1: Create Alpaca account ───
     const alpacaPayload = {
