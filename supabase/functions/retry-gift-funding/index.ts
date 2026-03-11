@@ -99,9 +99,18 @@ serve(async (req) => {
       }
 
       const amountNIS = Number(gift.total_amount);
-      const ILS_TO_USD_RATE = 0.274;
-      const amountUSD = Math.round(amountNIS * ILS_TO_USD_RATE * 100) / 100;
-      console.log(`[retry-gift-funding] Journaling $${amountUSD} (₪${amountNIS}) from ${firmAccountId} to ${alpaca_account_id}`);
+      let usdToIlsRate = 3.10;
+      try {
+        const rateRes = await fetch('https://open.er-api.com/v6/latest/USD');
+        if (rateRes.ok) {
+          const rateData = await rateRes.json();
+          if (rateData?.rates?.ILS) usdToIlsRate = rateData.rates.ILS;
+        }
+      } catch (e) {
+        console.warn('[retry-gift-funding] Failed to fetch live rate:', e.message);
+      }
+      const amountUSD = Math.round((amountNIS / usdToIlsRate) * 100) / 100;
+      console.log(`[retry-gift-funding] Journaling $${amountUSD} (₪${amountNIS}, rate: ${usdToIlsRate}) from ${firmAccountId} to ${alpaca_account_id}`);
 
       const journalRes = await fetch(`${ALPACA_URL}/journals`, {
         method: "POST",
