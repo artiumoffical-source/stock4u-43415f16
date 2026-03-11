@@ -65,10 +65,10 @@ export default function GiftCelebration() {
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">ערך המתנה שלך</p>
                   <p className="text-3xl font-black" style={{ color: "hsl(220, 91%, 53%)", fontFamily: "'Rubik', sans-serif" }}>
-                    ₪{giftAmountNIS}
+                    ${giftAmountUSD}
                   </p>
-                  <p className="text-xl font-bold mt-1" style={{ color: "hsl(142, 71%, 35%)" }}>
-                    ≈ ${giftAmountUSD}
+                  <p className="text-sm text-muted-foreground mt-1">
+                    (₪{giftAmountNIS})
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     יועבר לחשבון שלך ברגע שהאישור יושלם
@@ -84,10 +84,10 @@ export default function GiftCelebration() {
                 <div className="rounded-2xl border-[3px] border-white p-6 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
                   <p className="text-sm text-muted-foreground font-bold mb-2">היתרה בחשבון שלך</p>
                   <p className="text-3xl font-black" style={{ color: "hsl(220, 91%, 53%)", fontFamily: "'Rubik', sans-serif" }}>
-                    ₪{giftAmountNIS}
+                    ${giftAmountUSD}
                   </p>
-                  <p className="text-xl font-bold mt-1" style={{ color: "hsl(142, 71%, 35%)" }}>
-                    ≈ ${giftAmountUSD}
+                  <p className="text-sm text-muted-foreground mt-1">
+                    (₪{giftAmountNIS})
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     💰 הכסף מוכן להשקעה!
