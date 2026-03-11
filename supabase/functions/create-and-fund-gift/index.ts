@@ -257,7 +257,7 @@ serve(async (req) => {
         giftSent,
         giftAmountNIS,
         giftAmountUSD,
-        exchangeRate: ILS_TO_USD_RATE,
+        exchangeRate: usdToIlsRate,
         needsApproval: false,
         journalError: giftSent ? null : (journalData?.message || 'Unknown journal error'),
       }),
