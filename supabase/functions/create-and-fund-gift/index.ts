@@ -208,7 +208,7 @@ serve(async (req) => {
           giftSent: false,
           giftAmountNIS,
           giftAmountUSD,
-          exchangeRate: ILS_TO_USD_RATE,
+        exchangeRate: usdToIlsRate,
           needsApproval: true,
           message: `החשבון נוצר בהצלחה אך עדיין בסטטוס ${status}. ההפקדה תתבצע לאחר אישור החשבון.`,
         }),
