@@ -3,7 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, RefreshCw, TrendingUp, TrendingDown, Wallet, DollarSign, BarChart3 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Loader2, LogOut, RefreshCw, TrendingUp, TrendingDown, Wallet, DollarSign, BarChart3, ArrowDownToLine } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import { usStocks, israelStocks, usETFs, israelETFs, cryptoETFs } from "@/data/stockData";
 
@@ -43,12 +53,18 @@ const BG = "hsl(220, 63%, 92%)";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
   const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Sell modal state
+  const [sellTarget, setSellTarget] = useState<Position | null>(null);
+  const [sellConfirmed, setSellConfirmed] = useState(false);
+  const [selling, setSelling] = useState(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -108,6 +124,61 @@ export default function Dashboard() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/login", { replace: true });
+  };
+
+  const openSellModal = (position: Position) => {
+    setSellTarget(position);
+    setSellConfirmed(false);
+  };
+
+  const closeSellModal = () => {
+    setSellTarget(null);
+    setSellConfirmed(false);
+  };
+
+  const executeSell = async () => {
+    if (!sellTarget || !sellConfirmed) return;
+    setSelling(true);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      const { data, error: fnError } = await supabase.functions.invoke("sell-stock", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        body: { symbol: sellTarget.symbol, qty: sellTarget.qty },
+      });
+
+      if (fnError) throw fnError;
+
+      if (data?.error) {
+        toast({
+          title: "⚠️ שגיאה במכירה",
+          description: data.error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "✅ המכירה בוצעה!",
+          description: `פקודת מכירה ל-${sellTarget.symbol} נשלחה בהצלחה. הכסף יתעדכן בתיק בקרוב.`,
+        });
+        // Refresh portfolio after short delay
+        setTimeout(() => fetchPortfolio(true), 2000);
+      }
+    } catch (err: any) {
+      console.error("Sell error:", err);
+      toast({
+        title: "⚠️ שגיאה",
+        description: "לא הצלחנו לבצע את המכירה. נסה שוב.",
+        variant: "destructive",
+      });
+    } finally {
+      setSelling(false);
+      closeSellModal();
+    }
   };
 
   // Loading state
@@ -184,6 +255,10 @@ export default function Dashboard() {
   const totalPl = positions.reduce((sum, p) => sum + parseFloat(p.unrealized_pl || "0"), 0);
   const isProfit = totalPl >= 0;
 
+  // Sell modal meta
+  const sellMeta = sellTarget ? stockLookup[sellTarget.symbol] : null;
+  const sellCompanyName = sellMeta?.company || sellTarget?.symbol || "";
+
   return (
     <div className="min-h-screen py-6 px-4 pb-24" dir="rtl" style={{ background: BG }}>
       <div className="max-w-lg mx-auto space-y-5">
@@ -214,7 +289,6 @@ export default function Dashboard() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 gap-3">
-          {/* Total Value - full width */}
           <SummaryCard
             icon={<Wallet className="h-5 w-5" />}
             label="שווי כולל"
@@ -223,16 +297,12 @@ export default function Dashboard() {
             className="col-span-2"
             highlight
           />
-
-          {/* Cash */}
           <SummaryCard
             icon={<DollarSign className="h-5 w-5" />}
             label="מזומן"
             valueUsd={`$${acct.cash.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             valueIls={`₪${acct.cash_ils.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           />
-
-          {/* P&L */}
           <SummaryCard
             icon={isProfit ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
             label="רווח/הפסד"
@@ -261,11 +331,17 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           ) : (
-            positions.map((pos) => <HoldingCard key={pos.symbol} position={pos} exchangeRate={rate} />)
+            positions.map((pos) => (
+              <HoldingCard
+                key={pos.symbol}
+                position={pos}
+                exchangeRate={rate}
+                onSell={() => openSellModal(pos)}
+              />
+            ))
           )}
         </div>
 
-        {/* Exchange rate info */}
         <p className="text-xs text-muted-foreground text-center font-medium">
           💱 שער המרה: $1 = ₪{rate.toFixed(2)}
         </p>
@@ -276,6 +352,81 @@ export default function Dashboard() {
           🔒 כל הפעולות מבוצעות בצורה מאובטחת דרך Stock4U
         </p>
       </div>
+
+      {/* Sell Confirmation Modal */}
+      <Dialog open={!!sellTarget} onOpenChange={(open) => { if (!open) closeSellModal(); }}>
+        <DialogContent className="rounded-3xl border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.2)] max-w-sm mx-auto" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black text-center" style={{ fontFamily: "'Rubik', sans-serif", color: BLUE }}>
+              מכירת מניה
+            </DialogTitle>
+            <DialogDescription className="text-center text-muted-foreground font-medium">
+              אתה עומד למכור את כל האחזקה שלך ב-{sellCompanyName}
+            </DialogDescription>
+          </DialogHeader>
+
+          {sellTarget && (
+            <div className="space-y-4 py-2">
+              {/* Order summary */}
+              <div className="rounded-2xl border-2 border-blue-100 p-4 space-y-2" style={{ background: "hsl(220, 90%, 97%)" }}>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">מניה</span>
+                  <span className="font-black" style={{ color: BLUE }}>{sellTarget.symbol}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">כמות</span>
+                  <span className="font-bold">{parseFloat(sellTarget.qty).toLocaleString("en-US", { maximumFractionDigits: 6 })}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">שווי נוכחי</span>
+                  <span className="font-bold">${parseFloat(sellTarget.market_value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">סוג פקודה</span>
+                  <span className="font-bold">מכירה בשוק (Market)</span>
+                </div>
+              </div>
+
+              {/* Compliance checkbox */}
+              <div className="flex items-start gap-3 rounded-2xl border-2 border-amber-200 p-4" style={{ background: "hsl(45, 90%, 96%)" }}>
+                <Checkbox
+                  id="sell-compliance"
+                  checked={sellConfirmed}
+                  onCheckedChange={(checked) => setSellConfirmed(checked === true)}
+                  className="mt-0.5 border-amber-400 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                />
+                <label htmlFor="sell-compliance" className="text-xs font-medium leading-relaxed cursor-pointer" style={{ color: "hsl(30, 50%, 30%)" }}>
+                  אני מאשר/ת שעסקה זו מתבצעת על דעתי בלבד, ולא קיבלתי ייעוץ השקעות כלשהו. אני מבין/ה שפקודת מכירה בשוק תתבצע במחיר השוק הנוכחי.
+                </label>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+            <Button
+              onClick={executeSell}
+              disabled={!sellConfirmed || selling}
+              className="w-full h-12 text-base font-bold rounded-2xl gap-2"
+              style={{
+                background: sellConfirmed ? "hsl(0, 72%, 50%)" : "hsl(0, 10%, 80%)",
+                color: "white",
+                boxShadow: sellConfirmed ? "0 4px 0 hsl(0, 72%, 38%), 0 6px 15px rgba(200, 50, 50, 0.3)" : "none",
+              }}
+            >
+              {selling ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowDownToLine className="h-4 w-4" />}
+              {selling ? "מבצע מכירה..." : "אישור מכירה"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={closeSellModal}
+              disabled={selling}
+              className="w-full h-10 font-bold rounded-2xl"
+            >
+              ביטול
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -300,35 +451,20 @@ function Header({ email }: { email?: string }) {
 }
 
 function SummaryCard({
-  icon,
-  label,
-  valueUsd,
-  valueIls,
-  className = "",
-  highlight = false,
-  isProfit,
+  icon, label, valueUsd, valueIls, className = "", highlight = false, isProfit,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  valueUsd: string;
-  valueIls: string;
-  className?: string;
-  highlight?: boolean;
-  isProfit?: boolean;
+  icon: React.ReactNode; label: string; valueUsd: string; valueIls: string;
+  className?: string; highlight?: boolean; isProfit?: boolean;
 }) {
   const plColor = isProfit !== undefined
     ? isProfit ? "hsl(142, 71%, 35%)" : "hsl(0, 72%, 50%)"
     : BLUE;
-
   const plBg = isProfit !== undefined
     ? isProfit ? "hsl(142, 60%, 94%)" : "hsl(0, 70%, 95%)"
     : undefined;
 
   return (
-    <Card
-      className={`border-[3px] border-white shadow-[0_6px_20px_rgba(0,0,0,0.1)] rounded-2xl ${className}`}
-      style={plBg ? { background: plBg } : undefined}
-    >
+    <Card className={`border-[3px] border-white shadow-[0_6px_20px_rgba(0,0,0,0.1)] rounded-2xl ${className}`} style={plBg ? { background: plBg } : undefined}>
       <CardContent className={`${highlight ? "py-5 px-5" : "py-4 px-4"}`}>
         <div className="flex items-center gap-2 mb-2" style={{ color: plColor }}>
           {icon}
@@ -343,7 +479,7 @@ function SummaryCard({
   );
 }
 
-function HoldingCard({ position, exchangeRate }: { position: Position; exchangeRate: number }) {
+function HoldingCard({ position, exchangeRate, onSell }: { position: Position; exchangeRate: number; onSell: () => void }) {
   const pl = parseFloat(position.unrealized_pl || "0");
   const plPc = parseFloat(position.unrealized_plpc || "0") * 100;
   const isProfit = pl >= 0;
@@ -405,9 +541,24 @@ function HoldingCard({ position, exchangeRate }: { position: Position; exchangeR
                 </p>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              כמות: {parseFloat(position.qty).toLocaleString("en-US", { maximumFractionDigits: 6 })} · מחיר: ${parseFloat(position.current_price || "0").toFixed(2)}
-            </p>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-xs text-muted-foreground">
+                כמות: {parseFloat(position.qty).toLocaleString("en-US", { maximumFractionDigits: 6 })} · מחיר: ${parseFloat(position.current_price || "0").toFixed(2)}
+              </p>
+              <Button
+                size="sm"
+                onClick={onSell}
+                className="h-7 px-3 text-xs font-bold rounded-xl gap-1"
+                style={{
+                  background: "hsl(0, 72%, 95%)",
+                  color: "hsl(0, 72%, 45%)",
+                  border: "2px solid hsl(0, 60%, 85%)",
+                }}
+              >
+                <ArrowDownToLine className="h-3 w-3" />
+                מכירה
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>

@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.get-user-portfolio]
 verify_jwt = false
+
+[functions.sell-stock]
+verify_jwt = false
