@@ -11,18 +11,53 @@ const ALPACA_URL = "https://broker-api.sandbox.alpaca.markets/v1";
 
 const HEBREW_REGEX = /[\u0590-\u05FF]/;
 
+// Israeli ID checksum validation (Luhn-like algorithm)
+function isValidIsraeliId(id: string): boolean {
+  if (!/^\d{9}$/.test(id)) return false;
+  // Reject trivially invalid IDs (all same digit, sequential)
+  if (/^(\d)\1{8}$/.test(id)) return false;
+  const digits = id.split('').map(Number);
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    let num = digits[i] * ((i % 2) + 1);
+    if (num > 9) num = Math.floor(num / 10) + (num % 10);
+    sum += num;
+  }
+  return sum % 10 === 0;
+}
+
 const userDataSchema = z.object({
   firstName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
   lastName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
   email: z.string().email().max(254),
-  phone: z.string().min(9).max(15),
+  phone: z.string().min(9).max(15).regex(/^(\+972|05)\d{7,8}$/, 'Phone must be a valid Israeli format (+972... or 05...)'),
   address: z.string().min(2).max(300).refine(val => !HEBREW_REGEX.test(val), 'Address must contain English characters only'),
   city: z.string().min(2).max(100).refine(val => !HEBREW_REGEX.test(val), 'City must contain English characters only'),
   postalCode: z.string().regex(/^\d{5,}$/),
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  taxId: z.string().regex(/^\d{9}$/),
+  taxId: z.string().regex(/^\d{9}$/).refine(isValidIsraeliId, 'Israeli ID checksum is invalid'),
   giftId: z.string().uuid('Invalid gift ID'),
 });
+
+// Log an audit entry (never includes sensitive data like taxId/government_id)
+async function logAuditEntry(
+  supabase: ReturnType<typeof createClient>,
+  action: string,
+  entityId: string,
+  details: Record<string, unknown>
+) {
+  try {
+    await supabase.from('audit_logs').insert({
+      action,
+      entity_type: 'alpaca_sync',
+      entity_id: entityId,
+      user_type: 'service',
+      details,
+    });
+  } catch (e) {
+    console.error('[audit] Failed to write audit log:', e.message);
+  }
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -140,9 +175,15 @@ serve(async (req) => {
       } else if (errorStr.includes('postal') || errorStr.includes('zip')) {
         userMessage = 'מיקוד אינו תקין';
       } else {
-        // Show actual Alpaca error for debugging unrecognized issues
         userMessage = `שגיאה: ${account.message || JSON.stringify(account)}`;
       }
+
+      // Audit log the failure (no sensitive data)
+      await logAuditEntry(supabase, 'ALPACA_ACCOUNT_CREATION_FAILED', validated.giftId, {
+        error: userMessage,
+        alpaca_error_code: account?.code || null,
+        email: validated.email,
+      });
 
       return new Response(
         JSON.stringify({ success: false, error: userMessage }),
@@ -200,6 +241,12 @@ serve(async (req) => {
     if (status !== 'ACTIVE') {
       console.warn(`[create-and-fund-gift] Account not ACTIVE after polling (status: ${status}). Skipping journal transfer.`);
 
+      await logAuditEntry(supabase, 'ALPACA_ACCOUNT_PENDING', validated.giftId, {
+        alpaca_account_id: newAccountId,
+        final_status: status,
+        message: 'Account not active after polling, will be retried by cron',
+      });
+
       return new Response(
         JSON.stringify({
           success: true,
@@ -208,7 +255,7 @@ serve(async (req) => {
           giftSent: false,
           giftAmountNIS,
           giftAmountUSD,
-        exchangeRate: usdToIlsRate,
+          exchangeRate: usdToIlsRate,
           needsApproval: true,
           message: `החשבון נוצר בהצלחה אך עדיין בסטטוס ${status}. ההפקדה תתבצע לאחר אישור החשבון.`,
         }),
@@ -237,16 +284,36 @@ serve(async (req) => {
 
     console.log(`[create-and-fund-gift] Journal HTTP status: ${journalResponse.status}`);
     console.log(`[create-and-fund-gift] Journal response: ${JSON.stringify(journalData)}`);
-    console.log(`[create-and-fund-gift] from_account (firm): ${firmAccountId}, to_account: ${newAccountId}, amount: $${transferAmount}`);
 
     if (!giftSent) {
       console.error(`[create-and-fund-gift] JOURNAL FAILED — Alpaca error code: ${journalData?.code}, message: ${journalData?.message}`);
+
+      await logAuditEntry(supabase, 'ALPACA_JOURNAL_FAILED', validated.giftId, {
+        alpaca_account_id: newAccountId,
+        journal_error: journalData?.message || 'Unknown',
+        amount_usd: transferAmount,
+        amount_nis: giftAmountNIS,
+      });
     }
 
     if (giftSent) {
       await supabase.from('alpaca_onboarding')
         .update({ status: 'FUNDED' })
         .eq('alpaca_account_id', newAccountId);
+
+      // Audit success
+      await logAuditEntry(supabase, 'ALPACA_GIFT_FUNDED', validated.giftId, {
+        alpaca_account_id: newAccountId,
+        amount_usd: transferAmount,
+        amount_nis: giftAmountNIS,
+        exchange_rate: usdToIlsRate,
+      });
+
+      // ─── Profile upsert stub (will be wired to auth user_id in Step 2) ───
+      // For now, we store the alpaca_account_id linkage. When auth is implemented,
+      // the user_id will be set during the magic-link sign-in flow.
+      // The government_id is intentionally NOT stored here — it only exists
+      // temporarily in alpaca_onboarding and is sent directly to Alpaca.
     }
 
     return new Response(
