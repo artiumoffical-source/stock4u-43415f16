@@ -248,6 +248,18 @@ serve(async (req) => {
         message: 'Account not active after polling, will be retried by cron',
       });
 
+      // Create profile with pending sync status (if userId provided)
+      if (validated.userId) {
+        await supabase.from('profiles').upsert({
+          user_id: validated.userId,
+          full_name: `${validated.firstName} ${validated.lastName}`,
+          phone: validated.phone,
+          government_id: null,
+          government_id_synced: false,
+          alpaca_account_id: newAccountId,
+        }, { onConflict: 'user_id' });
+      }
+
       return new Response(
         JSON.stringify({
           success: true,

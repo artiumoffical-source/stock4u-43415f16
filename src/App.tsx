@@ -54,8 +54,8 @@ const App = () => (
                 <Route path="/purchase-error" element={<PurchaseError />} />
                 <Route path="/about" element={<About />} />
                 
-                {/* <Route path="/login" element={<Login />} /> */}
-                
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/gift-registration" element={<GiftRegistration />} />
                 <Route path="/redeem" element={<RedeemGift />} />
                 <Route path="/investor" element={<InvestorPitch />} />
