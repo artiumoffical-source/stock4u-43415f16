@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const userId = claimsData.claims.sub;
+    const userId = user.id;
 
     // Fetch profile to get alpaca_account_id
     const { data: profile, error: profileError } = await supabase
