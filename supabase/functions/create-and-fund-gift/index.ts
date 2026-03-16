@@ -37,6 +37,7 @@ const userDataSchema = z.object({
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/).refine(isValidIsraeliId, 'Israeli ID checksum is invalid'),
   giftId: z.string().uuid('Invalid gift ID'),
+  userId: z.string().uuid('Invalid user ID').optional(),
 });
 
 // Log an audit entry (never includes sensitive data like taxId/government_id)
@@ -247,6 +248,18 @@ serve(async (req) => {
         message: 'Account not active after polling, will be retried by cron',
       });
 
+      // Create profile with pending sync status (if userId provided)
+      if (validated.userId) {
+        await supabase.from('profiles').upsert({
+          user_id: validated.userId,
+          full_name: `${validated.firstName} ${validated.lastName}`,
+          phone: validated.phone,
+          government_id: null,
+          government_id_synced: false,
+          alpaca_account_id: newAccountId,
+        }, { onConflict: 'user_id' });
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
@@ -309,12 +322,18 @@ serve(async (req) => {
         exchange_rate: usdToIlsRate,
       });
 
-      // ─── Profile upsert stub (will be wired to auth user_id in Step 2) ───
-      // For now, we store the alpaca_account_id linkage. When auth is implemented,
-      // the user_id will be set during the magic-link sign-in flow.
-      // The government_id is intentionally NOT stored here — it only exists
-      // temporarily in alpaca_onboarding and is sent directly to Alpaca.
-    }
+      // Profile upsert: link auth user to Alpaca account
+      if (validated.userId) {
+        await supabase.from('profiles').upsert({
+          user_id: validated.userId,
+          full_name: `${validated.firstName} ${validated.lastName}`,
+          phone: validated.phone,
+          government_id: null,
+          government_id_synced: true,
+          alpaca_account_id: newAccountId,
+        }, { onConflict: 'user_id' });
+        console.log(`[create-and-fund-gift] Profile upserted for user ${validated.userId}`);
+      }
 
     return new Response(
       JSON.stringify({

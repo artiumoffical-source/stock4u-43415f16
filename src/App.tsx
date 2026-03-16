@@ -27,6 +27,8 @@ import OnePager from "./pages/OnePager";
 import Landing from "./pages/Landing";
 import ClaimStockGift from "./pages/ClaimStockGift";
 import GiftCelebration from "./pages/GiftCelebration";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -52,8 +54,8 @@ const App = () => (
                 <Route path="/purchase-error" element={<PurchaseError />} />
                 <Route path="/about" element={<About />} />
                 
-                {/* <Route path="/login" element={<Login />} /> */}
-                
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/gift-registration" element={<GiftRegistration />} />
                 <Route path="/redeem" element={<RedeemGift />} />
                 <Route path="/investor" element={<InvestorPitch />} />

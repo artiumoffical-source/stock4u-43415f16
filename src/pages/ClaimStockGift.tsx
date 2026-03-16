@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Loader2, CheckCircle2, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
@@ -83,17 +82,84 @@ function getDaysInMonth(year: string, month: string) {
   return Array.from({ length: d }, (_, i) => i + 1);
 }
 
+const SESSION_KEY = "pending_kyc_data";
+
+type FlowState = "form" | "waitingForEmail" | "processingAuth";
 
 export default function ClaimStockGift() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const giftId = searchParams.get("giftId");
 
+  const [flowState, setFlowState] = useState<FlowState>("form");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [giftAmount, setGiftAmount] = useState<number | null>(null);
   const [loadingGift, setLoadingGift] = useState(true);
+  const [sentEmail, setSentEmail] = useState("");
+
+  // Process the Alpaca flow after auth
+  const processGiftClaim = useCallback(async (userId: string) => {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return;
+
+    setFlowState("processingAuth");
+    setErrorMessage("");
+
+    try {
+      const pendingData = JSON.parse(raw);
+      const { data: result, error } = await supabase.functions.invoke("create-and-fund-gift", {
+        body: { userData: { ...pendingData, userId } },
+      });
+
+      if (error) throw new Error(error.message);
+      if (result && !result.success) {
+        setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
+        setFlowState("form");
+        return;
+      }
+
+      sessionStorage.removeItem(SESSION_KEY);
+
+      navigate("/gift-celebration", {
+        state: {
+          giftAmountNIS: result.giftAmountNIS,
+          giftAmountUSD: result.giftAmountUSD,
+          exchangeRate: result.exchangeRate,
+          accountStatus: result.accountStatus,
+          needsApproval: result.needsApproval,
+        },
+      });
+    } catch (err: any) {
+      setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
+      setFlowState("form");
+    }
+  }, [navigate]);
+
+  // Listen for auth state changes (magic link callback)
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === "SIGNED_IN" && session?.user) {
+          const hasPending = sessionStorage.getItem(SESSION_KEY);
+          if (hasPending) {
+            await processGiftClaim(session.user.id);
+          }
+        }
+      }
+    );
+
+    // Check if already signed in with pending data (page reload after magic link)
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const hasPending = sessionStorage.getItem(SESSION_KEY);
+      if (session?.user && hasPending) {
+        await processGiftClaim(session.user.id);
+      }
+    })();
+
+    return () => subscription.unsubscribe();
+  }, [processGiftClaim]);
 
   // Fetch gift amount from DB on mount
   useEffect(() => {
@@ -144,52 +210,41 @@ export default function ClaimStockGift() {
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
-    const payload = {
-      userData: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: phoneWithCode,
-        address: data.address,
-        city: data.city,
-        postalCode: data.postalCode,
-        dob,
-        taxId: data.taxId,
-        giftId,
-      },
+    // Store form data in sessionStorage for after magic link redirect
+    const kycPayload = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: phoneWithCode,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,
+      dob,
+      taxId: data.taxId,
+      giftId,
     };
 
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(kycPayload));
+
     try {
-      const { data: result, error } = await supabase.functions.invoke("create-and-fund-gift", {
-        body: payload,
+      const redirectUrl = `${window.location.origin}/claim?giftId=${giftId}`;
+      const { error } = await supabase.auth.signInWithOtp({
+        email: data.email,
+        options: { emailRedirectTo: redirectUrl },
       });
 
       if (error) throw new Error(error.message);
 
-      if (result && !result.success) {
-        setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
-        return;
-      }
-
-      // Navigate to celebration page with state
-      navigate("/gift-celebration", {
-        state: {
-          giftAmountNIS: result.giftAmountNIS,
-          giftAmountUSD: result.giftAmountUSD,
-          exchangeRate: result.exchangeRate,
-          accountStatus: result.accountStatus,
-          needsApproval: result.needsApproval,
-        },
-      });
+      setSentEmail(data.email);
+      setFlowState("waitingForEmail");
     } catch (err: any) {
-      setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
+      setErrorMessage(err.message || "שגיאה בשליחת קוד אימות");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-
-
+  // ── Loading state ──
   if (loadingGift) {
     return (
       <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
@@ -198,6 +253,7 @@ export default function ClaimStockGift() {
     );
   }
 
+  // ── Error: no gift ──
   if (!giftId || (!giftAmount && errorMessage)) {
     return (
       <div className="min-h-screen flex items-center justify-center py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
@@ -211,6 +267,65 @@ export default function ClaimStockGift() {
     );
   }
 
+  // ── Processing auth (after magic link) ──
+  if (flowState === "processingAuth") {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Card className="max-w-md w-full border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
+          <CardContent className="pt-10 pb-10 text-center space-y-6">
+            <Loader2 className="h-16 w-16 animate-spin mx-auto" style={{ color: "hsl(220, 91%, 53%)" }} />
+            <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(220, 91%, 53%)" }}>
+              פותחים את חשבון ההשקעות שלך...
+            </h2>
+            <p className="text-muted-foreground font-medium">
+              זה עשוי לקחת עד דקה ⏳
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // ── Waiting for email ──
+  if (flowState === "waitingForEmail") {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
+        <Card className="max-w-md w-full border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
+          <CardContent className="pt-10 pb-10 text-center space-y-6">
+            <div className="mx-auto w-24 h-24 rounded-full flex items-center justify-center border-[4px] border-white shadow-[0_6px_0_hsl(220,91%,48%),0_8px_20px_rgba(0,0,0,0.15)]"
+              style={{ background: "linear-gradient(135deg, hsl(220, 91%, 85%), hsl(220, 91%, 70%))" }}>
+              <Mail className="h-10 w-10 text-white" />
+            </div>
+            <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(220, 91%, 53%)" }}>
+              בדוק/י את תיבת המייל 📬
+            </h2>
+            <p className="text-muted-foreground font-medium leading-relaxed">
+              שלחנו קישור אימות לכתובת
+            </p>
+            <div className="rounded-2xl border-[3px] border-white p-4 shadow-[0_4px_15px_rgba(0,0,0,0.08)]" style={{ background: "hsl(220, 63%, 96%)" }}>
+              <p className="text-lg font-bold" dir="ltr" style={{ color: "hsl(220, 91%, 53%)" }}>
+                {sentEmail}
+              </p>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              לחצ/י על הקישור במייל כדי לאמת ולהמשיך בתהליך.
+              <br />
+              אם לא קיבלת, בדוק/י גם בתיקיית הספאם.
+            </p>
+            <Button
+              variant="outline"
+              className="rounded-2xl"
+              onClick={() => setFlowState("form")}
+            >
+              חזרה לטופס
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // ── Main form ──
   return (
     <div className="min-h-screen py-8 px-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
       <div className="max-w-lg mx-auto space-y-6">
@@ -277,72 +392,57 @@ export default function ClaimStockGift() {
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground">תאריך לידה</label>
                   <div className="grid grid-cols-3 gap-3">
-                    {/* Year */}
-                    <FormField
-                      control={form.control}
-                      name="dobYear"
-                      render={({ field }) => (
-                        <FormItem>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
-                                <SelectValue placeholder="שנה" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="max-h-60">
-                              {years.map((y) => (
-                                <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* Month */}
-                    <FormField
-                      control={form.control}
-                      name="dobMonth"
-                      render={({ field }) => (
-                        <FormItem>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
-                                <SelectValue placeholder="חודש" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {months.map((m) => (
-                                <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* Day */}
-                    <FormField
-                      control={form.control}
-                      name="dobDay"
-                      render={({ field }) => (
-                        <FormItem>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
-                                <SelectValue placeholder="יום" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="max-h-60">
-                              {days.map((d) => (
-                                <SelectItem key={d} value={d.toString()}>{d}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <FormField control={form.control} name="dobYear" render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                              <SelectValue placeholder="שנה" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="max-h-60">
+                            {years.map((y) => (
+                              <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="dobMonth" render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                              <SelectValue placeholder="חודש" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {months.map((m) => (
+                              <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="dobDay" render={({ field }) => (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="rounded-2xl h-12 border-2 border-muted text-base">
+                              <SelectValue placeholder="יום" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="max-h-60">
+                            {days.map((d) => (
+                              <SelectItem key={d} value={d.toString()}>{d}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
                   </div>
                 </div>
 
@@ -363,7 +463,7 @@ export default function ClaimStockGift() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="ml-2 h-5 w-5 animate-spin" />
-                      יוצרים את החשבון...
+                      שולח קישור אימות...
                     </>
                   ) : (
                     <>
