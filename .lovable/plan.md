@@ -1,34 +1,26 @@
 
 
-## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
+## Diagnosis
 
-### What Changes
+Both `ClaimStockGift.tsx` (line 230) and `Login.tsx` (line 41) already use `window.location.origin` dynamically:
 
-**Single file edit: `src/data/stockData.ts`**
+- **ClaimStockGift.tsx**: `` `${window.location.origin}/claim?giftId=${giftId}` ``
+- **Login.tsx**: `` `${window.location.origin}/dashboard` ``
 
-Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+The code is correct. The `CONNECTION_REFUSED` / localhost redirect issue is caused by your **Supabase project's Site URL and Redirect URL settings**, not the application code.
 
-### Logo Strategy
+## What You Need to Do (Supabase Dashboard)
 
-Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
+Go to **Supabase Dashboard → Authentication → URL Configuration**:
 
-### Data Mapping
+1. **Site URL**: Set to `https://stock4u.lovable.app` (your published URL)
+2. **Redirect URLs**: Add both:
+   - `https://stock4u.lovable.app/**`
+   - `https://id-preview--cbb5078a-3742-4a28-ae5f-8a9ae3faedab.lovable.app/**`
 
-Each entry maps to the existing `Stock` interface:
-- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
-- `company` → Hebrew name (e.g., `"בנק לאומי"`)
-- `description` → Short Hebrew description of the company
-- `logoUrl` → `https://logo.clearbit.com/{domain}`
-- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
+The wildcard `/**` allows any path on those domains. The preview URL is needed for testing before publishing.
 
-### What is NOT touched
-- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
-- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
-- All routing, contexts, and other pages — untouched
+## No Code Changes Needed
 
-### Technical Details
-
-The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
-
-ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
+The codebase is already correctly using `window.location.origin`. Once you update the Supabase settings above, magic links will redirect to the correct URL.
 
