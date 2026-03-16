@@ -1,34 +1,86 @@
 
 
-## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
+## Step 2: Recipient Onboarding & Auth Infrastructure
 
-### What Changes
+### Summary
 
-**Single file edit: `src/data/stockData.ts`**
+Enhance the `/claim` flow with email magic link authentication, create a profile record linking `auth.uid()` to the Alpaca account, update the Edge Function for profile upsert, add a `/dashboard` placeholder, and update GiftCelebration with a dashboard button.
 
-Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+### Changes
 
-### Logo Strategy
+**1. `src/pages/ClaimStockGift.tsx` — Magic link auth flow**
 
-Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
+- Add `useEffect` that listens for `onAuthStateChange` events
+- On form submit: validate → store form data + giftId in `sessionStorage` as `pending_kyc_data` → call `supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + '/claim?giftId=' + giftId } })` → show "check your email" UI state
+- On auth callback (user returns with session): read `pending_kyc_data` from sessionStorage → call `create-and-fund-gift` with `userId: session.user.id` added to payload → clear sessionStorage → navigate to `/gift-celebration`
+- New UI states: `waitingForEmail` (shows "check your inbox" screen) and `processingAuth` (shows "opening your account..." loader)
 
-### Data Mapping
+**2. `supabase/functions/create-and-fund-gift/index.ts` — Profile upsert**
 
-Each entry maps to the existing `Stock` interface:
-- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
-- `company` → Hebrew name (e.g., `"בנק לאומי"`)
-- `description` → Short Hebrew description of the company
-- `logoUrl` → `https://logo.clearbit.com/{domain}`
-- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
+- Add optional `userId` field to the request schema
+- After successful journal funding (line ~299), if `userId` is provided:
+  ```typescript
+  await supabase.from('profiles').upsert({
+    user_id: userId,
+    full_name: `${validated.firstName} ${validated.lastName}`,
+    phone: validated.phone,
+    government_id: null,  // never store — sent directly to Alpaca
+    government_id_synced: true,
+    alpaca_account_id: newAccountId,
+  }, { onConflict: 'user_id' });
+  ```
+- Also handle the `needsApproval` path (account not ACTIVE): still create the profile but with `government_id_synced: false` and the `alpaca_account_id`
 
-### What is NOT touched
-- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
-- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
-- All routing, contexts, and other pages — untouched
+**3. `src/pages/Dashboard.tsx` — Protected placeholder**
 
-### Technical Details
+- Check auth state on mount; redirect to `/login` if not authenticated
+- Show user's email, a "coming soon" message for portfolio data
+- Styled consistently with the sticker aesthetic (RTL, Rubik font, blue/white cards)
 
-The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+**4. `src/pages/Login.tsx` — Rewrite as email magic link**
 
-ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
+- Replace the current ID+phone form with a single email input
+- On submit: `supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + '/dashboard' } })`
+- Show "check your inbox" confirmation after sending
+- On mount: if already authenticated, redirect to `/dashboard`
+
+**5. `src/pages/GiftCelebration.tsx` — Dashboard button**
+
+- Add a primary "Go to Dashboard" button (`📊 לתיק ההשקעות שלי`) above the existing home button
+- Make the home button secondary (outline variant)
+
+**6. `src/App.tsx` — Routes**
+
+- Add `import Dashboard from "./pages/Dashboard"`
+- Add `<Route path="/dashboard" element={<Dashboard />} />`
+- Uncomment the `/login` route
+
+### Auth Flow Diagram
+
+```text
+User fills /claim form
+  → Submit
+  → Store form data in sessionStorage
+  → signInWithOtp({ email })
+  → Show "check your email" screen
+
+User clicks magic link in email
+  → Redirected to /claim?giftId=xxx (with session)
+  → onAuthStateChange fires with SIGNED_IN
+  → Read sessionStorage → call create-and-fund-gift({ userId })
+  → Profile created + Alpaca account opened
+  → Navigate to /gift-celebration
+  → User clicks "Go to Dashboard" → /dashboard
+```
+
+### Files Changed
+
+| Action | File |
+|--------|------|
+| Edit | `src/pages/ClaimStockGift.tsx` |
+| Edit | `supabase/functions/create-and-fund-gift/index.ts` |
+| Edit | `src/pages/GiftCelebration.tsx` |
+| Rewrite | `src/pages/Login.tsx` |
+| Create | `src/pages/Dashboard.tsx` |
+| Edit | `src/App.tsx` |
 
