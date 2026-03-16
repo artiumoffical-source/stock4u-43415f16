@@ -394,6 +394,42 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          alpaca_account_id: string | null
+          created_at: string
+          full_name: string | null
+          government_id: string | null
+          government_id_synced: boolean
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alpaca_account_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          government_id?: string | null
+          government_id_synced?: boolean
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alpaca_account_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          government_id?: string | null
+          government_id_synced?: boolean
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
