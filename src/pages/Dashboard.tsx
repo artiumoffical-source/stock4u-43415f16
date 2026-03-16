@@ -248,10 +248,44 @@ export default function Dashboard() {
     );
   }
 
-  // Active portfolio
-  const acct = portfolio!.account!;
-  const positions = portfolio!.positions || [];
-  const rate = portfolio!.exchange_rate || 3.10;
+  // Active portfolio — null-safe access
+  const acct = portfolio?.account;
+  const positions = portfolio?.positions || [];
+  const rate = portfolio?.exchange_rate || 3.10;
+
+  // If account data is missing despite "active" status, show pending
+  if (!acct) {
+    return (
+      <div className="min-h-screen py-8 px-4" dir="rtl" style={{ background: BG }}>
+        <div className="max-w-lg mx-auto space-y-6">
+          <Header email={user?.email} />
+          <Card className="border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
+            <CardContent className="pt-8 pb-8 text-center space-y-4">
+              <div className="text-5xl">👋</div>
+              <h2 className="text-xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: BLUE }}>
+                ברוך הבא ל-Stock4U!
+              </h2>
+              <p className="text-muted-foreground font-medium leading-relaxed">
+                אנחנו מכינים את תיק ההשקעות שלך.
+                <br />
+                נסה לרענן בעוד כמה דקות.
+              </p>
+            </CardContent>
+          </Card>
+          <Button
+            onClick={() => fetchPortfolio(true)}
+            disabled={refreshing}
+            className="w-full h-12 text-base font-bold rounded-2xl gap-2"
+            style={{ background: BLUE_LIGHT, color: "white", boxShadow: `0 4px 0 hsl(220, 91%, 48%), 0 6px 15px rgba(76, 126, 251, 0.3)` }}
+          >
+            {refreshing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            רענון
+          </Button>
+          <FooterActions onHome={() => navigate("/")} onSignOut={handleSignOut} />
+        </div>
+      </div>
+    );
+  }
   const totalPl = positions.reduce((sum, p) => sum + parseFloat(p.unrealized_pl || "0"), 0);
   const isProfit = totalPl >= 0;
 

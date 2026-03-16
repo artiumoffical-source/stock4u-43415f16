@@ -25,7 +25,7 @@ const formSchema = z.object({
   lastName: z.string().min(2, "שם משפחה חייב להכיל לפחות 2 תווים").max(100)
     .refine(val => !HEBREW_REGEX.test(val), "Please use English letters only – אנא הקלד באנגלית בלבד"),
   email: z.string().email("כתובת אימייל לא תקינה"),
-  phone: z.string().regex(/^\d{9,10}$/, "מספר טלפון חייב להכיל 9-10 ספרות (ללא קידומת מדינה)"),
+  phone: z.string().transform(val => val.replace(/[^\d]/g, '')).pipe(z.string().regex(/^\d{9,10}$/, "מספר טלפון חייב להכיל 9-10 ספרות (ללא קידומת מדינה)")),
   address: z.string().min(5, "כתובת חייבת להכיל לפחות 5 תווים")
     .refine(val => !HEBREW_REGEX.test(val), "Please use English letters only – אנא הקלד באנגלית בלבד"),
   city: z.string().min(2, "עיר חייבת להכיל לפחות 2 תווים")
