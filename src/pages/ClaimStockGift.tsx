@@ -107,6 +107,20 @@ export default function ClaimStockGift() {
     setErrorMessage("");
 
     try {
+      // ─── Check if user already has an Alpaca account ───
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("alpaca_account_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (profile?.alpaca_account_id) {
+        console.log("[ClaimStockGift] User already has Alpaca account, redirecting to dashboard");
+        sessionStorage.removeItem(SESSION_KEY);
+        navigate("/dashboard");
+        return;
+      }
+
       const pendingData = JSON.parse(raw);
 
       const timeoutPromise = new Promise<never>((_, reject) =>
@@ -121,8 +135,20 @@ export default function ClaimStockGift() {
 
       if (error) throw new Error(error.message);
       if (result && !result.success) {
-        setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
-        return; // stay in processingAuth to show error with retry
+        // Check for "already claimed" specifically
+        if (result.alreadyClaimed) {
+          setErrorMessage("מתנה זו כבר מומשה");
+        } else {
+          setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
+        }
+        return;
+      }
+
+      // If the edge function says account already exists, redirect
+      if (result?.alreadyExists) {
+        sessionStorage.removeItem(SESSION_KEY);
+        navigate("/dashboard");
+        return;
       }
 
       sessionStorage.removeItem(SESSION_KEY);
@@ -138,7 +164,6 @@ export default function ClaimStockGift() {
       });
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
-      // stay in processingAuth to show error with retry button
     }
   }, [navigate]);
 

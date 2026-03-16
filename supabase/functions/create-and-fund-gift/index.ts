@@ -83,6 +83,38 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+    // ─── Check if user already has an Alpaca account ───
+    if (validated.userId) {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('alpaca_account_id')
+        .eq('user_id', validated.userId)
+        .maybeSingle();
+
+      if (existingProfile?.alpaca_account_id) {
+        console.log(`[create-and-fund-gift] User ${validated.userId} already has Alpaca account ${existingProfile.alpaca_account_id}`);
+        return new Response(
+          JSON.stringify({ success: true, alreadyExists: true, accountId: existingProfile.alpaca_account_id }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        );
+      }
+    }
+
+    // ─── Check if gift was already claimed (funded) ───
+    const { data: existingOnboarding } = await supabase
+      .from('alpaca_onboarding')
+      .select('status, alpaca_account_id')
+      .eq('gift_id', validated.giftId)
+      .maybeSingle();
+
+    if (existingOnboarding?.status === 'FUNDED') {
+      console.log(`[create-and-fund-gift] Gift ${validated.giftId} already claimed`);
+      return new Response(
+        JSON.stringify({ success: false, alreadyClaimed: true, error: 'מתנה זו כבר מומשה' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
     // ─── Verify gift amount from DB (server-side, tamper-proof) ───
     const { data: giftRecord, error: giftError } = await supabase
       .from('gifts')
