@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.retry-gift-funding]
 verify_jwt = false
+
+[functions.get-user-portfolio]
+verify_jwt = false
