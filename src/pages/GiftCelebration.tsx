@@ -112,13 +112,20 @@ export default function GiftCelebration() {
             </div>
 
             <Button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/dashboard")}
               className="w-full h-14 text-lg font-black rounded-2xl transition-all hover:translate-y-[-2px]"
               style={{
                 background: "hsl(220, 91%, 63%)",
                 color: "white",
                 boxShadow: "0 6px 0 hsl(220, 91%, 48%), 0 8px 20px rgba(76, 126, 251, 0.35)",
               }}
+            >
+              📊 לתיק ההשקעות שלי
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/")}
+              className="w-full h-12 text-base font-bold rounded-2xl"
             >
               🏠 חזרה לדף הראשי
             </Button>
