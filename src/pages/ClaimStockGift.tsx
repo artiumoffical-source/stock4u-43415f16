@@ -108,15 +108,21 @@ export default function ClaimStockGift() {
 
     try {
       const pendingData = JSON.parse(raw);
-      const { data: result, error } = await supabase.functions.invoke("create-and-fund-gift", {
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("הפעולה לקחה יותר מדי זמן. נסה/י שוב.")), 30000)
+      );
+
+      const invokePromise = supabase.functions.invoke("create-and-fund-gift", {
         body: { userData: { ...pendingData, userId } },
       });
+
+      const { data: result, error } = await Promise.race([invokePromise, timeoutPromise]);
 
       if (error) throw new Error(error.message);
       if (result && !result.success) {
         setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
-        setFlowState("form");
-        return;
+        return; // stay in processingAuth to show error with retry
       }
 
       sessionStorage.removeItem(SESSION_KEY);
@@ -132,7 +138,7 @@ export default function ClaimStockGift() {
       });
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
-      setFlowState("form");
+      // stay in processingAuth to show error with retry button
     }
   }, [navigate]);
 
