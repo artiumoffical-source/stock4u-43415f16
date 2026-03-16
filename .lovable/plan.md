@@ -1,34 +1,50 @@
 
 
-## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
+## Fix: Claim Process Timeout & Error Handling
 
-### What Changes
+### Analysis
 
-**Single file edit: `src/data/stockData.ts`**
+The `create-and-fund-gift` edge function polls Alpaca up to 15 times at 4-second intervals (60 seconds max). The client (`ClaimStockGift.tsx` line 111) has no timeout wrapper, so users see an infinite spinner if the function hangs or takes too long.
 
-Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+CORS is already set to `'*'` in the edge function, so `https://stock4u.co.il` is already allowed. No CORS changes needed.
 
-### Logo Strategy
+The edge function logs confirm it's still failing on phone validation (`ZodError: Phone must be a valid Israeli format`), which was supposed to be fixed. The `.transform()` strip is there but may not be handling all edge cases from the client.
 
-Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
+### Changes
 
-### Data Mapping
+#### 1. Add 30-second timeout to `processGiftClaim` in `ClaimStockGift.tsx`
 
-Each entry maps to the existing `Stock` interface:
-- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
-- `company` → Hebrew name (e.g., `"בנק לאומי"`)
-- `description` → Short Hebrew description of the company
-- `logoUrl` → `https://logo.clearbit.com/{domain}`
-- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
+Wrap `supabase.functions.invoke` with `Promise.race` against a 30-second timeout. On timeout, show a friendly error with a "Try Again" button. Also improve error catching to handle all failure modes (network error, non-success response, timeout).
 
-### What is NOT touched
-- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
-- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
-- All routing, contexts, and other pages — untouched
+```typescript
+const processGiftClaim = useCallback(async (userId: string) => {
+  // ... existing setup ...
+  try {
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('הפעולה לקחה יותר מדי זמן. נסה שוב.')), 30000)
+    );
+    
+    const invokePromise = supabase.functions.invoke("create-and-fund-gift", {
+      body: { userData: { ...pendingData, userId } },
+    });
 
-### Technical Details
+    const { data: result, error } = await Promise.race([invokePromise, timeoutPromise]);
+    // ... rest of handling ...
+  }
+```
 
-The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+#### 2. Update the `processingAuth` UI to show error state with retry
 
-ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
+When `flowState === "processingAuth"` and `errorMessage` is set, show the error message with a "Try Again" button instead of the spinner. Currently errors reset to `"form"` state which loses context.
+
+#### 3. Reduce edge function polling to avoid timeouts
+
+In `create-and-fund-gift/index.ts`, reduce polling from 15 attempts to 5 (20 seconds max). The `retry-gift-funding` cron already handles the safety net for accounts that aren't active yet. This keeps the function well under the 30-second client timeout.
+
+### Files to Change
+
+| Action | File |
+|--------|------|
+| Edit | `src/pages/ClaimStockGift.tsx` — add timeout, better error UI |
+| Edit | `supabase/functions/create-and-fund-gift/index.ts` — reduce polling to 5 attempts |
 
