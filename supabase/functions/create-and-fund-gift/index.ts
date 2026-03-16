@@ -334,6 +334,7 @@ serve(async (req) => {
         }, { onConflict: 'user_id' });
         console.log(`[create-and-fund-gift] Profile upserted for user ${validated.userId}`);
       }
+    }
 
     return new Response(
       JSON.stringify({
