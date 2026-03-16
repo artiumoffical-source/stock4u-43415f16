@@ -212,8 +212,8 @@ serve(async (req) => {
       gift_id: validated.giftId,
     });
 
-    // ─── Step 2: Poll for ACTIVE status (up to 15 attempts, 4s apart = 60s) ───
-    const MAX_POLLS = 15;
+    // ─── Step 2: Poll for ACTIVE status (up to 5 attempts, 4s apart = 20s) ───
+    const MAX_POLLS = 5;
     const POLL_INTERVAL_MS = 4000;
 
     for (let attempt = 1; attempt <= MAX_POLLS; attempt++) {

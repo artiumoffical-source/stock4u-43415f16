@@ -279,13 +279,57 @@ export default function ClaimStockGift() {
       <div className="min-h-screen flex items-center justify-center p-4" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
         <Card className="max-w-md w-full border-[3px] border-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] rounded-3xl">
           <CardContent className="pt-10 pb-10 text-center space-y-6">
-            <Loader2 className="h-16 w-16 animate-spin mx-auto" style={{ color: "hsl(220, 91%, 53%)" }} />
-            <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(220, 91%, 53%)" }}>
-              פותחים את חשבון ההשקעות שלך...
-            </h2>
-            <p className="text-muted-foreground font-medium">
-              זה עשוי לקחת עד דקה ⏳
-            </p>
+            {errorMessage ? (
+              <>
+                <div className="text-5xl">⚠️</div>
+                <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(0, 72%, 51%)" }}>
+                  משהו השתבש
+                </h2>
+                <pre className="text-xs text-destructive font-mono text-right bg-destructive/10 rounded-2xl p-4 border-2 border-destructive/30 whitespace-pre-wrap break-all overflow-auto max-h-40" dir="ltr">
+                  {errorMessage}
+                </pre>
+                <Button
+                  className="w-full h-14 text-lg font-black rounded-2xl"
+                  style={{
+                    background: "hsl(220, 91%, 63%)",
+                    color: "white",
+                    boxShadow: "0 6px 0 hsl(220, 91%, 48%), 0 8px 20px rgba(76, 126, 251, 0.35)",
+                  }}
+                  onClick={async () => {
+                    setErrorMessage("");
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session?.user) {
+                      await processGiftClaim(session.user.id);
+                    } else {
+                      setErrorMessage("לא נמצא חיבור פעיל. נסה/י להתחבר שוב.");
+                      setFlowState("form");
+                    }
+                  }}
+                >
+                  🔄 נסה/י שוב
+                </Button>
+                <Button
+                  variant="outline"
+                  className="rounded-2xl"
+                  onClick={() => {
+                    setErrorMessage("");
+                    setFlowState("form");
+                  }}
+                >
+                  חזרה לטופס
+                </Button>
+              </>
+            ) : (
+              <>
+                <Loader2 className="h-16 w-16 animate-spin mx-auto" style={{ color: "hsl(220, 91%, 53%)" }} />
+                <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(220, 91%, 53%)" }}>
+                  פותחים את חשבון ההשקעות שלך...
+                </h2>
+                <p className="text-muted-foreground font-medium">
+                  זה עשוי לקחת עד 30 שניות ⏳
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
