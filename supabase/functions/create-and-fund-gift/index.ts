@@ -203,7 +203,22 @@ serve(async (req) => {
         userMessage = 'מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון';
       } else if (errorStr.includes('ascii') || errorStr.includes('latin')) {
         userMessage = 'שם, כתובת ועיר חייבים להיות באנגלית בלבד (אותיות לטיניות)';
-      } else if (errorStr.includes('already exists')) {
+      } else if (errorStr.includes('already exists') || errorStr.includes('duplicate')) {
+        // Account already exists — treat as success, look up existing account
+        console.log('[create-and-fund-gift] Account already exists for this email, looking up existing...');
+        const { data: existingOnb } = await supabase
+          .from('alpaca_onboarding')
+          .select('alpaca_account_id')
+          .eq('email', validated.email)
+          .not('alpaca_account_id', 'is', null)
+          .maybeSingle();
+
+        if (existingOnb?.alpaca_account_id) {
+          return new Response(
+            JSON.stringify({ success: true, alreadyExists: true, accountId: existingOnb.alpaca_account_id }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          );
+        }
         userMessage = 'כבר קיים חשבון עם כתובת האימייל הזו';
       } else if (errorStr.includes('postal') || errorStr.includes('zip')) {
         userMessage = 'מיקוד אינו תקין';
