@@ -83,6 +83,38 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+    // ─── Check if user already has an Alpaca account ───
+    if (validated.userId) {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('alpaca_account_id')
+        .eq('user_id', validated.userId)
+        .maybeSingle();
+
+      if (existingProfile?.alpaca_account_id) {
+        console.log(`[create-and-fund-gift] User ${validated.userId} already has Alpaca account ${existingProfile.alpaca_account_id}`);
+        return new Response(
+          JSON.stringify({ success: true, alreadyExists: true, accountId: existingProfile.alpaca_account_id }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        );
+      }
+    }
+
+    // ─── Check if gift was already claimed (funded) ───
+    const { data: existingOnboarding } = await supabase
+      .from('alpaca_onboarding')
+      .select('status, alpaca_account_id')
+      .eq('gift_id', validated.giftId)
+      .maybeSingle();
+
+    if (existingOnboarding?.status === 'FUNDED') {
+      console.log(`[create-and-fund-gift] Gift ${validated.giftId} already claimed`);
+      return new Response(
+        JSON.stringify({ success: false, alreadyClaimed: true, error: 'מתנה זו כבר מומשה' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      );
+    }
+
     // ─── Verify gift amount from DB (server-side, tamper-proof) ───
     const { data: giftRecord, error: giftError } = await supabase
       .from('gifts')
@@ -171,7 +203,22 @@ serve(async (req) => {
         userMessage = 'מספר תעודת הזהות אינו נראה תקין, אנא וודא שהקלדת מספר נכון';
       } else if (errorStr.includes('ascii') || errorStr.includes('latin')) {
         userMessage = 'שם, כתובת ועיר חייבים להיות באנגלית בלבד (אותיות לטיניות)';
-      } else if (errorStr.includes('already exists')) {
+      } else if (errorStr.includes('already exists') || errorStr.includes('duplicate')) {
+        // Account already exists — treat as success, look up existing account
+        console.log('[create-and-fund-gift] Account already exists for this email, looking up existing...');
+        const { data: existingOnb } = await supabase
+          .from('alpaca_onboarding')
+          .select('alpaca_account_id')
+          .eq('email', validated.email)
+          .not('alpaca_account_id', 'is', null)
+          .maybeSingle();
+
+        if (existingOnb?.alpaca_account_id) {
+          return new Response(
+            JSON.stringify({ success: true, alreadyExists: true, accountId: existingOnb.alpaca_account_id }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          );
+        }
         userMessage = 'כבר קיים חשבון עם כתובת האימייל הזו';
       } else if (errorStr.includes('postal') || errorStr.includes('zip')) {
         userMessage = 'מיקוד אינו תקין';
