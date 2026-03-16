@@ -37,6 +37,7 @@ const userDataSchema = z.object({
   dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   taxId: z.string().regex(/^\d{9}$/).refine(isValidIsraeliId, 'Israeli ID checksum is invalid'),
   giftId: z.string().uuid('Invalid gift ID'),
+  userId: z.string().uuid('Invalid user ID').optional(),
 });
 
 // Log an audit entry (never includes sensitive data like taxId/government_id)
