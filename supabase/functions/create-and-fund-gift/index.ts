@@ -30,7 +30,7 @@ const userDataSchema = z.object({
   firstName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
   lastName: z.string().min(1).max(100).refine(val => !HEBREW_REGEX.test(val), 'Name must contain English characters only'),
   email: z.string().email().max(254),
-  phone: z.string().min(9).max(15).regex(/^(\+972|05)\d{7,8}$/, 'Phone must be a valid Israeli format (+972... or 05...)'),
+  phone: z.string().transform(val => val.replace(/[\s\-\(\)]/g, '')).pipe(z.string().min(9).max(15).regex(/^(\+972|05)\d{7,8}$/, 'Phone must be a valid Israeli format (+972... or 05...)')),
   address: z.string().min(2).max(300).refine(val => !HEBREW_REGEX.test(val), 'Address must contain English characters only'),
   city: z.string().min(2).max(100).refine(val => !HEBREW_REGEX.test(val), 'City must contain English characters only'),
   postalCode: z.string().regex(/^\d{5,}$/),
