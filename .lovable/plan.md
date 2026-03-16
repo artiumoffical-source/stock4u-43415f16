@@ -1,34 +1,58 @@
 
 
-## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
+## Step 3: Live Portfolio Dashboard
 
-### What Changes
+### 1. Create Edge Function `get-user-portfolio`
 
-**Single file edit: `src/data/stockData.ts`**
+**File**: `supabase/functions/get-user-portfolio/index.ts`
 
-Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+- CORS headers (same pattern as other functions)
+- Authenticate user via Authorization header → extract JWT → get user ID
+- Query `profiles` table for `alpaca_account_id` where `user_id` matches
+- If no profile or no `alpaca_account_id` → return `{ status: "pending" }`
+- Call Alpaca Broker API (sandbox):
+  - `GET /v1/trading/accounts/{id}/account` → equity, cash, buying_power
+  - `GET /v1/trading/accounts/{id}/positions` → holdings array
+- Fetch USD→ILS rate from `open.er-api.com` (fallback 3.10)
+- Return structured JSON:
+  ```json
+  {
+    "status": "active",
+    "account": { "total_equity": 150.00, "cash": 50.00, "equity_ils": 465.00 },
+    "positions": [
+      { "symbol": "AAPL", "qty": "0.5", "market_value": "100.00", "unrealized_pl": "5.00", "current_price": "200.00", "cost_basis": "95.00" }
+    ],
+    "exchange_rate": 3.10
+  }
+  ```
 
-### Logo Strategy
+**Config**: Add `[functions.get-user-portfolio] verify_jwt = false` to `supabase/config.toml`
 
-Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
+### 2. Rewrite `src/pages/Dashboard.tsx`
 
-### Data Mapping
+Replace the placeholder with a state machine:
 
-Each entry maps to the existing `Stock` interface:
-- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
-- `company` → Hebrew name (e.g., `"בנק לאומי"`)
-- `description` → Short Hebrew description of the company
-- `logoUrl` → `https://logo.clearbit.com/{domain}`
-- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
+- **Loading**: Spinner while fetching
+- **Pending** (`status: "pending"`): Friendly card — "חשבון ההשקעות שלך בהכנה. המתנה שלך תופיע כאן בקרוב." with a clock emoji
+- **Active** (`status: "active"`): Full dashboard:
+  - **Summary row** (3 cards): Total Value (USD + ILS), Cash Available, Daily P&L
+  - **P&L color coding**: Green text + green background tint for profit, red for loss
+  - **Holdings list**: Each position as a card with:
+    - Logo from `stockData.ts` match (import `usStocks` + `israelStocks`, find by symbol)
+    - Company name (Hebrew from stockData or fallback to symbol)
+    - Quantity, market value, unrealized P&L (color-coded)
+  - **Refresh button** at top
+  - **Sign out** button at bottom
 
-### What is NOT touched
-- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
-- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
-- All routing, contexts, and other pages — untouched
+### 3. Logo Matching
 
-### Technical Details
+Import all stock arrays from `stockData.ts`. Build a lookup map `symbol → { company, logoUrl }`. For positions not in our data, show the symbol text with a generic icon fallback.
 
-The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
+### Files to Change
 
-ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
+| Action | File |
+|--------|------|
+| Create | `supabase/functions/get-user-portfolio/index.ts` |
+| Edit | `supabase/config.toml` — add function entry |
+| Rewrite | `src/pages/Dashboard.tsx` |
 
