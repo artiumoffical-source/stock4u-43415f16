@@ -83,21 +83,69 @@ function getDaysInMonth(year: string, month: string) {
 }
 
 const STORAGE_KEY = "pending_kyc_data";
+const MISSING_KYC_ERROR = "Missing KYC data";
+
+function logClaimStep(message: string, details?: unknown) {
+  if (details !== undefined) {
+    console.log(`[ClaimStockGift] ${message}`, details);
+    return;
+  }
+
+  console.log(`[ClaimStockGift] ${message}`);
+}
 
 function savePendingKyc(data: Record<string, unknown>) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  try {
+    logClaimStep("Saving pending KYC data", {
+      giftId: data.giftId,
+      email: data.email,
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to save pending KYC data", error);
+  }
 }
 function loadPendingKyc(): Record<string, any> | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
+    logClaimStep("LocalStorage found", { found: !!raw });
+
     if (!raw) return null;
+
     const parsed = JSON.parse(raw);
+    logClaimStep("LocalStorage parsed", {
+      giftId: parsed?.giftId ?? null,
+      email: parsed?.email ?? null,
+    });
+
     if (typeof parsed === "object" && parsed !== null && parsed.giftId) return parsed;
+
+    console.error("[ClaimStockGift] LocalStorage data invalid");
     return null;
-  } catch { return null; }
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to load pending KYC data", error);
+    return null;
+  }
 }
 function clearPendingKyc() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  try {
+    logClaimStep("Clearing pending KYC data");
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to clear pending KYC data", error);
+  }
+}
+
+function buildClaimRedirectUrl(giftId: string) {
+  const redirectUrl = new URL("/claim", window.location.origin);
+  redirectUrl.searchParams.set("giftId", giftId);
+
+  logClaimStep("emailRedirectTo prepared", {
+    redirectUrl: redirectUrl.toString(),
+    giftId,
+  });
+
+  return redirectUrl.toString();
 }
 
 type FlowState = "initializing" | "form" | "waitingForEmail" | "processingAuth";
@@ -119,36 +167,79 @@ export default function ClaimStockGift() {
 
   // Process the Alpaca flow after auth
   const processGiftClaim = useCallback(async (userId: string) => {
-    // Prevent concurrent calls
-    if (resumingRef.current) return;
+    logClaimStep("processGiftClaim called", { userId, giftId });
+
+    if (resumingRef.current) {
+      logClaimStep("Resume already in progress, skipping duplicate call", { userId });
+      return;
+    }
+
     resumingRef.current = true;
 
     const pendingData = loadPendingKyc();
+    const giftIdMatches = !!pendingData?.giftId && pendingData.giftId === giftId;
+
+    logClaimStep("Gift ID match", {
+      matches: giftIdMatches,
+      currentGiftId: giftId,
+      storedGiftId: pendingData?.giftId ?? null,
+      source: "processGiftClaim",
+    });
 
     setFlowState("processingAuth");
     setErrorMessage("");
 
     try {
-      // ─── Check if user already has an Alpaca account ───
+      logClaimStep("Auth detected", { userId, source: "processGiftClaim" });
+
       const { data: profile } = await supabase
         .from("profiles")
         .select("alpaca_account_id")
         .eq("user_id", userId)
         .maybeSingle();
 
+      logClaimStep("Profile lookup complete", {
+        userId,
+        hasAlpacaAccount: !!profile?.alpaca_account_id,
+      });
+
       if (profile?.alpaca_account_id) {
-        console.log("[ClaimStockGift] User already has Alpaca account, redirecting to dashboard");
+        logClaimStep("Existing Alpaca account found, redirecting to dashboard", {
+          userId,
+          alpacaAccountId: profile.alpaca_account_id,
+        });
         clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
-      // No pending data and no account — can't proceed
       if (!pendingData) {
-        setFlowState("form");
+        console.error("[ClaimStockGift] Authenticated user but pending KYC data is missing", {
+          userId,
+          currentGiftId: giftId,
+        });
+        setErrorMessage(MISSING_KYC_ERROR);
+        setFlowState("processingAuth");
         resumingRef.current = false;
         return;
       }
+
+      if (!giftIdMatches) {
+        console.error("[ClaimStockGift] Gift ID mismatch", {
+          currentGiftId: giftId,
+          storedGiftId: pendingData.giftId,
+        });
+        setErrorMessage("Gift ID mismatch");
+        setFlowState("processingAuth");
+        resumingRef.current = false;
+        return;
+      }
+
+      logClaimStep("Invoking create-and-fund-gift", {
+        userId,
+        giftId: pendingData.giftId,
+        email: pendingData.email,
+      });
 
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("הפעולה לקחה יותר מדי זמן. נסה/י שוב.")), 30000)
@@ -160,8 +251,11 @@ export default function ClaimStockGift() {
 
       const { data: result, error } = await Promise.race([invokePromise, timeoutPromise]);
 
+      logClaimStep("create-and-fund-gift response received", { result, hasError: !!error });
+
       if (error) throw new Error(error.message);
       if (result && !result.success) {
+        console.error("[ClaimStockGift] create-and-fund-gift returned failure", result);
         if (result.alreadyClaimed) {
           setErrorMessage("מתנה זו כבר מומשה");
         } else {
@@ -171,14 +265,15 @@ export default function ClaimStockGift() {
         return;
       }
 
-      // If the edge function says account already exists, redirect
       if (result?.alreadyExists) {
+        logClaimStep("Existing account returned from edge function, redirecting to dashboard", result);
         clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
       clearPendingKyc();
+      logClaimStep("Claim completed successfully, navigating to celebration", result);
 
       navigate("/gift-celebration", {
         state: {
@@ -190,21 +285,34 @@ export default function ClaimStockGift() {
         },
       });
     } catch (err: any) {
+      console.error("[ClaimStockGift] processGiftClaim failed", err);
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
       resumingRef.current = false;
     }
-  }, [navigate]);
+  }, [giftId, navigate]);
 
   // ─── Mount-time: smart redirect or auto-resume ───
   useEffect(() => {
     let cancelled = false;
 
+    logClaimStep("Component mounted", {
+      currentUrl: window.location.href,
+      giftId,
+    });
+
     (async () => {
+      logClaimStep("Checking session on mount");
       const { data: { session } } = await supabase.auth.getSession();
       if (cancelled) return;
 
+      logClaimStep("Session check complete", {
+        authenticated: !!session?.user,
+        userId: session?.user?.id ?? null,
+      });
+
       if (session?.user) {
-        // Check if already has an account
+        logClaimStep("Auth detected", { userId: session.user.id, source: "mount" });
+
         const { data: profile } = await supabase
           .from("profiles")
           .select("alpaca_account_id")
@@ -213,42 +321,113 @@ export default function ClaimStockGift() {
 
         if (cancelled) return;
 
+        logClaimStep("Mount profile lookup complete", {
+          userId: session.user.id,
+          hasAlpacaAccount: !!profile?.alpaca_account_id,
+        });
+
         if (profile?.alpaca_account_id) {
           clearPendingKyc();
           navigate("/dashboard");
           return;
         }
 
-        // Check for pending KYC data to auto-resume
         const pending = loadPendingKyc();
-        if (pending) {
-          await processGiftClaim(session.user.id);
+        const giftIdMatches = !!pending?.giftId && pending.giftId === giftId;
+
+        logClaimStep("Gift ID match", {
+          matches: giftIdMatches,
+          currentGiftId: giftId,
+          storedGiftId: pending?.giftId ?? null,
+          source: "mount",
+        });
+
+        if (pending && giftIdMatches) {
+          logClaimStep("Resuming claim from mount effect", { userId: session.user.id });
+          void processGiftClaim(session.user.id);
           return;
         }
+
+        if (pending && !giftIdMatches) {
+          console.error("[ClaimStockGift] Pending KYC data found but gift ID does not match on mount", {
+            currentGiftId: giftId,
+            storedGiftId: pending.giftId,
+          });
+          setErrorMessage("Gift ID mismatch");
+          setFlowState("processingAuth");
+          return;
+        }
+
+        console.error("[ClaimStockGift] Authenticated user without pending KYC data on mount", {
+          userId: session.user.id,
+          currentGiftId: giftId,
+        });
+        setErrorMessage(MISSING_KYC_ERROR);
+        setFlowState("processingAuth");
+        return;
       }
 
-      // No session or no pending data — show form
+      logClaimStep("No authenticated user on mount, showing form");
       if (!cancelled) setFlowState("form");
     })();
 
     return () => { cancelled = true; };
-  }, [navigate, processGiftClaim]);
+  }, [giftId, navigate, processGiftClaim]);
 
   // Listen for auth state changes (magic link callback)
   useEffect(() => {
+    logClaimStep("Subscribing to auth state changes");
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        logClaimStep("Auth state change", {
+          event,
+          authenticated: !!session?.user,
+          userId: session?.user?.id ?? null,
+          giftId,
+        });
+
         if (event === "SIGNED_IN" && session?.user) {
+          logClaimStep("Auth detected", { userId: session.user.id, source: "auth_listener" });
+
           const pending = loadPendingKyc();
-          if (pending) {
-            await processGiftClaim(session.user.id);
+          const giftIdMatches = !!pending?.giftId && pending.giftId === giftId;
+
+          logClaimStep("Gift ID match", {
+            matches: giftIdMatches,
+            currentGiftId: giftId,
+            storedGiftId: pending?.giftId ?? null,
+            source: "auth_listener",
+          });
+
+          if (pending && giftIdMatches) {
+            logClaimStep("Resuming claim from auth listener", { userId: session.user.id });
+            void processGiftClaim(session.user.id);
+            return;
           }
+
+          if (pending && !giftIdMatches) {
+            console.error("[ClaimStockGift] Pending KYC data found but gift ID does not match after auth", {
+              currentGiftId: giftId,
+              storedGiftId: pending.giftId,
+            });
+            setErrorMessage("Gift ID mismatch");
+            setFlowState("processingAuth");
+            return;
+          }
+
+          console.error("[ClaimStockGift] Authenticated user without pending KYC data after magic link", {
+            userId: session.user.id,
+            currentGiftId: giftId,
+          });
+          setErrorMessage(MISSING_KYC_ERROR);
+          setFlowState("processingAuth");
         }
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [processGiftClaim]);
+  }, [giftId, processGiftClaim]);
 
   // Fetch gift amount from DB on mount
   useEffect(() => {
@@ -296,6 +475,19 @@ export default function ClaimStockGift() {
     setIsSubmitting(true);
     setErrorMessage("");
 
+    logClaimStep("Form submitted", {
+      giftId,
+      email: data.email,
+      currentUrl: window.location.href,
+    });
+
+    if (!giftId) {
+      console.error("[ClaimStockGift] Cannot send magic link without giftId");
+      setErrorMessage("קישור לא תקין – חסר מזהה מתנה");
+      setIsSubmitting(false);
+      return;
+    }
+
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
@@ -312,11 +504,17 @@ export default function ClaimStockGift() {
       giftId,
     };
 
-    // Persist to localStorage so it survives tab switches
     savePendingKyc(kycPayload);
 
     try {
-      const redirectUrl = `${window.location.origin}/claim?giftId=${giftId}`;
+      const redirectUrl = buildClaimRedirectUrl(giftId);
+
+      logClaimStep("Sending magic link", {
+        email: data.email,
+        redirectUrl,
+        giftId,
+      });
+
       const { error } = await supabase.auth.signInWithOtp({
         email: data.email,
         options: { emailRedirectTo: redirectUrl },
@@ -324,9 +522,16 @@ export default function ClaimStockGift() {
 
       if (error) throw new Error(error.message);
 
+      logClaimStep("Magic link sent successfully", {
+        email: data.email,
+        redirectUrl,
+        giftId,
+      });
+
       setSentEmail(data.email);
       setFlowState("waitingForEmail");
     } catch (err: any) {
+      console.error("[ClaimStockGift] Error sending magic link", err);
       setErrorMessage(err.message || "שגיאה בשליחת קוד אימות");
     } finally {
       setIsSubmitting(false);
