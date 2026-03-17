@@ -83,21 +83,69 @@ function getDaysInMonth(year: string, month: string) {
 }
 
 const STORAGE_KEY = "pending_kyc_data";
+const MISSING_KYC_ERROR = "Missing KYC data";
+
+function logClaimStep(message: string, details?: unknown) {
+  if (details !== undefined) {
+    console.log(`[ClaimStockGift] ${message}`, details);
+    return;
+  }
+
+  console.log(`[ClaimStockGift] ${message}`);
+}
 
 function savePendingKyc(data: Record<string, unknown>) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  try {
+    logClaimStep("Saving pending KYC data", {
+      giftId: data.giftId,
+      email: data.email,
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to save pending KYC data", error);
+  }
 }
 function loadPendingKyc(): Record<string, any> | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
+    logClaimStep("LocalStorage found", { found: !!raw });
+
     if (!raw) return null;
+
     const parsed = JSON.parse(raw);
+    logClaimStep("LocalStorage parsed", {
+      giftId: parsed?.giftId ?? null,
+      email: parsed?.email ?? null,
+    });
+
     if (typeof parsed === "object" && parsed !== null && parsed.giftId) return parsed;
+
+    console.error("[ClaimStockGift] LocalStorage data invalid");
     return null;
-  } catch { return null; }
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to load pending KYC data", error);
+    return null;
+  }
 }
 function clearPendingKyc() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  try {
+    logClaimStep("Clearing pending KYC data");
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error("[ClaimStockGift] Failed to clear pending KYC data", error);
+  }
+}
+
+function buildClaimRedirectUrl(giftId: string) {
+  const redirectUrl = new URL("/claim", window.location.origin);
+  redirectUrl.searchParams.set("giftId", giftId);
+
+  logClaimStep("emailRedirectTo prepared", {
+    redirectUrl: redirectUrl.toString(),
+    giftId,
+  });
+
+  return redirectUrl.toString();
 }
 
 type FlowState = "initializing" | "form" | "waitingForEmail" | "processingAuth";
