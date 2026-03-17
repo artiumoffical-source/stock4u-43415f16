@@ -295,12 +295,24 @@ export default function ClaimStockGift() {
   useEffect(() => {
     let cancelled = false;
 
+    logClaimStep("Component mounted", {
+      currentUrl: window.location.href,
+      giftId,
+    });
+
     (async () => {
+      logClaimStep("Checking session on mount");
       const { data: { session } } = await supabase.auth.getSession();
       if (cancelled) return;
 
+      logClaimStep("Session check complete", {
+        authenticated: !!session?.user,
+        userId: session?.user?.id ?? null,
+      });
+
       if (session?.user) {
-        // Check if already has an account
+        logClaimStep("Auth detected", { userId: session.user.id, source: "mount" });
+
         const { data: profile } = await supabase
           .from("profiles")
           .select("alpaca_account_id")
@@ -309,42 +321,113 @@ export default function ClaimStockGift() {
 
         if (cancelled) return;
 
+        logClaimStep("Mount profile lookup complete", {
+          userId: session.user.id,
+          hasAlpacaAccount: !!profile?.alpaca_account_id,
+        });
+
         if (profile?.alpaca_account_id) {
           clearPendingKyc();
           navigate("/dashboard");
           return;
         }
 
-        // Check for pending KYC data to auto-resume
         const pending = loadPendingKyc();
-        if (pending) {
-          await processGiftClaim(session.user.id);
+        const giftIdMatches = !!pending?.giftId && pending.giftId === giftId;
+
+        logClaimStep("Gift ID match", {
+          matches: giftIdMatches,
+          currentGiftId: giftId,
+          storedGiftId: pending?.giftId ?? null,
+          source: "mount",
+        });
+
+        if (pending && giftIdMatches) {
+          logClaimStep("Resuming claim from mount effect", { userId: session.user.id });
+          void processGiftClaim(session.user.id);
           return;
         }
+
+        if (pending && !giftIdMatches) {
+          console.error("[ClaimStockGift] Pending KYC data found but gift ID does not match on mount", {
+            currentGiftId: giftId,
+            storedGiftId: pending.giftId,
+          });
+          setErrorMessage("Gift ID mismatch");
+          setFlowState("processingAuth");
+          return;
+        }
+
+        console.error("[ClaimStockGift] Authenticated user without pending KYC data on mount", {
+          userId: session.user.id,
+          currentGiftId: giftId,
+        });
+        setErrorMessage(MISSING_KYC_ERROR);
+        setFlowState("processingAuth");
+        return;
       }
 
-      // No session or no pending data — show form
+      logClaimStep("No authenticated user on mount, showing form");
       if (!cancelled) setFlowState("form");
     })();
 
     return () => { cancelled = true; };
-  }, [navigate, processGiftClaim]);
+  }, [giftId, navigate, processGiftClaim]);
 
   // Listen for auth state changes (magic link callback)
   useEffect(() => {
+    logClaimStep("Subscribing to auth state changes");
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        logClaimStep("Auth state change", {
+          event,
+          authenticated: !!session?.user,
+          userId: session?.user?.id ?? null,
+          giftId,
+        });
+
         if (event === "SIGNED_IN" && session?.user) {
+          logClaimStep("Auth detected", { userId: session.user.id, source: "auth_listener" });
+
           const pending = loadPendingKyc();
-          if (pending) {
-            await processGiftClaim(session.user.id);
+          const giftIdMatches = !!pending?.giftId && pending.giftId === giftId;
+
+          logClaimStep("Gift ID match", {
+            matches: giftIdMatches,
+            currentGiftId: giftId,
+            storedGiftId: pending?.giftId ?? null,
+            source: "auth_listener",
+          });
+
+          if (pending && giftIdMatches) {
+            logClaimStep("Resuming claim from auth listener", { userId: session.user.id });
+            void processGiftClaim(session.user.id);
+            return;
           }
+
+          if (pending && !giftIdMatches) {
+            console.error("[ClaimStockGift] Pending KYC data found but gift ID does not match after auth", {
+              currentGiftId: giftId,
+              storedGiftId: pending.giftId,
+            });
+            setErrorMessage("Gift ID mismatch");
+            setFlowState("processingAuth");
+            return;
+          }
+
+          console.error("[ClaimStockGift] Authenticated user without pending KYC data after magic link", {
+            userId: session.user.id,
+            currentGiftId: giftId,
+          });
+          setErrorMessage(MISSING_KYC_ERROR);
+          setFlowState("processingAuth");
         }
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [processGiftClaim]);
+  }, [giftId, processGiftClaim]);
 
   // Fetch gift amount from DB on mount
   useEffect(() => {
