@@ -167,36 +167,79 @@ export default function ClaimStockGift() {
 
   // Process the Alpaca flow after auth
   const processGiftClaim = useCallback(async (userId: string) => {
-    // Prevent concurrent calls
-    if (resumingRef.current) return;
+    logClaimStep("processGiftClaim called", { userId, giftId });
+
+    if (resumingRef.current) {
+      logClaimStep("Resume already in progress, skipping duplicate call", { userId });
+      return;
+    }
+
     resumingRef.current = true;
 
     const pendingData = loadPendingKyc();
+    const giftIdMatches = !!pendingData?.giftId && pendingData.giftId === giftId;
+
+    logClaimStep("Gift ID match", {
+      matches: giftIdMatches,
+      currentGiftId: giftId,
+      storedGiftId: pendingData?.giftId ?? null,
+      source: "processGiftClaim",
+    });
 
     setFlowState("processingAuth");
     setErrorMessage("");
 
     try {
-      // ─── Check if user already has an Alpaca account ───
+      logClaimStep("Auth detected", { userId, source: "processGiftClaim" });
+
       const { data: profile } = await supabase
         .from("profiles")
         .select("alpaca_account_id")
         .eq("user_id", userId)
         .maybeSingle();
 
+      logClaimStep("Profile lookup complete", {
+        userId,
+        hasAlpacaAccount: !!profile?.alpaca_account_id,
+      });
+
       if (profile?.alpaca_account_id) {
-        console.log("[ClaimStockGift] User already has Alpaca account, redirecting to dashboard");
+        logClaimStep("Existing Alpaca account found, redirecting to dashboard", {
+          userId,
+          alpacaAccountId: profile.alpaca_account_id,
+        });
         clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
-      // No pending data and no account — can't proceed
       if (!pendingData) {
-        setFlowState("form");
+        console.error("[ClaimStockGift] Authenticated user but pending KYC data is missing", {
+          userId,
+          currentGiftId: giftId,
+        });
+        setErrorMessage(MISSING_KYC_ERROR);
+        setFlowState("processingAuth");
         resumingRef.current = false;
         return;
       }
+
+      if (!giftIdMatches) {
+        console.error("[ClaimStockGift] Gift ID mismatch", {
+          currentGiftId: giftId,
+          storedGiftId: pendingData.giftId,
+        });
+        setErrorMessage("Gift ID mismatch");
+        setFlowState("processingAuth");
+        resumingRef.current = false;
+        return;
+      }
+
+      logClaimStep("Invoking create-and-fund-gift", {
+        userId,
+        giftId: pendingData.giftId,
+        email: pendingData.email,
+      });
 
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("הפעולה לקחה יותר מדי זמן. נסה/י שוב.")), 30000)
@@ -208,8 +251,11 @@ export default function ClaimStockGift() {
 
       const { data: result, error } = await Promise.race([invokePromise, timeoutPromise]);
 
+      logClaimStep("create-and-fund-gift response received", { result, hasError: !!error });
+
       if (error) throw new Error(error.message);
       if (result && !result.success) {
+        console.error("[ClaimStockGift] create-and-fund-gift returned failure", result);
         if (result.alreadyClaimed) {
           setErrorMessage("מתנה זו כבר מומשה");
         } else {
@@ -219,14 +265,15 @@ export default function ClaimStockGift() {
         return;
       }
 
-      // If the edge function says account already exists, redirect
       if (result?.alreadyExists) {
+        logClaimStep("Existing account returned from edge function, redirecting to dashboard", result);
         clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
       clearPendingKyc();
+      logClaimStep("Claim completed successfully, navigating to celebration", result);
 
       navigate("/gift-celebration", {
         state: {
@@ -238,10 +285,11 @@ export default function ClaimStockGift() {
         },
       });
     } catch (err: any) {
+      console.error("[ClaimStockGift] processGiftClaim failed", err);
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
       resumingRef.current = false;
     }
-  }, [navigate]);
+  }, [giftId, navigate]);
 
   // ─── Mount-time: smart redirect or auto-resume ───
   useEffect(() => {
