@@ -475,6 +475,19 @@ export default function ClaimStockGift() {
     setIsSubmitting(true);
     setErrorMessage("");
 
+    logClaimStep("Form submitted", {
+      giftId,
+      email: data.email,
+      currentUrl: window.location.href,
+    });
+
+    if (!giftId) {
+      console.error("[ClaimStockGift] Cannot send magic link without giftId");
+      setErrorMessage("קישור לא תקין – חסר מזהה מתנה");
+      setIsSubmitting(false);
+      return;
+    }
+
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
@@ -491,11 +504,17 @@ export default function ClaimStockGift() {
       giftId,
     };
 
-    // Persist to localStorage so it survives tab switches
     savePendingKyc(kycPayload);
 
     try {
-      const redirectUrl = `${window.location.origin}/claim?giftId=${giftId}`;
+      const redirectUrl = buildClaimRedirectUrl(giftId);
+
+      logClaimStep("Sending magic link", {
+        email: data.email,
+        redirectUrl,
+        giftId,
+      });
+
       const { error } = await supabase.auth.signInWithOtp({
         email: data.email,
         options: { emailRedirectTo: redirectUrl },
@@ -503,9 +522,16 @@ export default function ClaimStockGift() {
 
       if (error) throw new Error(error.message);
 
+      logClaimStep("Magic link sent successfully", {
+        email: data.email,
+        redirectUrl,
+        giftId,
+      });
+
       setSentEmail(data.email);
       setFlowState("waitingForEmail");
     } catch (err: any) {
+      console.error("[ClaimStockGift] Error sending magic link", err);
       setErrorMessage(err.message || "שגיאה בשליחת קוד אימות");
     } finally {
       setIsSubmitting(false);
