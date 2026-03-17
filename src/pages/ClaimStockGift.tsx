@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -82,26 +82,48 @@ function getDaysInMonth(year: string, month: string) {
   return Array.from({ length: d }, (_, i) => i + 1);
 }
 
-const SESSION_KEY = "pending_kyc_data";
+const STORAGE_KEY = "pending_kyc_data";
 
-type FlowState = "form" | "waitingForEmail" | "processingAuth";
+function savePendingKyc(data: Record<string, unknown>) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+}
+function loadPendingKyc(): Record<string, any> | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === "object" && parsed !== null && parsed.giftId) return parsed;
+    return null;
+  } catch { return null; }
+}
+function clearPendingKyc() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+}
+
+type FlowState = "initializing" | "form" | "waitingForEmail" | "processingAuth";
 
 export default function ClaimStockGift() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const giftId = searchParams.get("giftId");
 
-  const [flowState, setFlowState] = useState<FlowState>("form");
+  const [flowState, setFlowState] = useState<FlowState>("initializing");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [giftAmount, setGiftAmount] = useState<number | null>(null);
   const [loadingGift, setLoadingGift] = useState(true);
   const [sentEmail, setSentEmail] = useState("");
 
+  // Guard to prevent double-invocation of processGiftClaim
+  const resumingRef = useRef(false);
+
   // Process the Alpaca flow after auth
   const processGiftClaim = useCallback(async (userId: string) => {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return;
+    // Prevent concurrent calls
+    if (resumingRef.current) return;
+    resumingRef.current = true;
+
+    const pendingData = loadPendingKyc();
 
     setFlowState("processingAuth");
     setErrorMessage("");
@@ -116,12 +138,17 @@ export default function ClaimStockGift() {
 
       if (profile?.alpaca_account_id) {
         console.log("[ClaimStockGift] User already has Alpaca account, redirecting to dashboard");
-        sessionStorage.removeItem(SESSION_KEY);
+        clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
-      const pendingData = JSON.parse(raw);
+      // No pending data and no account — can't proceed
+      if (!pendingData) {
+        setFlowState("form");
+        resumingRef.current = false;
+        return;
+      }
 
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("הפעולה לקחה יותר מדי זמן. נסה/י שוב.")), 30000)
@@ -135,23 +162,23 @@ export default function ClaimStockGift() {
 
       if (error) throw new Error(error.message);
       if (result && !result.success) {
-        // Check for "already claimed" specifically
         if (result.alreadyClaimed) {
           setErrorMessage("מתנה זו כבר מומשה");
         } else {
           setErrorMessage(result.error || "אירעה שגיאה, נסו שוב מאוחר יותר");
         }
+        resumingRef.current = false;
         return;
       }
 
       // If the edge function says account already exists, redirect
       if (result?.alreadyExists) {
-        sessionStorage.removeItem(SESSION_KEY);
+        clearPendingKyc();
         navigate("/dashboard");
         return;
       }
 
-      sessionStorage.removeItem(SESSION_KEY);
+      clearPendingKyc();
 
       navigate("/gift-celebration", {
         state: {
@@ -164,30 +191,61 @@ export default function ClaimStockGift() {
       });
     } catch (err: any) {
       setErrorMessage(err.message || "אירעה שגיאה, נסו שוב מאוחר יותר");
+      resumingRef.current = false;
     }
   }, [navigate]);
+
+  // ─── Mount-time: smart redirect or auto-resume ───
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
+
+      if (session?.user) {
+        // Check if already has an account
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("alpaca_account_id")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (profile?.alpaca_account_id) {
+          clearPendingKyc();
+          navigate("/dashboard");
+          return;
+        }
+
+        // Check for pending KYC data to auto-resume
+        const pending = loadPendingKyc();
+        if (pending) {
+          await processGiftClaim(session.user.id);
+          return;
+        }
+      }
+
+      // No session or no pending data — show form
+      if (!cancelled) setFlowState("form");
+    })();
+
+    return () => { cancelled = true; };
+  }, [navigate, processGiftClaim]);
 
   // Listen for auth state changes (magic link callback)
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (event === "SIGNED_IN" && session?.user) {
-          const hasPending = sessionStorage.getItem(SESSION_KEY);
-          if (hasPending) {
+          const pending = loadPendingKyc();
+          if (pending) {
             await processGiftClaim(session.user.id);
           }
         }
       }
     );
-
-    // Check if already signed in with pending data (page reload after magic link)
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const hasPending = sessionStorage.getItem(SESSION_KEY);
-      if (session?.user && hasPending) {
-        await processGiftClaim(session.user.id);
-      }
-    })();
 
     return () => subscription.unsubscribe();
   }, [processGiftClaim]);
@@ -241,7 +299,6 @@ export default function ClaimStockGift() {
     const dob = `${data.dobYear}-${data.dobMonth}-${data.dobDay.padStart(2, "0")}`;
     const phoneWithCode = `+972${data.phone.replace(/^0/, "")}`;
 
-    // Store form data in sessionStorage for after magic link redirect
     const kycPayload = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -255,7 +312,8 @@ export default function ClaimStockGift() {
       giftId,
     };
 
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(kycPayload));
+    // Persist to localStorage so it survives tab switches
+    savePendingKyc(kycPayload);
 
     try {
       const redirectUrl = `${window.location.origin}/claim?giftId=${giftId}`;
@@ -275,8 +333,8 @@ export default function ClaimStockGift() {
     }
   };
 
-  // ── Loading state ──
-  if (loadingGift) {
+  // ── Loading / initializing state ──
+  if (loadingGift || flowState === "initializing") {
     return (
       <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: "hsl(220, 63%, 92%)" }}>
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -322,6 +380,7 @@ export default function ClaimStockGift() {
                   }}
                   onClick={async () => {
                     setErrorMessage("");
+                    resumingRef.current = false;
                     const { data: { session } } = await supabase.auth.getSession();
                     if (session?.user) {
                       await processGiftClaim(session.user.id);
@@ -338,6 +397,7 @@ export default function ClaimStockGift() {
                   className="rounded-2xl"
                   onClick={() => {
                     setErrorMessage("");
+                    resumingRef.current = false;
                     setFlowState("form");
                   }}
                 >
@@ -348,7 +408,7 @@ export default function ClaimStockGift() {
               <>
                 <Loader2 className="h-16 w-16 animate-spin mx-auto" style={{ color: "hsl(220, 91%, 53%)" }} />
                 <h2 className="text-2xl font-black" style={{ fontFamily: "'Rubik', sans-serif", color: "hsl(220, 91%, 53%)" }}>
-                  פותחים את חשבון ההשקעות שלך...
+                  מאמתים את הפרטים ומקימים את תיק ההשקעות שלך...
                 </h2>
                 <p className="text-muted-foreground font-medium">
                   זה עשוי לקחת עד 30 שניות ⏳
