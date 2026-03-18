@@ -105,7 +105,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
       console.log('[EMAIL_START] Sending sender confirmation email...');
       
       const senderEmailData: EmailData = {
-        from: 'Stock4U <onboarding@resend.dev>',
+        from: 'Stock4U <noreply@stock4u.co.il>',
         to: giftData.senderEmail.trim(),
         subject: `✅ המתנה נשלחה בהצלחה ל-${giftData.recipientDetails?.name || giftData.recipientName || 'המקבל'}`,
         senderName: giftData.senderName || 'השולח',
