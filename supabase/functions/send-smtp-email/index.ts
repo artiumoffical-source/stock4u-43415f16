@@ -411,10 +411,16 @@ const handler = async (req: Request): Promise<Response> => {
       result = await resend.emails.send(emailRequest);
       console.log('[EMAIL_SEND_SUCCESS]', {
         to: emailRequest.to,
-        id: (result as any)?.id,
+        fullResult: JSON.stringify(result),
       });
     } catch (sendError: any) {
-      console.error('[EMAIL_SEND_ERROR]', sendError);
+      console.error('[EMAIL_SEND_ERROR] Full details:', {
+        message: sendError?.message,
+        statusCode: sendError?.statusCode,
+        name: sendError?.name,
+        response: sendError?.response,
+        fullError: JSON.stringify(sendError, Object.getOwnPropertyNames(sendError)),
+      });
       throw new Error(sendError?.message || 'Failed to send email via Resend');
     }
 

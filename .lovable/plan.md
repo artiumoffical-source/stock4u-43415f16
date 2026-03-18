@@ -1,69 +1,34 @@
 
 
-## Audit Results & Plan
+## Plan: Replace Israeli Stocks & ETFs with TASE Top 35
 
-### Findings
+### What Changes
 
-**1. Hardcoded emails/filters:** No hardcoded email restrictions found in `ClaimStockGift.tsx`, `Login.tsx`, or edge functions. The `from` address is `Stock4U <onboarding@resend.dev>` (Resend sandbox domain) in `send-smtp-email` and `Stock4U <noreply@stock4u.co.il>` in `create-gift`. No recipient filtering exists.
+**Single file edit: `src/data/stockData.ts`**
 
-**2. Email transformations:** In `ClaimStockGift.tsx` line 492, phone is transformed with `+972` prefix, but email (`data.email`) is passed as-is to `signInWithOtp` — no hidden transformation. In `send-smtp-email`, the `to` email is `.trim()`-ed and `Name <email>` format is extracted — this is safe normalization.
+Replace the `israelStocks` array (currently 6 items) with 35 TASE companies, and replace `israelETFs` (currently 2 items) with 7 local ETFs. Also update `israelTechStocks` to reference the tech companies from the new list (NICE, Tower, Nova, Sapiens, Camtek, Matrix, Hilan, Maytronics).
 
-**3. Resend sandbox mode:** The Resend SDK (`npm:resend@2.0.0`) does not have a test/sandbox mode flag in the code. However, the `from` address `onboarding@resend.dev` is the Resend test domain which **can only send to the account owner's email**. This is likely the root cause of email delivery failures for non-owner recipients. The `create-gift` function already uses `noreply@stock4u.co.il` but `send-smtp-email` still uses `onboarding@resend.dev`.
+### Logo Strategy
 
-**4. Missing detailed error logging:** The `signInWithOtp` error is caught but only `error.message` is logged — no error code or full object. The `resend.emails.send` catch logs the error but doesn't capture `statusCode`, `name`, or response details.
+Use Clearbit logo API: `https://logo.clearbit.com/{domain}` for each company. The `CompactStockCard` component already has a fallback (shows first letter of symbol) when `logoUrl` fails to load or is missing, so no UI breakage risk.
 
-### Changes
+### Data Mapping
 
-#### 1. Enhanced error logging in `ClaimStockGift.tsx`
-Add full error object logging to `signInWithOtp` call (line 518-523):
-```typescript
-const { error } = await supabase.auth.signInWithOtp({ ... });
-if (error) {
-  console.error("[ClaimStockGift] signInWithOtp FULL error:", {
-    message: error.message, status: error.status, name: error.name, code: error.code, fullError: error
-  });
-  throw new Error(error.message);
-}
-```
+Each entry maps to the existing `Stock` interface:
+- `symbol` → the `.TA` ticker (e.g., `"LUMI.TA"`)
+- `company` → Hebrew name (e.g., `"בנק לאומי"`)
+- `description` → Short Hebrew description of the company
+- `logoUrl` → `https://logo.clearbit.com/{domain}`
+- `category` → Sector category with emoji (בנקאות 🏦, תעשייה ⚙️, טכנולוגיה 💻, etc.)
 
-#### 2. Enhanced error logging in `send-smtp-email/index.ts`
-Expand the Resend send error catch (line 416-418) to log full error details:
-```typescript
-} catch (sendError: any) {
-  console.error('[EMAIL_SEND_ERROR] Full details:', {
-    message: sendError?.message, statusCode: sendError?.statusCode,
-    name: sendError?.name, response: sendError?.response, fullError: JSON.stringify(sendError)
-  });
-  throw new Error(sendError?.message || 'Failed to send email via Resend');
-}
-```
+### What is NOT touched
+- `usStocks`, `usETFs`, `cryptoETFs`, `usTechStocks` arrays — completely untouched
+- `CompactStockCard.tsx`, `StockFilterBar.tsx`, `StockSelection.tsx` — no changes needed
+- All routing, contexts, and other pages — untouched
 
-Also log the full Resend response on success (the `id: undefined` in logs suggests the response shape may differ):
-```typescript
-console.log('[EMAIL_SEND_SUCCESS]', { to: emailRequest.to, fullResult: JSON.stringify(result) });
-```
+### Technical Details
 
-#### 3. Log email exactly as passed in `ClaimStockGift.tsx`
-Add a verification log right before `signInWithOtp`:
-```typescript
-logClaimStep("Email value EXACT (pre-OTP)", { emailRaw: data.email, emailLength: data.email.length, emailCharCodes: [...data.email].map(c => c.charCodeAt(0)) });
-```
+The `israelTechStocks` derived array at the bottom of the file will be updated to reference tech companies from the new `israelStocks` list (NICE, Nova, Tower, Sapiens, Camtek, Matrix, Hilan, Maytronics).
 
-#### 4. Enhanced error logging in `create-and-fund-gift/index.ts`
-In the ZodError catch (line 400-404), log the full error:
-```typescript
-console.error('[create-and-fund-gift] FULL error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
-```
-
-### Files to change
-
-| File | Change |
-|------|--------|
-| `src/pages/ClaimStockGift.tsx` | Add full error logging to signInWithOtp, add email verification log |
-| `supabase/functions/send-smtp-email/index.ts` | Enhanced Resend error + success logging |
-| `supabase/functions/create-and-fund-gift/index.ts` | Enhanced error logging in catch block |
-
-### Important finding to flag
-
-The `send-smtp-email` function uses `from: emailData.from` which the client sets to `Stock4U <onboarding@resend.dev>`. This is the **Resend sandbox domain** — it can only deliver to the Resend account owner's verified email. This is likely why some recipients never get emails. This is a separate fix (changing to `noreply@stock4u.co.il`) but worth noting.
+ETFs will not have `logoUrl` set (no iconic logos for index funds), so they'll use the letter fallback — consistent with how US ETFs already work.
 

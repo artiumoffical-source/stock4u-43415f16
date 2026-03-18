@@ -509,6 +509,12 @@ export default function ClaimStockGift() {
     try {
       const redirectUrl = buildClaimRedirectUrl(giftId);
 
+      logClaimStep("Email value EXACT (pre-OTP)", {
+        emailRaw: data.email,
+        emailLength: data.email.length,
+        emailCharCodes: [...data.email].map(c => c.charCodeAt(0)),
+      });
+
       logClaimStep("Sending magic link", {
         email: data.email,
         redirectUrl,
@@ -520,7 +526,16 @@ export default function ClaimStockGift() {
         options: { emailRedirectTo: redirectUrl },
       });
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        console.error("[ClaimStockGift] signInWithOtp FULL error:", {
+          message: error.message,
+          status: (error as any).status,
+          name: error.name,
+          code: (error as any).code,
+          fullError: error,
+        });
+        throw new Error(error.message);
+      }
 
       logClaimStep("Magic link sent successfully", {
         email: data.email,
