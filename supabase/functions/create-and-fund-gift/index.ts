@@ -399,6 +399,7 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('[create-and-fund-gift] Error:', error);
+    console.error('[create-and-fund-gift] FULL error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     const message = error instanceof z.ZodError
       ? 'נתונים לא תקינים: ' + error.errors.map(e => e.message).join(', ')
       : error.message || 'שגיאה פנימית';
