@@ -75,7 +75,7 @@ export const sendGiftNotificationEmails = async (giftData: any, orderId: string)
 
   // Email to recipient (REQUIRED)
   const recipientEmailData: EmailData = {
-    from: 'Stock4U <onboarding@resend.dev>',
+    from: 'Stock4U <noreply@stock4u.co.il>',
     to: recipientEmail,
     subject: `🎁 קיבלת מתנת מניות מ-${giftData.senderName || 'השולח'}!`,
     senderName: giftData.senderName || 'השולח',
